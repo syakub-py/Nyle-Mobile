@@ -7,4 +7,5 @@
 		Sam is going with react native 
 		Ariel is going with react web version
 		Modeling design after airbnb
+		Making branches
 		
