@@ -37,7 +37,7 @@ export default function MainContainer({Navigation}) {
             }else if (rn === Profile){
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
-            return <Ionicons name = {iconName} />
+            return <Ionicons name = {iconName}/>
            },
         })}>
            

@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground } from 'react-native';
-import PostCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/Card.js'
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView } from 'react-native';
+import PostCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/Card.js';
 import { useState } from 'react';
+import CategoryCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/CategoryCard.js';
 
 export default function Home({navigation}) {
+
   const posts = [
     {
       id:1,
@@ -12,7 +14,7 @@ export default function Home({navigation}) {
       price: "560",
       currency: "SOL",
       location: "New York, NY",
-      pictures: "./assets/ipad pro 12.jpg"
+      pictures: "../assets/ipad pro 12.jpg"
     },
     {
       id:2,
@@ -20,7 +22,7 @@ export default function Home({navigation}) {
       price: "50",
       currency: "BTC",
       location: "New York, NY",
-      pictures: "./assets/2015 Lamborghini Aventador.jpg"
+      pictures: "../assets/2015 Lamborghini Aventador.jpg"
     },
     {
       id:3,
@@ -28,7 +30,7 @@ export default function Home({navigation}) {
       price: "50",
       currency: "ETH",
       location: "New York, NY",
-      pictures: "./assets/2015 Lamborghini Aventador.jpg"
+      pictures: "../assets/2015 Lamborghini Aventador.jpg"
     },
     {
       id:4,
@@ -36,13 +38,20 @@ export default function Home({navigation}) {
       price: "10",
       currency: "DOGE",
       location: "New York, NY",
-      pictures: "./assets/2015 Lamborghini Aventador.jpg"
+      pictures: "../assets/2015 Lamborghini Aventador.jpg"
     },
   ]
+  
   
     return (
       <SafeAreaView style={{flex:1}}>
         <StatusBar style="auto" />
+        {/* <ScrollView horizontal = {true} >
+          <FlatList
+          data={categories}
+          renderItem={({item})=><CategoryCard data = {item}/>}
+          />
+        </ScrollView> */}
         <View style={{flex:1}}>
           <View style={{zIndex:0}}>
            <FlatList

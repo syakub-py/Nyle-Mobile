@@ -17,7 +17,7 @@ const Setting = ({title, value, type, onPress}) => {
         <Text style = {{flex:1, color:'black', fontSize: 14}}>{title}</Text>
 
         <View style = {{flexDirection:'row', alignItems:'center'}}>
-          <Text style = {{marginRight:10, color: 'lightgray', fontSize:12}}>{value}</Text>
+          <Text style = {{marginRight:10, color: 'lightgray', fontSize:14}}>{value}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -101,7 +101,5 @@ export default function Profile({navigation}) {
     username: {
       alignSelf:"center",
       fontSize:20,
-      fontWeight: '200',
-      opacity:0.3,
     }
   });

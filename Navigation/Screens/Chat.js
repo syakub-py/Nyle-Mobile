@@ -4,7 +4,7 @@ import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity 
 import faker from 'faker';
 
 faker.seed(10);
-const chats =  [...Array(50).keys()].map((_, i) => {
+const chats =  [...Array(10).keys()].map((_, i) => {
   return {
       key: faker.random.uuid(),
       image: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
@@ -16,6 +16,7 @@ const chats =  [...Array(50).keys()].map((_, i) => {
 export default function Chat({navigation}) {
     return (
       <SafeAreaView style={styles.container}>
+        <Text style= {{margin: 10, fontSize:18, fontWeight: 'bold'}}>Current converstions</Text>
           <FlatList
           data = {chats}
           keyExtractor = {item => item.key}

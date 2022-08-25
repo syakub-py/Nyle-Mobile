@@ -1,2 +1,0 @@
-# Nyle
- Crypto-Native Marketplace

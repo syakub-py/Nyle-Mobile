@@ -13,7 +13,7 @@ const PostCard = ({ data }) => {
       }}>
         <View style ={{width:"100%", height:250}}>
           <Image
-          source={data.pictures}
+          source={{uri: 'https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/model/aventador/aventador-svj-roadster/family/gallery/01_Gallery-Gateway-Famiglia.jpg'}}
           resizeMode = "cover"
           style = {{
             width:"100%",

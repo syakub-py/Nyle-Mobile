@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image } from 'react-native';
 import axios, { Axios } from 'axios'
+import moment from 'moment';
 
 function renderwalletInfoSection(){
   const changePct = '2.3'
@@ -35,56 +36,72 @@ function renderwalletInfoSection(){
   )
 }
 
+const formatSparkLine = (numbers) =>{
+  try{
+    const sevenDaysAgo = moment().subtract(7, 'days').unix();
+    let formatSparkLine = numbers.map((item, index)=>{
+      return {
+        x: sevenDaysAgo+(index+1)*3600,
+        y: item,
+      }
+    })
+    return formatSparkLine;
+  }catch(error){
+    console.log(error.message + "formatSparkLine()");
+  }
+}
 
-// function getCoins(){
-//   coins = axios.get("http://127.0.0.1:5000/getCoins")
-//   return coins
-// }
+const formatMarketData = (data) =>{
+  let formattedData= [];
+  try{
+    data.forEach(item =>{
+      const formatSparkline =  formatSparkLine(item.sparkline_in_7d.price)
+      const formattedItem = {
+        ...item,
+        sparkline_in_7d:{
+          price: formatSparkline,
+        }
+      }
+      formattedData.push(formattedItem);
+    })
+  return formattedData;
+  }catch(error){
+    console.log(error.message + "formatMarketData()");
+  }
+}
 
+
+export const getMarketData = async () =>{
+  try{
+    const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=7d")
+    const data = response.data;
+    const formatedResponse =formatMarketData(data);
+    return formatedResponse;
+  }catch(error){
+    console.log(error.message);
+  }
+}
 
 export default function Wallet({navigation}) {
-  coins = [
-    {
-      id: 1,
-      name: 'Bitcoin',
-      symbol: 'BTC',
-      image: 'https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png',
-      currentPrice : '25,000'
-    },
-    {
-      id: 2,
-      name: 'Solana',
-      symbol: 'SOL',
-      image: 'https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png',
-      currentPrice : '25,000'
-
-    },
-    {
-      id: 3,
-      name: 'Etherum',
-      symbol: 'ETH',
-      image: 'https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png',
-      currentPrice : '25,000'
-    },
-    {
-      id: 4,
-      name: 'USD Coin',
-      symbol: 'USDT',
-      image: 'https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png',
-      currentPrice : '25,000'
-    },
-  ]
+  const [data, setData] = React.useState([])
+  React.useEffect(() =>{
+    const fetchMarketData = () =>{
+      const marketData = getMarketData();
+      setData(marketData);
+    }
+    fetchMarketData();
+  }, [])
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
         <View>
           {renderwalletInfoSection()}
           <FlatList
-          data = {coins}
+          data = {data}
           keyExtractor = {item => item.id}
           contentContainerStyle ={{
             marginTop:30,
-            paddingHorizontal: 10
+            paddingHorizontal: 15
           }}
           ListHeaderComponent = {
             <View>
@@ -94,10 +111,10 @@ export default function Wallet({navigation}) {
           renderItem ={({item}) => {
             return(
               // get from coingecko api from python (ask sergey how to do it)
-              <TouchableOpacity style ={{height: 55, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity style ={{height: 55, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 10}}>
                 <View style = {{width:35}}>
                   <Image
-                  source={{uri: item.image}}
+                  source={{uri: item.symbol}}
                   style ={{
                     height:30,
                     width: 30,
@@ -109,7 +126,7 @@ export default function Wallet({navigation}) {
                 </View>
 
                 <View>
-                  <Text>$ {item.currentPrice}</Text>
+                  <Text>$ {item.current_price}</Text>
                 </View>
               </TouchableOpacity>
             )
