@@ -1,8 +1,12 @@
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground } from 'react-native';
+import { Button } from 'react-native-elements';
 
-
-const Details = ({route, navigation}) =>{
+export default function PostDetails({navigation}){
     return (
-        <Text>Details</Text>
+        <SafeAreaView style = {{flex:1}}>
+            <View style ={{width:'100%', position:'absolute', bottom:0, alignItems:"center", justifyContent:"center",  zIndex:1}}>
+                <Button title = "Buy Now"/>
+            </View>
+        </SafeAreaView>
     )
 }

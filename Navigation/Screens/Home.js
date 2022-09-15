@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
 import PostCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/Card.js';
-import { useState } from 'react';
-import CategoryCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/CategoryCard.js';
+import axios, { Axios } from 'axios';
+
+
+//console.log(Axios.get('http://192.168.238.115:3000/getPosts'))
+
 
 export default function Home({navigation}) {
-
   const posts = [
     {
       id:1,
@@ -14,7 +16,7 @@ export default function Home({navigation}) {
       price: "560",
       currency: "SOL",
       location: "New York, NY",
-      pictures: "../assets/ipad pro 12.jpg"
+      // pic: require('../PostImages/ipadPro.jpg')
     },
     {
       id:2,
@@ -22,7 +24,7 @@ export default function Home({navigation}) {
       price: "50",
       currency: "BTC",
       location: "New York, NY",
-      pictures: "../assets/2015 Lamborghini Aventador.jpg"
+      // pic: require('../PostImages/2015 Lamborghini Aventador.jpg')
     },
     {
       id:3,
@@ -30,7 +32,7 @@ export default function Home({navigation}) {
       price: "50",
       currency: "ETH",
       location: "New York, NY",
-      pictures: "../assets/2015 Lamborghini Aventador.jpg"
+      // pic: require("../assets/2015 Lamborghini Aventador.jpg")
     },
     {
       id:4,
@@ -38,25 +40,26 @@ export default function Home({navigation}) {
       price: "10",
       currency: "DOGE",
       location: "New York, NY",
-      pictures: "../assets/2015 Lamborghini Aventador.jpg"
+      // pic: require("../assets/2015 Lamborghini Aventador.jpg")
     },
   ]
-  
-  
+
+
+
     return (
       <SafeAreaView style={{flex:1}}>
         <StatusBar style="auto" />
-        {/* <ScrollView horizontal = {true} >
-          <FlatList
-          data={categories}
-          renderItem={({item})=><CategoryCard data = {item}/>}
-          />
-        </ScrollView> */}
         <View style={{flex:1}}>
           <View style={{zIndex:0}}>
            <FlatList
            data={posts}
-           renderItem = {({item}) => <PostCard data ={item}/>}
+           renderItem = {({item}) => (
+
+            <TouchableOpacity onPress={() => navigation.navigate("post details")}>
+              <PostCard data ={item}/>
+           </TouchableOpacity>
+
+            )}
            />
           </View>
         </View>

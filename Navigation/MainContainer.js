@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import {NavigationContainer, TabActions} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Screens
 import home from './Screens/Home'
@@ -19,9 +19,8 @@ const Profile = 'Profile';
 
 
 const Tab = createBottomTabNavigator();
-export default function MainContainer({Navigation}) {
+export default function MainContainer() {
     return (
-      <NavigationContainer>
         <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({
           tabBarIcon: ({focused, color, size}) =>{
@@ -48,7 +47,6 @@ export default function MainContainer({Navigation}) {
            <Tab.Screen name = {Profile} component = {profile}/>
 
         </Tab.Navigator>
-      </NavigationContainer>
     );
   }
   

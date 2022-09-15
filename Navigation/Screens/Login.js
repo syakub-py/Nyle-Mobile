@@ -15,7 +15,6 @@ export default function Login({navigation}){
                     }}/>
                     
                 </View>
-
                 <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                     <TouchableOpacity>
                         <View style = {styles.socialButton}>
@@ -42,13 +41,17 @@ export default function Login({navigation}){
                     </View>
                     <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
-                    <TouchableOpacity style={styles.submitContainer}>
+                    <TouchableOpacity
+                        style={styles.submitContainer}
+                        onPress = {()=> navigation.navigate("Main Container")}
+                        >
                         <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                     </TouchableOpacity>
 
-                    <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
+                    <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
+                        <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
+                    </TouchableOpacity>
                 </View>
-
             </View>
         </ScrollView>
     )
@@ -98,3 +101,4 @@ const styles = StyleSheet.create({
         shadowRadius: 20
     },
   });
+

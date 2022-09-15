@@ -1,10 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert } from 'react-native';
-import Login from './Navigation/Screens/Login';
-
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import Stack from './Navigation/Stack';
 
 export default function App() {
   return (
-    <Login/>
+    <NavigationContainer>
+      <Stack/>
+    </NavigationContainer>
   );
 }
