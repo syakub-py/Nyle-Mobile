@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
-import PostCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/Shared/Card.js';
+import PostCard from 'C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/Shared/Card.js';
 import axios, { Axios } from 'axios';
 
 

@@ -4,7 +4,7 @@ import SignUp from './Screens/SignUp';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import MainContainer from './MainContainer';
-import PostDetails from './Screens/PostDetails';
+import PostDetails from './Screens/postDetails';
 import Chatbox from './Screens/ChatBox';
 // screenOptions={{headerShown:false}}
 const Stack = () =>{

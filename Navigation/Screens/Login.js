@@ -8,7 +8,7 @@ export default function Login({navigation}){
             <View>
                 <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                     <Image
-                    source ={require('C:/Users/syaku/OneDrive/Documents/programs/JavaScript/Nyle/assets/icon.png')}
+                    source ={require('C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/assets/icon.png')}
                     style ={{
                         height: 150,
                         width: 150
