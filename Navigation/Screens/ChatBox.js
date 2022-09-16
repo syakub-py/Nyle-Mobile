@@ -1,10 +1,55 @@
 import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
 import faker from 'faker';
 import * as React from 'react';
-import { View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+//import Fire from "C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/Shared/Firebase"
+//import { SafeAreaView } from 'react-native-safe-area-context';
 
 faker.seed(10);
+
+// export default class ChatBox extends React.Component{
+//   state = {
+//     messages: []
+//   }
+//   get user(){
+//     return{
+//       _id:Fire.uid,
+//       name: this.props.navigation.state.params.name
+//     }
+//   }
+//   componentDidMount(){
+//     Fire.get(message => 
+//       this.setState(previous =>{
+//         messages: GiftedChat.append(previous.messages, message)
+//     }));
+//   }
+
+//   componentWillUnmount(){
+//     Fire.off();
+//   }
+
+//   render(){
+//     const chat = <GiftedChat messages={this.state.messages} onSend={Fire.send} user={this.user}/>;
+//     if (Platform.OS === 'android'){
+//       return(
+//         <KeyboardAvoidingView style = {{flex:1}} behavior ="padding" keyboardVerticalOffset={30} enabled>
+//           {chat}
+//         </KeyboardAvoidingView>
+//       )
+//     }
+//     return(
+//       <SafeAreaView style={{flex:1}}>{chat}</SafeAreaView>
+//     )
+//   }
+// }
+
+
+
+
+
+
+
 
 export default function ChatBox() {
   const [messages, setMessages] = React.useState([]);

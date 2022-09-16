@@ -9,7 +9,7 @@ const PostCard = ({ data }) => {
         marginBottom: 10,
         margin: 20
       }}>
-        <View style ={{width:"100%", height:250}}>
+        <View style ={{width:"100%", height:200}}>
           <Image
           source={require("./test.jpg")}
           resizeMode = "cover"
@@ -19,7 +19,6 @@ const PostCard = ({ data }) => {
             borderTopLeftRadius: 6,
             borderTopRightRadius: 6,
           }}/>
-
         </View>
         <Text style ={{fontSize:14, fontWeight:'bold'}}>{data.title}</Text>
         <Text style={{color:'black', fontSize:12}}>{data.price} <Text style={{fontSize:10}}>{data.currency}</Text></Text>
