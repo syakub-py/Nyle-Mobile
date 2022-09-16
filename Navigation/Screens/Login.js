@@ -1,5 +1,17 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
+import firebase from "firebase/app";
+import 'firebase/firestore';
+import 'firebase/auth';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import {useCollectionData} from'react-firebase-hooks/firestore';
+
+firebase.initializeApp({
+
+})
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 
 export default function Login({navigation}){
@@ -100,5 +112,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 20
     },
-  });
+});
 
