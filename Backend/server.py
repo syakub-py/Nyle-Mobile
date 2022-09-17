@@ -7,6 +7,8 @@ import pandas as pd
 #   2. add user class
 #   3. create database connection 
 
+#http://10.0.2.2:3000/
+
 app = Flask(__name__)
 app.secret_key = 'BAD_SECRET_KEY'
 

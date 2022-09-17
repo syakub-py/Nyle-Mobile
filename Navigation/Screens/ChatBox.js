@@ -103,18 +103,17 @@ export default function ChatBox() {
   return (
     <SafeAreaView>
       <View style={{flex:1}}>
-        <Text style ={{color:'black', fontWeight:"bold"}}>Chatting with</Text>
         <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
         user={{
           _id: 1,
         }}
-        alwaysShowSend
-        scrollToBottom
-        renderBubble={renderBubble}
-        renderSend = {renderSendBar}
-      />
+          alwaysShowSend
+          scrollToBottom
+          renderBubble={renderBubble}
+          renderSend = {renderSendBar}
+        />
       </View>
     </SafeAreaView>
   )
