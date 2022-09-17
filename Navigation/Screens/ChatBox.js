@@ -3,6 +3,7 @@ import faker from 'faker';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 //import Fire from "C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/Shared/Firebase"
 //import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -100,16 +101,21 @@ export default function ChatBox() {
   };
 
   return (
-    <GiftedChat
-    messages={messages}
-    onSend={messages => onSend(messages)}
-    user={{
-      _id: 1,
-    }}
-    alwaysShowSend
-    scrollToBottom
-    renderBubble={renderBubble}
-    renderSend = {renderSendBar}
-  />
+    <SafeAreaView>
+      <View style={{flex:1}}>
+        <Text style ={{color:'black', fontWeight:"bold"}}>Chatting with</Text>
+        <GiftedChat
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: 1,
+        }}
+        alwaysShowSend
+        scrollToBottom
+        renderBubble={renderBubble}
+        renderSend = {renderSendBar}
+      />
+      </View>
+    </SafeAreaView>
   )
 }

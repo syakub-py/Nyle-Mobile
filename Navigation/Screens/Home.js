@@ -62,11 +62,27 @@ export default function Home({navigation}) {
                   <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator = {false}>
-                    <CategoryCard imageUri ={require("./CategoryImages/ipadPro.jpg")}/>
-                    <CategoryCard imageUri ={require("./CategoryImages/2015-lamborghini-aventador.jpg")} />
-                    <CategoryCard imageUri ={require("./CategoryImages/house.jpg")}/>
-                    <CategoryCard imageUri ={require("./CategoryImages/bike.jpg")}/>
-                    <CategoryCard imageUri ={require("./CategoryImages/fridge.jpg")}/>
+
+                    <TouchableOpacity>
+                      <CategoryCard imageUri ={require("./CategoryImages/ipadPro.jpg")}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                      <CategoryCard imageUri ={require("./CategoryImages/2015-lamborghini-aventador.jpg")} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                      <CategoryCard imageUri ={require("./CategoryImages/house.jpg")}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                      <CategoryCard imageUri ={require("./CategoryImages/bike.jpg")}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity>
+                      <CategoryCard imageUri ={require("./CategoryImages/fridge.jpg")}/>
+                    </TouchableOpacity>
+                    
                   </ScrollView>
                 </View>
               </ScrollView>
