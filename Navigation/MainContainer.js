@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-import {NavigationContainer, TabActions} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -10,11 +9,12 @@ import home from './Screens/Home'
 import wallet from './Screens/Wallet'
 import chat from './Screens/Chat'
 import profile from './Screens/Profile'
-
+import addPost from './Screens/AddPost';
 
 const Home = 'Home';
 const Wallet = 'Wallet';
-const Chat = 'Chat'
+const AddPost ='Add Post';
+const Chat = 'Chat';
 const Profile = 'Profile';
 
 
@@ -35,6 +35,8 @@ export default function MainContainer() {
               iconName = focused ? 'chatbox' : 'chatbox-outline';
             }else if (rn === Profile){
               iconName = focused ? 'person-circle' : 'person-circle-outline';
+            }else if (rn === AddPost){
+              iconName = focused ? 'add-circle-outline' : 'add-circle-outline';
             }
             return <Ionicons name = {iconName}/>
            },
@@ -43,6 +45,7 @@ export default function MainContainer() {
 
            <Tab.Screen name = {Home} component = {home}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
+           <Tab.Screen name = {AddPost} component = {addPost}/>
            <Tab.Screen name = {Chat} component = {chat}/>
            <Tab.Screen name = {Profile} component = {profile}/>
 

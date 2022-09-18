@@ -1,6 +1,8 @@
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const PostCard = ({ data }) => {
+
+
+export default function PostCard({ data }){
   return (
     <View style = {{
       backgroundColor: 'white',
@@ -10,7 +12,7 @@ const PostCard = ({ data }) => {
     }}>
       <View style ={{width:"100%", height:200}}>
         <Image
-        source={require("./test.jpg")}
+        source={data.pic}
         resizeMode = "cover"
         style = {{
           width:"100%",
@@ -26,5 +28,5 @@ const PostCard = ({ data }) => {
   )
 }
 
-export default PostCard;
+
 

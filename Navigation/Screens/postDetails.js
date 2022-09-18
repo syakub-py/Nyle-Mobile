@@ -6,7 +6,7 @@ const {width} = Dimensions.get("window");
 const height = width*0.6;
 
 
-export default function PostDetails(){
+export default function PostDetails({route}){
     const images = [
         'https://images.pexels.com/photos/2127733/pexels-photo-2127733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
         'https://images.pexels.com/photos/1005162/pexels-photo-1005162.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
@@ -18,8 +18,8 @@ export default function PostDetails(){
         <SafeAreaView style={{flex:1}}>
             <View>
                 <ScrollView>
-                    <Text style={{marginTop:50, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold', alignSelf:'center'}}>2015 lamborghini Hurcan</Text>
-                    
+                    <Text style={{marginTop:50, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold', alignSelf:'center'}}>{route.params.PostTitle}</Text>
+                
                     <View >
                         <ScrollView horizontal  pagingEnabled showsHorizontalScrollIndicator ={false}>
                         {
