@@ -12,7 +12,7 @@ export default function PostCard({ data }){
     }}>
       <View style ={{width:"100%", height:200}}>
         <Image
-        source={data.pic}
+        source={{uri: data.pic}}
         resizeMode = "cover"
         style = {{
           width:"100%",

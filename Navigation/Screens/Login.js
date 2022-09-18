@@ -1,11 +1,35 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
+//import auth from './Components/Firebase';
 
 
 
+export default function Login({navigation, route}){
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
+
+    // React.useEffect(()=>{
+    //    const unsubcribe =  auth.onAuthStateChanged(user =>{
+    //         if(user){
+    //             navigation.navigate('Home')
+    //         }
+    //     })
+    //     return unsubcribe;
+    // }, [])
+    
+    
+    // const handleLogin = () => {
+    //     auth
+    //     .signInWithEmailAndPassword(route.params.username, route.params.password)
+    //     .then(userCredentials =>{
+    //         const user = userCredentials.user;
+    //         console.log(user.email)
+    //     })
+    //     .catch(error => alert(error.message))
+    // }
 
 
-export default function Login({navigation}){
+
     return(
         <ScrollView style ={styles.container}>
             <View>
@@ -37,10 +61,10 @@ export default function Login({navigation}){
                 <View>
                     <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
                     <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
-                        <TextInput placeholder='Username' ></TextInput>
+                        <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
                     </View>
                     <View>
-                        <TextInput placeholder='Password'></TextInput>
+                        <TextInput placeholder='Password' onChangeText={text => setPassword(text)} style={styles.input} secureTextEntry/>
                     </View>
                     <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
@@ -65,6 +89,13 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor: "white",
         paddingHorizontal: 20
+    },
+    input:{
+        backgroundColor:'lightgray',
+        paddingHorizontal:15,
+        paddingVertical:10,
+        borderRadius:10,
+        marginTop:5,
     },
     text: {
       color: 'black',
