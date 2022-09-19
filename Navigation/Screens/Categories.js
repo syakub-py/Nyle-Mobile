@@ -9,12 +9,12 @@ export default function Categories({navigation, route}){
                 <ScrollView>
                     <Text style={{marginLeft:16, fontSize:30, fontWeight:'bold'}}>{route.params.title}</Text>
                     <View style={{flexDirection:'row', height:80, shadowColor:'black', shadowOpacity:0.2}}>
-                        <TextInput placeholder='Search...' placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1,}}/>
+                        <TextInput placeholder='Search...' placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1, paddingHorizontal:15,}}/>
                     </View>
                     <FlatList
                     data={route.params.Posts}
                     renderItem = {({item}) => (
-                        <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title, Details: item.details, Description:item.description, images: [item.pic]})}>
+                        <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details: item.details, Description:item.description, images: [item.pic]})}>
                         <PostCard data ={item}/>
                         </TouchableOpacity>
                         )}

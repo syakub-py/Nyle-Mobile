@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, Dimensions, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 
-
 const {width} = Dimensions.get("window");
 const height = width*0.6;
 
@@ -15,7 +14,7 @@ export default function PostDetails({route}){
                 <ScrollView>
                     <Text style={{marginTop:50, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold', alignSelf:'center'}}>{route.params.PostTitle}</Text>
                 
-                    <View >
+                    <View>
                         <ScrollView horizontal  pagingEnabled showsHorizontalScrollIndicator ={false}>
                         {
                             images.map((image, index)=>(
@@ -24,9 +23,9 @@ export default function PostDetails({route}){
                         }
                         </ScrollView>
                     </View>
-                    <Text style={{color: 'lightgray', fontSize:15, fontWeight:'bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
+                    <Text style={{color: 'lightgray', fontSize:15, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
                     <View>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:50, width:50}} resizeMode={'stretch'} source={require('../Screens/Components/Eth.png')}/> 135</Text>
+                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={require('../Screens/Components/Eth.png')}/> {route.params.Price}</Text>
                     </View>
 
                     <View>
@@ -38,6 +37,7 @@ export default function PostDetails({route}){
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'lightgray', fontSize:15}}>{route.params.Description}</Text>
                     </View>
+
                     <View style={{flexDirection:'row', justifyContent:'center', width:'100%'}}>
                         <Button title={'Buy Out'} />
                         <Button title={'Place bid'} />

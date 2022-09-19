@@ -48,10 +48,6 @@ faker.seed(10);
 
 
 
-
-
-
-
 export default function ChatBox() {
   const [messages, setMessages] = React.useState([]);
   React.useEffect(() => {
@@ -102,19 +98,18 @@ export default function ChatBox() {
 
   return (
     <SafeAreaView>
-      <View style={{flex:1}}>
-        <GiftedChat
-        messages={messages}
-        onSend={messages => onSend(messages)}
-        user={{
-          _id: 1,
-        }}
-          alwaysShowSend
-          scrollToBottom
-          renderBubble={renderBubble}
-          renderSend = {renderSendBar}
-        />
-      </View>
+      <GiftedChat
+      messages={messages}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: 1,
+      }}
+        alwaysShowSend
+        scrollToBottom
+        renderBubble={renderBubble}
+        renderSend = {renderSendBar}
+      />
+
     </SafeAreaView>
   )
 }

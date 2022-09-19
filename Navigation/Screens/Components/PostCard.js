@@ -1,4 +1,4 @@
-import {Text, View, Image, TouchableOpacity} from 'react-native';
+import {Text, View, Image, TouchableOpacity, ImageBackground} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -6,24 +6,17 @@ export default function PostCard({ data }){
   return (
     <View style = {{
       backgroundColor: 'white',
-      borderRadius: 6,
       marginBottom: 10,
-      margin: 20
-    }}>
-      <View style ={{width:"100%", height:200}}>
-        <Image
-        source={{uri: data.pic}}
-        resizeMode = "cover"
-        style = {{
-          width:"100%",
-          height:"100%",
-          borderTopLeftRadius: 6,
-          borderTopRightRadius: 6,
-        }}/>
+      margin: 20,
+      borderRadius:10,
+      elevation:2}}>
+      <View style ={{width:"100%", height:300, }}>
+        <ImageBackground source={{uri: data.pic}} imageStyle ={{width:"100%", height:300, borderRadius:10}}>
+          <Text style ={{fontSize:14, fontWeight:'bold', color:'white'}}>{data.title}</Text>
+          <Text style={{color:'white', fontSize:12}}>{data.price} <Text style={{fontSize:10}}>{data.currency}</Text></Text>
+          <Text style={{color:'white'}}><Ionicons name='location-outline' style={{marginRight: 10}}/>{data.location}</Text>
+        </ImageBackground>
       </View>
-      <Text style ={{fontSize:14, fontWeight:'bold'}}>{data.title}</Text>
-      <Text style={{color:'black', fontSize:12}}>{data.price} <Text style={{fontSize:10}}>{data.currency}</Text></Text>
-      <Text><Ionicons name='location-outline' style={{marginRight: 10}}/>{data.location}</Text>
     </View>
   )
 }
