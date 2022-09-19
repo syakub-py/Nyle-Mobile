@@ -23,7 +23,7 @@ export default function MainContainer() {
     return (
         <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({
-          tabBarIcon: ({focused, color, size}) =>{
+          tabBarIcon: ({focused}) =>{
             let iconName;
             let rn = route.name;
 
@@ -38,7 +38,7 @@ export default function MainContainer() {
             }else if (rn === AddPost){
               iconName = focused ? 'add-circle-outline' : 'add-circle-outline';
             }
-            return <Ionicons name = {iconName}/>
+            return <Ionicons name = {iconName} size={18} style={{color:'black'}}/>
            },
         })}>
            

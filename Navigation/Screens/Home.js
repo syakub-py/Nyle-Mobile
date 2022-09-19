@@ -8,6 +8,9 @@ import faker from 'faker';
 
 
 export default function Home({navigation}) {
+  const [filteredData, setfilterData] = React.useState([]);
+  const [masterData, setMasterData] = React.useState([]);
+  const[search, setSearch] = React.useState([])
   //posts for home screen
     const HomeScreenPosts = [
       {
@@ -54,7 +57,7 @@ export default function Home({navigation}) {
   //posts for Homes
     const HomePosts = [
         {
-          id:1,
+          id:5,
           title: faker.address.streetAddress(),
           price: "560",
           currency: "SOL",
@@ -64,7 +67,7 @@ export default function Home({navigation}) {
           pic: 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=300'
         },
         {
-          id:2,
+          id:6,
           title: faker.address.streetAddress(),
           price: "50",
           currency: "BTC",
@@ -74,7 +77,7 @@ export default function Home({navigation}) {
           pic: 'https://images.pexels.com/photos/8134820/pexels-photo-8134820.jpeg?auto=compress&cs=tinysrgb&w=300'
         },
         {
-          id:3,
+          id:7,
           title: faker.address.streetAddress(),
           price: "50",
           currency: "ETH",
@@ -84,7 +87,7 @@ export default function Home({navigation}) {
           pic: 'https://images.pexels.com/photos/7598365/pexels-photo-7598365.jpeg?auto=compress&cs=tinysrgb&w=300'
         },
         {
-          id:4,
+          id:8,
           title: faker.address.streetAddress(),
           price: "10",
           currency: "DOGE",
@@ -97,7 +100,7 @@ export default function Home({navigation}) {
     //posts for automobiles
     const CarPosts = [
       {
-        id:1,
+        id:9,
         title: 'Lamborgini huracan',
         price: "560",
         currency: "SOL",
@@ -107,7 +110,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/5063626/pexels-photo-5063626.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:2,
+        id:10,
         title: 'Lamborgini aventador',
         price: "50",
         currency: "BTC",
@@ -117,7 +120,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/6968984/pexels-photo-6968984.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:3,
+        id:11,
         title: 'Mclaren 720s',
         price: "50",
         currency: "ETH",
@@ -127,7 +130,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/8590608/pexels-photo-8590608.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:4,
+        id:12,
         title: 'porsche 911',
         price: "10",
         currency: "DOGE",
@@ -140,7 +143,7 @@ export default function Home({navigation}) {
     //posts for tech
     const TechPosts = [
       {
-        id:1,
+        id:13,
         title: "ipad Pro 11 inch",
         price: "560",
         currency: "SOL",
@@ -150,7 +153,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/3082341/pexels-photo-3082341.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:2,
+        id:14,
         title: 'm1 macbook pro',
         price: "50",
         currency: "BTC",
@@ -160,7 +163,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/303383/pexels-photo-303383.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:3,
+        id:15,
         title: "windows computer",
         price: "50",
         currency: "ETH",
@@ -170,7 +173,7 @@ export default function Home({navigation}) {
         pic: 'https://images.pexels.com/photos/6372946/pexels-photo-6372946.jpeg?auto=compress&cs=tinysrgb&w=300'
       },
       {
-        id:4,
+        id:16,
         title: "Mac",
         price: "10",
         currency: "DOGE",
@@ -266,6 +269,33 @@ export default function Home({navigation}) {
         // pic: require("../assets/2015 Lamborghini Aventador.jpg")
       },
     ]
+
+
+    const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
+
+    React.useEffect(()=>{
+      setfilterData(masterPostList);
+      setMasterData(masterPostList);
+    }, [])
+
+
+    const searchFilter = (text) =>{
+      if (text){
+        const newData = masterData.filter((item) =>{
+          const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase()
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData)>-1;
+        });
+        setfilterData(newData);
+        setSearch(text);
+      }else{
+        setfilterData(masterData);
+        setSearch(text);
+      }
+    }
+
+
+
     return (
       <SafeAreaView style={{flex:1}}>
         <StatusBar style="auto" />
@@ -276,7 +306,7 @@ export default function Home({navigation}) {
           </View>
           <View style={{flex:1}}>
             <View style={{flexDirection:'row', height:80, shadowColor:'black', shadowOpacity:0.2}}>
-              <TextInput placeholder='Search...' placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1, paddingHorizontal:15,}}/>
+              <TextInput placeholder='Search...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1, paddingHorizontal:15,}}/>
             </View>
             <View style={{zIndex:0}}>
               <View>
@@ -316,7 +346,7 @@ export default function Home({navigation}) {
               </View>
               <Text style={{color:'black', fontWeight:'bold', fontSize:19, paddingHorizontal:20}}>Top Posts</Text>
               <FlatList
-              data={HomeScreenPosts}
+              data={filteredData}
               renderItem = {({item}) => (
                 <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:[item.pic]})}>
                   <PostCard data ={item}/>

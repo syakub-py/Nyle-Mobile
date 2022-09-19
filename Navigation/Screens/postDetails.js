@@ -12,8 +12,6 @@ export default function PostDetails({route}){
         <SafeAreaView style={{flex:1}}>
             <View>
                 <ScrollView>
-                    <Text style={{marginTop:50, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold', alignSelf:'center'}}>{route.params.PostTitle}</Text>
-                
                     <View>
                         <ScrollView horizontal  pagingEnabled showsHorizontalScrollIndicator ={false}>
                         {
@@ -23,6 +21,8 @@ export default function PostDetails({route}){
                         }
                         </ScrollView>
                     </View>
+                    <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+
                     <Text style={{color: 'lightgray', fontSize:15, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={require('../Screens/Components/Eth.png')}/> {route.params.Price}</Text>

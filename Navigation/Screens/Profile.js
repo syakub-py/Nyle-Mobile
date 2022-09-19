@@ -2,22 +2,22 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
 import faker from 'faker'
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import YourPostCard from './Components/YourPostsCard';
 
 const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20}}>
-      <Text style={{color: 'lightgray'}}>{title}</Text>
+      <Text style={{color: 'gray', fontSize:20, fontWeight:'500'}}>{title}</Text>
     </View>)}
 
-const Setting = ({title, value, type, onPress}) => {
+const Setting = ({title, type, onPress}) => {
   if (type == "button"){
     return(
       <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center'}} onPress = {onPress}>
-        <Text style = {{flex:1, color:'black', fontSize: 14}}>{title}</Text>
-
+        <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
         <View style = {{flexDirection:'row', alignItems:'center'}}>
-          <Text style = {{marginRight:10, color: 'lightgray', fontSize:14}}>{value}</Text>
+          <Ionicons name='chevron-forward-outline' style={{color:'lightgray'}} size={19}/>
         </View>
       </TouchableOpacity>
     )
@@ -35,7 +35,7 @@ export default function Profile({navigation}) {
           {/* container for user image */}
           <View style = {{alignSelf:"center"}}>
             <View>
-              <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="center"/>
+              <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="cover"/>
             </View>
           </View>
 
@@ -53,32 +53,28 @@ export default function Profile({navigation}) {
           />
 
           <Setting
-          title = "Change password"
-          value = "Home"
+          title = "Security"
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
 
         <Setting
           title = "Apperence"
-          value = "Light"
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
 
       <Setting
           title = "Connect a wallet"
-          value = "Not connected"
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
-      <Setting
-        title = "Current Currency"
-        value = "Bitcoin"
-        type = "button"
-        onPress = {() => console.log("pressed button")}
-        />
 
+
+        <SectionTitle title={'Your Posts'}/>
+
+        {/* test post card */}
+        <YourPostCard/>
 
         </ScrollView>
         <StatusBar style="auto" />
@@ -92,8 +88,8 @@ export default function Profile({navigation}) {
       backgroundColor: 'white',
     },
     image:{
-      width: 75,
-      height: 75,
+      width: 175,
+      height: 175,
       borderRadius: 100,
       overflow: 'hidden',
       paddingBottom: 50,
