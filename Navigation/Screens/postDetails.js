@@ -24,8 +24,11 @@ export default function PostDetails({route}){
                     <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
 
                     <Text style={{color: 'lightgray', fontSize:15, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
+
+                    <Text style={{color:'lightgray', fontSize:13}}>{route.params.Location}</Text>
+
                     <View>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={require('../Screens/Components/Eth.png')}/> {route.params.Price}</Text>
+                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={{uri:route.params.Currency}}/> {route.params.Price}</Text>
                     </View>
 
                     <View>
@@ -43,7 +46,6 @@ export default function PostDetails({route}){
                         <Button title={'Place bid'} />
                     </View>
                 </ScrollView>
-                
             </View>
         </SafeAreaView>
     )

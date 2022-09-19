@@ -14,7 +14,7 @@ export default function Categories({navigation, route}){
                     <FlatList
                     data={route.params.Posts}
                     renderItem = {({item}) => (
-                        <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details: item.details, Description:item.description, images: [item.pic]})}>
+                        <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details: item.details, Description:item.description, images: [item.pic], Currency:item.currency})}>
                         <PostCard data ={item}/>
                         </TouchableOpacity>
                         )}
