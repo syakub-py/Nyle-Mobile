@@ -42,12 +42,6 @@ export default function Profile({navigation}) {
           {/* name */}
           <Text style = {styles.username}>{faker.name.findName()}</Text>
           {/* rest of settings screen */}
-          <View style = {{flexDirection: 'row',marginTop: 23 }}>
-            <View style ={{flex:1,}}>
-              <Text style ={{color:'black'}}>{faker.internet.email()}</Text>
-            </View>
-          </View>
-
           <SectionTitle
           title = 'Account'
           />

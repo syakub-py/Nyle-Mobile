@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
-//import auth from './Components/Firebase';
+import auth from './Components/Firebase';
 
 
 
@@ -8,25 +8,25 @@ export default function Login({navigation, route}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
-    // React.useEffect(()=>{
-    //    const unsubcribe =  auth.onAuthStateChanged(user =>{
-    //         if(user){
-    //             navigation.navigate('Home')
-    //         }
-    //     })
-    //     return unsubcribe;
-    // }, [])
+    React.useEffect(()=>{
+       const unsubcribe =  auth.onAuthStateChanged(user =>{
+            if(user){
+                navigation.navigate('Home')
+            }
+        })
+        return unsubcribe;
+    }, [])
     
     
-    // const handleLogin = () => {
-    //     auth
-    //     .signInWithEmailAndPassword(route.params.username, route.params.password)
-    //     .then(userCredentials =>{
-    //         const user = userCredentials.user;
-    //         console.log(user.email)
-    //     })
-    //     .catch(error => alert(error.message))
-    // }
+    const handleLogin = () => {
+        auth
+        .signInWithEmailAndPassword(route.params.username, route.params.password)
+        .then(userCredentials =>{
+            const user = userCredentials.user;
+            console.log(user.email)
+        })
+        .catch(error => alert(error.message))
+    }
 
 
 

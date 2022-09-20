@@ -7,6 +7,7 @@ import MainContainer from './MainContainer';
 import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import Categories from './Screens/Categories';
+import ViewProfile from './Screens/ViewProfile';
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -18,6 +19,8 @@ const Stack = () =>{
             <Stack.Screen name="post details" component = {PostDetails}/>
             <Stack.Screen name="chat box" component = {Chatbox} />
             <Stack.Screen name="categories" component = {Categories} />
+            <Stack.Screen name="view profile" component = {ViewProfile} />
+
           </Stack.Navigator>
         );
   }

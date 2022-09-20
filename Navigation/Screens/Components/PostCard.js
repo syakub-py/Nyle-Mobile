@@ -4,7 +4,8 @@ import faker from 'faker';
 
 faker.seed(10)
 
-export default function PostCard({ data }){
+export default function PostCard({ data}){
+  // const navigation = 
   return (
     <View style = {{
       backgroundColor: 'white',
@@ -15,7 +16,9 @@ export default function PostCard({ data }){
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic}} imageStyle ={{width:"100%", height:300, borderRadius:10}}>
           <View style={{flexDirection:'row'}}>
-            <Image style={{height:50, width:50, borderRadius:30, elevation:1, margin:10}} source={{uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`}}></Image>
+            <TouchableOpacity onPress={() => alert("not working yet")}>
+              <Image style={{height:50, width:50, borderRadius:30, elevation:1, margin:10}} source={{uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`}}/>
+            </TouchableOpacity>
             <View>
               <Text style ={{fontSize:15, fontWeight:'bold', color:'white'}}>{data.title}</Text>
               <View style={{flexDirection:'row'}}>

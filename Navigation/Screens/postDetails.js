@@ -1,5 +1,7 @@
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, Dimensions, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 const {width} = Dimensions.get("window");
 const height = width*0.6;
@@ -22,10 +24,10 @@ export default function PostDetails({route}){
                         </ScrollView>
                     </View>
                     <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+                    <Text style={{color:'gray', fontSize:17, marginLeft:10}}><Ionicons name='location-outline' size={20} style={{marginRight: 10}}/>{route.params.Location}</Text>
 
                     <Text style={{color: 'lightgray', fontSize:15, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
 
-                    <Text style={{color:'lightgray', fontSize:13}}>{route.params.Location}</Text>
 
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={{uri:route.params.Currency}}/> {route.params.Price}</Text>
@@ -41,11 +43,12 @@ export default function PostDetails({route}){
                         <Text style={{marginRight:30, marginLeft:30, color:'lightgray', fontSize:15}}>{route.params.Description}</Text>
                     </View>
 
-                    <View style={{flexDirection:'row', justifyContent:'center', width:'100%'}}>
-                        <Button title={'Buy Out'} />
-                        <Button title={'Place bid'} />
+                    <View style={{flexDirection:'row', justifyContent:'center', width:'100%', justifyContent:'space-evenly'}}>
+                        <Button title={'Buy Out'}/>
+                        <Button title={'Place bid'}/>
                     </View>
                 </ScrollView>
+
             </View>
         </SafeAreaView>
     )
