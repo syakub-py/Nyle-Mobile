@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground,
 import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -305,8 +306,19 @@ export default function Home({navigation}) {
             <Text style={{fontSize:25, fontWeight:'bold'}}>Samuel Y</Text>
           </View>
           <View style={{flex:1}}>
-            <View style={{flexDirection:'row', height:80, shadowColor:'black', shadowOpacity:0.2}}>
-              <TextInput placeholder='Search...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1, paddingHorizontal:15,}}/>
+            <View style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  height:60,
+                  borderRadius:50,
+                  margin:10,
+                  elevation:3
+            }}>
+              <Ionicons name="search-outline" style={{paddingLeft: 30}} size={20}/>
+              <TextInput placeholder='Search...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'500', backgroundColor:'white', margin:10, borderRadius:100, paddingHorizontal:5,}}/>
             </View>
             <View style={{zIndex:0}}>
               <View>

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, Dimensions, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, Dimensions, ScrollView, Pressable } from 'react-native';
 import { Button } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -25,10 +25,8 @@ export default function PostDetails({route}){
                     </View>
                     <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                     <Text style={{color:'gray', fontSize:17, marginLeft:10}}><Ionicons name='location-outline' size={20} style={{marginRight: 10}}/>{route.params.Location}</Text>
-
+                    
                     <Text style={{color: 'lightgray', fontSize:15, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: Sam</Text>
-
-
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={{uri:route.params.Currency}}/> {route.params.Price}</Text>
                     </View>
