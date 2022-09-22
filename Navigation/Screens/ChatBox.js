@@ -1,4 +1,4 @@
-import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
 import faker from 'faker';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, View, Alert } from 'react-native';
@@ -59,18 +59,18 @@ export default function ChatBox() {
       </Send>
     );
   };
+  return (   
+    <GiftedChat
+    messages={messages}
+    onSend={messages => onSend(messages)}
+    user={{
+      _id: 1,
+    }}
+      alwaysShowSend
+      scrollToBottom
+      renderBubble={renderBubble}
+      renderSend = {renderSendBar}
+    />
 
-  return (
-      <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
-        alwaysShowSend
-        scrollToBottom
-        renderBubble={renderBubble}
-        renderSend = {renderSendBar}
-      />
   )
 }

@@ -29,13 +29,13 @@ export default function PostCard({data}){
               <Text style={{color:'white', elevation:1}}><Ionicons name='location-outline' style={{marginRight: 10}} size ={20}/>{data.location}</Text>
             </View>
           </View>  
-          <View>
-          <Pressable onPress={() => navigation.navigate('chat box', {ProfileImage: [`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`]})}>
-              <View style={{height:50, width:50, borderRadius:100, backgroundColor:'black', elevation:10,position:'absolute', bottom:110, left:290}}>
-                <Ionicons name="chatbox" color={'white'} size={20} style={{margin:15}}/>
-              </View>
-          </Pressable>
-          </View>       
+          {/* <View>
+            <Pressable onPress={() => navigation.navigate('chat box', {ProfileImage: [`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`]})}>
+                <View style={{height:50, width:50, borderRadius:100, backgroundColor:'black', elevation:10,position:'absolute', bottom:110, left:290}}>
+                  <Ionicons name="chatbox" color={'white'} size={20} style={{margin:15}}/>
+                </View>
+            </Pressable>
+          </View>        */}
         </ImageBackground>
       </View>
     </View>

@@ -5,7 +5,7 @@ import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import ToolbarAndroid from '@react-native-community/toolbar-android';
 
 
 export default function Home({navigation}) {
@@ -300,6 +300,10 @@ export default function Home({navigation}) {
     return (
       <SafeAreaView style={{flex:1}}>
         <StatusBar style="auto" />
+        {/* <ToolbarAndroid
+          logo={require('./Components/icon.png')}
+          navIcon = {<Ionicons name='person-circle-outline' size={20}/>}
+        /> */}
         <ScrollView>
           <View style={{margin:20}}>
             <Text style={{color:'gray', fontSize:15, fontWeight:'500'}}>Welcome back,</Text>

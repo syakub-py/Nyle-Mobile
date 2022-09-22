@@ -53,7 +53,7 @@ export default function Profile({navigation}) {
           />
 
         <Setting
-          title = "Apperence"
+          title = "Appearance"
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
