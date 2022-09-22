@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
-// import auth from './Components/Firebase';
+//import auth from './Components/Firebase';
 
 
 
@@ -35,7 +35,7 @@ export default function Login({navigation, route}){
             <View>
                 <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                     <Image
-                    source ={require('C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/assets/icon.png')}
+                    source ={require('./Components/icon.png')}
                     style ={{
                         height: 150,
                         width: 150

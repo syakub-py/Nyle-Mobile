@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Nyle",
-    "slug": "Nyle",
+    "name": "nylecryptostore",
+    "slug": "nylecryptostore",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.nylecryptostore.nylecryptostore"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17d63e9a-41a7-4d57-a5ec-d0621701db39"
+      }
     }
   }
 }
