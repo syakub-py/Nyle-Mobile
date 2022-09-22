@@ -1,4 +1,4 @@
-import {Text, View, Image, TouchableOpacity, ImageBackground, Alert} from 'react-native';
+import {Text, View, Image, TouchableOpacity, ImageBackground, Alert, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
 import { useNavigation } from '@react-navigation/native';
@@ -17,9 +17,9 @@ export default function PostCard({data}){
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic}} imageStyle ={{width:"100%", height:300, borderRadius:10}}>
           <View style={{flexDirection:'row'}}>
-            <TouchableOpacity onPress={() => navigation.navigate("view profile")}>
+            <Pressable onPress={() => navigation.navigate("view profile")}>
               <Image style={{height:50, width:50, borderRadius:30, elevation:10, margin:10}} source={{uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`}}/>
-            </TouchableOpacity>
+            </Pressable>
             <View>
               <Text style ={{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
               <View style={{flexDirection:'row'}}>
@@ -30,11 +30,11 @@ export default function PostCard({data}){
             </View>
           </View>  
           <View>
-          <TouchableOpacity onPress={() => navigation.navigate('chat box', {ProfileImage: [`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`]})}>
+          <Pressable onPress={() => navigation.navigate('chat box', {ProfileImage: [`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`]})}>
               <View style={{height:50, width:50, borderRadius:100, backgroundColor:'black', elevation:10,position:'absolute', bottom:110, left:290}}>
                 <Ionicons name="chatbox" color={'white'} size={20} style={{margin:15}}/>
               </View>
-          </TouchableOpacity>
+          </Pressable>
           </View>       
         </ImageBackground>
       </View>

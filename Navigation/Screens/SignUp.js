@@ -19,7 +19,7 @@ export default function SignUp({navigation}){
         <View style={styles.container}>
             <View style={{ alignItems:'center', justifyContent:'center'}}>
                 <Image
-                source ={require('C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/assets/icon.png')}
+                source ={require('./Components/icon.png')}
                 style ={{
                     height: 150,
                     width: 150

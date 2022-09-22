@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, Pressable, TextInput } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
@@ -318,7 +318,7 @@ export default function Home({navigation}) {
                   elevation:3
             }}>
               <Ionicons name="search-outline" style={{paddingLeft: 30}} size={20}/>
-              <TextInput placeholder='Search...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'500', backgroundColor:'white', margin:10, borderRadius:100, paddingHorizontal:5,}}/>
+              <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:100, paddingHorizontal:5,}}/>
             </View>
             <View style={{zIndex:0}}>
               <View>
@@ -330,25 +330,25 @@ export default function Home({navigation}) {
                     <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator = {false}>
-                      <TouchableOpacity onPress={() => navigation.navigate('categories', {title: 'Tech', Posts:TechPosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Tech', Posts:TechPosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/ipadPro.jpg")}/>
-                      </TouchableOpacity>
+                      </Pressable>
 
-                      <TouchableOpacity onPress={() => navigation.navigate('categories', {title: 'Automobiles', Posts:CarPosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Automobiles', Posts:CarPosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/2015-lamborghini-aventador.jpg")} />
-                      </TouchableOpacity>
+                      </Pressable>
 
-                      <TouchableOpacity onPress={() => navigation.navigate('categories', {title: 'Homes',Posts:HomePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Homes',Posts:HomePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/house.jpg")}/>
-                      </TouchableOpacity>
+                      </Pressable>
 
-                      <TouchableOpacity onPress={() => navigation.navigate('categories', {title: 'Bikes',Posts:BikePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Bikes',Posts:BikePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/bike.jpg")}/>
-                      </TouchableOpacity>
+                      </Pressable>
 
-                      <TouchableOpacity onPress={() => navigation.navigate('categories', {title: 'appliences',Posts:AppliencePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {title: 'appliences',Posts:AppliencePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/fridge.jpg")}/>
-                      </TouchableOpacity>
+                      </Pressable>
                       
                     </ScrollView>
                   </View>
@@ -359,9 +359,9 @@ export default function Home({navigation}) {
               <FlatList
               data={filteredData}
               renderItem = {({item}) => (
-                <TouchableOpacity onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:[item.pic], Currency:item.currency, Location: item.location})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:[item.pic], Currency:item.currency, Location: item.location})}>
                   <PostCard data ={item}/>
-                </TouchableOpacity>
+                </Pressable>
                 )}
               />
             </View>
