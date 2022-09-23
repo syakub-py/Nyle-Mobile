@@ -28,9 +28,8 @@ export default function Categories({navigation, route}){
       }
     return(
         <SafeAreaView>
-            <View style={{marginTop:30}}>
+            <View style={{marginTop:50}}>
                 <ScrollView>
-                    <Text style={{marginLeft:16, fontSize:30, fontWeight:'bold'}}>{route.params.title}</Text>
                     <View style={{flexDirection:'row', height:80, shadowColor:'black', shadowOpacity:0.2}}>
                         <TextInput placeholder='Search...' onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'700', backgroundColor:'white', margin:20, borderRadius:10, elevation:1, paddingHorizontal:15,}}/>
                     </View>

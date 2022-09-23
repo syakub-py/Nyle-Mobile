@@ -63,9 +63,17 @@ export default function Profile({navigation}) {
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
+          
+      <Setting
+          title = "2 factor Authentication"
+          type = "button"
+          onPress = {() => console.log("pressed button")}
+          />
+
 
 
         <SectionTitle title={'Your Posts'}/>
+
 
         {/* test post card */}
         <YourPostCard/>

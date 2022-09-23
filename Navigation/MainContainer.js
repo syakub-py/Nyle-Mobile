@@ -23,6 +23,8 @@ export default function MainContainer() {
     return (
         <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({
+          tabBarHideOnKeyboard:true,
+          headerShown:false,
           tabBarIcon: ({focused}) =>{
             let iconName;
             let rn = route.name;
@@ -42,7 +44,6 @@ export default function MainContainer() {
            },
         })}>
            
-
            <Tab.Screen name = {Home} component = {home}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost}/>

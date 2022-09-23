@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, Tou
 
 
 export default function Login({navigation, route}){
+    
     // const [username, setUsername] = React.useState('')
     // const [password, setPassword] = React.useState('')
 
@@ -61,10 +62,12 @@ export default function Login({navigation, route}){
                 <View>
                     <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
                     <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
-                        <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
+                    {/* onChangeText={text => setUsername(text)} */}
+                        <TextInput placeholder='Username'  style={styles.input}/>
                     </View>
                     <View>
-                        <TextInput placeholder='Password' onChangeText={text => setPassword(text)} style={styles.input} secureTextEntry/>
+                    {/* onChangeText={text => setPassword(text) }*/}
+                        <TextInput placeholder='Password' style={styles.input} secureTextEntry/>
                     </View>
                     <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 

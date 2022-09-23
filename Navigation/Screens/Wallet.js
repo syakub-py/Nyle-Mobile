@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable} from 'react-native';
 import axios, { Axios } from 'axios'
 import moment from 'moment';
 
@@ -111,7 +111,7 @@ export default function Wallet({navigation}) {
             //needs to refresh in the screen
             walletValue = walletValue+item.current_price*2;
             return(
-              <TouchableOpacity style ={{height: 55, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 10}}>
+              <Pressable style ={{height: 55, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 10}}>
                 <View style = {{width:35}}>
                   <Image
                   source={{uri: item.image}}
@@ -129,7 +129,7 @@ export default function Wallet({navigation}) {
                   <Text>Your Holdings: $ {item.current_price*2}</Text>
                   <Text style ={{fontSize:11, color: 'gray'}}>Current Value: $ {item.current_price}</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             )
           }}
           />

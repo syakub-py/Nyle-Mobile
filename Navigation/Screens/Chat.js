@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity, Pressable } from 'react-native';
 import faker from 'faker';
 faker.seed(10);
 const chats =  [...Array(50).keys()].map((_, i) => {
@@ -37,7 +37,7 @@ export default function Chat({navigation}) {
             return(
               //each card in the chat screen
               //add the onpress function here
-              <TouchableOpacity onPress={() => {navigation.navigate("chat box")}}>
+              <Pressable onPress={() => {navigation.navigate("chat box")}}>
                 <View style = {{flexDirection: 'row', marginBottom:15}}>
                   <Image
                   source = {{uri: item.image}}
@@ -52,7 +52,7 @@ export default function Chat({navigation}) {
                     <Text style = {{fontSize:14, color:'lightgrey'}}>{item.lastText}</Text>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             )
           }}
           />

@@ -5,7 +5,6 @@ import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ToolbarAndroid from '@react-native-community/toolbar-android';
 
 
 export default function Home({navigation}) {
@@ -299,16 +298,22 @@ export default function Home({navigation}) {
 
     return (
       <SafeAreaView style={{flex:1}}>
-        <StatusBar style="auto" />
         {/* <ToolbarAndroid
           logo={require('./Components/icon.png')}
           navIcon = {<Ionicons name='person-circle-outline' size={20}/>}
         /> */}
         <ScrollView>
-          <View style={{margin:20}}>
-            <Text style={{color:'gray', fontSize:15, fontWeight:'500'}}>Welcome back,</Text>
-            <Text style={{fontSize:25, fontWeight:'bold'}}>Samuel Y</Text>
+          
+          <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20}}>
+            <View style={{margin:20}}>
+              <Text style={{color:'gray', fontSize:15, fontWeight:'500'}}>Welcome back,</Text>
+              <Text style={{fontSize:25, fontWeight:'bold'}}>{faker.name.findName()}</Text>   
+            </View>
+            <View style={{margin:20}}>
+              <Image resizeMode='cover' source={{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(100)}.jpg`}} style={{height:70, width:70, borderRadius:100}}/>
+            </View>
           </View>
+
           <View style={{flex:1}}>
             <View style={{
                   flex: 1,
@@ -334,23 +339,23 @@ export default function Home({navigation}) {
                     <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator = {false}>
-                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Tech', Posts:TechPosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {Posts:TechPosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/ipadPro.jpg")}/>
                       </Pressable>
 
-                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Automobiles', Posts:CarPosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', { Posts:CarPosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/2015-lamborghini-aventador.jpg")} />
                       </Pressable>
 
-                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Homes',Posts:HomePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {Posts:HomePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/house.jpg")}/>
                       </Pressable>
 
-                      <Pressable onPress={() => navigation.navigate('categories', {title: 'Bikes',Posts:BikePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {Posts:BikePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/bike.jpg")}/>
                       </Pressable>
 
-                      <Pressable onPress={() => navigation.navigate('categories', {title: 'appliences',Posts:AppliencePosts})}>
+                      <Pressable onPress={() => navigation.navigate('categories', {Posts:AppliencePosts})}>
                         <CategoryCard imageUri ={require("./CategoryImages/fridge.jpg")}/>
                       </Pressable>
                       
