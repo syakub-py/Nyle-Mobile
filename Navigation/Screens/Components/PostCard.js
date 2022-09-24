@@ -17,8 +17,8 @@ export default function PostCard({data}){
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic}} imageStyle ={{width:"100%", height:300, borderRadius:10}}>
           <View style={{flexDirection:'row'}}>
-            <Pressable onPress={() => navigation.navigate("view profile")}>
-              <Image style={{height:50, width:50, borderRadius:30, elevation:10, margin:10}} source={{uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`}}/>
+            <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic})}>
+              <Image style={{height:50, width:50, borderRadius:30, elevation:10, margin:10}} source={{uri:data.profilePic}}/>
             </Pressable>
             <View>
               <Text style ={{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
@@ -29,13 +29,13 @@ export default function PostCard({data}){
               <Text style={{color:'white', elevation:1}}><Ionicons name='location-outline' style={{marginRight: 10}} size ={20}/>{data.location}</Text>
             </View>
           </View>  
-          <View>
+          {/* <View>
             <Pressable onPress={() => navigation.navigate('chat box', {ProfileImage: [`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`]})}>
-                <View style={{height:50, width:50, borderRadius:100, backgroundColor:'black', elevation:10,position:'absolute', bottom:110, left:290}}>
+                <View style={{height:50, width:50, borderRadius:100, backgroundColor:'black', elevation:10,position:'absolute', bottom:110, left:280}}>
                   <Ionicons name="chatbox" color={'white'} size={20} style={{margin:15}}/>
                 </View>
             </Pressable>
-          </View>       
+          </View>        */}
         </ImageBackground>
       </View>
     </View>

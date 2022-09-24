@@ -1,39 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable, ScrollView} from 'react-native';
 import axios, { Axios } from 'axios'
 import moment from 'moment';
-
-function renderwalletInfoSection(walletValue){
-  return(
-    <View style ={{
-      paddingHorizontal:10,
-      borderBottomLeftRadius: 25,
-      borderBottomRightRadius: 25,
-      elevation: 4,
-      backgroundColor: 'white',
-    }}>
-      {/* balance Info */}
-      <View style = {{margin:50}}>
-        <Text style = {{color:'black'}}>Wallet Value</Text>
-
-        <View style ={{
-          flexDirection: 'row',
-          alignItems: "flex-end"
-        }}>
-          <Text style = {{color: "black"}}>$</Text>
-          <Text style ={{color: "black", marginLeft: 5, fontSize:18, fontWeight:'bold'}}>{walletValue}</Text>
-          <Text style = {{color:'gray', fontSize: 12, marginLeft:5}}>USD</Text>
-        </View>
-      </View>
-      <View style ={{
-        flexDirection: 'row',
-        alignItems: 'flex-end'
-      }}>
-      </View>
-    </View>
-  )
-}
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const formatSparkline = (numbers) => {
   const sevenDaysAgo = moment().subtract(7, 'days').unix();
@@ -94,7 +64,6 @@ export default function Wallet({navigation}) {
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
         <View>
-          {renderwalletInfoSection(walletValue)}
           <FlatList
           data = {data}
           keyExtractor = {item => item.id}
@@ -104,6 +73,13 @@ export default function Wallet({navigation}) {
           }}
           ListHeaderComponent = {
             <View>
+
+              <View style={{margin:40, }}>
+                <Text style={{fontWeight:'bold', fontSize:20}}>Wallet Value </Text>
+                <Text style={{fontWeight:'600'}}>$968495</Text>
+                <Text style={{fontSize:15, fontWeight:'600', color:'lightgreen'}}><Ionicons name='arrow-up-outline' color={'lightgreen'} size={15}/>2.65%</Text>
+              </View>
+
               <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Top Coins</Text>
             </View>
           }

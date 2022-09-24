@@ -1,35 +1,32 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
-//import auth from './Components/Firebase';
+import { auth }from './Components/Firebase';
 
 
 
-export default function Login({navigation, route}){
+export default function Login({navigation}){
     
-    // const [username, setUsername] = React.useState('')
-    // const [password, setPassword] = React.useState('')
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
 
-    // React.useEffect(()=>{
-    //    const unsubcribe =  auth.onAuthStateChanged(user =>{
-    //         if(user){
-    //             navigation.navigate('Home')
-    //         }
-    //     })
-    //     return unsubcribe;
-    // }, [])
+    React.useEffect(()=>{
+       const unsubcribe =  auth.onAuthStateChanged(user =>{
+            if(user){
+                navigation.navigate("Main Container")
+            }
+        })
+        return unsubcribe;
+    }, [])
     
     
-    // const handleLogin = () => {
-    //     auth
-    //     .signInWithEmailAndPassword(route.params.username, route.params.password)
-    //     .then(userCredentials =>{
-    //         const user = userCredentials.user;
-    //         console.log(user.email)
-    //     })
-    //     .catch(error => alert(error.message))
-    // }
-
-
+    const handleLogin = () => {
+        auth
+        .signInWithEmailAndPassword(username, password)
+        .then(userCredentials =>{
+            const user = userCredentials.user;
+        })
+        .catch(error => alert(error.message))
+    }
 
     return(
         <ScrollView style ={styles.container}>
@@ -63,17 +60,17 @@ export default function Login({navigation, route}){
                     <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
                     <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
                     {/* onChangeText={text => setUsername(text)} */}
-                        <TextInput placeholder='Username'  style={styles.input}/>
+                        <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
                     </View>
                     <View>
                     {/* onChangeText={text => setPassword(text) }*/}
-                        <TextInput placeholder='Password' style={styles.input} secureTextEntry/>
+                        <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={styles.input} secureTextEntry/>
                     </View>
                     <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
                     <TouchableOpacity
                         style={styles.submitContainer}
-                        onPress = {()=> navigation.navigate("Main Container")}
+                        onPress = {handleLogin}
                         >
                         <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                     </TouchableOpacity>

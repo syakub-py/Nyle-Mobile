@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity, Pressable, TextInput } from 'react-native';
 import faker from 'faker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 faker.seed(10);
 const chats =  [...Array(50).keys()].map((_, i) => {
   return {
@@ -16,6 +17,30 @@ const chats =  [...Array(50).keys()].map((_, i) => {
 
 
 export default function Chat({navigation}) {
+  const [filteredData, setfilterData] = React.useState([]);
+  const [masterData, setMasterData] = React.useState([]);
+  const[search, setSearch] = React.useState([])
+  
+  React.useEffect(()=>{
+    setfilterData(chats);
+    setMasterData(chats);
+  }, [])
+
+
+  const searchFilter = (text) =>{
+    if (text){
+      const newData = masterData.filter((item) =>{
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase()
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData)>-1;
+      });
+      setfilterData(newData);
+      setSearch(text);
+    }else{
+      setfilterData(masterData);
+      setSearch(text);
+    }
+  }
   const ItemSeparator = () => {
     return(
       <View style ={{height:1, backgroundColor:'lightgray', width:'100%', marginBottom:5}}/>
@@ -23,20 +48,24 @@ export default function Chat({navigation}) {
   }
     return (
       <SafeAreaView style={styles.container}>
+        
           <FlatList
-          data = {chats}
+          data = {filteredData}
           keyExtractor = {item => item.key}
           
           contentContainerStyle = {{
             padding: 20,
 
           }}
-          ListHeaderComponent = {<Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current converstions</Text>}
+          ListHeaderComponent = {
+            <View>
+              <TextInput placeholder='Search Chat...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:20, marginBottom:20,elevation:3, height:60, paddingHorizontal:15, borderRadius:20, backgroundColor:'white'}}/>
+              <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current converstions</Text>
+            </View>
+        }
           ItemSeparatorComponent = {ItemSeparator}
           renderItem = {({item, index}) => {
             return(
-              //each card in the chat screen
-              //add the onpress function here
               <Pressable onPress={() => {navigation.navigate("chat box")}}>
                 <View style = {{flexDirection: 'row', marginBottom:15}}>
                   <Image
