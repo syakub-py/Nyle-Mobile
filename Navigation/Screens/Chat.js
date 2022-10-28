@@ -58,8 +58,8 @@ export default function Chat({navigation}) {
 
           }}
           ListHeaderComponent = {
-            <View>
-              <TextInput placeholder='Search Chat...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:20, marginBottom:20,elevation:3, height:60, paddingHorizontal:15, borderRadius:20, backgroundColor:'white'}}/>
+            <View style={{paddingTop:20}}>
+              <TextInput placeholder='Search Chat...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:10, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
               <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current converstions</Text>
             </View>
         }

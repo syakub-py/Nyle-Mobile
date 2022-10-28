@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth }from './Components/Firebase';
+import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
 
 
@@ -9,76 +10,89 @@ export default function Login({navigation}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
-    React.useEffect(()=>{
-       const unsubcribe =  auth.onAuthStateChanged(user =>{
-            if(user){
-                navigation.navigate("Main Container")
-            }
-        })
-        return unsubcribe;
-    }, [])
     
-    
-    const handleLogin = () => {
+    const handleEmailAndPasswordLogin = () => {
         auth
         .signInWithEmailAndPassword(username, password)
         .then(userCredentials =>{
             const user = userCredentials.user;
+            
+        })
+        .catch(error => alert(error.message))
+    }
+    const GoogleAuth = new GoogleAuthProvider();
+    const getauth = getAuth();
+    const handleGoogleLogin = () =>{
+        auth.signInWithRedirect(getauth, GoogleAuth)
+        .then((result) =>{
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
         })
         .catch(error => alert(error.message))
     }
 
+    
+    React.useEffect(()=>{
+        const unsubcribe =  auth.onAuthStateChanged(user =>{
+             if(user){
+                 navigation.navigate("Main Container")
+             }
+         })
+         return unsubcribe;
+     }, [])
+
     return(
         <ScrollView style ={styles.container}>
+            <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
+                <Image
+                source ={require('./Components/icon.png')}
+                style ={{
+                    height: 150,
+                    width: 150
+                }}/>
+                
+            </View>
+            <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
+                <TouchableOpacity>
+                    <View style = {styles.socialButton}>
+                        <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/>
+                        <Text style ={styles.text}>Facebook</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <Pressable onPress={handleGoogleLogin}>
+                    <View style = {styles.socialButton}>
+                        <Image source={{uri:"https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"}} style ={{height:20, width:20, marginRight:5}}/>
+                        <Text style ={styles.text}>Google</Text>
+                    </View>
+                </Pressable>
+            </View>
+
             <View>
-                <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
-                    <Image
-                    source ={require('./Components/icon.png')}
-                    style ={{
-                        height: 150,
-                        width: 150
-                    }}/>
-                    
+                <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
+                <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
+                {/* onChangeText={text => setUsername(text)} */}
+                    <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
                 </View>
-                <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
-                    <TouchableOpacity>
-                        <View style = {styles.socialButton}>
-                            <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/>
-                            <Text style ={styles.text}>Facebook</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity>
-                        <View style = {styles.socialButton}>
-                            <Image source={{uri:"https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"}} style ={{height:20, width:20, marginRight:5}}/>
-                            <Text style ={styles.text}>Google</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
                 <View>
-                    <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
-                    <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
-                    {/* onChangeText={text => setUsername(text)} */}
-                        <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
-                    </View>
-                    <View>
-                    {/* onChangeText={text => setPassword(text) }*/}
-                        <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={styles.input} secureTextEntry/>
-                    </View>
-                    <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
-
-                    <TouchableOpacity
-                        style={styles.submitContainer}
-                        onPress = {handleLogin}
-                        >
-                        <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
-                        <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
-                    </TouchableOpacity>
+                {/* onChangeText={text => setPassword(text) }*/}
+                    <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={styles.input} secureTextEntry/>
                 </View>
+                <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
+
+                <TouchableOpacity
+                    style={styles.submitContainer}
+                    onPress = {handleEmailAndPasswordLogin}
+                    >
+                    <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
+                    <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     )

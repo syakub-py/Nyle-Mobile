@@ -5,6 +5,8 @@ import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { readData } from './Components/Firebase.js';
+
 
 
 export default function Home({navigation}) {
@@ -303,7 +305,7 @@ export default function Home({navigation}) {
      }, [])
 
 
-    const searchFilter = (text) =>{
+    const searchFilter = (text) => {
       if (text){
         const newData = masterData.filter((item) =>{
           const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase()
