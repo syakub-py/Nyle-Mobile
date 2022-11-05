@@ -56,12 +56,12 @@ export default function Login({navigation}){
                 
             </View>
             <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
-                <TouchableOpacity>
+                <Pressable>
                     <View style = {styles.socialButton}>
                         <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/>
                         <Text style ={styles.text}>Facebook</Text>
                     </View>
-                </TouchableOpacity>
+                </Pressable>
 
                 <Pressable onPress={handleGoogleLogin}>
                     <View style = {styles.socialButton}>

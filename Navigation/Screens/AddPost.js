@@ -1,18 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //import { Dropdown } from 'react-native-material-dropdown';
+import { getstorage } from './Components/Firebase';
+import ImagePicker from 'react-native-image-picker';
 
 export default function AddPost(){
+    // const uploadImage =() =>{
+    //     const [image, setImage] = React.useState(null);
+
+
+    // }
     return(
         <SafeAreaView>
             <ScrollView>
-                <TouchableOpacity>
+                <Pressable>
                     <View style={{backgroundColor:'lightgray', margin:20, borderRadius:15}}>
                         <Ionicons name = {'aperture-outline'} size={250} style={{alignSelf:'center', color:'gray'}}/>
                     </View>
-                </TouchableOpacity>
+                </Pressable>
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
                     <TextInput placeholder='Enter price of item' style={styles.textinput}/>

@@ -5,11 +5,19 @@ import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { readData } from './Components/Firebase.js';
-
+import {collection, getDocs} from 'firebase/firestore/lite'
+import {firestore} from './Components/Firebase'
 
 
 export default function Home({navigation}) {
+
+  const getPosts = async ()=>{
+    const postCollection = collection(firestore, "Posts");
+    const postSnapshot = await getDocs(postCollection)
+    const masterPostList = postSnapshot.docs.map(doc =>doc.data())
+    return masterPostList;
+  }
+
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const[search, setSearch] = React.useState([])
@@ -297,7 +305,8 @@ export default function Home({navigation}) {
     ]
 
 
-    const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
+    //const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
+    const masterPostList = [getPosts()]
 
     React.useEffect(()=>{
       setfilterData(masterPostList);
