@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
 
 export default function SignUp({navigation}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
-
+    const [Name, setName] = React.useState('')
     const handleSignUp = () =>{
         auth
         .createUserWithEmailAndPassword(username, password)
@@ -26,8 +26,11 @@ export default function SignUp({navigation}){
                 }}/>    
             </View>
 
+            <TextInput placeholder='Name' style = {styles.textInput} onChangeText={(text) => setName(text)}/>
             <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text) => setUsername(text)} />
             <TextInput placeholder='Password' style = {styles.textInput} onChangeText={(text)=> setPassword(text)} secureTextEntry/>
+            <TextInput style = {styles.textInput} placeholder='Wallet ID' secureTextEntry/>
+
             <Pressable style={styles.submitContainer} onPress={handleSignUp}>
                         <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
             </Pressable>

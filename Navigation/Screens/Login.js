@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image, Touchable, TouchableOpacity, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth }from './Components/Firebase';
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
@@ -23,7 +23,7 @@ export default function Login({navigation}){
     const GoogleAuth = new GoogleAuthProvider();
     const getauth = getAuth();
     const handleGoogleLogin = () =>{
-        auth.signInWithRedirect(getauth, GoogleAuth)
+        auth.signInWithPopup(getauth, GoogleAuth)
         .then((result) =>{
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -83,12 +83,12 @@ export default function Login({navigation}){
                 </View>
                 <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
-                <TouchableOpacity
+                <Pressable
                     style={styles.submitContainer}
                     onPress = {handleEmailAndPasswordLogin}
                     >
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
-                </TouchableOpacity>
+                </Pressable>
 
                 <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
                     <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>

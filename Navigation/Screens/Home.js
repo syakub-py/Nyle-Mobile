@@ -10,17 +10,18 @@ import {firestore} from './Components/Firebase'
 
 
 export default function Home({navigation}) {
-
+  const [filteredData, setfilterData] = React.useState([]);
+  const [masterData, setMasterData] = React.useState([]);
+  const[search, setSearch] = React.useState([])
   const getPosts = async ()=>{
     const postCollection = collection(firestore, "Posts");
     const postSnapshot = await getDocs(postCollection)
     const masterPostList = postSnapshot.docs.map(doc =>doc.data())
+    
     return masterPostList;
   }
 
-  const [filteredData, setfilterData] = React.useState([]);
-  const [masterData, setMasterData] = React.useState([]);
-  const[search, setSearch] = React.useState([])
+
   //posts for home screen
     const HomeScreenPosts = [
       {
@@ -305,10 +306,10 @@ export default function Home({navigation}) {
     ]
 
 
-    //const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
-    const masterPostList = [getPosts()]
+    const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
+    //const masterPostList = [getPosts()]
 
-    React.useEffect(()=>{
+     React.useEffect(()=>{
       setfilterData(masterPostList);
       setMasterData(masterPostList);
      }, [])
