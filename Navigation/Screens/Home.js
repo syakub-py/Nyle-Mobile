@@ -13,6 +13,7 @@ export default function Home({navigation}) {
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const[search, setSearch] = React.useState([])
+
   const getPosts = async ()=>{
     const postCollection = collection(firestore, "Posts");
     const postSnapshot = await getDocs(postCollection)
@@ -329,6 +330,7 @@ export default function Home({navigation}) {
         setSearch(text);
       }
     }
+    
     return (
       <SafeAreaView style={{flex:1}}>
         <View style={{flex:1}}>

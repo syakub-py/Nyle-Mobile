@@ -3,7 +3,9 @@ import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity, Pressable, TextInput } from 'react-native';
 import faker from 'faker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 faker.seed(10);
+
 const chats =  [...Array(50).keys()].map((_, i) => {
   return {
       key: faker.random.uuid(),
@@ -76,7 +78,7 @@ export default function Chat({navigation}) {
                   }}
                   />
                   <View>
-                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{item.name} </Text>
+                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text>
                     <Text style ={{fontSize:15, color:'grey'}}>{item.email}</Text>
                     <Text style = {{fontSize:14, color:'lightgrey'}}>{item.lastText}</Text>
                   </View>
@@ -85,7 +87,7 @@ export default function Chat({navigation}) {
             )
           }}
           />
-        <StatusBar style="auto" />
+        <StatusBar style="auto"/>
       </SafeAreaView>
     );
   }

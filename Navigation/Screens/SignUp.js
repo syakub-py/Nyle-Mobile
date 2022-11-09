@@ -17,6 +17,7 @@ export default function SignUp({navigation}){
     }
     return(
         <View style={styles.container}>
+            
             <View style={{ alignItems:'center', justifyContent:'center'}}>
                 <Image
                 source ={require('./Components/icon.png')}
@@ -32,8 +33,9 @@ export default function SignUp({navigation}){
             <TextInput style = {styles.textInput} placeholder='Wallet ID' secureTextEntry/>
 
             <Pressable style={styles.submitContainer} onPress={handleSignUp}>
-                        <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
+                <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
             </Pressable>
+
         </View>
     )
 }

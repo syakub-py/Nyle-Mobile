@@ -14,7 +14,7 @@ export default function PostCard({data}){
       margin: 20,
       borderRadius:10,
       elevation:2}}>
-        
+
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic}} imageStyle ={{width:"100%", height:300, borderRadius:10}}>
           <View style={{flexDirection:'row'}}>
@@ -38,7 +38,7 @@ export default function PostCard({data}){
                 </View>
             </Pressable>
           </View>        */}
-        
+
         </ImageBackground>
       </View>
     </View>

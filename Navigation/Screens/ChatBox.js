@@ -3,14 +3,12 @@ import faker from 'faker';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, View, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import messaging from '@react-native-firebase/messaging';
-//import Fire from "C:/Users/syaku/OneDrive/Documents/programs/JavaScript/NyleVS/Shared/Firebase"
-//import { SafeAreaView } from 'react-native-safe-area-context';
+import {firestore} from './Components/Firebase';
 
 
 faker.seed(10);
 
-
+//https://stackoverflow.com/questions/60205950/how-to-customize-react-native-gifted-chat-in-react-native-0-61
 
 export default function ChatBox() {
   const [messages, setMessages] = React.useState([]);
@@ -39,7 +37,7 @@ export default function ChatBox() {
       {...props}
       wrapperStyle={{
         right: {
-          backgroundColor: '#2e64e5',
+          backgroundColor: 'black',
         },
       }}
       textStyle={{
@@ -59,6 +57,17 @@ export default function ChatBox() {
       </Send>
     );
   };
+
+  // const messagesRef = firestore.collection('messages');
+  // const query = messagesRef.orderBy('createdAt').limit(25);
+
+  // await messagesRef.add({
+  //   text: formValue,
+  //   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+  //   uid,
+  //   photoURL
+  // })
+
   return (   
     <GiftedChat
     messages={messages}
