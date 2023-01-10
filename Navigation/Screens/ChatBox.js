@@ -74,6 +74,7 @@ export default function ChatBox() {
     onSend={messages => onSend(messages)}
     user={{
       _id: 1,
+      avatar: "https://my-user-photo.jpg"
     }}
       alwaysShowSend
       scrollToBottom

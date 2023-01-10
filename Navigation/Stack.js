@@ -8,6 +8,7 @@ import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import Categories from './Screens/Categories';
 import ViewProfile from './Screens/ViewProfile';
+
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();

@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView, FlatList, Image, TouchableOpacity, Pressable, TextInput } from 'react-native';
 import faker from 'faker';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 faker.seed(10);
 
@@ -61,7 +60,7 @@ export default function Chat({navigation}) {
           }}
           ListHeaderComponent = {
             <View style={{paddingTop:20}}>
-              <TextInput placeholder='Search Chat...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:10, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
+              <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:10, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
               <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current converstions</Text>
             </View>
         }

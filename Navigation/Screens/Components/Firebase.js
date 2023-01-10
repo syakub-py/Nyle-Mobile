@@ -4,18 +4,18 @@ import 'firebase/compat/firestore'
 import {getFirestore} from 'firebase/firestore/lite'
 import {getStorage} from 'firebase/storage'
 import "firebase/compat/analytics"
-import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSEGING_SENDER_ID, APP_ID, MEASUREMENT_ID} from 'react-native-dotenv';
 
 var app = "";
 
+
 const firebaseConfig = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: MESSEGING_SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  apiKey: "AIzaSyAS0OLIeH01QAyHZQxILWWUu3I2PJm3xz4",
+  authDomain: "nyle-bd594.firebaseapp.com",
+  projectId: "nyle-bd594",
+  storageBucket: "nyle-bd594.appspot.com",
+  messagingSenderId: "616674242131",
+  appId: "1:616674242131:web:7788508192e82a84b660a6",
+  measurementId: "G-70E5N2DBMC"
 };
 
 // Initialize Firebase

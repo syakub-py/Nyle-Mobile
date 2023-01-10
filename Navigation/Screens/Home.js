@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, Pressable, TextInput, Alert, RefreshControl } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import faker from 'faker';
@@ -12,16 +12,39 @@ import {firestore} from './Components/Firebase'
 export default function Home({navigation}) {
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
-  const[search, setSearch] = React.useState([])
+  const [search, setSearch] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  // const[masterPostList, setMasterPostList] = React.useState([]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Call the API to refresh the data here
+    // After the data has been refreshed, set refreshing to false
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+  
+
 
   const getPosts = async ()=>{
+    const results =[];
     const postCollection = collection(firestore, "Posts");
-    const postSnapshot = await getDocs(postCollection)
-    const masterPostList = postSnapshot.docs.map(doc =>doc.data())
+    const postSnapshot = await getDocs(postCollection);
+    postSnapshot.forEach(doc => {
+      results.push(doc.data())
+    });
     
-    return masterPostList;
+    return results;
   }
-
+  React.useEffect(()=>{
+    getPosts().then((result) =>{
+      const masterPostList = result
+      setfilterData(masterPostList);
+      setMasterData(masterPostList);
+    }).catch((error)=>{
+      Alert(error)
+    })
+  }, [])
 
   //posts for home screen
     const HomeScreenPosts = [
@@ -307,13 +330,16 @@ export default function Home({navigation}) {
     ]
 
 
-    const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
-    //const masterPostList = [getPosts()]
+    //const masterPostList = HomeScreenPosts.concat(HomePosts, CarPosts,TechPosts)
 
-     React.useEffect(()=>{
-      setfilterData(masterPostList);
-      setMasterData(masterPostList);
-     }, [])
+    // React.useEffect(()=>{
+    //   setfilterData(masterPostList);
+    //   setMasterData(masterPostList);
+    //  }, [])
+
+
+
+    console.log(masterData)
 
 
     const searchFilter = (text) => {
@@ -398,6 +424,9 @@ export default function Home({navigation}) {
           </View>
             }
             data={filteredData}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             renderItem = {({item}) => (
               <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:[item.pic], Currency:item.currency, Location: item.location})}>
                 <PostCard data ={item}/>
