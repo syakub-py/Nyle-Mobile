@@ -3,6 +3,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
 import faker from 'faker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SwipeListView} from 'react-native-swipe-list-view';
 import YourPostCard from './Components/YourPostsCard';
 
 const SectionTitle = ({title}) => {

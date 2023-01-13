@@ -3,7 +3,6 @@ import faker from 'faker';
 import * as React from 'react';
 import { KeyboardAvoidingView, Platform, View, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from './Components/Firebase';
 
 
 faker.seed(10);
