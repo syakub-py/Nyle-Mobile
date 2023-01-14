@@ -1,19 +1,35 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
+import {collection} from 'firebase/firestore/lite'
+import {firestore, firestoreLite} from './Components/Firebase'
 
 export default function SignUp({navigation}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [Name, setName] = React.useState('')
+    const addUser = (collectionName, username) =>{
+        if (!collectionName) {
+            throw new Error('Error: collection name cannot be empty');
+        }
+        return firestore.collection(collectionName).doc(username).set({})
+        .then(ref => {
+          console.log('Added document with ID: ' + docId);
+        })
+        .catch(error => {
+          console.log('Error adding document: ', error);
+        });
+      }
+
     const handleSignUp = () =>{
         auth
         .createUserWithEmailAndPassword(username, password)
         .then(userCredentials =>{
             const user = userCredentials.user;
-            alert("signed up")
+            
         })
         .catch(error => alert(error.message))
+        addUser("Users", username)
     }
     return(
         <View style={styles.container}>

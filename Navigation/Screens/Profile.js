@@ -70,7 +70,12 @@ export default function Profile({navigation}) {
           type = "button"
           onPress = {() => console.log("pressed button")}
           />
-
+                  
+      <Setting
+          title = "Log Out"
+          type = "button"
+          onPress = {() => console.log("pressed button")}
+          />
 
 
         <SectionTitle title={'Your Posts'}/>

@@ -8,17 +8,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestore, firestoreLite} from './Components/Firebase'
 
-export default function Home({navigation}) {
+export default function Home({navigation, route}) {
+  
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  // const[masterPostList, setMasterPostList] = React.useState([]);
-
   const onRefresh = () => {
     setRefreshing(true);
-    // Call the API to refresh the data here
     getPosts().then((result) =>{
       const masterPostList = result
       setfilterData(masterPostList);
@@ -26,16 +24,13 @@ export default function Home({navigation}) {
     }).catch((error)=>{
       Alert(error)
     })
-    // After the data has been refreshed, set refreshing to false
     setTimeout(() => setRefreshing(false), 1000);
   };
   
 
-
   const getPosts = async ()=>{
-    
     const results =[];
-    const postCollection = collection(firestoreLite, "Posts");
+    const postCollection = collection(firestoreLite, "Users/"+route.params.username+"/Posts");
     const postSnapshot = await getDocs(postCollection);
     postSnapshot.forEach(doc => {
       results.push(doc.data())
@@ -54,22 +49,26 @@ export default function Home({navigation}) {
   }, [])
 
 
-  const addPosts = (collectionName) =>{
-    if (!collectionName) {
+  const addPosts = (collectionPath) =>{
+    if (!collectionPath) {
         throw new Error('Error: collection name cannot be empty');
     }
-    return firestore.collection(collectionName).add({
+    return firestore.collection(collectionPath).add({
+      id:faker.random.number(),
       title: faker.address.streetAddress(),
-      price: "50",
+      price: faker.random.number({min:1, max:100}),
       currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
       location: "New York, NY",
       details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet ut nisl ac venenatis. Pellentesque bibendum lectus risus. Etiam et tristique dolor. Sed et purus at lectus semper ullamcorper in non est. Curabitur venenatis nunc sit amet tortor venenatis commodo. Donec eu malesuada urna. Duis vulputate semper luctus. Nam aliquam est sit amet leo malesuada, id sodales sapien dapibus. Sed ornare ante vel metus placerat ornare. Pellentesque non risus venenatis, porttitor tellus sit amet, fringilla sem. Nam vitae elit vitae ex tincidunt pretium. ",
       description: "In nec gravida ex. Aliquam ultricies diam aliquam consectetur eleifend. Donec massa odio, sagittis sit amet finibus ac, suscipit lacinia metus. Sed nulla nulla, placerat eu volutpat at, pretium sed nulla. Ut dignissim enim in enim dapibus, in sollicitudin nulla sagittis. Curabitur nec turpis sed massa consequat gravida iaculis in orci. Ut tincidunt hendrerit nunc, a finibus urna vulputate vel. Quisque luctus mauris sed laoreet venenatis. Nunc convallis eleifend leo, quis sollicitudin leo condimentum in. Suspendisse accumsan erat nulla, quis venenatis lectus aliquam ut. Maecenas tempor nulla vel consectetur efficitur.",
-      pic: 'https://images.squarespace-cdn.com/content/v1/58487dc4b8a79b6d02499b60/1650194082470-72Q6R35RXYETS0ZBRBL0/Francis+York+Iconic+Oceanfront+Estate+for+Sale+in+the+Hamptons%2C+NY+1.jpeg?format=1500w',
+      pic: "https://images.pexels.com/photos/323776/pexels-photo-323776.jpeg?auto=compress&cs=tinysrgb&w=300",
       profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
+      date: new Date().toLocaleString(),
+      type: "",
+
     })
     .then(ref => {
-      console.log('Added document with ID: ', ref.id);
+      console.log('Added document with ID: ' + ref.id);
     })
     .catch(error => {
       console.log('Error adding document: ', error);
@@ -101,7 +100,7 @@ export default function Home({navigation}) {
               <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20}}>
                 <View style={{margin:20}}>
                   <Text style={{color:'gray', fontSize:15, fontWeight:'500'}}>Welcome back,</Text>
-                  <Text style={{fontSize:25, fontWeight:'bold'}}>{faker.name.findName()}</Text>   
+                  <Text style={{fontSize:25, fontWeight:'bold'}}>{route.params.username}</Text>   
                 </View>
                 <View style={{margin:20}}>
                   <Image resizeMode='cover' source={{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(100)}.jpg`}} style={{height:70, width:70, borderRadius:100}}/>
@@ -153,9 +152,9 @@ export default function Home({navigation}) {
                   </ScrollView>
                 </View>
               </ScrollView>
-              <Text style={{color:'black', fontWeight:'bold', fontSize:19, paddingHorizontal:20}}>Top Posts</Text>
+              <Text style={{color:'black', fontWeight:'bold', fontSize:19, paddingHorizontal:20}}>Your Posts</Text>
             </View>
-            <Pressable onPress={()=> addPosts("Posts")}>
+            <Pressable onPress={()=> addPosts("Users/"+route.params.username+"/Posts")}>
               <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                 <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
               </View>

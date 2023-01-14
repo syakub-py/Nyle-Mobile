@@ -19,7 +19,7 @@ const Profile = 'Profile';
 
 
 const Tab = createBottomTabNavigator();
-export default function MainContainer() {
+export default function MainContainer({route}) {
     return (
         <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({
@@ -44,7 +44,8 @@ export default function MainContainer() {
            },
         })}>
            
-           <Tab.Screen name = {Home} component = {home}/>
+           
+           <Tab.Screen name = {Home} component = {home} initialParams={{ username: route.params.username }}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost}/>
            <Tab.Screen name = {Chat} component = {chat}/>
