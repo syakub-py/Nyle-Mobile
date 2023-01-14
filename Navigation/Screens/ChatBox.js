@@ -9,7 +9,7 @@ faker.seed(10);
 
 //https://stackoverflow.com/questions/60205950/how-to-customize-react-native-gifted-chat-in-react-native-0-61
 
-export default function ChatBox() {
+export default function ChatBox({route}) {
   const [messages, setMessages] = React.useState([]);
   React.useEffect(() => {
     setMessages([
@@ -17,11 +17,18 @@ export default function ChatBox() {
         _id: 1,
         text: faker.lorem.lines(1),
         createdAt: new Date(),
-        user: {
-          _id: 2,
+        user: [
+          {
+          _id: 1,
           name: faker.name.findName(),
           avatar: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
         },
+        {
+          _id: 2,
+          name: faker.name.findName(),
+          avatar: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
+        },]
+        
       },
     ])
   }, [])

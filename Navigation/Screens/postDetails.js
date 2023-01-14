@@ -9,7 +9,6 @@ const height = width*0.6;
 
 export default function PostDetails({route, navigation}){
     const images = route.params.images
-
     return (
         <SafeAreaView style={{flex:1}}>
             <View>

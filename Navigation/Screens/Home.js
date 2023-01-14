@@ -50,6 +50,7 @@ export default function Home({navigation, route}) {
 
 
   const addPosts = (collectionPath) =>{
+    faker.seed(10);
     if (!collectionPath) {
         throw new Error('Error: collection name cannot be empty');
     }
