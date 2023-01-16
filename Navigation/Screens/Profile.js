@@ -1,10 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, ScrollView, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
 import faker from 'faker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import YourPostCard from './Components/YourPostsCard';
+import PostCard from './Components/PostCard.js';
+import {collection, getDocs} from 'firebase/firestore/lite'
+import {firestoreLite} from './Components/Firebase'
+import { SwipeListView } from 'react-native-swipe-list-view';
+import {firestore} from './Components/Firebase'
 
 const SectionTitle = ({title}) => {
   return(
@@ -29,10 +31,53 @@ const Setting = ({title, type, onPress}) => {
   }
 }
 
-export default function Profile({navigation}) {
+export default function Profile({navigation, route}) {
+  const [userList, setUserList] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+
+  const getPosts = async ()=>{
+    const results =[];
+    const postCollection = collection(firestoreLite, "Users/"+route.params.username+"/Posts");
+    const postSnapshot = await getDocs(postCollection);
+    postSnapshot.forEach(doc => {
+      results.push(doc.data())
+    });
+    return results;
+  }
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getPosts().then((result) =>{
+      const userPostList = result
+      setUserList(userPostList);
+    }).catch((error)=>{
+      console.log(error)
+    })
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+  
+  React.useEffect(()=>{
+    getPosts().then((result) =>{
+      const userPostList = result
+      setUserList(userPostList);
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }, [])
+
+  const deleteRow = (item) =>{
+    firestore.collection("Users/"+route.params.username+"/Posts").doc(item.title).delete()
+    .then(() => {
+        console.log('Document successfully deleted!');
+    })
+    .catch((error) => {
+        console.error('Error deleting document: ', error);
+    });
+  }
     return (
-      <SafeAreaView style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator = {false} style ={{margin:15}}>
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator = {false} style ={{margin:15, flex:1}}>
           {/* container for user image */}
           <View style = {{alignSelf:"center"}}>
             <View>
@@ -77,16 +122,37 @@ export default function Profile({navigation}) {
           onPress = {() => console.log("pressed button")}
           />
 
-
-        <SectionTitle title={'Your Posts'}/>
-
-
-        {/* test post card */}
-        <YourPostCard/>
-
         </ScrollView>
-        <StatusBar style="auto" />
-      </SafeAreaView>
+          {/* <View>
+            <SectionTitle title={'Your Posts'}/>
+            <SwipeListView
+              data={userList}
+              rightOpenValue={-75}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              renderItem={({item}) => (
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:[item.pic], Currency:item.currency, Location: item.location})}>
+                  <PostCard data ={item}/>
+                </Pressable>
+                )}
+                renderHiddenItem = {({item}) => (
+                  <View style={{ position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  width: 75,
+                  justifyContent: 'center',
+                  alignItems: 'center'}}>
+                    <TouchableOpacity onPress={()=>deleteRow(item)}>
+                      <Ionicons size={30} name='trash-outline' color={"red"}/>
+                    </TouchableOpacity>
+                  </View>
+               )}
+            /> 
+          </View> */}
+      </View>
+      
     );
   }
   

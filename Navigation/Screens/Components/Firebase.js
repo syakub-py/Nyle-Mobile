@@ -34,9 +34,7 @@ const auth = firebase.auth()
 
 const getstorage = getStorage(app)
 
-const analytics = firebase.analytics(app)
-
-export {auth,firestoreLite, firestore, getstorage, analytics};
+export {auth,firestoreLite, firestore, getstorage};
 
 
 

@@ -1,17 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView, FlatList, SwipeListView ,Image, RefreshControl, Pressable, TextInput } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import faker from 'faker';
 import {firestore, firestoreLite} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
-
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 export default function Chat({navigation, route}) {
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const[search, setSearch] = React.useState([])
   const [refreshing, setRefreshing] = React.useState(false);
+  const [receiver, setReceiver] = React.useState([]);
 
   
   const getChats = async ()=>{
@@ -37,13 +38,12 @@ export default function Chat({navigation, route}) {
       lastText:faker.lorem.lines(1)
     })
     .then(ref => {
-      console.log('Added document with ID: ' + ref.id);
+      console.log('Added document with ID: ' + receiver);
     })
     .catch(error => {
       console.log('Error adding document: ', error);
     });
   }
-
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -100,17 +100,28 @@ export default function Chat({navigation, route}) {
       setSearch(text);
     }
   }
+
   const ItemSeparator = () => {
     return(
       <View style ={{height:1, backgroundColor:'lightgray', width:'100%', marginBottom:5}}/>
     )
   }
+
+  const deleteRow = (item) =>{
+    firestore.collection("Users/"+route.params.username+"/Conversations").doc(item.email).delete()
+    .then(() => {
+        console.log('Document successfully deleted!');
+    })
+    .catch((error) => {
+        console.error('Error deleting document: ', error);
+    });
+  }
     return (
       <SafeAreaView style={styles.container}>
-
-          <FlatList
+          <SwipeListView
           data = {filteredData}
           keyExtractor = {item => item.key}
+          rightOpenValue={-50}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -119,6 +130,9 @@ export default function Chat({navigation, route}) {
           }}
           ListHeaderComponent = {
             <View>
+              <View>
+                <Text style={{alignSelf:"center", fontSize:20, fontWeight:"bold", margin:10}}>{route.params.username}</Text>
+              </View>
               <View style={{paddingTop:20}}>
                 <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:10, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
                 <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current Conversions</Text>
@@ -126,17 +140,26 @@ export default function Chat({navigation, route}) {
             </View>
         }
           ItemSeparatorComponent = {ItemSeparator}
-          renderItem = {({item, index}) => {
+          renderHiddenItem = {({item}) => (
+            <View style={{ position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: 75,
+            justifyContent: 'center',
+            alignItems: 'center'}}>
+              <TouchableOpacity onPress={()=>deleteRow(item)}>
+                <Ionicons size={25} name='trash-outline' color={"red"}/>
+              </TouchableOpacity>
+            </View>
+         )}
+          renderItem = {({item}) => {
             return(
-              <Pressable onPress={() => {navigation.navigate("chat box", {collectionPath: "Users/"+route.params.username+"/Conversations"})}}>
-                <View style = {{flexDirection: 'row', marginBottom:15}}>
+              <Pressable onPress={() => {setReceiver(item.email); navigation.navigate("chat box", {username: route.params.username, recipient: receiver})}}>
+                <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white"}}>
                   <Image
                   source = {{uri: item.image}}
-                  style = {{
-                    width: 50, height:50, borderRadius:50,
-                    marginRight: 10,
-                  }}
-                  />
+                  style = {{width: 50, height:50, borderRadius:50,marginRight: 10,}}/>
                   <View>
                     <Text style ={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text>
                     <Text style ={{fontSize:15, color:'grey'}}>{item.email}</Text>

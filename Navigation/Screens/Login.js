@@ -36,7 +36,7 @@ export default function Login({navigation}){
 
     
     React.useEffect(()=>{
-        const unsubcribe =  auth.onAuthStateChanged(user =>{
+        const unsubcribe = auth.onAuthStateChanged(user =>{
              if(user){
                 navigation.navigate("Main Container", {username: user.email})
              }
@@ -53,7 +53,6 @@ export default function Login({navigation}){
                     height: 150,
                     width: 150
                 }}/>
-                
             </View>
             <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                 <Pressable>
@@ -73,12 +72,10 @@ export default function Login({navigation}){
 
             <View>
                 <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
-                <View style={{borderRadius:6, height:50, justifyContent:'center', }}>
-                {/* onChangeText={text => setUsername(text)} */}
+                <View style={{borderRadius:6, height:50, justifyContent:'center'}}>
                     <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
                 </View>
                 <View>
-                {/* onChangeText={text => setPassword(text) }*/}
                     <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={styles.input} secureTextEntry/>
                 </View>
                 <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
@@ -118,7 +115,6 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         marginHorizontal:12,
         paddingVertical: 12,
-        paddingHorizontal:12,
         paddingHorizontal:30,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor:"rgba(171, 180, 189, 0.65)",
