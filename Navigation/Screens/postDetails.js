@@ -2,38 +2,63 @@ import faker from 'faker';
 import { View, Text, SafeAreaView, Image, Dimensions, ScrollView, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
+import React from 'react';
 
 
 const {width} = Dimensions.get("window");
-const height = width*0.6;
+const height = width*0.7;
 
 
 export default function PostDetails({route, navigation}){
     const images = route.params.images
+    const [state, setState] = React.useState({active:0})
+
+    const change = ({nativeEvent}) =>{
+        const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
+
+        if(slide !== state.active){
+            setState({active: slide})
+        }
+
+    }
+
     return (
         <SafeAreaView style={{flex:1}}>
-            
-
             <View>
+
                 <View style={{zIndex:1}}>
                     <Avatar size={55} rounded source={{uri: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`}} containerStyle={{ position: 'absolute', top: 20, right: 10, elevation:2}}/>
-                    <View style={{position: 'absolute', top: 30, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
+                    <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
                         </Pressable>
                     </View>
                 </View>
+                
                 <ScrollView>
-                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-                    {
-                        images.map((image, index)=>(
-                            <View style={{width, height, borderRadius:10, position: 'relative'}} key={index}>
-                                <Image style={{width, height, borderRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={index}/>
-                                
-                            </View>
-                        ))
-                    }
+                    
+                <View>
+                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
+                        {
+                            images.map((image, index)=>(
+                                    <View style={{width, height, position: 'relative'}} key={index}>
+                                        {/* onPress={()=>navigation.navigate("view image", {pics: images})} */}
+                                        <Pressable >
+                                            <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={index}/>
+                                        </Pressable>
+                                    </View>
+                            ))
+                        }
                     </ScrollView>
+
+                    <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center'}}>
+                        {
+                            images.map((i, k)=>(
+                                <Text style={k==state.active?{color:'white', margin:4, fontSize:(width/30)}:{color:'lightgray', margin:4, fontSize:(width/30)}} key={k}>⬤</Text>
+                            ))
+                        }
+                    </View>
+                </View>
 
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                         <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
@@ -55,12 +80,12 @@ export default function PostDetails({route, navigation}){
 
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'lightgray', fontSize:15}}>{route.params.Details}</Text>
+                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Details}</Text>
                     </View>
 
                     <View style={{marginBottom:20}}>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'lightgray', fontSize:15}}>{route.params.Description}</Text>
+                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Description}</Text>
                     </View>
                     
                     <View style={{flexDirection:'row', justifyContent:'center', width:'100%', justifyContent:'space-evenly'}}>

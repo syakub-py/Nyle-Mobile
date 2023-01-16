@@ -11,6 +11,7 @@ export default function Home({navigation, route}) {
   
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
+  const [profilePic, setProfilePic] = React.useState('');
   const [search, setSearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -36,6 +37,7 @@ export default function Home({navigation, route}) {
     return results;
   }
 
+
   React.useEffect(()=>{
     getPosts().then((result) =>{
       const masterPostList = result
@@ -44,6 +46,7 @@ export default function Home({navigation, route}) {
     }).catch((error)=>{
       Alert(error)
     })
+
   }, [])
 
   const searchFilter = (text) => {
@@ -74,7 +77,7 @@ export default function Home({navigation, route}) {
                   <Text style={{fontSize:25, fontWeight:'bold'}}>{route.params.username}</Text>   
                 </View>
                 <View style={{margin:20}}>
-                  <Image resizeMode='cover' source={{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(100)}.jpg`}} style={{height:70, width:70, borderRadius:100}}/>
+                  <Image resizeMode='cover' source={{uri:"https://randomuser.me/api/portraits/men/54.jpg"}} style={{height:70, width:70, borderRadius:100}}/>
                 </View>
               </View>
                 <View style={{
