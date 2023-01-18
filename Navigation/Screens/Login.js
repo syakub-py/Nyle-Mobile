@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth }from './Components/Firebase';
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -57,26 +58,30 @@ export default function Login({navigation}){
             <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                 <Pressable>
                     <View style = {styles.socialButton}>
-                        <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/>
-                        <Text style ={styles.text}>Facebook</Text>
+                        {/* <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/> */}
+                        <Ionicons name='logo-facebook' size={20} style={{height:20, width:20, marginRight:5}}/>
+                        <Text style ={{fontSize:15, fontWeight:'500'}}>Facebook</Text>
                     </View>
                 </Pressable>
 
                 <Pressable onPress={handleGoogleLogin}>
                     <View style = {styles.socialButton}>
-                        <Image source={{uri:"https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"}} style ={{height:20, width:20, marginRight:5}}/>
-                        <Text style ={styles.text}>Google</Text>
+                        {/* <Image source={{uri:"https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"}} style ={{height:20, width:20, marginRight:5}}/> */}
+                        <Ionicons name='logo-google' size={20} style={{height:20, width:20, marginRight:5}}/>
+                        <Text style ={{fontSize:15, fontWeight:'500'}}>Google</Text>
                     </View>
                 </Pressable>
             </View>
 
-            <View>
+            <View style={{justifyContent:'center', marginLeft:15, marginRight:15}}>
                 <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
                 <View style={{borderRadius:6, height:50, justifyContent:'center'}}>
-                    <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={styles.input}/>
+                    <Ionicons name='person-outline' size={20} style={{ position: 'absolute',}}/>
+                    <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={{marginLeft:25}}/>
                 </View>
-                <View>
-                    <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={styles.input} secureTextEntry/>
+                <View >
+                    <Ionicons name='ellipse' size={20} style={{ position: 'absolute',}}/>
+                    <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={{marginLeft:25}} secureTextEntry/>
                 </View>
                 <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
@@ -101,30 +106,29 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingHorizontal: 20
     },
-    input:{
-        backgroundColor:'lightgray',
-        paddingHorizontal:15,
-        paddingVertical:10,
-        borderRadius:10,
-        marginTop:5,
-    },
+    // input:{
+    //     backgroundColor:'#e8e7e3',
+    //     paddingHorizontal:15,
+    //     paddingVertical:10,
+    //     borderRadius:10,
+    //     fontSize: 12,
+    //     fontWeight:'400',
+    //     margin:5,
+    // },
     text: {
       color: 'black',
     },
     socialButton:{
         flexDirection:"row",
+        alignItems:'center',
         marginHorizontal:12,
         paddingVertical: 12,
         paddingHorizontal:30,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor:"rgba(171, 180, 189, 0.65)",
-        borderRadius:4,
+        borderRadius:30,
         backgroundColor: 'white',
-        shadowColor: 'lightgray',
-        shadowOffset: {width: 0, height:10},
-        shadowOpacity:1,
-        shadowRadius:20,
-        elevation:5
+        elevation:2
     },
     link:{
         color:"black",
