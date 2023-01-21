@@ -3,7 +3,6 @@ import { View, Text, Image, Dimensions, ScrollView, Pressable} from 'react-nativ
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import React from 'react';
-import { fa } from 'faker/lib/locales';
 
 
 const {width} = Dimensions.get("window");
@@ -37,11 +36,8 @@ export default function PostDetails({route, navigation}){
                         {
                             images.map((image, key)=>(
                                 <View style={{width, height, position: 'relative'}} key={key}>
-                                    {/* onPress={()=>navigation.navigate("view image", {pics: images})} */}
-                                    <Pressable >
-                                        <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
-                                    </Pressable>
-                                    <View style={{height:20, width:25,zIndex:1,bottom:10,left:10, position:'absolute' }}>
+                                    <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
+                                    <View style={{height:20, width:25,zIndex:1,bottom:10,left:10, position:'absolute'}}>
                                         <Text style={{color:"white"}}>{key+1}/{images.length}</Text>
                                     </View>
                                 </View>
@@ -50,12 +46,16 @@ export default function PostDetails({route, navigation}){
                         }
                     </ScrollView>
                 </View>
-                <ScrollView horizontal>
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}>
+                {/*<Text style={k==state.active?{color:'white', margin:4, fontSize:(width/25)}:{color:'#a8a5a5', margin:4, fontSize:(width/35)}} key={k}>⬤</Text> */}
+
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k)=>(
-                                <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
-                                // <Text style={k==state.active?{color:'white', margin:4, fontSize:(width/25)}:{color:'#a8a5a5', margin:4, fontSize:(width/35)}} key={k}>⬤</Text>
+                                <Pressable key={k}>
+                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
+                                </Pressable>
                             ))
                         }
                     </View>
@@ -75,7 +75,7 @@ export default function PostDetails({route, navigation}){
                     <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: {faker.name.findName()}</Text>
                     
                     <View>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={{uri:route.params.Currency}}/> {route.params.Price}</Text>
+                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}><Image style={{height:35, width:35}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>{route.params.Price}</Text>
                     </View>
 
                     <View>

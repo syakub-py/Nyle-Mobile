@@ -48,11 +48,10 @@ export default function EditPost({navigation, route}){
     }
 
     return (
-
         <SafeAreaView style={{flex:1}}>
-            <View>
 
-                <View style={{zIndex:1}}>
+            <View>
+                <View style={{zIndex:1, flexDirection:'row'}}>
                     <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
@@ -61,29 +60,29 @@ export default function EditPost({navigation, route}){
                 </View>
                 
                 <ScrollView>
-                    
-                <View>
-                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
-                        {
-                            images.map((image, index)=>(
-                                    <View style={{width, height, position: 'relative'}} key={index}>
-                                        {/* onPress={()=>navigation.navigate("view image", {pics: images})} */}
-                                        <Pressable >
-                                            <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={index}/>
-                                        </Pressable>
-                                    </View>
+                    <Ionicons name='create' color={'white'} size={40} style={{position: 'absolute', top: 20, right: 10, height:50, width:50, opacity:0.8}}/>
+                    <View>
+                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
+                            {
+                                images.map((image, index)=>(
+                                        <View style={{width, height, position: 'relative'}} key={index}>
+                                            {/* onPress={()=>navigation.navigate("view image", {pics: images})} */}
+                                            <Pressable >
+                                                <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={index}/>
+                                            </Pressable>
+                                        </View>
+                                    )
                                 )
-                            )
-                        }
-                    </ScrollView>
-                    <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
-                        {
-                            images.map((i, k)=>(
-                                <Text style={k==state.active?{color:'white', margin:4, fontSize:(width/25)}:{color:'#a8a5a5', margin:4, fontSize:(width/35)}} key={k}>⬤</Text>
-                            ))
-                        }
+                            }
+                        </ScrollView>
+                        <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
+                            {
+                                images.map((i, k)=>(
+                                    <Text style={k==state.active?{color:'white', margin:4, fontSize:(width/25)}:{color:'#a8a5a5', margin:4, fontSize:(width/35)}} key={k}>⬤</Text>
+                                ))
+                            }
+                        </View>
                     </View>
-                </View>
 
                     <TextInput style={{margin:15, fontSize:30, fontWeight:'bold', backgroundColor:'lightgray', borderRadius:10}} defaultValue={route.params.PostTitle} onChangeText={(text) => {setTitle(text)}}/>
 
@@ -114,6 +113,7 @@ export default function EditPost({navigation, route}){
                     </View>
                 </ScrollView>
             </View>
+            
         </SafeAreaView>
     )
 }

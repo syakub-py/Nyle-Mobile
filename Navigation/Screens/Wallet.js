@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable, Dimensions, ScrollView} from 'react-native';
 import axios, { Axios } from 'axios'
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 const formatSparkline = (numbers) => {
   const sevenDaysAgo = moment().subtract(7, 'days').unix();
@@ -59,7 +60,7 @@ export default function Wallet({navigation}) {
     }, [])
 
     var walletValue = 96569;
-  
+
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
@@ -73,12 +74,28 @@ export default function Wallet({navigation}) {
           }}
           ListHeaderComponent = {
             <View>
-
-              <View style={{margin:40, }}>
-                <Text style={{fontWeight:'bold', fontSize:20}}>Wallet Value </Text>
-                <Text style={{fontWeight:'600'}}>$968495</Text>
-                <Text style={{fontSize:15, fontWeight:'600', color:'lightgreen'}}><Ionicons name='arrow-up-outline' color={'lightgreen'} size={15}/>2.65%</Text>
+              <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
+              <View style={{marginBottom:10, alignItems:'center'}}>
+                <Text style={{fontWeight:'600', fontSize:50}}>$968,495</Text>
+                <View style={{backgroundColor:'lightgreen', borderRadius:20}}>
+                  <View style={{flexDirection:'row',  margin:7}}>
+                    <Text style={{fontSize:15, fontWeight:'bold', color:'black'}}><Ionicons name='arrow-up-outline' color={'black'} size={15}/>2.65%</Text>
+                    <Text style={{marginLeft:3, marginRight:3, fontWeight:'bold', opacity:0.5}}>|</Text>
+                    <Text style={{fontWeight:'bold'}}>$7,000</Text>
+                  </View>
+                </View>
               </View>
+{/* 
+              <View>
+                <ScrollView>
+                  <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
+                  <View style={{flexDirection:'row',  borderRadius:10, alignItems:'center'}}>
+                    <Image style={{height:40, width:40, margin:10}} source={{uri: 'https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png'}}/>
+                    <Text style={{fontWeight:'bold'}}>Item name</Text>
+                    <Text style={{color:'lightgray'}}>-35</Text>
+                  </View>
+                </ScrollView>
+              </View> */}
 
               <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Top Coins</Text>
             </View>
@@ -87,23 +104,25 @@ export default function Wallet({navigation}) {
             //needs to refresh in the screen
             walletValue = walletValue+item.current_price*2;
             return(
-              <Pressable style ={{height: 55, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 10}}>
-                <View style = {{width:35}}>
-                  <Image
-                  source={{uri: item.image}}
-                  style ={{
-                    height:30,
-                    width: 30,
-                  }}
-                  />
-                </View>
-                <View style = {{flex:1}}>
-                    <Text style = {{fontSize:18, fontWeight: 'bold'}}>{item.name}</Text>
-                </View>
-
-                <View>
-                  <Text>Your Holdings: $ {item.current_price*2}</Text>
-                  <Text style ={{fontSize:11, color: 'gray'}}>Current Value: $ {item.current_price}</Text>
+              <Pressable style ={{margin: 7}}>
+                <View style={{height: 55,  width:'100%',flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius:10}}>
+                  <View style = {{width:35, margin:7}}>
+                    <Image
+                    source={{uri: item.image}}
+                    style ={{
+                      height:30,
+                      width: 30,
+                    }}
+                    />
+                  </View>
+                  <View style = {{flex:1}}>
+                      <Text style = {{fontSize:15, fontWeight: 'bold'}}>{item.name}</Text>
+                  </View>
+              
+                  <View style={{margin:10}}>
+                    <Text>Your Holdings: $ {item.current_price*2}</Text>
+                    <Text style ={{fontSize:11, color: 'gray'}}>Current Value: $ {item.current_price}</Text>
+                  </View>
                 </View>
               </Pressable>
             )

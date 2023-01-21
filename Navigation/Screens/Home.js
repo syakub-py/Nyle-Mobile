@@ -61,7 +61,7 @@ export default function Home({navigation, route}) {
       setfilterData(masterData);
       setSearch(text);
     }
-    }
+  }
   
     return (
       <View style={{flex:1, backgroundColor:'white'}}>
@@ -91,9 +91,9 @@ export default function Home({navigation, route}) {
               margin:10,
               elevation:2
           }}>
-            <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
-            <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
-          </View>
+              <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
+              <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+            </View>
           <View>
             <ScrollView scrollEventThrottle={16}>
               <View>

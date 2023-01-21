@@ -1,16 +1,22 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, RefreshControl, ScrollView,TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, RefreshControl, ScrollView,TextInput, Pressable,Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
 import {firestore} from './Components/Firebase'
-
-
+const { Configuration, OpenAIApi } = require("openai");
 
 export default function AddPost({route}){
     faker.seed(20);
 
     const [refresh, setRefreshing] = React.useState(false);
-    const [title, setTitle] = React.useState(false);
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
+
+    const handleTitleChange = (title) => {
+        setTitle(title);
+    }
+
+
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -41,12 +47,31 @@ export default function AddPost({route}){
         });
     }
 
+    const handleSubmit = async (title) =>{
+        const configuration = new Configuration({
+            apiKey: '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',
+        });
+        const openai = new OpenAIApi(configuration);
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: "I am selling a " + title +" write a short description" ,
+            max_tokens: 100
+        });
+    
+        setDescription(response.data.choices[0].text);
+    }
+
+    // createDescription("ipad pro 10.5 inch").then((result)=>{console.log(result)})
+
+
     return(
-        <SafeAreaView>
+        <View style={{backgroundColor:'white'}}>
             <ScrollView refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
+                <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
+
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
-                    <TextInput placeholder='Enter Title' style={styles.textinput} onChangeText = {(result) => setTitle(result)}/>
+                    <TextInput placeholder='Enter Title' style={styles.textinput} onChangeText = {handleTitleChange} value={title}/>
                 </View>
 
                 <Pressable>
@@ -54,6 +79,7 @@ export default function AddPost({route}){
                         <Ionicons name = {'aperture-outline'} size={250} style={{alignSelf:'center', color:'gray'}}/>
                     </View>
                 </Pressable>
+
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
                     <TextInput placeholder='Enter price of item' style={styles.textinput}/>
@@ -62,17 +88,25 @@ export default function AddPost({route}){
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Details</Text>
                     <TextInput placeholder='Enter Details of item' style={styles.textinput}/>
                 </View>
+
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20,}}>Description</Text>
-                    <TextInput placeholder='Enter full description of item' style={styles.textinput}/>
+                    <TextInput placeholder='Enter full description of item'  style={styles.textinput} defaultValue ={description}/>
                 </View>
+
+                <Pressable onPress={handleSubmit}>
+                    <View style={{backgroundColor:'black', borderRadius:20, alignItems:'center', margin:10}}>
+                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Generate Description</Text>
+                    </View>
+                </Pressable>
+
                 <Pressable onPress={()=> {addPosts("Users/"+route.params.username+"/Posts", title)}}>
                 <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                     <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
                 </View>
                 </Pressable>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
