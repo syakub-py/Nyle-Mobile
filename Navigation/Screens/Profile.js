@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView, ScrollView, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
+import { View, Text, StyleSheet,Alert, ScrollView, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
 import faker from 'faker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
-import {collection, getDocs} from 'firebase/firestore/lite'
-import {firestoreLite} from './Components/Firebase'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {firestore} from './Components/Firebase'
 
 const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20, marginLeft:10}}>
-      <Text style={{color: 'gray', fontSize:20}}>{title}</Text>
-    </View>)}
+      <Text style={{color: 'gray', fontSize:30, fontWeight:'bold'}}>{title}</Text>
+    </View>)
+    }
 
 const Setting = ({title, nameOfIcon,type, onPress}) => {
   if (type == "button"){
@@ -37,13 +36,14 @@ export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const getPosts = async ()=>{
-    const results =[];
-    const postCollection = collection(firestoreLite, "Users/"+route.params.username+"/Posts");
-    const postSnapshot = await getDocs(postCollection);
-    postSnapshot.forEach(doc => {
-      results.push(doc.data())
-    });
+  const getPosts = async () =>{
+    const results = [];
+    const MyPostsQuery = firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
+    MyPostsQuery.get().then(postSnapshot =>{
+      postSnapshot.forEach(doc => {
+            results.push(doc.data())
+        });
+      })
     return results;
   }
 
@@ -53,7 +53,7 @@ export default function Profile({navigation, route}) {
       const userPostList = result
       setUserList(userPostList);
     }).catch((error)=>{
-      console.log(error)
+      Alert.alert('Error Getting Posts: ', error)
     })
     setTimeout(() => setRefreshing(false), 1000);
   };
@@ -63,19 +63,20 @@ export default function Profile({navigation, route}) {
       const userPostList = result
       setUserList(userPostList);
     }).catch((error)=>{
-      console.log(error)
+      Alert.alert('Error Getting Posts: ', error)
     })
   }, [])
 
   const deleteRow = (item) =>{
-    firestore.collection("Users/"+route.params.username+"/Posts").doc(item.title).delete()
+    firestore.collection("AllPosts").doc(item.title).delete()
     .then(() => {
-        console.log('Document successfully deleted!');
+        Alert.alert('Document successfully deleted!')
     })
     .catch((error) => {
-        console.error('Error deleting document: ', error);
+        Alert.alert('Error deleting document: ', error)
     });
   }
+
     return (
       <View >
             <SwipeListView
@@ -88,7 +89,7 @@ export default function Profile({navigation, route}) {
                 <View >
                   <View style = {{alignSelf:"flex-start", flexDirection:'row'}}>
                         <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="cover"/>
-                        <Text style = {styles.username}>{faker.name.findName()}</Text>
+                        <Text style = {styles.username}>{route.params.username}</Text>
                   </View>
                                       
                     <SectionTitle
@@ -96,43 +97,42 @@ export default function Profile({navigation, route}) {
                     />
 
                     <Setting
-                    title = "Security"
-                    type = "button"
-                    onPress = {() => console.log("pressed button")}
-                    nameOfIcon = 'lock-closed-outline'
+                      title = "Security"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon = 'lock-closed-outline'
                     />
 
                     <Setting
-                    title = "Appearance"
-                    type = "button"
-                    onPress = {() => console.log("pressed button")}
-                    nameOfIcon = 'eye-outline'
+                      title = "Appearance"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon = 'eye-outline'
                     />
 
                     <Setting
-                    title = "Connect a wallet"
-                    type = "button"
-                    onPress = {() => console.log("pressed button")}
-                    nameOfIcon = "wallet-outline"
+                      title = "Connect a wallet"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon = "wallet-outline"
                     />
 
                     <Setting
-                    title = "2 factor Authentication"
-                    type = "button"
-                    onPress = {() => console.log("pressed button")}
-                    nameOfIcon='settings-outline'
+                      title = "2 factor Authentication"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon='settings-outline'
 
                     />
                             
                     <Setting
-                    title = "Log Out"
-                    type = "button"
-                    onPress = {() => console.log("pressed button")}
-                    nameOfIcon = 'log-out-outline'
+                      title = "Log Out"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon = 'log-out-outline'
                     />
                   
                   <SectionTitle title={'Your Posts'}/>
-
                 </View>
                 }
               renderItem={({item}) => (

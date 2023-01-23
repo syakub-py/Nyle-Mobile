@@ -26,10 +26,9 @@ export default function SignUp({navigation}){
         .createUserWithEmailAndPassword(username, password)
         .then(userCredentials =>{
             const user = userCredentials.user;
-            
         })
         .catch(error => alert(error.message))
-        addUser("Users", username)
+        // addUser("Users", username)
     }
     return(
         <View style={styles.container}>
@@ -43,10 +42,10 @@ export default function SignUp({navigation}){
                 }}/>    
             </View>
 
-            <TextInput placeholder='Name' style = {styles.textInput} onChangeText={(text) => setName(text)}/>
+            {/* <TextInput placeholder='Name' style = {styles.textInput} onChangeText={(text) => setName(text)}/> */}
             <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text) => setUsername(text)} />
             <TextInput placeholder='Password' style = {styles.textInput} onChangeText={(text)=> setPassword(text)} secureTextEntry/>
-            <TextInput style = {styles.textInput} placeholder='Wallet ID' secureTextEntry/>
+            {/* <TextInput style = {styles.textInput} placeholder='Wallet ID' secureTextEntry/> */}
 
             <Pressable style={styles.submitContainer} onPress={handleSignUp}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>

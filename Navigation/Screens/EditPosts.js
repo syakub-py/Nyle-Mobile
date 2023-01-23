@@ -37,7 +37,7 @@ export default function EditPost({navigation, route}){
             description: description,
             pic:[ "https://photos.zillowstatic.com/fp/37e63bdbc4f81984c6aa3fa7cc704e54-uncropped_scaled_within_1536_1152.webp"],
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
-            date: new Date().toLocaleString(),
+            dateUpdated: new Date().toLocaleString(),
         })
         .then(ref => {
             console.log('Edited document with ID: ' + newTitle);
@@ -106,7 +106,7 @@ export default function EditPost({navigation, route}){
                     
                     <View style={{flexDirection:'row', justifyContent:'space-evenly', width:'100%'}}>
                         <View style={{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:(width-20), height:50, alignItems:'center', margin:20}}>
-                            <Pressable onPress={()=>{saveChanges( collectionPath,route.params.PostTitle, title, price, description, details)}}>
+                            <Pressable onPress={()=>{saveChanges(collectionPath, route.params.PostTitle, title, price, description, details)}}>
                                 <Text style={{color:'white', fontSize:15, fontWeight:"bold"}}>Save changes</Text>
                             </Pressable>
                         </View>

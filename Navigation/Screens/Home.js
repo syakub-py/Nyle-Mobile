@@ -28,7 +28,7 @@ export default function Home({navigation, route}) {
   
   const getPosts = async ()=>{
     const results =[];
-    const postCollection = collection(firestoreLite, "Users/"+route.params.username+"/Posts");
+    const postCollection = collection(firestoreLite, "AllPosts");
     const postSnapshot = await getDocs(postCollection);
     postSnapshot.forEach(doc => {
       results.push(doc.data())
@@ -72,25 +72,21 @@ export default function Home({navigation, route}) {
             <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,}}>
             <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
 
-              {/* <View style={{margin:20}}>
-                <Text style={{color:'gray', fontSize:15, fontWeight:'500'}}>Welcome back,</Text>
-                <Text style={{fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>   
-              </View> */}
               <View style={{marginTop:20, marginRight:20}}>
                 <Image resizeMode='cover' source={{uri:"https://randomuser.me/api/portraits/men/94.jpg"}} style={{height:70, width:70, borderRadius:100}}/>
               </View>
             </View>
               <View style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#fff',
-              height:60,
-              borderRadius:50,
-              margin:10,
-              elevation:2
-          }}>
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  height:60,
+                  borderRadius:50,
+                  margin:10,
+                  elevation:2
+                }}>
               <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
               <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
             </View>
@@ -135,7 +131,7 @@ export default function Home({navigation, route}) {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           renderItem = {({item}) => (
-            <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, ProfilePic:item.profilePic})}>
+            <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, ProfilePic:item.profilePic, DatePosted:item.date, postedBy:item.PostedBy})}>
               <PostCard data ={item}/>
             </Pressable>
             )}

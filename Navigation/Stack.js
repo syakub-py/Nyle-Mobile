@@ -10,6 +10,7 @@ import Categories from './Screens/Categories';
 import ViewProfile from './Screens/ViewProfile';
 import EditPost from './Screens/EditPosts';
 import AddChat from './Screens/AddChat';
+import ViewImages from './Screens/ImageViewer';
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ const Stack = () =>{
           <Stack.Screen name="view profile" component = {ViewProfile} />
           <Stack.Screen name="Edit Post" component = {EditPost} />
           <Stack.Screen name="Add chat" component = {AddChat} />
+          <Stack.Screen name="Image Viewer" component = {ViewImages} />
         </Stack.Navigator>
       );
   }

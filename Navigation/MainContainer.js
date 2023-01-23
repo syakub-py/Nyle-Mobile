@@ -2,6 +2,7 @@ import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
 //Screens
 import home from './Screens/Home'
 import wallet from './Screens/Wallet'
@@ -46,7 +47,7 @@ export default function MainContainer({route}) {
             }else if (rn === AddPost){
               iconName = focused ? 'add-circle' : 'add-circle-outline';
             }
-            return <Ionicons name = {iconName} size={25} color={color}/>
+            return <Ionicons name = {iconName} size={30} color={color}/>
            },
            
         })}>
