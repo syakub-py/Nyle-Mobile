@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, RefreshControl, ScrollView,TextInput, Pressable, Image } from 'react-native';
-
+import { View, Text, StyleSheet, RefreshControl, ScrollView,TextInput, Pressable, Image, Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
-import {firestore} from './Components/Firebase'
+import {firestore} from './Components/Firebase';
+import MapView, { Marker } from 'react-native-maps';
 const { Configuration, OpenAIApi } = require("openai");
+
+const {width} = Dimensions.get("window");
+const height = width*1;
 
 
 const handleSubmit = async (title) =>{
@@ -27,7 +30,7 @@ export default function AddPost({route}){
     const [refresh, setRefreshing] = React.useState(false);
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
-
+    const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const handleTitleChange = (title) => {
         setTitle(title);
     }
@@ -37,7 +40,13 @@ export default function AddPost({route}){
         setTimeout(() => setRefreshing(false), 1000);
     };
 
-    const addPosts = (collectionPath, title) =>{
+    const dropMarker = (event) =>{
+        const coordinate = event.nativeEvent;
+        
+        setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
+    } 
+
+    const addPosts = (collectionPath, title, coordinates) =>{
         if (!collectionPath) {
             throw new Error('Error: collection name cannot be empty');
         }
@@ -50,8 +59,9 @@ export default function AddPost({route}){
             location: faker.address.state(),
             details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet ut nisl ac venenatis. Pellentesque bibendum lectus risus. Etiam et tristique dolor. Sed et purus at lectus semper ullamcorper in non est. Curabitur venenatis nunc sit amet tortor venenatis commodo. Donec eu malesuada urna. Duis vulputate semper luctus. Nam aliquam est sit amet leo malesuada, id sodales sapien dapibus. Sed ornare ante vel metus placerat ornare. Pellentesque non risus venenatis, porttitor tellus sit amet, fringilla sem. Nam vitae elit vitae ex tincidunt pretium. ",
             description: "On 2+ acres between the ocean and Georgica Pond on the most prestigious lane in East Hampton Village, this graceful 9 bedroom shingled classic has 160 feet directly on a white sandy beach plus a 3 bedroom guest house, private pool area, and dune-top sunset viewing deck. Beautifully maintained as an idyllic beach house by the same family for three generations, this timeless beauty is one of very few oceanfront properties on West End Road located almost entirely outside of the FEMA flood zone allowing for significant expansion.",
-            pic:["https://www.lambocars.com/wp-content/uploads/2020/03/2019_huracan_evo_1.jpg"],
+            pic:["https://photos.zillowstatic.com/fp/4e79c3f68954afcd7cea98e74330e230-uncropped_scaled_within_1536_1152.webp"],
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
+            coordinates: coordinates,
             date: new Date().toLocaleString(),
         })
         .then(ref => {
@@ -85,9 +95,11 @@ export default function AddPost({route}){
                     
                 </View>
 
-                <View>
-                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Location</Text>
-                    <TextInput style={styles.textinput}/>
+                <View style={{width:width-50, height:300, alignSelf:'center', marginTop:20, marginBottom:20}}>
+                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black'}}>Location</Text>
+                    <MapView style={{height:"100%", width:"100%", borderRadius:30}} onLongPress={dropMarker}>
+                        <Marker coordinate={coordinates}/>
+                    </MapView>
                 </View>
 
                 <View>
@@ -100,7 +112,7 @@ export default function AddPost({route}){
                     <TextInput style={{backgroundColor:'lightgray',color:'gray',marginLeft:35,marginRight:35,fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description}/>
                 </View>
 
-                <Pressable onPress={()=> {addPosts("AllPosts", title)}}>
+                <Pressable onPress={()=> {addPosts("AllPosts", title, coordinates)}}>
                     <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
                     </View>
