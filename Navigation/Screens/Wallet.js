@@ -1,11 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Image, Pressable, ScrollView, ImageBackground} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, Dimensions, Image, Pressable, ScrollView, ImageBackground} from 'react-native';
 import axios from 'axios'
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
 import { Avatar } from 'react-native-elements';
+import {firestore, firestoreLite} from './Components/Firebase'
+
+const {width} = Dimensions.get("window");
 
 const formatSparkline = (numbers) => {
   const sevenDaysAgo = moment().subtract(7, 'days').unix();
@@ -48,6 +51,8 @@ export const getMarketData = async () => {
     console.log(error.message);
   }
 }
+
+
 
 
 const transactions =[
@@ -93,33 +98,52 @@ const transactions =[
 },
 ]
 
-export default function Wallet({navigation}) {
+export default function Wallet({navigation, route}) {
     const [data, setData] = React.useState([]);
+    const [wallet, setWallet] = React.useState([]);
+    
+
+
+    const getWalletInfo = async ()=>{
+      const results =[];
+      const WalletInfoCollection = collection(firestoreLite, "Wallets/" + route.params.username);
+      const WalletInfoSnapshot = await getDocs(WalletInfoCollection);
+      WalletInfoSnapshot.forEach(doc => {
+        results.push(doc.data())
+      });
+      return results;
+    }
+  
     React.useEffect(() => {
       const fetchMarketData = async () => {
         const marketData = await getMarketData();
         setData(marketData);
       }
-  
+      // getWalletInfo().then((result) =>{
+      //   setWallet(result);
+      // }).catch((error)=>{
+      //   console.log(error)
+      // })
+
       fetchMarketData();
+
     }, [])
 
     var walletValue = 96569;
 
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar style="auto" />
+        <StatusBar style="auto"/>
         <View>
           <FlatList
           data = {data}
           keyExtractor = {item => item.id}
           contentContainerStyle ={{
-            marginTop:30,
-            paddingHorizontal: 15
+            marginTop:20,
           }}
           ListHeaderComponent = {
-            <View>
-              <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
+            <View style={{width:width}}>
+              <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
               <View style={{marginBottom:10, alignItems:'center'}}>
                 <Text style={{fontWeight:'600', fontSize:50,}}>$968,495</Text>
                 <View style={{backgroundColor:'lightgreen', borderRadius:20}}>
@@ -131,13 +155,13 @@ export default function Wallet({navigation}) {
                 </View>
               </View>
 
-              <View>
+              <View style={{marginTop:20}}>
                 <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {
                     transactions.map((item, index) =>(
                       <View style={{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key={index}>
-                        <ImageBackground source={{uri:item.pic}}  imageStyle={{height:150, width:"100%",borderRadius:20}} resizeMode={'cover'} >
+                        <ImageBackground source={{uri:item.pic}}  imageStyle={{height:150, width:"100%",borderRadius:20}} resizeMode={'cover'}>
                           <View style={{flexDirection:'row', paddingHorizontal:5, paddingTop:3}}>
                             <Avatar source={{uri: item.profilePic}} rounded/>
                             <Text style={{color:'white', fontWeight:'bold', paddingHorizontal:10, paddingTop:5}}>{item.title}</Text>
@@ -151,9 +175,32 @@ export default function Wallet({navigation}) {
                     ))
                   }
                 </ScrollView>
+                <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Top Coins</Text>
               </View>
 
-              <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Top Coins</Text>
+
+              <View style={{marginTop:20}}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {
+                  data.map((item, index) =>(
+                    <View style={{height:150, width:150, margin:10, backgroundColor:'white'}} key={index}>
+                      <View style = {{paddingHorizontal:5, paddingTop:3, alignItems:'center'}}>
+                        <Avatar source={{uri: item.image}} size={50} rounded/>
+                        <Text style = {{fontSize:17, fontWeight: 'bold', margin:7}}>{item.symbol.toUpperCase()}</Text>
+                        <Text style={{color:'black', fontWeight:'bold', fontSize:15}}>${item.current_price}</Text>
+
+                        <View style={{flexDirection:'row', margin:7}}>
+                            {item.price_change_percentage_24h<0?<Ionicons name='arrow-down-outline' style={{color:'red'}} size={20}/>:<Ionicons name='arrow-up-outline' style={{color:'lightgreen'}} size={20}/>}
+                          <Text style={item.price_change_percentage_24h>0?{color:'lightgreen'}:{color:'red'}}>%{item.price_change_percentage_24h}</Text>
+                        </View>  
+                      </View>
+                    </View>
+                  ))
+                  }
+                </ScrollView>
+              </View>
+
+              <Text style={{fontSize:17, fontWeight:'bold'}}>Coin Balances</Text>
             </View>
           }
           renderItem ={({item}) => {

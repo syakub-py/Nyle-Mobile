@@ -6,6 +6,8 @@ import PostCard from './Components/PostCard.js';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {firestore} from './Components/Firebase'
 
+
+
 const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20, marginLeft:10}}>
@@ -57,6 +59,7 @@ export default function Profile({navigation, route}) {
     })
     setTimeout(() => setRefreshing(false), 1000);
   };
+  
   
   React.useEffect(()=>{
     getPosts().then((result) =>{
@@ -136,7 +139,7 @@ export default function Profile({navigation, route}) {
                 </View>
                 }
               renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates})}>
                   <PostCard data ={item}/>
                 </Pressable>
                 )}

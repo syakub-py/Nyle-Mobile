@@ -21,10 +21,7 @@ export default function PostCard({data}){
                   <Image style={{height:17, width:17, marginTop:3}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:3, fontWeight:'500'}}>{data.price} </Text>
                 </View>
-                <View style={{flexDirection:'row', alignItems:'center'}}>
-                  <Ionicons name='location-outline' style={{marginRight: 5, color:'white'}} size ={15}/>
-                  <Text style={{color:'white', elevation:1, fontWeight:'500', fontSize:12}}>{data.location}</Text>
-                </View>
+
               </View>
             </View>
           </ImageBackground>

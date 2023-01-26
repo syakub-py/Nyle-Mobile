@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, Image, Dimensions, ScrollView, Pressable, Tex
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import {firestore} from './Components/Firebase'
+import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
 
 const {width} = Dimensions.get("window");
 const height = width*0.7;
@@ -89,7 +90,14 @@ export default function EditPost({navigation, route}){
                     <Text style={{color:'gray', fontSize:20, marginLeft:10, marginBottom:15}}><Ionicons name='location-outline' size={20} style={{marginRight: 10}}/>{route.params.Location}</Text>
 
                     <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: {faker.name.findName()}</Text>
-                    
+
+                    <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
+                        {/* mapType={MAP_TYPES.SATELLITE} */}
+                        <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
+                            <Marker coordinate={route.params.coordinates}/>
+                        </MapView>
+                    </View>
+
                     <View>
                         <TextInput style={{fontSize:35, fontWeight:'bold', color:'black', margin:20, backgroundColor:'lightgray'}} defaultValue={route.params.Price} onChangeText={(text) => {setPrice(text)}}/> 
                     </View>
