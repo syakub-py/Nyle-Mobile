@@ -13,6 +13,34 @@ export default function PostDetails({route, navigation}){
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
 
+    let randomNumber = Math.floor(Math.random() * 100);
+
+    const bids = [
+        {
+            by: 'admin@admin.com',
+            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
+            price: randomNumber,
+            currency:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png"
+        },
+        {
+            by: 'admin@admin.com',
+            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
+            price: randomNumber,
+            currency: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png",
+        },
+        {
+            by: 'admin@admin.com',
+            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
+            price: randomNumber,
+            currency:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png"
+        },
+        {
+            by: 'admin@admin.com',
+            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
+            price: randomNumber,
+            currency: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000",
+        }
+    ]
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
         if(slide !== state.active){
@@ -88,6 +116,29 @@ export default function PostDetails({route, navigation}){
                         <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
                             <Marker coordinate={route.params.coordinates}/>
                         </MapView>
+                    </View>
+
+                    <View>
+                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Current Bids</Text>
+                        <ScrollView>
+                            {
+                                bids.map((item, index)=>(
+                                    <View style={{flexDirection:'row', width:'100%', justifyContent:'space-evenly', marginBottom:15}} key={index}>
+
+                                        <View style={{flexDirection:'row',alignItems:'center'}} >
+                                            <Avatar  size={55} source={{uri: item.profilePic}} rounded/>
+                                            <Text style={{fontWeight:'bold', paddingLeft:'5%'}}>Bid placed by {item.by}</Text>
+                                        </View>
+
+                                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                                            <Avatar source={{uri: item.currency}} rounded/>
+                                            <Text style={{paddingLeft:'1%', fontSize:20, fontWeight:'600'}}>{item.price}</Text>
+                                        </View>
+
+                                    </View>
+                                ))
+                            }
+                        </ScrollView>
                     </View>
 
                     <View>

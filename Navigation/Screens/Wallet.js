@@ -178,7 +178,6 @@ export default function Wallet({navigation, route}) {
                 <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Top Coins</Text>
               </View>
 
-
               <View style={{marginTop:20}}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {
@@ -191,7 +190,7 @@ export default function Wallet({navigation, route}) {
 
                         <View style={{flexDirection:'row', margin:7}}>
                             {item.price_change_percentage_24h<0?<Ionicons name='arrow-down-outline' style={{color:'red'}} size={20}/>:<Ionicons name='arrow-up-outline' style={{color:'lightgreen'}} size={20}/>}
-                          <Text style={item.price_change_percentage_24h>0?{color:'lightgreen'}:{color:'red'}}>%{item.price_change_percentage_24h}</Text>
+                          <Text style={item.price_change_percentage_24h>0?{color:'lightgreen'}:{color:'red'}}>% {Math.round(item.price_change_percentage_24h*100)/100}</Text>
                         </View>  
                       </View>
                     </View>

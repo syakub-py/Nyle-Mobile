@@ -21,6 +21,7 @@ export default function Login({navigation}){
         })
         .catch(error => alert(error.message))
     }
+
     const GoogleAuth = new GoogleAuthProvider();
     const getauth = getAuth();
     const handleGoogleLogin = () =>{
@@ -58,7 +59,6 @@ export default function Login({navigation}){
             <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                 <Pressable>
                     <View style = {styles.socialButton}>
-                        {/* <Image source={{uri:"https://1000logos.net/wp-content/uploads/2021/10/logo-Meta.png"}} style ={{height:20, width:20, marginRight:5}}/> */}
                         <Ionicons name='logo-facebook' size={20} style={{height:20, width:20, marginRight:5}}/>
                         <Text style ={{fontSize:15, fontWeight:'500'}}>Facebook</Text>
                     </View>
@@ -66,7 +66,6 @@ export default function Login({navigation}){
 
                 <Pressable onPress={handleGoogleLogin}>
                     <View style = {styles.socialButton}>
-                        {/* <Image source={{uri:"https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png"}} style ={{height:20, width:20, marginRight:5}}/> */}
                         <Ionicons name='logo-google' size={20} style={{height:20, width:20, marginRight:5}}/>
                         <Text style ={{fontSize:15, fontWeight:'500'}}>Google</Text>
                     </View>
@@ -95,6 +94,7 @@ export default function Login({navigation}){
                 <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
                     <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
                 </TouchableOpacity>
+
             </View>
         </ScrollView>
     )

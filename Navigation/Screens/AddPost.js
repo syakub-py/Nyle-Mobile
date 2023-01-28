@@ -63,7 +63,7 @@ export default function AddPost({route}){
             currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
             details: details,
             description: description,
-            pic:["https://photos.zillowstatic.com/fp/ba790d95e6afc01e83f94491000368e3-uncropped_scaled_within_1536_1152.webp"],
+            pic:["https://photos.zillowstatic.com/fp/7d64d1e7cde823c3b5cd1459630e30a0-uncropped_scaled_within_1536_1152.webp"],
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
             coordinates: coordinates,
             date: new Date().toLocaleString(),
