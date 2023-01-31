@@ -162,7 +162,7 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                 <View style={{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>
-                    <Pressable>
+                    <Pressable onPress={()=> navigation.navigate("Check Out")}>
                         <Text style={{color:'white', fontSize:15, fontWeight:"bold"}}>Buy out</Text>
                     </Pressable>
                 </View>

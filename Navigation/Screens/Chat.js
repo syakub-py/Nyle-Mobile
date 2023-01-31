@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import faker from 'faker';
-import {firestore, firestoreLite} from './Components/Firebase'
+import {firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -12,17 +12,17 @@ export default function Chat({navigation, route}) {
   const [masterData, setMasterData] = React.useState([]);
   const[search, setSearch] = React.useState([])
   const [refreshing, setRefreshing] = React.useState(false);
-  const [receiver, setReceiver] = React.useState([]);
 
-  
-  const getChats = async ()=>{
-    const results =[];
-    const chatCollection = collection(firestoreLite, "Conversations");
-    const chatSnapshot = await getDocs(chatCollection);
-    chatSnapshot.forEach(doc => {
-      results.push(doc.data())
-    });
-    return results;
+  const getChats = async () =>{
+    const results = [];
+    const MyChatQuery = firestore.collection('Chats').where("owners", "array-contains", route.params.username)
+    await MyChatQuery.get().then(ChatSnapshot =>{
+      ChatSnapshot.forEach(doc => {
+          results.push({data: doc.data(), id:doc.id})
+          
+        });
+      })
+      return results;
   }
 
   const addChat = (collectionPath, receiver) =>{
@@ -42,14 +42,13 @@ export default function Chat({navigation, route}) {
     .catch(error => {
       console.log('Error adding document: ', error);
     });
-}
+  }
 
   const onRefresh = () => {
     setRefreshing(true);
     getChats().then((result) =>{
-      const chats = result
-      setfilterData(chats);
-      setMasterData(chats);
+      setfilterData(result);
+      setMasterData(result);
     }).catch((error)=>{
       console.log(error)
     })
@@ -58,9 +57,8 @@ export default function Chat({navigation, route}) {
 
   React.useEffect(()=>{
     getChats().then((result) =>{
-      const chats = result
-      setfilterData(chats);
-      setMasterData(chats);
+      setfilterData(result.data);
+      setMasterData(result.data);
     }).catch((error)=>{
       console.log(error)
     })
@@ -100,14 +98,17 @@ export default function Chat({navigation, route}) {
     }
   }
 
-  const ItemSeparator = () => {
-    return(
-      <View style ={{height:1, backgroundColor:'lightgray', width:'100%', marginBottom:5}}/>
-    )
+  const findUser = (userArray)=>{
+    for (let index = 0; index < userArray.length; index++) {
+      if (userArray[index]!=route.params.username){
+        return userArray[index]
+      }
+    }
+    return "";
   }
 
   const deleteRow = (item) =>{
-    firestore.collection("Users/"+route.params.username+"/Conversations").doc(item.email).delete()
+    firestore.collection("Chats").where("recipient","==",item.recipient).delete()
     .then(() => {
         console.log('Document successfully deleted!');
     })
@@ -115,6 +116,7 @@ export default function Chat({navigation, route}) {
         console.error('Error deleting document: ', error);
     });
   }
+
     return (
       <SafeAreaView style={styles.container}>
           <SwipeListView
@@ -134,37 +136,36 @@ export default function Chat({navigation, route}) {
                 <FloatingButton/>
                 <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
               </View>
+
               <View >
                 <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:5, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
-                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Current Conversions</Text>
+                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>All messages</Text>
               </View>
+            
             </View>
         }
-          ItemSeparatorComponent = {ItemSeparator}
-          renderHiddenItem = {({item}) => (
+          renderHiddenItem = {({item, index}) => (
             <View style={{ position: 'absolute',
             top: 0,
             right: 0,
             bottom: 0,
             width: 75,
             justifyContent: 'center',
-            alignItems: 'center'}}>
+            alignItems: 'center'}} key={index}>
               <TouchableOpacity onPress={()=>deleteRow(item)}>
                 <Ionicons size={25} name='trash-outline' color={"red"}/>
               </TouchableOpacity>
             </View>
          )}
-          renderItem = {({item}) => {
+          renderItem = {({item, index}) => {
             return(
-              <Pressable onPress={() => {setReceiver(item.email); navigation.navigate("chat box", {username: route.params.username, recipient: receiver})}}>
+              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, messageID:item.id})}} key={index}>
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white"}}>
                   <Image
-                  source = {{uri: item.image}}
-                  style = {{width: 50, height:50, borderRadius:50,marginRight: 10,}}/>
+                  source = {{uri: item.data.profilePic}}
+                  style = {{width: 60, height:60, borderRadius:50,marginRight: 10,}}/>
                   <View>
-                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text>
-                    <Text style ={{fontSize:15, color:'grey'}}>{item.email}</Text>
-                    <Text style = {{fontSize:14, color:'lightgrey'}}>{item.lastText}</Text>
+                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{findUser(item.data.owners)}</Text>
                   </View>
                 </View>
               </Pressable>

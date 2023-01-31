@@ -94,7 +94,7 @@ export default function Profile({navigation, route}) {
                         <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="cover"/>
                         <Text style = {styles.username}>{route.params.username}</Text>
                   </View>
-                                      
+
                     <SectionTitle
                     title = 'Account Settings'
                     />

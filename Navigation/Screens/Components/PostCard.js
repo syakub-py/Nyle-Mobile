@@ -2,11 +2,9 @@ import {Text, View, Image, ImageBackground, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
 import { useNavigation } from '@react-navigation/native';
+import { Avatar } from 'react-native-elements';
 
 faker.seed(10)
-
-
-
 
 export default function PostCard({data}){
   const navigation = useNavigation(); 
@@ -29,6 +27,13 @@ export default function PostCard({data}){
                 </View>
               </View>
             </View>
+
+            <View style={{flexDirection:'row', alignItems:'center', elevation:2}}>
+              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:10, height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
+              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:30,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
+              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:50,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
+            </View>
+          
           </ImageBackground>
       </View>
     </View>
