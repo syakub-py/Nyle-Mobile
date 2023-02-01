@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, FlatList, Image, ScrollView, Pressable, TextInput, Alert, RefreshControl } from 'react-native';
+import { View, Text, FlatList, Image, Pressable, TextInput, Alert, RefreshControl } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import CategoryCard from './Components/CategoryCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';

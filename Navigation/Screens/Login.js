@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth }from './Components/Firebase';
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+// import  AsyncStorage  from '@react-native-community/async-storage';
 
 
 export default function Login({navigation}){
@@ -23,17 +23,14 @@ export default function Login({navigation}){
     }
 
     const GoogleAuth = new GoogleAuthProvider();
-    const getauth = getAuth();
-    const handleGoogleLogin = () =>{
-        auth.signInWithPopup(getauth, GoogleAuth)
-        .then((result) =>{
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            // The signed-in user info.
-            const user = result.user;
-        })
-        .catch(error => alert(error.message))
+    const handleGoogleLogin = async () =>{
+        const result = await auth.signInWithPopup(GoogleAuth)
+        const credential = GoogleAuth.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+        // await AsyncStorage.setItem('user', JSON.stringify(user));
     }
 
     

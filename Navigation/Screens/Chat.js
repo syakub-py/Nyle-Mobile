@@ -4,7 +4,6 @@ import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, T
 import faker from 'faker';
 import {firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {collection, getDocs} from 'firebase/firestore/lite'
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 export default function Chat({navigation, route}) {
@@ -15,14 +14,15 @@ export default function Chat({navigation, route}) {
 
   const getChats = async () =>{
     const results = [];
-    const MyChatQuery = firestore.collection('Chats').where("owners", "array-contains", route.params.username)
+    //.where("owners.username", "==", route.params.username)
+    const MyChatQuery = firestore.collection('Chats')
     await MyChatQuery.get().then(ChatSnapshot =>{
       ChatSnapshot.forEach(doc => {
           results.push({data: doc.data(), id:doc.id})
-          
         });
       })
       return results;
+
   }
 
   const addChat = (collectionPath, receiver) =>{
@@ -57,8 +57,8 @@ export default function Chat({navigation, route}) {
 
   React.useEffect(()=>{
     getChats().then((result) =>{
-      setfilterData(result.data);
-      setMasterData(result.data);
+      setfilterData(result);
+      setMasterData(result);
     }).catch((error)=>{
       console.log(error)
     })
@@ -100,8 +100,8 @@ export default function Chat({navigation, route}) {
 
   const findUser = (userArray)=>{
     for (let index = 0; index < userArray.length; index++) {
-      if (userArray[index]!=route.params.username){
-        return userArray[index]
+      if (userArray[index].username!=route.params.username){
+        return index
       }
     }
     return "";
@@ -158,14 +158,15 @@ export default function Chat({navigation, route}) {
             </View>
          )}
           renderItem = {({item, index}) => {
+            const username = item.data.owners[findUser(item.data.owners)].username
             return(
-              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, messageID:item.id})}} key={index}>
-                <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white"}}>
+              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, messageID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
+                <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}}>
                   <Image
-                  source = {{uri: item.data.profilePic}}
-                  style = {{width: 60, height:60, borderRadius:50,marginRight: 10,}}/>
+                  source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
+                  style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}/>
                   <View>
-                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{findUser(item.data.owners)}</Text>
+                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{username}</Text>
                   </View>
                 </View>
               </Pressable>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@rainbow-me/animated-charts": "^1.0.0-alpha.6",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/toolbar-android": "^0.2.1",
     "@react-native-firebase/app": "~15.4.0",
     "@react-native-firebase/messaging": "^15.6.0",

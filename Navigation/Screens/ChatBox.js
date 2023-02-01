@@ -1,17 +1,16 @@
 import { Bubble, GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
 import faker from 'faker';
 import * as React from 'react';
-import { View,Text, Alert } from 'react-native';
+import { View,Text, Pressable, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 faker.seed(10);
 
-export default function ChatBox({route}) {
+export default function ChatBox({route, navigation}) {
   const [messages, setMessages] = React.useState([]);
-  // console.log("Users/"+route.params.username+"/Conversations/Rico.Kuphal@hotmail.com/Messages")
 
   const getAllDocs = async () =>{
     const docs = [];
@@ -34,9 +33,9 @@ export default function ChatBox({route}) {
           results.push({
             _id: data._id,
             text: data.text,
-            createdAt: data.CreatedAt,
+            createdAt: new Date(data.CreatedAt),
             user: {
-              _id: 2,
+              _id: data.userId,
               name: data.username,
               avatar: data.profilePic
             },
@@ -61,20 +60,19 @@ export default function ChatBox({route}) {
   const onSend = React.useCallback( async (message)  => {
     const messagesRef = firestore.collection('Chats/'+ route.params.messageID + "/messages");
     const title= uuidv4();
-    messagesRef.doc(title).set({
-      text: message.text,
-      createdAt: message.createdAt,
-      userName: route.params.username,
-    })
-    // messages.forEach(message => {
-    //   newMessages.push({
-    //     text: message.text,
-    //     createdAt: message.createdAt,
-    //     userId: message.user._id,
-    //     userName: message.user.name,
-    //   });
-    // });
-    //setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+    const mappedMessage = {
+      _id:title,
+      createdAt: new Date(),
+      text:message[0].text,
+      user:{
+        _id:route.params.userId,
+        name:route.params.username,
+        // avatar:route.params.avatar
+      }
+    }
+    messagesRef.add(mappedMessage)
+    setMessages(previousMessages => GiftedChat.append(previousMessages, mappedMessage))
+    console.log(mappedMessage)
   }, [])
 
   const renderBubble = (props) =>{
@@ -95,25 +93,33 @@ export default function ChatBox({route}) {
     )
   }
 
-  const renderSendBar = (props) => {
-    return (
-      <Send {...props}>
-        <View>
-          <Ionicons name='arrow-forward-circle-outline' size={38} style ={{color: "blue"}}/>
+
+
+  return (  
+    <SafeAreaView style={{flex:1}}>
+      <View style={{marginLeft:10, flexDirection:'row'}}>
+        <View style={{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:10}}>
+            <Pressable onPress={()=>navigation.goBack()}>
+                <Ionicons name='arrow-back-outline' size={30}/>
+            </Pressable>
         </View>
-      </Send>
-    );
-  };
 
-  return (   
-    <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      alwaysShowSend
-      scrollToBottom
-      renderBubble={renderBubble}
-      renderSend = {renderSendBar}
-    />
-
+        <View style={{ backgroundColor: 'transparent', flexDirection:'row', alignItems:'center'}}>
+          <Image style={{height:40, width:40, borderRadius:100}} source={{uri:route.params.avatar}}/>
+          <Text style={{fontWeight:'bold', margin:10, fontSize:15}}>{route.params.name}</Text>
+        </View>
+      </View>
+      <GiftedChat
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        alwaysShowSend
+        scrollToBottom
+        user={{
+          name:route.params.username,
+          avatar: route.params.avatar
+        }}
+        renderBubble={renderBubble}
+      />
+  </SafeAreaView> 
   )
 }
