@@ -33,11 +33,11 @@ export default function ChatBox({route, navigation}) {
           results.push({
             _id: data._id,
             text: data.text,
-            createdAt: new Date(data.CreatedAt),
+            createdAt: new Date(),
             user: {
-              _id: data.userId,
-              name: data.username,
-              avatar: data.profilePic
+              _id: data.user._id,
+              name: data.user.name,
+              avatar: data.user.avatar
             },
           });
         });
@@ -45,6 +45,7 @@ export default function ChatBox({route, navigation}) {
     } catch (error) {
       console.error('Error getting documents: ', error);
     }
+    console.log(results)
     return results;
   };
   
@@ -67,12 +68,11 @@ export default function ChatBox({route, navigation}) {
       user:{
         _id:route.params.userId,
         name:route.params.username,
-        // avatar:route.params.avatar
+        avatar:route.params.avatar 
       }
     }
     messagesRef.add(mappedMessage)
     setMessages(previousMessages => GiftedChat.append(previousMessages, mappedMessage))
-    console.log(mappedMessage)
   }, [])
 
   const renderBubble = (props) =>{
@@ -114,10 +114,7 @@ export default function ChatBox({route, navigation}) {
         onSend={messages => onSend(messages)}
         alwaysShowSend
         scrollToBottom
-        user={{
-          name:route.params.username,
-          avatar: route.params.avatar
-        }}
+        user={{_id:route.params.userId}}
         renderBubble={renderBubble}
       />
   </SafeAreaView> 

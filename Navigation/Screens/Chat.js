@@ -116,6 +116,14 @@ export default function Chat({navigation, route}) {
         console.error('Error deleting document: ', error);
     });
   }
+  const findProfilePic = (userArray)=>{
+    for (let index = 0; index < userArray.length; index++) {
+      if (userArray[index].username === route.params.username){
+        return index
+      }
+    }
+    return "";
+  }
 
     return (
       <SafeAreaView style={styles.container}>
