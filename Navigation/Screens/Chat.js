@@ -116,15 +116,6 @@ export default function Chat({navigation, route}) {
         console.error('Error deleting document: ', error);
     });
   }
-  const findProfilePic = (userArray)=>{
-    for (let index = 0; index < userArray.length; index++) {
-      if (userArray[index].username === route.params.username){
-        return index
-      }
-    }
-    return "";
-  }
-
     return (
       <SafeAreaView style={styles.container}>
           <SwipeListView
@@ -168,7 +159,8 @@ export default function Chat({navigation, route}) {
           renderItem = {({item, index}) => {
             const username = item.data.owners[findUser(item.data.owners)].username
             return(
-              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, messageID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
+
+              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}}>
                   <Image
                   source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}

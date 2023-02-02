@@ -12,40 +12,30 @@ faker.seed(10);
 export default function ChatBox({route, navigation}) {
   const [messages, setMessages] = React.useState([]);
 
-  const getAllDocs = async () =>{
-    const docs = [];
-    const snapShot = await firestore.collection('Chats').get()
-    snapShot.forEach(doc => {
-      docs.push({ id: doc.id, data:doc.data()});
-    });
-     return docs;
-  }
-
-
   const getMessages = async () => {
     const results =[]
     try {
-      const result = await getAllDocs();
-      for (const doc of result) {
-        const QueryData = await firestore.collection(`Chats/${doc.id}/messages`).get();
-        QueryData.forEach(async doc => {
-          const data = doc.data();
-          results.push({
-            _id: data._id,
-            text: data.text,
-            createdAt: new Date(),
-            user: {
-              _id: data.user._id,
-              name: data.user.name,
-              avatar: data.user.avatar
-            },
-          });
+      const QueryData = await firestore.collection(`Chats/${route.params.conversationID}/messages`).get();
+      QueryData.forEach(async doc => {
+        const data = doc.data();
+        results.push({
+          _id: data._id,
+          text: data.text,
+          createdAt: new Date(data.createdAt),
+          user: {
+            _id: data.user._id,
+            name: data.user.name,
+            avatar: data.user.avatar
+          },
         });
-      }
+      });
     } catch (error) {
       console.error('Error getting documents: ', error);
     }
-    console.log(results)
+    results.sort((a, b) => {
+      return a.createdAt - b.createdAt;
+    });
+
     return results;
   };
   
@@ -59,11 +49,11 @@ export default function ChatBox({route, navigation}) {
   }, [])
 
   const onSend = React.useCallback( async (message)  => {
-    const messagesRef = firestore.collection('Chats/'+ route.params.messageID + "/messages");
+    const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
     const title= uuidv4();
     const mappedMessage = {
       _id:title,
-      createdAt: new Date(),
+      createdAt: new Date().toString(),
       text:message[0].text,
       user:{
         _id:route.params.userId,
@@ -71,8 +61,11 @@ export default function ChatBox({route, navigation}) {
         avatar:route.params.avatar 
       }
     }
+    
     messagesRef.add(mappedMessage)
-    setMessages(previousMessages => GiftedChat.append(previousMessages, mappedMessage))
+
+    setMessages(lastMessage => GiftedChat.append(mappedMessage,  messages))
+  
   }, [])
 
   const renderBubble = (props) =>{
