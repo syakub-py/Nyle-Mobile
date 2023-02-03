@@ -18,7 +18,12 @@ export default function Chat({navigation, route}) {
     const MyChatQuery = firestore.collection('Chats')
     await MyChatQuery.get().then(ChatSnapshot =>{
       ChatSnapshot.forEach(doc => {
-          results.push({data: doc.data(), id:doc.id})
+          for(let i = 0; i<doc.data().owners.length; i++){
+            if (doc.data().owners[i].username === route.params.username){
+              results.push({data: doc.data(), id:doc.id})
+            }
+            
+          }
         });
       })
       return results;
@@ -108,7 +113,7 @@ export default function Chat({navigation, route}) {
   }
 
   const deleteRow = (item) =>{
-    firestore.collection("Chats").where("recipient","==",item.recipient).delete()
+    firestore.collection("Chats/" + route.params.conversationID).where("recipient","==",item.recipient).delete()
     .then(() => {
         console.log('Document successfully deleted!');
     })
@@ -143,14 +148,14 @@ export default function Chat({navigation, route}) {
             
             </View>
         }
-          renderHiddenItem = {({item, index}) => (
+          renderHiddenItem = {({item, i}) => (
             <View style={{ position: 'absolute',
             top: 0,
             right: 0,
             bottom: 0,
             width: 75,
             justifyContent: 'center',
-            alignItems: 'center'}} key={index}>
+            alignItems: 'center'}} key={i}>
               <TouchableOpacity onPress={()=>deleteRow(item)}>
                 <Ionicons size={25} name='trash-outline' color={"red"}/>
               </TouchableOpacity>
@@ -159,9 +164,8 @@ export default function Chat({navigation, route}) {
           renderItem = {({item, index}) => {
             const username = item.data.owners[findUser(item.data.owners)].username
             return(
-
-              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
-                <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}}>
+              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} >
+                <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} key={index}>
                   <Image
                   source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
                   style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}/>

@@ -1,7 +1,7 @@
-import { Bubble, GiftedChat, Send, InputToolbar } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat} from 'react-native-gifted-chat';
 import faker from 'faker';
 import * as React from 'react';
-import { View,Text, Pressable, Image } from 'react-native';
+import { View,Text, Pressable, Image, RefreshControl } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
@@ -32,8 +32,9 @@ export default function ChatBox({route, navigation}) {
     } catch (error) {
       console.error('Error getting documents: ', error);
     }
+    
     results.sort((a, b) => {
-      return a.createdAt - b.createdAt;
+      return b.createdAt - a.createdAt;
     });
 
     return results;
@@ -64,8 +65,7 @@ export default function ChatBox({route, navigation}) {
     
     messagesRef.add(mappedMessage)
 
-    setMessages(lastMessage => GiftedChat.append(mappedMessage,  messages))
-  
+    setMessages(lastMessage => GiftedChat.append(lastMessage,  mappedMessage))
   }, [])
 
   const renderBubble = (props) =>{
@@ -106,6 +106,7 @@ export default function ChatBox({route, navigation}) {
         messages={messages}
         onSend={messages => onSend(messages)}
         alwaysShowSend
+        isTyping = {true}
         scrollToBottom
         user={{_id:route.params.userId}}
         renderBubble={renderBubble}

@@ -22,17 +22,17 @@ export default function PostCard({data}){
               <View>
                 <Text style ={{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                 <View style={{flexDirection:'row', alignItems:'center'}}>
-                  <Image style={{height:17, width:17, marginTop:3}} source={{uri:data.currency}}/>
+                  <Image style={{height:17, width:17, marginTop:3, borderRadius:20}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:3, fontWeight:'500'}}>{data.price} </Text>
                 </View>
               </View>
             </View>
 
-            <View style={{flexDirection:'row', alignItems:'center', elevation:2}}>
+            {/* <View style={{flexDirection:'row', alignItems:'center', elevation:2}}>
               <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:10, height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
               <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:30,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
               <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:50,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
-            </View>
+            </View> */}
           
           </ImageBackground>
       </View>
