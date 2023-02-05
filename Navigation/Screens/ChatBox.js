@@ -6,48 +6,20 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import {useCollectionData} from "react-firebase-hooks/firestore"
 faker.seed(10);
 
 export default function ChatBox({route, navigation}) {
-  const [messages, setMessages] = React.useState([]);
-
-  const getMessages = async () => {
-    const results =[]
-    try {
-      const QueryData = await firestore.collection(`Chats/${route.params.conversationID}/messages`).get();
-      QueryData.forEach(async doc => {
-        const data = doc.data();
-        results.push({
-          _id: data._id,
-          text: data.text,
-          createdAt: new Date(data.createdAt),
-          user: {
-            _id: data.user._id,
-            name: data.user.name,
-            avatar: data.user.avatar
-          },
-        });
-      });
-    } catch (error) {
-      console.error('Error getting documents: ', error);
-    }
-    
-    results.sort((a, b) => {
-      return b.createdAt - a.createdAt;
-    });
-
-    return results;
-  };
+  // const [messages, setMessages] = React.useState([]);
   
+  const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
+  let [messages] = useCollectionData(messagesRef)
+  if (messages){
+    messages = messages.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  }
 
-  React.useEffect(() => {
-    getMessages().then((result) =>{
-      setMessages(result)
-    }).catch((error)=>{
-      console.log(error)
-    })
-  }, [])
 
   const onSend = React.useCallback( async (message)  => {
     const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
@@ -59,13 +31,10 @@ export default function ChatBox({route, navigation}) {
       user:{
         _id:route.params.userId,
         name:route.params.username,
-        avatar:route.params.avatar 
+        avatar:route.params.otherAvatar 
       }
     }
-    
     messagesRef.add(mappedMessage)
-
-    setMessages(lastMessage => GiftedChat.append(lastMessage,  mappedMessage))
   }, [])
 
   const renderBubble = (props) =>{
@@ -106,7 +75,6 @@ export default function ChatBox({route, navigation}) {
         messages={messages}
         onSend={messages => onSend(messages)}
         alwaysShowSend
-        isTyping = {true}
         scrollToBottom
         user={{_id:route.params.userId}}
         renderBubble={renderBubble}

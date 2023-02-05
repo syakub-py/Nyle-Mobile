@@ -9,12 +9,11 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 export default function Chat({navigation, route}) {
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
-  const[search, setSearch] = React.useState([])
+  const [search, setSearch] = React.useState([])
   const [refreshing, setRefreshing] = React.useState(false);
 
   const getChats = async () =>{
     const results = [];
-    //.where("owners.username", "==", route.params.username)
     const MyChatQuery = firestore.collection('Chats')
     await MyChatQuery.get().then(ChatSnapshot =>{
       ChatSnapshot.forEach(doc => {
@@ -112,6 +111,15 @@ export default function Chat({navigation, route}) {
     return "";
   }
 
+  const findProfilePic = (userArray)=>{
+    for (let index = 0; index < userArray.length; index++) {
+      if (userArray[index].username===route.params.username){
+        return index
+      }
+    }
+    return "";
+  }
+
   const deleteRow = (item) =>{
     firestore.collection("Chats/" + route.params.conversationID).where("recipient","==",item.recipient).delete()
     .then(() => {
@@ -121,6 +129,7 @@ export default function Chat({navigation, route}) {
         console.error('Error deleting document: ', error);
     });
   }
+  
     return (
       <SafeAreaView style={styles.container}>
           <SwipeListView
@@ -164,7 +173,7 @@ export default function Chat({navigation, route}) {
           renderItem = {({item, index}) => {
             const username = item.data.owners[findUser(item.data.owners)].username
             return(
-              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} >
+              <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} >
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} key={index}>
                   <Image
                   source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
