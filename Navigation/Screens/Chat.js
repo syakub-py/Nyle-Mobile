@@ -25,28 +25,11 @@ export default function Chat({navigation, route}) {
           }
         });
       })
+      console.log(results[0].data)
       return results;
 
-  }
-
-  const addChat = (collectionPath, receiver) =>{
-    if (!collectionPath) {
-        throw new Error('Error: collection name cannot be empty');
     }
-    return firestore.collection(collectionPath).doc(receiver).set({
-      key: faker.random.number({min:1, max:100}),
-      image: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,
-      name: receiver,
-      email: receiver,
-      lastText:faker.lorem.lines(1)
-    })
-    .then(ref => {
-      console.log('Added document with ID: ' + receiver);
-    })
-    .catch(error => {
-      console.log('Error adding document: ', error);
-    });
-  }
+
 
   const onRefresh = () => {
     setRefreshing(true);

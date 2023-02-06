@@ -1,9 +1,12 @@
 import faker from 'faker';
-import { View, Text, Image, Dimensions, ScrollView, Pressable} from 'react-native';
+import { View, Text, Image, Dimensions, ScrollView, Pressable, Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import React from 'react';
 import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
+import {firestore} from './Components/Firebase'
+import { v4 as uuidv4 } from 'uuid';
+
 
 const {width} = Dimensions.get("window");
 const height = width*1;
@@ -41,6 +44,28 @@ export default function PostDetails({route, navigation}){
             currency: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000",
         }
     ]
+
+    const handleAddChat = () =>{
+
+        firestore.collection('Chats').add({
+          owners:[
+            {
+                profilePic:"",
+                username: route.params.username
+            },
+            {
+                profilePic:"",
+                username: route.params.postedBy
+            }
+        ]
+        })
+        .then(ref => {
+          Alert.alert("Added")
+        })
+        .catch(error => {
+            Alert.alert('Error adding document: ', error);
+        });
+    }
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
         if(slide !== state.active){
@@ -93,7 +118,7 @@ export default function PostDetails({route, navigation}){
 
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                         <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
-                        <Pressable onPress={()=>navigation.navigate('chat box')}>
+                        <Pressable onPress={handleAddChat}>
                             <View style={{height:60, width:60, borderRadius:100, backgroundColor:'black', elevation:10, margin:10}}>
                                 <Ionicons name="chatbox" color={'white'} size={30} style={{margin:15}}/>
                             </View>

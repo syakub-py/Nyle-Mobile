@@ -1,17 +1,13 @@
 import { Bubble, GiftedChat} from 'react-native-gifted-chat';
-import faker from 'faker';
 import * as React from 'react';
-import { View,Text, Pressable, Image, RefreshControl } from 'react-native';
+import { View,Text, Pressable, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
-faker.seed(10);
 
 export default function ChatBox({route, navigation}) {
-  // const [messages, setMessages] = React.useState([]);
-  
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
   if (messages){
@@ -19,11 +15,11 @@ export default function ChatBox({route, navigation}) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
   }
+  
 
-
-  const onSend = React.useCallback( async (message)  => {
+  const onSend = React.useCallback((message)  => {
     const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
-    const title= uuidv4();
+    const title = uuidv4();
     const mappedMessage = {
       _id:title,
       createdAt: new Date().toString(),
@@ -55,6 +51,16 @@ export default function ChatBox({route, navigation}) {
     )
   }
 
+  const renderSend = () =>{
+    return(
+      <TouchableOpacity>
+        <View style={{backgroundColor:'black', padding:11, borderRadius:20}}>
+          <Ionicons name={'send-outline'} size={20} color={'white'}/>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
 
 
   return (  
@@ -62,14 +68,27 @@ export default function ChatBox({route, navigation}) {
       <View style={{marginLeft:10, flexDirection:'row'}}>
         <View style={{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:10}}>
             <Pressable onPress={()=>navigation.goBack()}>
-                <Ionicons name='arrow-back-outline' size={30}/>
+                <Ionicons name='arrow-back-outline' size={35}/>
             </Pressable>
         </View>
 
         <View style={{ backgroundColor: 'transparent', flexDirection:'row', alignItems:'center'}}>
-          <Image style={{height:40, width:40, borderRadius:100}} source={{uri:route.params.avatar}}/>
-          <Text style={{fontWeight:'bold', margin:10, fontSize:15}}>{route.params.name}</Text>
+          <Image style={{height:45, width:45, borderRadius:100}} source={{uri:route.params.avatar}}/>
+          <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
+
+        <View style={{justifyContent:'center', paddingLeft:10, paddingTop:5}}>
+          <TouchableOpacity>
+            <Ionicons name='search-sharp' size={22}/>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{justifyContent:'center', paddingLeft:3, paddingTop:5}}>
+          <TouchableOpacity >
+            <Ionicons name='reorder-three-sharp' size={30}/>
+          </TouchableOpacity>
+        </View>
+
       </View>
       <GiftedChat
         messages={messages}
@@ -78,6 +97,7 @@ export default function ChatBox({route, navigation}) {
         scrollToBottom
         user={{_id:route.params.userId}}
         renderBubble={renderBubble}
+        // renderSend={renderSend}
       />
   </SafeAreaView> 
   )
