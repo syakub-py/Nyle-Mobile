@@ -103,8 +103,8 @@ export default function Chat({navigation, route}) {
     return "";
   }
 
-  const deleteRow = (item) =>{
-    firestore.collection("Chats/" + route.params.conversationID).where("recipient","==",item.recipient).delete()
+  const deleteRow = () =>{
+    firestore.collection('Chats/'+ route.params.conversationID ).where(doc.id, "==",route.params.conversationID).delete()
     .then(() => {
         console.log('Document successfully deleted!');
     })
@@ -140,7 +140,7 @@ export default function Chat({navigation, route}) {
             
             </View>
         }
-          renderHiddenItem = {({item, i}) => (
+          renderHiddenItem = {({i}) => (
             <View style={{ position: 'absolute',
             top: 0,
             right: 0,
@@ -148,7 +148,7 @@ export default function Chat({navigation, route}) {
             width: 75,
             justifyContent: 'center',
             alignItems: 'center'}} key={i}>
-              <TouchableOpacity onPress={()=>deleteRow(item)}>
+              <TouchableOpacity onPress={()=>deleteRow}>
                 <Ionicons size={25} name='trash-outline' color={"red"}/>
               </TouchableOpacity>
             </View>

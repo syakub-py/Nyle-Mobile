@@ -2,8 +2,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import 'firebase/compat/firestore'
 import {getFirestore} from 'firebase/firestore/lite'
-import {getStorage} from 'firebase/storage'
 import "firebase/compat/analytics"
+import 'firebase/compat/storage';
 
 var app = "";
 
@@ -32,9 +32,9 @@ const firestoreLite = getFirestore(app)
 
 const auth = firebase.auth()
 
-const getstorage = getStorage(app)
+const getstorage = firebase.storage()
 
-export {auth,firestoreLite, firestore, getstorage};
+export {auth, firestoreLite, firestore, getstorage};
 
 
 

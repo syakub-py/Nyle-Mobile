@@ -3,7 +3,7 @@ import { View, Text, Image, Dimensions, ScrollView, Pressable, Alert} from 'reac
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import React from 'react';
-import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -46,7 +46,6 @@ export default function PostDetails({route, navigation}){
     ]
 
     const handleAddChat = () =>{
-
         firestore.collection('Chats').add({
           owners:[
             {
@@ -66,6 +65,7 @@ export default function PostDetails({route, navigation}){
             Alert.alert('Error adding document: ', error);
         });
     }
+
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
         if(slide !== state.active){
@@ -76,7 +76,6 @@ export default function PostDetails({route, navigation}){
     return (
         <View style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
-                
                 <View style={{zIndex:1}}>
                     <Avatar size={55} rounded source={{uri: route.params.ProfilePic}} containerStyle={{ position: 'absolute', top: 20, right: 20, elevation:5}}/>
                     <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
@@ -137,7 +136,6 @@ export default function PostDetails({route, navigation}){
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                     <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
-                        {/* mapType={MAP_TYPES.SATELLITE} */}
                         <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
                             <Marker coordinate={route.params.coordinates}/>
                         </MapView>

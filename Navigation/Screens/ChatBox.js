@@ -77,17 +77,17 @@ export default function ChatBox({route, navigation}) {
           <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
 
-        <View style={{justifyContent:'center', paddingLeft:10, paddingTop:5}}>
+        {/* <View style={{justifyContent:'center', right:5}}>
           <TouchableOpacity>
             <Ionicons name='search-sharp' size={22}/>
           </TouchableOpacity>
         </View>
 
-        <View style={{justifyContent:'center', paddingLeft:3, paddingTop:5}}>
+        <View style={{justifyContent:'center', right:3}}>
           <TouchableOpacity >
             <Ionicons name='reorder-three-sharp' size={30}/>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
       </View>
       <GiftedChat

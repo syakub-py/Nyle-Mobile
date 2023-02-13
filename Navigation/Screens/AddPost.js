@@ -1,27 +1,27 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, RefreshControl, ScrollView,TextInput, Pressable, Image, Dimensions, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, ScrollView, TextInput,Image ,Pressable, Dimensions, Platform, Alert } from 'react-native';
 import faker from 'faker';
-import {firestore} from './Components/Firebase';
+import {firestore, getstorage} from './Components/Firebase';
 import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
-const { Configuration, OpenAIApi } = require("openai");
+import * as ImagePicker from 'expo-image-picker';
+
 
 const {width} = Dimensions.get("window");
 const height = width*1;
 
+// const handleSubmit = async (title) =>{
+//     const configuration = new Configuration({
+//         apiKey: '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',
+//     });
+//     const openai = new OpenAIApi(configuration);
+//     const response = await openai.createCompletion({
+//         model: "text-davinci-003",
+//         prompt: "I am selling a " + title +" write a short description" ,
+//         max_tokens: 100
+//     });
 
-const handleSubmit = async (title) =>{
-    const configuration = new Configuration({
-        apiKey: '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',
-    });
-    const openai = new OpenAIApi(configuration);
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: "I am selling a " + title +" write a short description" ,
-        max_tokens: 100
-    });
-
-    return response.data.choices[0].text;
-}
+//     return response.data.choices[0].text;
+// }
 
 export default function AddPost({route}){
     faker.seed(20);
@@ -32,13 +32,38 @@ export default function AddPost({route}){
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState('');
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
-    const [Images, setImages] = React.useState([]);
+    const [image, setImage] = React.useState([]);
 
     let randomNumber = Math.floor(Math.random() * 100);
 
     const handleTitleChange = (title) => {
         setTitle(title);
     }
+
+    const uploadImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          aspect: [4, 3],
+          quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }else{
+            console.log("image upload canceled")
+        }
+
+        let refrence = getstorage.ref("test")
+        let imageRef = refrence.child(image)
+        let task = refrence.put(imageRef)
+
+        task.then(() => {
+            Alert.alert('Image uploaded to the bucket!');
+        }).catch((e) => console.log('uploading image error => ', e));
+      };
+
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -82,34 +107,28 @@ export default function AddPost({route}){
             <ScrollView refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
 
                 <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
-
+                
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
                     <TextInput style={styles.textinput} onChangeText = {handleTitleChange} value={title}/>
                 </View>
 
-
                 <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Add Pictures</Text>
-                <TextInput  onChangeText={(text)=>{}} style={styles.textinput}/>
 
-                <Pressable onPress={()=> {}}>
+                <Pressable onPress={uploadImage}>
                     <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add Picture</Text>
                     </View>
                 </Pressable>
-                {/* {console.log(Images)}
-                {setImages(Images.concat(text))} */}
-                
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
-                    <TextInput style={styles.textinput} on onChangeText={(text)=>setPrice(text)}/>                    
+                    <TextInput style={styles.textinput} onChangeText={(text)=>setPrice(text)}/>                    
                 </View>
 
                 <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                 <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
-                    {/* mapType={MAP_TYPES.SATELLITE} */}
-                    <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress={dropMarker} >
+                    <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress={dropMarker}>
                         <Marker coordinate={coordinates}/>
                     </MapView>
                 </View>
@@ -130,13 +149,11 @@ export default function AddPost({route}){
                     </View>
                 </Pressable>
 
-                {/* onPress={()=>{handleSubmit(title).then((result) => {setDescription(result)})}} */}
                 <Pressable >
                     <View style={{backgroundColor:'black', borderRadius:20, alignItems:'center', margin:10}}>
                         <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Generate Description</Text>
                     </View>
                 </Pressable>
-
             </ScrollView>
         </View>
     );

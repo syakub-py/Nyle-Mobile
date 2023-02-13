@@ -52,9 +52,6 @@ export const getMarketData = async () => {
   }
 }
 
-
-
-
 const transactions =[
   {
     title: faker.address.streetAddress(),
@@ -102,8 +99,6 @@ export default function Wallet({navigation, route}) {
     const [data, setData] = React.useState([]);
     const [wallet, setWallet] = React.useState([]);
     
-
-
     const getWalletInfo = async ()=>{
       const results =[];
       const WalletInfoCollection = collection(firestoreLite, "Wallets/" + route.params.username);
@@ -187,7 +182,6 @@ export default function Wallet({navigation, route}) {
                         <Avatar source={{uri: item.image}} size={50} rounded/>
                         <Text style = {{fontSize:17, fontWeight: 'bold', margin:7}}>{item.symbol.toUpperCase()}</Text>
                         <Text style={{color:'black', fontWeight:'bold', fontSize:15}}>${item.current_price}</Text>
-
                         <View style={{flexDirection:'row', margin:7}}>
                             {item.price_change_percentage_24h<0?<Ionicons name='arrow-down-outline' style={{color:'red'}} size={20}/>:<Ionicons name='arrow-up-outline' style={{color:'lightgreen'}} size={20}/>}
                           <Text style={item.price_change_percentage_24h>0?{color:'lightgreen'}:{color:'red'}}>% {Math.round(item.price_change_percentage_24h*100)/100}</Text>

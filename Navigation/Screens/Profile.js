@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {firestore} from './Components/Firebase'
-
+import firebase from "firebase/compat/app";
 
 
 const SectionTitle = ({title}) => {
@@ -19,12 +19,10 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
   if (type == "button"){
     return(
       <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center', width:'100%', marginLeft:20}} onPress = {onPress}>
-        
-      <View style={{flexDirection:'row'}}>
-        <Ionicons name={nameOfIcon} style={{color:'black', marginRight: 20}} size={25}/>
-        <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
-      </View>
-        
+        <View style={{flexDirection:'row'}}>
+          <Ionicons name={nameOfIcon} style={{color:'black', marginRight: 20}} size={25}/>
+          <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
+        </View>
       </TouchableOpacity>
     )
   }else{
@@ -34,14 +32,17 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
   }
 }
 
+
+
+
 export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const getPosts = async () =>{
     const results = [];
-    const MyPostsQuery = firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
-    MyPostsQuery.get().then(postSnapshot =>{
+    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
+    await MyPostsQuery.get().then(postSnapshot =>{
       postSnapshot.forEach(doc => {
             results.push(doc.data())
         });
@@ -59,7 +60,15 @@ export default function Profile({navigation, route}) {
     })
     setTimeout(() => setRefreshing(false), 1000);
   };
-  
+
+  const handleSignOut = async () =>{
+    try {
+      await firebase.auth().signOut();
+    } catch (error) {
+      console.error(error);
+    }
+    return navigation.navigate("Login")
+  }
   
   React.useEffect(()=>{
     getPosts().then((result) =>{
@@ -89,10 +98,11 @@ export default function Profile({navigation, route}) {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
               ListHeaderComponent= {
-                <View >
-                  <View style = {{alignSelf:"flex-start", flexDirection:'row'}}>
+                <View>
+                  <Text style={{color:'black', paddingTop:20, paddingLeft:30, fontSize:30, fontWeight:'bold'}}>Settings</Text>
+                  <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
                         <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="cover"/>
-                        <Text style = {styles.username}>{route.params.username}</Text>
+                        <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>
                   </View>
 
                     <SectionTitle
@@ -127,11 +137,19 @@ export default function Profile({navigation, route}) {
                       nameOfIcon='settings-outline'
 
                     />
+
+                    <Setting
+                      title = "Edit Profile"
+                      type = "button"
+                      onPress = {() => console.log("pressed button")}
+                      nameOfIcon='person-outline'
+
+                    />
                             
                     <Setting
                       title = "Log Out"
                       type = "button"
-                      onPress = {() => console.log("pressed button")}
+                      onPress = {handleSignOut}
                       nameOfIcon = 'log-out-outline'
                     />
                   
@@ -154,7 +172,7 @@ export default function Profile({navigation, route}) {
                     <TouchableOpacity onPress={()=>deleteRow(item)} style={{marginRight:20}}>
                       <Ionicons size={30} name='trash-outline' color={"red"}/>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"Users/"+route.params.username+"/Posts"})}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
                       <Ionicons size={30} name='create-outline' color={"Black"}/>
                     </TouchableOpacity>
                   </View>
@@ -179,9 +197,5 @@ export default function Profile({navigation, route}) {
       paddingBottom: 50,
       margin:30
     },
-    username: {
-      alignSelf:"center",
-      fontSize:20,
-      fontWeight:'bold'
-    }
+
   });
