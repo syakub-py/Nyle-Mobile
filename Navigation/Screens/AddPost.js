@@ -33,6 +33,7 @@ export default function AddPost({route}){
     const [price, setPrice] = React.useState('');
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [image, setImage] = React.useState([]);
+    const [imageUrls, setImageUrls] = React.useState([]);
 
     let randomNumber = Math.floor(Math.random() * 100);
 
@@ -46,23 +47,26 @@ export default function AddPost({route}){
           aspect: [4, 3],
           quality: 1,
         });
-
+      
         console.log(result);
-
+      
         if (!result.canceled) {
           setImage(result.assets[0].uri);
         }else{
-            console.log("image upload canceled")
+          console.log("image upload canceled")
         }
-
-        let refrence = getstorage.ref("test")
-        let imageRef = refrence.child(image)
-        let task = refrence.put(imageRef)
-
+      
+        let reference = getstorage.ref(title+randomNumber+".jpg")
+        let imageRef = reference.child(image)
+        let task = reference.put(imageRef)
+      
         task.then(() => {
+          getstorage.ref(title+randomNumber).getDownloadURL().then((url)=>{
+            setImageUrls([...imageUrls, url])
             Alert.alert('Image uploaded to the bucket!');
+          })
         }).catch((e) => console.log('uploading image error => ', e));
-      };
+      };      
 
 
     const onRefresh = () => {
@@ -88,7 +92,7 @@ export default function AddPost({route}){
             currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
             details: details,
             description: description,
-            pic:["https://photos.zillowstatic.com/fp/7d64d1e7cde823c3b5cd1459630e30a0-uncropped_scaled_within_1536_1152.webp"],
+            pic:imageUrls,
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
             coordinates: coordinates,
             date: new Date().toLocaleString(),
