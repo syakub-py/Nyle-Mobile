@@ -1,19 +1,21 @@
-import {Text, View, Image, ImageBackground, Pressable} from 'react-native';
+import {Text, View, Image, ImageBackground, Pressable, ScrollView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import faker from 'faker';
 import { useNavigation } from '@react-navigation/native';
-import { Avatar } from 'react-native-elements';
-
-faker.seed(10)
+import * as React from 'react';
 
 export default function PostCard({data}){
   const navigation = useNavigation(); 
+  const [iconName, setIconName] = React.useState('bookmark-outline');
   return (
     <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 20, borderRadius:10, elevation:3}}>
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic[0]}} imageStyle ={{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
           <View style={{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:100, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-            <Ionicons name='bookmark-outline' size={25} />
+            
+            <Pressable onPress={()=>{setIconName("bookmark")}}>
+              <Ionicons name={iconName} size={25}/>
+            </Pressable>
+
           </View>
             <View style={{flexDirection:'row'}}>
               <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic})}>
@@ -27,15 +29,9 @@ export default function PostCard({data}){
                 </View>
               </View>
             </View>
-
-            {/* <View style={{flexDirection:'row', alignItems:'center', elevation:2}}>
-              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:10, height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
-              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:30,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
-              <Image source={{uri: data.profilePic}} style={{position: 'absolute', top:190,  right:50,height:30, width:30, backgroundColor:'white', justifyContent:'center', alignItems:'center', borderRadius:100, borderWidth:2, borderColor:'white'}}/>
-            </View> */}
-          
           </ImageBackground>
       </View>
     </View>
   )
 }
+

@@ -5,7 +5,6 @@ import { Avatar } from 'react-native-elements';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import { v4 as uuidv4 } from 'uuid';
 
 
 const {width} = Dimensions.get("window");
@@ -15,36 +14,7 @@ export default function PostDetails({route, navigation}){
 
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
-
-    let randomNumber = Math.floor(Math.random() * 100);
-
-    const bids = [
-        {
-            by: 'admin@admin.com',
-            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
-            price: randomNumber,
-            currency:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png"
-        },
-        {
-            by: 'admin@admin.com',
-            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
-            price: randomNumber,
-            currency: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png",
-        },
-        {
-            by: 'admin@admin.com',
-            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
-            price: randomNumber,
-            currency:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png"
-        },
-        {
-            by: 'admin@admin.com',
-            profilePic:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
-            price: randomNumber,
-            currency: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000",
-        }
-    ]
-
+    
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
           owners:[
@@ -125,6 +95,7 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <View>
+                        <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>This post has {route.params.views} views</Text>
                         <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: {route.params.postedBy}</Text>
                     </View>
                     
@@ -141,7 +112,7 @@ export default function PostDetails({route, navigation}){
                         </MapView>
                     </View>
 
-                    <View>
+                    {/* <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Current Bids</Text>
                         <ScrollView>
                             {
@@ -162,7 +133,7 @@ export default function PostDetails({route, navigation}){
                                 ))
                             }
                         </ScrollView>
-                    </View>
+                    </View> */}
 
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
@@ -185,7 +156,7 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                 <View style={{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>
-                    <Pressable onPress={()=> navigation.navigate("Check Out")}>
+                    <Pressable onPress={()=> navigation.navigate("Check Out", {title: route.params.PostTitle, price:route.params.Price, currency: route.params.Currency})}>
                         <Text style={{color:'white', fontSize:15, fontWeight:"bold"}}>Buy out</Text>
                     </Pressable>
                 </View>

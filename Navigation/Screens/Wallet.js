@@ -7,18 +7,20 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import faker from 'faker';
 import { Avatar } from 'react-native-elements';
 import {firestore, firestoreLite} from './Components/Firebase'
+import { LineChart } from 'react-native-chart-kit';
 
 const {width} = Dimensions.get("window");
 
 const formatSparkline = (numbers) => {
   const sevenDaysAgo = moment().subtract(7, 'days').unix();
   let formattedSparkline = numbers.map((item, index) => {
-    return {
+    return{
       x: sevenDaysAgo + (index + 1) * 3600,
       y: item,
     }
   })
-
+  
+  
   return formattedSparkline;
 }
 
@@ -37,7 +39,6 @@ const formatMarketData = (data) => {
 
     formattedData.push(formattedItem);
   });
-
   return formattedData;
 }
 
@@ -125,7 +126,11 @@ export default function Wallet({navigation, route}) {
     }, [])
 
     var walletValue = 96569;
-
+    const chartConfig = {
+      backgroundGradientFrom: '#1E2923',
+      backgroundGradientTo: '#08130D',
+      color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    };
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto"/>
@@ -137,7 +142,7 @@ export default function Wallet({navigation, route}) {
             marginTop:20,
           }}
           ListHeaderComponent = {
-            <View style={{width:width}}>
+            <View style={{width:width, margin:10}}>
               <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
               <View style={{marginBottom:10, alignItems:'center'}}>
                 <Text style={{fontWeight:'600', fontSize:50,}}>$968,495</Text>
