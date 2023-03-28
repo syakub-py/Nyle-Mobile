@@ -34,6 +34,7 @@ export default function AddPost({route}){
     const [price, setPrice] = React.useState('');
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [imageUrls, setImageUrls] = React.useState([]);
+    const [state, setState] = React.useState({active:0})
 
     let randomNumber = Math.floor(Math.random() * 100);
 
@@ -104,30 +105,37 @@ export default function AddPost({route}){
         });
     }
 
-
     return(
         <View style={{backgroundColor:'white'}}>
             <ScrollView refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
-                {/* <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/> */}
-                
-                <Pressable onPress={uploadImage}>
-                    <View style={{backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
-                        <View style={{width:width, backgroundColor:'lightgray', height:height, borderBottomLeftRadius:20, borderBottomRightRadius:20, justifyContent:'center', alignItems:'center'}}>
-                            <Ionicons name='images' size={150} color={"white"} />
-                            <Text style={{color:'white', fontSize:20}}>Tap to add pictures</Text>
+                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+                {
+                    imageUrls.map((item, index)=>(
+                        <View key={index}>
+                            <Image source={{uri:item}} style={{height:height, width:width, borderBottomRightRadius:10, borderBottomLeftRadius:10}}/>
                         </View>
-                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+                    ) )
+                }
+                </ScrollView>
+                
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}>
+                    <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
-                            imageUrls.map((item, index)=>(
-                                <View key={index}>
-                                    <Image source={{uri:item.uri}} style={{height:height, width:width}}/>
-                                </View>
+                            imageUrls.map((i, k)=>(
+                                <Pressable key={k}>
+                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
+                                </Pressable>
                             ))
                         }
-                        </ScrollView>
+                    </View>
+                </ScrollView>
+            
+                <Pressable onPress={uploadImage}>
+                    <View style={{margin:10, backgroundColor:'black', height:50, borderRadius:20, justifyContent:'center', alignItems:'center'}}>
+                        <Text style={{color:'white', fontSize:20}}>Tap to add pictures</Text>
                     </View>
                 </Pressable>
-                
+
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
                     <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
