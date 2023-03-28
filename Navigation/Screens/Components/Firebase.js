@@ -3,8 +3,7 @@ import "firebase/compat/auth";
 import 'firebase/compat/firestore'
 import {getFirestore} from 'firebase/firestore/lite'
 import "firebase/compat/analytics"
-import 'firebase/compat/storage';
-
+import 'firebase/compat/storage'
 var app = "";
 
 

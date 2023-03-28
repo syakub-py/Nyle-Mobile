@@ -91,7 +91,10 @@ export default function Home({navigation, route}) {
                 <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
                 <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
               </View>
-              <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
+                <Ionicons name='filter-outline' size={25} style={{position:'absolute', right:25}}/>
+              </View>
             </View>
 
 

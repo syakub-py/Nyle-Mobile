@@ -41,7 +41,7 @@ export default function MainContainer({route}) {
             }else if (rn === Wallet){
               iconName = focused ? 'wallet' : 'wallet-outline';
             }else if (rn === Chat){
-              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+              iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
             }else if (rn === Profile){
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }else if (rn === AddPost){

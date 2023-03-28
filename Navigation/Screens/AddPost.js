@@ -33,7 +33,6 @@ export default function AddPost({route}){
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState('');
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
-    const [image, setImage] = React.useState([]);
     const [imageUrls, setImageUrls] = React.useState([]);
 
     let randomNumber = Math.floor(Math.random() * 100);
@@ -50,24 +49,20 @@ export default function AddPost({route}){
         });
       
         if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            const ref = getstorage.ref().child('images').child(title + randomNumber);
-            const response = await fetch(result.assets[0].uri);
-            const data = await response.blob();
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const dataURL = reader.result;
-                const contentType = dataURL && dataURL.match(/^data:([^,]+)?,/)[1];
-                const task = ref.putString(dataURL, 'data_url', { contentType: contentType });
-                await task.then(() => {
-                    ref.getDownloadURL().then((url) => {
-                    console.log(url);
-                    });
+            const currentImageUrls = [...imageUrls];
+            const fileJson = result.assets[0];
+            currentImageUrls.push(fileJson.uri)
+            setImageUrls(currentImageUrls);
+            const filename = fileJson.uri.split('/')[fileJson.uri.split('/').length -1];
+            const response = await fetch(fileJson.uri);
+            const storageRef = getstorage.ref().child(`images/${filename}`);
+            response.blob().then((result)=>{
+                storageRef.put(result).then((snapshot) => {
+                    console.log('Image uploaded successfully!');
                 });
-            };
+            })
+        };
             
-            reader.readAsDataURL(data);
-        }
       };
           
 
@@ -95,7 +90,7 @@ export default function AddPost({route}){
             currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
             details: details,
             description: description,
-            pic: ["https://photos.zillowstatic.com/fp/098f32fc93e3b6b15cf6e2e22332426d-uncropped_scaled_within_1536_1152.webp", "https://photos.zillowstatic.com/fp/203fa4c434461888f63672f39817600a-uncropped_scaled_within_1536_1152.webp", "https://photos.zillowstatic.com/fp/33078d5fa58732d0f0f3af76c9716820-uncropped_scaled_within_1536_1152.webp", "https://photos.zillowstatic.com/fp/115685a3cad663798b7682adab5d6a2e-uncropped_scaled_within_1536_1152.webp", "https://photos.zillowstatic.com/fp/69965fc0d7d7aa63d491160ea30a6cb0-uncropped_scaled_within_1536_1152.webp", "https://photos.zillowstatic.com/fp/b44ab46a610ac30251555d73a13f671c-uncropped_scaled_within_1536_1152.webp"],
+            pic: imageUrls,
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
             coordinates: coordinates,
             views: 0,
@@ -132,6 +127,13 @@ export default function AddPost({route}){
                         </ScrollView>
                     </View>
                 </Pressable>
+                
+                <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
+                    <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
+                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
+                    </View>
+                </Pressable>
+
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
                     <TextInput style={styles.textinput} onChangeText = {handleTitleChange} value={title}/>
@@ -161,11 +163,7 @@ export default function AddPost({route}){
                     <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
-                <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
-                    <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
-                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
-                    </View>
-                </Pressable>
+
             </ScrollView>
         </View>
     );
