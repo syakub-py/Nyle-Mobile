@@ -5,6 +5,7 @@ import {firestore, getstorage} from './Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Dropdown } from 'react-native-element-dropdown';
 
 
 const {width} = Dimensions.get("window");
@@ -35,6 +36,8 @@ export default function AddPost({route}){
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [imageUrls, setImageUrls] = React.useState([]);
     const [state, setState] = React.useState({active:0})
+    const [currency, setCurrency] = React.useState(null);
+    const [isFocus, setIsFocus] = React.useState(false);
 
     let randomNumber = Math.floor(Math.random() * 100);
 
@@ -61,6 +64,7 @@ export default function AddPost({route}){
                 storageRef.put(result).then((snapshot) => {
                     console.log('Image uploaded successfully!');
                 });
+                alert("All images uploaded successfully")
             })
         };
             
@@ -130,15 +134,11 @@ export default function AddPost({route}){
                     </View>
                 </ScrollView>
             
-                <Pressable onPress={uploadImage}>
-                    <View style={{margin:10, backgroundColor:'black', height:50, borderRadius:20, justifyContent:'center', alignItems:'center'}}>
-                        <Text style={{color:'white', fontSize:20}}>Tap to add pictures</Text>
-                    </View>
-                </Pressable>
 
-                <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
-                    <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
-                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
+                <Pressable onPress={uploadImage}>
+                    <View style={{width:50, backgroundColor:'black', height:50, borderRadius:30, justifyContent:'center', alignItems:'center'}}>
+                        {/* <Text style={{color:'white', fontSize:20}}>Tap to add pictures</Text> */}
+                        <Ionicons name='add-outline' size={30} color={'white'}/>
                     </View>
                 </Pressable>
 
@@ -147,11 +147,37 @@ export default function AddPost({route}){
                     <TextInput style={styles.textinput} onChangeText = {handleTitleChange} value={title}/>
                 </View>
 
-
-
-                <View>
+                <View >
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
-                    <TextInput style={styles.textinput} onChangeText={(text)=>setPrice(text)}/>                    
+                    <View style={{flexDirection:'row', marginLeft:30}}>
+                        <Dropdown
+                        style={{height:50,width:width/3, borderColor: 'gray', borderWidth: 0, borderRadius: 30, paddingHorizontal: 8,}}
+                        placeholderStyle={{}}
+                        selectedTextStyle={{}}
+                        inputSearchStyle={{}}
+                        iconStyle={{width: 20, height: 20,}}
+                        data={[]}
+                        search
+                        maxHeight={300}
+                        labelField="name"
+                        valueField="image"
+                        placeholder={!isFocus ? 'Select item' : '...'}
+                        searchPlaceholder="Search..."
+                        value={currency}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                        // renderLeftIcon={({ image }) => {
+                        //     return (
+                        //     <Image source={{ uri: image }} style={{ width: 30, height: 30 }} />
+                        //   )}}
+                        onChange={item => {
+                            setCurrency(item);
+                            setIsFocus(false);
+                        }}/>
+
+                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/3}} onChangeText={(text)=>setPrice(text)}/>  
+                    </View>
+                                      
                 </View>
 
                 <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
@@ -171,7 +197,11 @@ export default function AddPost({route}){
                     <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
-
+                <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
+                    <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
+                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
+                    </View>
+                </Pressable>
             </ScrollView>
         </View>
     );

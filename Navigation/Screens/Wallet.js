@@ -50,6 +50,7 @@ export const getMarketData = async () => {
     return formattedResponse;
   } catch (error) {
     console.log(error.message);
+    return []
   }
 }
 

@@ -111,16 +111,17 @@ export default function Chat({navigation, route}) {
         console.error('Error deleting document: ', error);
     });
   }
-  
+  let randomNumber = Math.floor(Math.random() * 100);
+
     return (
       <SafeAreaView style={styles.container}>
           <SwipeListView
           data = {filteredData}
-          keyExtractor = {item => item.key}
           rightOpenValue={-50}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          key = {randomNumber}
           contentContainerStyle = {{
             padding: 20,
           }}
@@ -147,7 +148,7 @@ export default function Chat({navigation, route}) {
             width: 75,
             justifyContent: 'center',
             alignItems: 'center'}} key={i}>
-              <TouchableOpacity onPress={()=>deleteRow}>
+              <TouchableOpacity onPress={()=>{deleteRow()}}>
                 <Ionicons size={25} name='trash-outline' color={"red"}/>
               </TouchableOpacity>
             </View>
