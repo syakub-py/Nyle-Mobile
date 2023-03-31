@@ -11,66 +11,53 @@ import { Dropdown } from 'react-native-element-dropdown';
 const {width} = Dimensions.get("window");
 const height = width*1;
 
-// const handleSubmit = async (title) =>{
-//     const configuration = new Configuration({
-//         apiKey: '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',
-//     });
-//     const openai = new OpenAIApi(configuration);
-//     const response = await openai.createCompletion({
-//         model: "text-davinci-003",
-//         prompt: "I am selling a " + title +" write a short description" ,
-//         max_tokens: 100
-//     });
-
-//     return response.data.choices[0].text;
-// }
-
 export default function AddPost({route}){
-    faker.seed(20);
+    let randomNumber = Math.floor(Math.random() * 100);
+    faker.seed(randomNumber);
 
     const [refresh, setRefreshing] = React.useState(false);
-    const [title, setTitle] = React.useState('');
+    const [title, setTitle] = React.useState(faker.address.streetAddress(false));
     const [description, setDescription] = React.useState('');
     const [details, setDetails] = React.useState('');
-    const [price, setPrice] = React.useState('');
+    const [price, setPrice] = React.useState(randomNumber.toString());
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [imageUrls, setImageUrls] = React.useState([]);
-    const [state, setState] = React.useState({active:0})
-    const [currency, setCurrency] = React.useState(null);
+    const [currency, setCurrency] = React.useState({image:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png", image: "https://freepngimg.com/save/137173-symbol-bitcoin-free-png-hq/512x512"});
     const [isFocus, setIsFocus] = React.useState(false);
 
-    let randomNumber = Math.floor(Math.random() * 100);
 
-    const handleTitleChange = (title) => {
-        setTitle(title);
-    }
 
     const uploadImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           aspect: [4, 3],
           quality: 1,
+          allowsMultipleSelection: true
         });
       
         if (!result.canceled) {
             const currentImageUrls = [...imageUrls];
-            const fileJson = result.assets[0];
-            currentImageUrls.push(fileJson.uri)
+            const fileJson = result.assets;
+            fileJson.forEach((element)=>{
+                currentImageUrls.push(element.uri)
+            })
             setImageUrls(currentImageUrls);
-            const filename = fileJson.uri.split('/')[fileJson.uri.split('/').length -1];
-            const response = await fetch(fileJson.uri);
+        };  
+    };
+          
+
+    const upload = async (array) =>{
+        array.forEach( async (element)  => {
+            const filename = element.split('/')[element.split('/').length -1];
+            const response = await fetch(element.uri);
             const storageRef = getstorage.ref().child(`images/${filename}`);
-            response.blob().then((result)=>{
+            await response.blob().then((result)=>{
                 storageRef.put(result).then((snapshot) => {
                     console.log('Image uploaded successfully!');
                 });
-                alert("All images uploaded successfully")
             })
-        };
-            
-      };
-          
-
+        });
+    }
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -79,14 +66,32 @@ export default function AddPost({route}){
 
     const dropMarker = (event) =>{
         const coordinate = event.nativeEvent;
-        
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
     } 
 
-    const addPosts = (collectionPath, title, price, details, description, coordinates) =>{
+    const clear =() =>{
+        setTitle('');
+        setDescription('');
+        setDetails('');
+        setPrice('');
+        setCoordinates({latitude: 0, longitude: 0,});
+        setImageUrls([]);
+                
+        onRefresh();
+    }
+
+    const deleteImages = (index) =>{
+        const newArray = imageUrls
+        newArray.splice(index, 1)
+        setImageUrls(newArray)
+        onRefresh();
+    }
+
+    const addPosts = async (collectionPath, title, price, details, description, coordinates) =>{
         if (!collectionPath) {
             throw new Error('Error: collection name cannot be empty');
         }
+        await upload(imageUrls);
         return firestore.collection(collectionPath).doc(title).set({
             id:randomNumber,
             title: title,
@@ -103,6 +108,8 @@ export default function AddPost({route}){
         })
         .then(ref => {
             console.log('Added document with ID: ' + title);
+            
+            clear();
         })
         .catch(error => {
             console.log('Error adding document: ', error);
@@ -111,7 +118,7 @@ export default function AddPost({route}){
 
     return(
         <View style={{backgroundColor:'white'}}>
-            <ScrollView refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
+            <ScrollView contentContainerStyle={{paddingBottom:60}} refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
                 {
                     imageUrls.map((item, index)=>(
@@ -127,7 +134,14 @@ export default function AddPost({route}){
                         {
                             imageUrls.map((i, k)=>(
                                 <Pressable key={k}>
-                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
+                                    <Pressable style={{zIndex:1}} onPress={()=>{deleteImages(k)}}>
+                                        <View style={styles.shadowBox}>
+                                            <View style={styles.circle}>
+                                                <Ionicons name='remove-outline' color={'white'} size={15} style={{elevation:1}}/>
+                                            </View>
+                                        </View>
+                                    </Pressable>
+                                    <Image source={{uri:i}} style={{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}}/>
                                 </Pressable>
                             ))
                         }
@@ -135,16 +149,15 @@ export default function AddPost({route}){
                 </ScrollView>
             
 
-                <Pressable onPress={uploadImage}>
-                    <View style={{width:50, backgroundColor:'black', height:50, borderRadius:30, justifyContent:'center', alignItems:'center'}}>
-                        {/* <Text style={{color:'white', fontSize:20}}>Tap to add pictures</Text> */}
-                        <Ionicons name='add-outline' size={30} color={'white'}/>
+                <Pressable onPress={uploadImage} style={{justifyContent:'center', alignItems:'center'}}>
+                    <View style={{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
+                        <Ionicons name='add-outline' size={40} color={'white'}/>
                     </View>
                 </Pressable>
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
-                    <TextInput style={styles.textinput} onChangeText = {handleTitleChange} value={title}/>
+                    <TextInput style={styles.textinput} onChangeText = {(text)=>{setTitle(text)}} value={title}/>
                 </View>
 
                 <View >
@@ -159,8 +172,8 @@ export default function AddPost({route}){
                         data={[]}
                         search
                         maxHeight={300}
-                        labelField="name"
-                        valueField="image"
+                        labelField=""
+                        valueField=""
                         placeholder={!isFocus ? 'Select item' : '...'}
                         searchPlaceholder="Search..."
                         value={currency}
@@ -174,8 +187,7 @@ export default function AddPost({route}){
                             setCurrency(item);
                             setIsFocus(false);
                         }}/>
-
-                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/3}} onChangeText={(text)=>setPrice(text)}/>  
+                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>  
                     </View>
                                       
                 </View>
@@ -189,12 +201,12 @@ export default function AddPost({route}){
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Details</Text>
-                    <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
+                    <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
                 </View>
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20,}}>Description</Text>
-                    <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
+                    <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
@@ -219,4 +231,26 @@ const styles = StyleSheet.create({
         borderRadius:10,
         paddingHorizontal:15,
     },
+    shadowBox: {
+        position: 'absolute',
+        left: 5,
+        top: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        zIndex:1
+      },
+      circle: {
+        backgroundColor: 'red',
+        height: 20,
+        width: 20,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
   });
