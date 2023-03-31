@@ -21,13 +21,16 @@ export default function AddPost({route}){
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState(randomNumber.toString());
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
+    //urls for the phone
     const [imageUrls, setImageUrls] = React.useState([]);
     const [currency, setCurrency] = React.useState({image:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png", image: "https://freepngimg.com/save/137173-symbol-bitcoin-free-png-hq/512x512"});
     const [isFocus, setIsFocus] = React.useState(false);
+    //the urls to download
+    const [uploadUrls, setUploadUrls] = React.useState([])
 
 
 
-    const uploadImage = async () => {
+    const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           aspect: [4, 3],
@@ -47,17 +50,24 @@ export default function AddPost({route}){
           
 
     const upload = async (array) =>{
-        array.forEach( async (element)  => {
+        const UrlDownloads = []
+        for (const element of array) {
             const filename = element.split('/')[element.split('/').length -1];
-            const response = await fetch(element.uri);
-            const storageRef = getstorage.ref().child(`images/${filename}`);
-            await response.blob().then((result)=>{
-                storageRef.put(result).then((snapshot) => {
+            await fetch(element).then((result)=>{
+                result.blob().then(async (response)=>{
+                    const storageRef = getstorage.ref().child(`images/${filename}`);
+                    await storageRef.put(response);
+                    
+                    storageRef.getDownloadURL().then((url)=>{
+                        UrlDownloads.push(url)
+                    })
                     console.log('Image uploaded successfully!');
                 });
-            })
-        });
+            });
+            setUploadUrls(UrlDownloads)
+        }
     }
+    
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -92,6 +102,7 @@ export default function AddPost({route}){
             throw new Error('Error: collection name cannot be empty');
         }
         await upload(imageUrls);
+        
         return firestore.collection(collectionPath).doc(title).set({
             id:randomNumber,
             title: title,
@@ -100,7 +111,7 @@ export default function AddPost({route}){
             currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
             details: details,
             description: description,
-            pic: imageUrls,
+            pic: uploadUrls,
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
             coordinates: coordinates,
             views: 0,
@@ -149,7 +160,7 @@ export default function AddPost({route}){
                 </ScrollView>
             
 
-                <Pressable onPress={uploadImage} style={{justifyContent:'center', alignItems:'center'}}>
+                <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
                     <View style={{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
                         <Ionicons name='add-outline' size={40} color={'white'}/>
                     </View>
