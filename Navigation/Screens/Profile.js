@@ -82,7 +82,8 @@ export default function Profile({navigation, route}) {
   const deleteRow = (item) =>{
     firestore.collection("AllPosts").doc(item.title).delete()
     .then(() => {
-        Alert.alert('Document successfully deleted!')
+        Alert.alert('Post deleted!')
+        onRefresh();
     })
     .catch((error) => {
         Alert.alert('Error deleting document: ', error)

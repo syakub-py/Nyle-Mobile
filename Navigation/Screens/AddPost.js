@@ -26,7 +26,6 @@ export default function AddPost({route}){
     const [currency, setCurrency] = React.useState({image:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png", image: "https://freepngimg.com/save/137173-symbol-bitcoin-free-png-hq/512x512"});
     const [isFocus, setIsFocus] = React.useState(false);
     //the urls to download
-    const [uploadUrls, setUploadUrls] = React.useState([])
 
 
 
@@ -49,24 +48,27 @@ export default function AddPost({route}){
     };
           
 
-    const upload = async (array) =>{
-        const UrlDownloads = []
-        for (const element of array) {
-            const filename = element.split('/')[element.split('/').length -1];
-            await fetch(element).then((result)=>{
-                result.blob().then(async (response)=>{
-                    const storageRef = getstorage.ref().child(`images/${filename}`);
-                    await storageRef.put(response);
-                    
-                    storageRef.getDownloadURL().then((url)=>{
-                        UrlDownloads.push(url)
-                    })
-                    console.log('Image uploaded successfully!');
-                });
-            });
-            setUploadUrls(UrlDownloads)
+    const upload = async (array) => {
+        const UrlDownloads = [];
+        try {
+          for (const element of array) {
+            const filename = element.split("/").pop();
+            const response = await fetch(element);
+            const blob = await response.blob();
+            const storageRef = getstorage.ref().child(`images/${filename}`);
+            await storageRef.put(blob);
+            console.log("Image uploaded successfully!");
+            const url = await storageRef.getDownloadURL();
+            UrlDownloads.push(url);
+          }
+          console.log("All images uploaded successfully!");
+          console.log(UrlDownloads)
+          return UrlDownloads;
+        } catch (error) {
+          console.error(error);
+          return [];
         }
-    }
+      };
     
 
     const onRefresh = () => {
@@ -86,7 +88,7 @@ export default function AddPost({route}){
         setPrice('');
         setCoordinates({latitude: 0, longitude: 0,});
         setImageUrls([]);
-                
+        
         onRefresh();
     }
 
@@ -101,8 +103,7 @@ export default function AddPost({route}){
         if (!collectionPath) {
             throw new Error('Error: collection name cannot be empty');
         }
-        await upload(imageUrls);
-        
+        const UrlList = await upload(imageUrls)
         return firestore.collection(collectionPath).doc(title).set({
             id:randomNumber,
             title: title,
@@ -111,7 +112,7 @@ export default function AddPost({route}){
             currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
             details: details,
             description: description,
-            pic: uploadUrls,
+            pic: UrlList,
             profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
             coordinates: coordinates,
             views: 0,
@@ -119,7 +120,7 @@ export default function AddPost({route}){
         })
         .then(ref => {
             console.log('Added document with ID: ' + title);
-            
+            Alert.alert("Post added")
             clear();
         })
         .catch(error => {
