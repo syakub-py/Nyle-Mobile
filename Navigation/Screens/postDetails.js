@@ -23,7 +23,7 @@ export default function PostDetails({route, navigation}){
                 username: route.params.username
             },
             {
-                profilePic:"",
+                profilePic:route.params.ProfilePic,
                 username: route.params.postedBy
             }
         ]
@@ -148,7 +148,7 @@ export default function PostDetails({route, navigation}){
                 <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>Posted On: {route.params.DatePosted}</Text>
 
             </ScrollView>
-            <View style={{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>
+            {/* <View style={{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>
                 <View style={{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>
                     <Pressable>
                         <Text style={{color:'white', fontSize:15, fontWeight:"bold"}}>Place Bid</Text>
@@ -160,7 +160,7 @@ export default function PostDetails({route, navigation}){
                         <Text style={{color:'white', fontSize:15, fontWeight:"bold"}}>Buy out</Text>
                     </Pressable>
                 </View>
-            </View> 
+            </View>  */}
         </View>
 
     )

@@ -23,10 +23,10 @@ export default function AddPost({route}){
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     //urls for the phone
     const [imageUrls, setImageUrls] = React.useState([]);
-    const [currency, setCurrency] = React.useState({image:"https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png", image: "https://freepngimg.com/save/137173-symbol-bitcoin-free-png-hq/512x512"});
+    const [currency, setCurrency] = React.useState(  [{ value: 'USD', label: 'USD', image: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" },
+    { value: 'EUR', label: 'EUR', image: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png" },
+    { value: 'GBP', label: 'GBP', image: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000" },]);
     const [isFocus, setIsFocus] = React.useState(false);
-    //the urls to download
-
 
 
     const SelectImages = async () => {
@@ -55,7 +55,7 @@ export default function AddPost({route}){
             const filename = element.split("/").pop();
             const response = await fetch(element);
             const blob = await response.blob();
-            const storageRef = getstorage.ref().child(`images/${filename}`);
+            const storageRef = getstorage.ref().child(`images/${title}/${filename}`);
             await storageRef.put(blob);
             console.log("Image uploaded successfully!");
             const url = await storageRef.getDownloadURL();
@@ -176,28 +176,26 @@ export default function AddPost({route}){
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
                     <View style={{flexDirection:'row', marginLeft:30}}>
                         <Dropdown
-                        style={{height:50,width:width/3, borderColor: 'gray', borderWidth: 0, borderRadius: 30, paddingHorizontal: 8,}}
-                        placeholderStyle={{}}
-                        selectedTextStyle={{}}
-                        inputSearchStyle={{}}
-                        iconStyle={{width: 20, height: 20,}}
-                        data={[]}
-                        search
-                        maxHeight={300}
-                        labelField=""
-                        valueField=""
-                        placeholder={!isFocus ? 'Select item' : '...'}
-                        searchPlaceholder="Search..."
-                        value={currency}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        // renderLeftIcon={({ image }) => {
-                        //     return (
-                        //     <Image source={{ uri: image }} style={{ width: 30, height: 30 }} />
-                        //   )}}
-                        onChange={item => {
-                            setCurrency(item);
-                            setIsFocus(false);
+                            style={{height:50,width:width/3, borderColor: 'gray', borderWidth: 0, borderRadius: 30, paddingHorizontal: 8,}}
+                            placeholderStyle={{}}
+                            selectedTextStyle={{}}
+                            inputSearchStyle={{}}
+                            iconStyle={{width: 20, height: 20,}}
+                            data={currency}
+                            search
+                            // maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus ? 'Select item' : '...'}
+                            searchPlaceholder="Search..."
+                            value={currency}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            renderAccessory={() => <Image source={{uri: currency.image}} style={{ width: 30, height: 30 }} />}
+
+                            onChange={item => {
+                                setCurrency(item);
+                                setIsFocus(false);
                         }}/>
                         <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>  
                     </View>
