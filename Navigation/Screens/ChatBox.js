@@ -1,6 +1,6 @@
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import * as React from 'react';
-import { View,Text, Pressable, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { View,Text, Pressable, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +13,6 @@ export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = React.useState([]);
-
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -34,7 +33,6 @@ export default function ChatBox({route, navigation}) {
     newArray.splice(index, 1)
     setImageUrls(newArray)
   }
-
 
   const SelectImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -60,34 +58,41 @@ export default function ChatBox({route, navigation}) {
     const mappedMessage = {
       _id:title,
       createdAt: new Date().toString(),
-      text:message[0],
+      text:message[0].text,
+      image: imageUrls,
       user:{
         _id:route.params.userId,
         name:route.params.username,
         avatar:route.params.otherAvatar 
       }
     }
+    setImageUrls([])
     messagesRef.add(mappedMessage)
   }, [])
 
-  const renderBubble = (props) =>{
-    return(
+  const renderBubble = (props) => {
+    const wrapperStyle = {
+      right: {
+        backgroundColor: 'black',
+        borderWidth: 3,
+        borderRadius: 18,
+        ...(imageUrls.length > 0 && { marginBottom: 90 }),
+      },
+    };
+    return (
       <Bubble
-      {...props}
-      wrapperStyle={{
-        right: {
-          backgroundColor: 'black',
-        },
-      }}
-      textStyle={{
-        right: {
-          color: '#fff',
-        },
-      }}
+        {...props}
+        wrapperStyle={wrapperStyle}
+        textStyle={{
+          right: {
+            color: '#fff',
+          },
+        }}
       />
-    )
-  }
-
+    );
+  };
+  
+  
   const renderSend = () =>{
     return(
       <TouchableOpacity onPress={onSend}>
@@ -112,12 +117,12 @@ export default function ChatBox({route, navigation}) {
             height: 75,
           }}>
           {
-            imageUrls.length > 0 ? (
+            (imageUrls.length > 0) ? (
               imageUrls.map((value, index) => (
                 <View key={index} style={{backgroundColor:'#F0F0F0'}}>
                   <Pressable style={{zIndex:1}}>
                     <View style={{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
-                      <Ionicons name='remove-outline'  color={'white'} size={15} style={{elevation:1}}/>
+                      <Ionicons name='close-outline'  color={'white'} size={15} style={{elevation:1}}/>
                     </View>
                   </Pressable>
                   <Image
@@ -162,10 +167,10 @@ export default function ChatBox({route, navigation}) {
           <Image style={{height:45, width:45, borderRadius:100}} source={{uri:route.params.avatar}}/>
           <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
-
-
       </View>
+
       <GiftedChat
+        inverted 
         messages={messages}
         onSend={messages => onSend(messages)}
         alwaysShowSend
@@ -173,8 +178,15 @@ export default function ChatBox({route, navigation}) {
         user={{_id:route.params.userId}}
         renderBubble={renderBubble}
         renderActions={renderActions}
-        renderSend={renderSend}
+        // renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
+        renderMessageImage={(props) => (
+          <Image
+            source={{ uri: props.currentMessage.image }}
+            style={{ width: 200, height: 200 }}
+            resizeMode="cover"
+          />
+        )}
       />
   </SafeAreaView> 
   )

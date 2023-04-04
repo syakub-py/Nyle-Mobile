@@ -159,13 +159,24 @@ export default function AddPost({route}){
                         }
                     </View>
                 </ScrollView>
-            
 
-                <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
-                    <View style={{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name='add-outline' size={40} color={'white'}/>
-                    </View>
-                </Pressable>
+                {
+                    (imageUrls.length === 0)? (
+                        <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
+                            <View style={{height:height, width:width, borderBottomRightRadius:10, borderBottomLeftRadius:10, backgroundColor:'lightgray', justifyContent:'center', alignItems:'center'}}>
+                                <Ionicons name='images-outline' size={80} color={'white'}/>
+                                <Text>Tap here to add images</Text>
+                            </View>
+                        </Pressable>
+    
+                    ):(
+                    <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
+                        <View style={{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
+                            <Ionicons name='add-outline' size={40} color={'white'}/>
+                        </View>
+                    </Pressable>
+                    )
+                }
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
