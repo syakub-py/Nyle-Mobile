@@ -17,7 +17,7 @@ export default function ViewImages({route, navigation}){
         enableSwipeDown={true}
         onSwipeDown={() => {navigation.goBack()}}
         index={route.params.index}
-
+        backgroundColor='transparent'
         />
     );
 }

@@ -1,6 +1,6 @@
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import * as React from 'react';
-import { View,Text, Pressable, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView} from 'react-native';
+import { View,Text, Pressable, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +13,7 @@ export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = React.useState([]);
+  const [refresh, setRefreshing] = React.useState(false);
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -32,7 +33,13 @@ export default function ChatBox({route, navigation}) {
     const newArray = imageUrls
     newArray.splice(index, 1)
     setImageUrls(newArray)
+    onRefresh();
   }
+  
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 500);
+  };
 
   const SelectImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -115,14 +122,15 @@ export default function ChatBox({route, navigation}) {
             left: 0,
             right: 0,
             height: 75,
-          }}>
+          }}
+          refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>}>
           {
             (imageUrls.length > 0) ? (
               imageUrls.map((value, index) => (
                 <View key={index} style={{backgroundColor:'#F0F0F0'}}>
-                  <Pressable style={{zIndex:1}}>
+                  <Pressable style={{zIndex:1}} onPress={()=>deleteImages(index)}>
                     <View style={{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
-                      <Ionicons name='close-outline'  color={'white'} size={15} style={{elevation:1}}/>
+                      <Ionicons name='remove-outline'  color={'white'} size={15} style={{elevation:1}}/>
                     </View>
                   </Pressable>
                   <Image

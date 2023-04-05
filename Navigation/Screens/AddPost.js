@@ -26,7 +26,7 @@ export default function AddPost({route}){
     const [currency, setCurrency] = React.useState(  [{ value: 'USD', label: 'USD', image: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" },
     { value: 'EUR', label: 'EUR', image: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png" },
     { value: 'GBP', label: 'GBP', image: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000" },]);
-    const [isFocus, setIsFocus] = React.useState(false);
+    const [isFocus, setIsFocus] = React.useState(false);    
 
 
     const SelectImages = async () => {
@@ -165,7 +165,7 @@ export default function AddPost({route}){
                         <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
                             <View style={{height:height, width:width, borderBottomRightRadius:10, borderBottomLeftRadius:10, backgroundColor:'lightgray', justifyContent:'center', alignItems:'center'}}>
                                 <Ionicons name='images-outline' size={80} color={'white'}/>
-                                <Text>Tap here to add images</Text>
+                                <Text style={{color:'white', fontSize:17, fontWeight:'700'}}>Tap here to add images</Text>
                             </View>
                         </Pressable>
     

@@ -14,6 +14,7 @@ export default function PostDetails({route, navigation}){
 
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
+
     
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
@@ -77,7 +78,7 @@ export default function PostDetails({route, navigation}){
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k)=>(
-                                <Pressable key={k}>
+                                <Pressable key={k} onPress={()=>console.log("Button Pressed")}>
                                     <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
                                 </Pressable>
                             ))
