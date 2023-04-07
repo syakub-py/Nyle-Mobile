@@ -99,6 +99,27 @@ export default function ChatBox({route, navigation}) {
     );
   };
   
+  const upload = async (array) => {
+    const UrlDownloads = [];
+    try {
+      for (const element of array) {
+        const filename = element.split("/").pop();
+        const response = await fetch(element);
+        const blob = await response.blob();
+        const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
+        await storageRef.put(blob);
+        console.log("Image uploaded successfully!");
+        const url = await storageRef.getDownloadURL();
+        UrlDownloads.push(url);
+      }
+      console.log("All images uploaded successfully!");
+      console.log(UrlDownloads)
+      return UrlDownloads;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
   
   const renderSend = () =>{
     return(
