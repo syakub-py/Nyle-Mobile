@@ -70,7 +70,7 @@ export default function Login({navigation}){
             </View>
 
             <View style={{justifyContent:'center', marginLeft:15, marginRight:15}}>
-                <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}>or</Text>
+                <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}></Text>
                 <View style={{borderRadius:6, height:50, justifyContent:'center'}}>
                     <Ionicons name='person-outline' size={20} style={{ position: 'absolute',}}/>
                     <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={{marginLeft:25}}/>

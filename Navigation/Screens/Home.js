@@ -36,14 +36,12 @@ export default function Home({navigation, route}) {
     return results;
   }
 
-
   React.useEffect(()=>{
     getPosts().then((result) =>{
       const masterPostList = result
       setfilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
-      
       Alert(error)
     })
 

@@ -36,8 +36,25 @@ export default function SignUp({navigation}){
     const removeProfilePhoto = () =>{
         setRefreshing(true);
         setProfilePic('')
-        setTimeout(() => setRefreshing(false), 1000);
+        setTimeout(() => setRefreshing(false), 300);
     }
+
+    const upload = async (string) => {
+        try {
+            downloadUrl = ""
+            const response = await fetch(string);
+            const blob = await response.blob();
+            const storageRef = getstorage.ref().child(`ProfileImages/${username}`);
+            await storageRef.put(blob);
+            const url = await storageRef.getDownloadURL();
+            downloadUrl = url
+            console.log("Image uploaded successfully! Download URL: " + downloadUrl);
+            return downloadUrl;
+        } catch (error) {
+          console.error(error);
+          return "";
+        }
+      };
 
     return(
         <View style={styles.container}>

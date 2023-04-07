@@ -92,7 +92,6 @@ export default function EditPost({navigation, route}){
                     <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: {faker.name.findName()}</Text>
 
                     <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
-                        {/* mapType={MAP_TYPES.SATELLITE} */}
                         <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
                             <Marker coordinate={route.params.coordinates}/>
                         </MapView>

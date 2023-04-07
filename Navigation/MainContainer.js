@@ -26,15 +26,9 @@ export default function MainContainer({route}) {
           headerShown:false,
           tabBarActiveTintColor:"black",
           tabBarShowLabel:false,
-          // tabBarStyle:{
-          //   height:50,
-          //   borderRadius:15,
-          //   position:'absolute',
-          //   margin:15,
-          // },
           tabBarStyle: {
-            height: 60, 
-            borderRadius:18, 
+            height: 70, 
+            borderRadius:30, 
             backgroundColor: '#fff', 
             position: 'absolute',
             bottom: 20, 
@@ -65,7 +59,7 @@ export default function MainContainer({route}) {
             }else if (rn === AddPost){
               iconName = focused ? 'add-circle' : 'add-circle-outline';
             }
-            return <Ionicons name = {iconName} size={30} color={color}/>
+            return <Ionicons name = {iconName} size={32} color={color}/>
            },
            
         })}>
