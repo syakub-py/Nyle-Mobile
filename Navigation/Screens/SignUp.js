@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, RefreshControl, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
-import {getstorage} from './Components/Firebase'
+import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -11,14 +11,14 @@ export default function SignUp({navigation}){
     const [password, setPassword] = React.useState('')
     const [profilePic, setProfilePic] = React.useState('')
     const [refreshing, setRefreshing] = React.useState(false);
+    const [profilePicUrl, setProfilePicUrl] = React.useState('')
 
     const handleSignUp = () =>{
         auth
         .createUserWithEmailAndPassword(username, password)
         .then(userCredentials =>{
             const user = userCredentials.user;
-        })
-        .catch(error => alert(error.message))
+        }).catch(error => alert(error.message))
     }
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -33,7 +33,7 @@ export default function SignUp({navigation}){
         };  
     };
 
-    const removeProfilePhoto = () =>{
+    const removeProfilePhoto = () => {
         setRefreshing(true);
         setProfilePic('')
         setTimeout(() => setRefreshing(false), 300);
@@ -41,7 +41,7 @@ export default function SignUp({navigation}){
 
     const upload = async (string) => {
         try {
-            downloadUrl = ""
+            let downloadUrl = ""
             const response = await fetch(string);
             const blob = await response.blob();
             const storageRef = getstorage.ref().child(`ProfileImages/${username}`);
@@ -49,7 +49,8 @@ export default function SignUp({navigation}){
             const url = await storageRef.getDownloadURL();
             downloadUrl = url
             console.log("Image uploaded successfully! Download URL: " + downloadUrl);
-            return downloadUrl;
+            setProfilePicUrl(downloadUrl);
+            console.log(profilePicUrl)
         } catch (error) {
           console.error(error);
           return "";
@@ -58,14 +59,6 @@ export default function SignUp({navigation}){
 
     return(
         <View style={styles.container}>
-            {/* <View style={{ alignItems:'center', justifyContent:'center'}}>
-                <Image
-                source ={require('./Components/icon.png')}
-                style ={{
-                    height: 150,
-                    width: 150
-                }}/>    
-            </View> */}
 
             <View style={{alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress={SelectImages}>
@@ -92,10 +85,8 @@ export default function SignUp({navigation}){
                 </Pressable>
             </View>
 
-            {/* <TextInput placeholder='Name' style = {styles.textInput} onChangeText={(text) => setName(text)}/> */}
             <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text) => setUsername(text)} />
             <TextInput placeholder='Password' style = {styles.textInput} onChangeText={(text)=> setPassword(text)} secureTextEntry/>
-            {/* <TextInput style = {styles.textInput} placeholder='Wallet ID' secureTextEntry/> */}
 
             <Pressable style={styles.submitContainer} onPress={handleSignUp}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>

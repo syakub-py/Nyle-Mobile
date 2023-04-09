@@ -209,13 +209,15 @@ export default function ChatBox({route, navigation}) {
         renderActions={renderActions}
         // renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
-        renderMessageImage={(props) => (
-          <Image
-            source={{ uri: props.currentMessage.image }}
-            style={{ width: 200, height: 200 }}
-            resizeMode="cover"
-          />
-        )}
+
+        //needs to get finished
+        // renderMessageImage={(props) => (
+        //   <Image
+        //     source={{ uri: props.currentMessage.image }}
+        //     style={{ width: 200, height: 200 }}
+        //     resizeMode="cover"
+        //   />
+        // )}
       />
   </SafeAreaView> 
   )

@@ -4,7 +4,7 @@ import faker from 'faker'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import {firestore} from './Components/Firebase'
+import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 
 
@@ -123,18 +123,36 @@ const transactions =[
     })
   }, [])
 
-  const deleteRow = (item) =>{
-    firestore.collection("AllPosts").doc(item.title).delete()
-    .then(() => {
-        Alert.alert('Post deleted!')
-        onRefresh();
-    })
-    .catch((error) => {
-        Alert.alert('Error deleting document: ', error)
-    });
-  }
+  const deletePost = (item) => {
+    console.log("Deleting post:", item.title);
+    firestore
+        .collection("AllPosts")
+        .doc(item.title)
+        .delete()
+        .then(() => {
+          console.log("Deleted the Firestore data");
+          //delete each image
+          item.pic.forEach((picture, index) => {
+            const picRef = getstorage.refFromURL(picture);
+            console.log("Deleting image:", picture);
+            picRef
+                .delete()
+                .then(() => {
+                  console.log("Deleted picture");
+                })
+                .catch((error) => {
+                  console.log("Error deleting picture:", error);
+                });
+          });
+          Alert.alert("Posted deleted!");
+          onRefresh();
+        })
+        .catch((error) => {
+          console.log("Error deleting document: " + JSON.stringify(error));
+        });
+  };
 
-    return (
+  return (
       <View >
             <SwipeListView
               data={userList}
@@ -214,7 +232,7 @@ const transactions =[
                   bottom: 0,
                   width: 100,
                   alignItems: 'center'}}>
-                    <TouchableOpacity onPress={()=>deleteRow(item)} style={{marginRight:20}}>
+                    <TouchableOpacity onPress={()=>deletePost(item)} style={{marginRight:20}}>
                       <Ionicons size={30} name='trash-outline' color={"red"}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>

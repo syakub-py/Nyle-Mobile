@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput
 import { auth }from './Components/Firebase';
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import  AsyncStorage  from '@react-native-community/async-storage';
 
 
 export default function Login({navigation}){
@@ -17,7 +16,6 @@ export default function Login({navigation}){
         .signInWithEmailAndPassword(username, password)
         .then(userCredentials =>{
             const user = userCredentials.user;
-            
         })
         .catch(error => alert(error.message))
     }
@@ -30,8 +28,8 @@ export default function Login({navigation}){
         // The signed-in user info.
         const user = result.user;
         console.log(user);
-        // await AsyncStorage.setItem('user', JSON.stringify(user));
     }
+
 
     
     React.useEffect(()=>{

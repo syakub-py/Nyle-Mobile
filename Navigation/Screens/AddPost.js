@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, RefreshControl, ScrollView, TextInput,Image ,Pressable, Dimensions, Picker, Alert } from 'react-native';
+import { View, Text, StyleSheet, RefreshControl, ScrollView, TextInput, Image ,Pressable, Dimensions, Alert } from 'react-native';
 import faker from 'faker';
 import {firestore, getstorage} from './Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
