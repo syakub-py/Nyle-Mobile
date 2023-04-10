@@ -2,7 +2,7 @@ import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import * as React from 'react';
 import { View,Text, Pressable, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from './Components/Firebase'
+import {firestore, getstorage} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
@@ -14,6 +14,7 @@ export default function ChatBox({route, navigation}) {
   let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = React.useState([]);
   const [refresh, setRefreshing] = React.useState(false);
+  let downloadUrls =[]
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -56,26 +57,33 @@ export default function ChatBox({route, navigation}) {
             currentImageUrls.push(element.uri)
         })
         setImageUrls(currentImageUrls);
-    };  
+
+        console.log("current image urls: " + currentImageUrls)
+    }
   }
 
-  const onSend = React.useCallback((message)  => {
-    const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
-    const title = uuidv4();
-    const mappedMessage = {
-      _id:title,
-      createdAt: new Date().toString(),
-      text:message[0].text,
-      image: imageUrls,
-      user:{
-        _id:route.params.userId,
-        name:route.params.username,
-        avatar:route.params.otherAvatar 
-      }
-    }
-    setImageUrls([])
-    messagesRef.add(mappedMessage)
-  }, [])
+    const onSend = React.useCallback(async (message)  => {
+        const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
+        const title = uuidv4();
+
+        downloadUrls = await upload(imageUrls);
+        console.log("upload results: " + downloadUrls);
+
+        const mappedMessage = {
+            _id:title,
+            createdAt: new Date().toString(),
+            text:message[0].text,
+            image: downloadUrls,
+            user:{
+                _id:route.params.userId,
+                name:route.params.username,
+                avatar:route.params.otherAvatar
+            }
+        }
+        setImageUrls([])
+        messagesRef.add(mappedMessage)
+    }, [imageUrls])
+
 
   const renderBubble = (props) => {
     const wrapperStyle = {
@@ -100,6 +108,7 @@ export default function ChatBox({route, navigation}) {
   };
   
   const upload = async (array) => {
+    console.log("image array passed into upload function: " + array)
     const UrlDownloads = [];
     try {
       for (const element of array) {
@@ -113,7 +122,6 @@ export default function ChatBox({route, navigation}) {
         UrlDownloads.push(url);
       }
       console.log("All images uploaded successfully!");
-      console.log(UrlDownloads)
       return UrlDownloads;
     } catch (error) {
       console.error(error);
@@ -209,15 +217,16 @@ export default function ChatBox({route, navigation}) {
         renderActions={renderActions}
         // renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
-
-        //needs to get finished
-        // renderMessageImage={(props) => (
-        //   <Image
-        //     source={{ uri: props.currentMessage.image }}
-        //     style={{ width: 200, height: 200 }}
-        //     resizeMode="cover"
-        //   />
-        // )}
+        renderMessageImage={(props) => {
+            return(
+                <Image
+                    source={{ uri: props.currentMessage.image[0]}}
+                    style={{ width: 200, height: 200, borderTopRightRadius:15, borderTopLeftRadius:15 }}
+                    resizeMode="cover"
+                />
+                )
+            }
+        }
       />
   </SafeAreaView> 
   )

@@ -49,7 +49,7 @@ export default function SignUp({navigation}){
             const docRef = firestore.collection("ProfilePictures").doc(username);
             await docRef.set({
                 username: username,
-                profilePicUrl: downloadUrl
+                FileName: downloadUrl
             });
             console.log("Username added to map successfully");
         } catch (error) {
