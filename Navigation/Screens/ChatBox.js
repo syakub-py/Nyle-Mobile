@@ -15,6 +15,7 @@ export default function ChatBox({route, navigation}) {
   const [imageUrls, setImageUrls] = React.useState([]);
   const [refresh, setRefreshing] = React.useState(false);
   let downloadUrls =[]
+  const [state, setState] = React.useState({active:0})
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -91,6 +92,13 @@ export default function ChatBox({route, navigation}) {
                 borderRadius: 18,
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             },
+            left:{
+                backgroundColor:'#ebebeb',
+                borderWidth: 3,
+                borderRadius: 18,
+                borderColor:'#ebebeb',
+                ...(imageUrls.length > 0 && { marginBottom: 90 }),
+            }
         };
         return (
             <Bubble
@@ -100,6 +108,7 @@ export default function ChatBox({route, navigation}) {
                     right: {
                         color: '#fff',
                     },
+
                 }}/>
         );
     };
@@ -107,25 +116,35 @@ export default function ChatBox({route, navigation}) {
 
     const upload = async (array) => {
     const UrlDownloads = [];
-    try {
-      for (const element of array) {
-        const filename = element.split("/").pop();
-        const response = await fetch(element);
-        const blob = await response.blob();
-        const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
-        await storageRef.put(blob);
-        console.log("Image uploaded successfully!");
-        const url = await storageRef.getDownloadURL();
-        UrlDownloads.push(url);
-      }
-      console.log("All images uploaded successfully!");
-      return UrlDownloads;
-    } catch (error) {
-      console.error(error);
-      return [];
+    if (array.length> 0){
+        try {
+            for (const element of array) {
+                const filename = element.split("/").pop();
+                const response = await fetch(element);
+                const blob = await response.blob();
+                const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
+                await storageRef.put(blob);
+                console.log("Image uploaded successfully!");
+                const url = await storageRef.getDownloadURL();
+                UrlDownloads.push(url);
+            }
+            console.log("All images uploaded successfully!");
+            return UrlDownloads;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }else{
+        return [];
     }
   };
-  
+    const change = ({nativeEvent}) =>{
+        const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
+        if(slide !== state.active){
+            setState({active: slide})
+        }
+    }
+
   const renderSend = () =>{
     return(
       <TouchableOpacity onPress={onSend}>
@@ -213,29 +232,52 @@ export default function ChatBox({route, navigation}) {
         renderActions={renderActions}
         renderInputToolbar={renderInputToolbar}
         renderMessageImage={(props) => {
-            return (
-                <View style={{ width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} style={{ width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}>
-                        {
-                            props.currentMessage.image.map((image, index) => {
-                            return (
-                                <Image
-                                    key={index}
-                                    source={{ uri: image }}
+            if (props.currentMessage.image.length > 0) {
+                return (
+                    <View style={{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} onScroll={change}
                                     style={{
                                         width: 200,
                                         height: 200,
                                         borderTopRightRadius: 15,
                                         borderTopLeftRadius: 15
-                                    }}
-                                    resizeMode="cover"
-                                />
-                            );
-                        })}
-                    </ScrollView>
-                </View>
-            );
-        }}
+                                    }}>
+                            {
+                                props.currentMessage.image.map((image, index) => {
+                                    return (
+                                        <Image
+                                            key={index}
+                                            source={{uri: image}}
+                                            style={{
+                                                width: 200,
+                                                height: 200,
+                                                borderRadius:15
+                                                // borderTopRightRadius: 15,
+                                                // borderTopLeftRadius: 15
+                                            }}
+                                            resizeMode="cover"
+                                        />
+                                    );
+                                })}
+                        </ScrollView>
+                        <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
+                            {
+                                props.currentMessage.image.map((i, k)=>(
+                                    <Text style={k==state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key={k}>⬤</Text>
+                                ))
+                            }
+                        </View>
+                    </View>
+                );
+            }else {
+                return (
+                    <View>
+
+                    </View>
+                )
+            }
+        }
+      }
       />
   </SafeAreaView> 
   )
