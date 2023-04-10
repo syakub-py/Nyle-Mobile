@@ -43,7 +43,7 @@ export default function MainContainer({route}) {
             },
             shadowOpacity: 0.2,
             shadowRadius: 4,
-            elevation: 5, // for Android shadow
+            elevation: 5,
           },
           tabBarIcon: ({focused, color}) =>{
             let iconName;
@@ -64,7 +64,7 @@ export default function MainContainer({route}) {
            
         })}>
            
-           <Tab.Screen name = {Home} component = {home} initialParams={{ username: route.params.username }}/>
+           <Tab.Screen name = {Home} component = {home} initialParams={{ username: route.params.username, picture:route.params.profilePic}}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost} initialParams={{ username: route.params.username }}/>
            <Tab.Screen name = {Chat} component = {chat} initialParams={{ username: route.params.username }}/>

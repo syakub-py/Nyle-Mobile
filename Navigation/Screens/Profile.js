@@ -33,8 +33,6 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
 }
 
 
-
-
 export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -134,11 +132,10 @@ const transactions =[
           //delete each image
           item.pic.forEach((picture, index) => {
             const picRef = getstorage.refFromURL(picture);
-            console.log("Deleting image:", picture);
             picRef
                 .delete()
                 .then(() => {
-                  console.log("Deleted picture");
+                  console.log("Deleting image:", picRef.name);
                 })
                 .catch((error) => {
                   console.log("Error deleting picture:", error);

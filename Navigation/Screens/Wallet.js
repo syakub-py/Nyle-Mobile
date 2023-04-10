@@ -5,8 +5,8 @@ import axios from 'axios'
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
-import {firestore, firestoreLite} from './Components/Firebase'
-import { LineChart } from 'react-native-chart-kit';
+import {firestoreLite} from './Components/Firebase'
+import {collection, getDocs} from "firebase/firestore/lite";
 
 const {width} = Dimensions.get("window");
 

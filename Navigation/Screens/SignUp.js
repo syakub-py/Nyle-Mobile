@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, RefreshControl, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
-import {firestore, getstorage} from './Components/Firebase'
+import {getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -44,7 +44,7 @@ export default function SignUp({navigation}){
             let downloadUrl = ""
             const response = await fetch(string);
             const blob = await response.blob();
-            const storageRef = getstorage.ref().child(`ProfileImages/${username}`);
+            const storageRef = getstorage.ref().child(`ProfilePictures/${username}`);
             await storageRef.put(blob);
             const url = await storageRef.getDownloadURL();
             downloadUrl = url
