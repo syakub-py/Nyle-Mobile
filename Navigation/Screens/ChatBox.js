@@ -235,38 +235,38 @@ export default function ChatBox({route, navigation}) {
             if (props.currentMessage.image.length > 0) {
                 return (
                     <View style={{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
-                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} onScroll={change}
-                                    style={{
-                                        width: 200,
-                                        height: 200,
-                                        borderTopRightRadius: 15,
-                                        borderTopLeftRadius: 15
-                                    }}>
-                            {
-                                props.currentMessage.image.map((image, index) => {
-                                    return (
-                                        <Image
-                                            key={index}
-                                            source={{uri: image}}
-                                            style={{
-                                                width: 200,
-                                                height: 200,
-                                                borderRadius:15
-                                                // borderTopRightRadius: 15,
-                                                // borderTopLeftRadius: 15
-                                            }}
-                                            resizeMode="cover"
-                                        />
-                                    );
-                                })}
-                        </ScrollView>
-                        <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
-                            {
-                                props.currentMessage.image.map((i, k)=>(
-                                    <Text style={k==state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key={k}>⬤</Text>
-                                ))
-                            }
-                        </View>
+                        <Pressable onPress={()=>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
+                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} onScroll={change}
+                                        style={{
+                                            width: 200,
+                                            height: 200,
+                                            borderTopRightRadius: 15,
+                                            borderTopLeftRadius: 15
+                                        }}>
+                                {
+                                    props.currentMessage.image.map((image, index) => {
+                                        return (
+                                            <Image
+                                                key={index}
+                                                source={{uri: image}}
+                                                style={{
+                                                    width: 200,
+                                                    height: 200,
+                                                    borderRadius:15
+                                                }}
+                                                resizeMode="cover"
+                                            />
+                                        );
+                                    })}
+                            </ScrollView>
+                            <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
+                                {
+                                    props.currentMessage.image.map((i, k)=>(
+                                        <Text style={k==state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key={k}>⬤</Text>
+                                    ))
+                                }
+                            </View>
+                        </Pressable>
                     </View>
                 );
             }else {

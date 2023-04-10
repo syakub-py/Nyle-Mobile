@@ -91,7 +91,7 @@ export default function MainContainer({route}) {
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost} initialParams={{ username: route.params.username , profilePicture:profilePic}}/>
            <Tab.Screen name = {Chat} component = {chat} initialParams={{ username: route.params.username }}/>
-           <Tab.Screen name = {Profile} component = {profile} initialParams={{ username: route.params.username }}/>
+           <Tab.Screen name = {Profile} component = {profile} initialParams={{ username: route.params.username, profilePicture:profilePic}}/>
         </Tab.Navigator>
     );
   }

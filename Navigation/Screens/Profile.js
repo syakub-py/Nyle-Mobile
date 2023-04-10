@@ -161,7 +161,7 @@ const transactions =[
                 <View>
                   <Text style={{color:'black', paddingTop:20, paddingLeft:30, fontSize:30, fontWeight:'bold'}}>Settings</Text>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
-                        <Image source = {{uri:`https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${faker.random.number(60)}.jpg`,}} style = {styles.image} resizeMode ="cover"/>
+                        <Image source = {{uri:route.params.profilePic,}} style = {styles.image} resizeMode ="cover"/>
                         <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>
                   </View>
 

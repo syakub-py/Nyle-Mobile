@@ -20,11 +20,11 @@ export default function PostDetails({route, navigation}){
         firestore.collection('Chats').add({
           owners:[
             {
-                profilePic:"",
+                profilePic:route.params.ProfilePic,
                 username: route.params.username
             },
             {
-                profilePic:route.params.ProfilePic,
+                profilePic:"",
                 username: route.params.postedBy
             }
         ]

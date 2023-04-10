@@ -1,13 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, TextInput, TouchableOpacity } from 'react-native';
-import faker from 'faker';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 export default function Chat({navigation, route}) {
-  const [filteredData, setfilterData] = React.useState([]);
+  const [filteredData, setFilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([])
   const [refreshing, setRefreshing] = React.useState(false);
@@ -32,7 +31,7 @@ export default function Chat({navigation, route}) {
   const onRefresh = () => {
     setRefreshing(true);
     getChats().then((result) =>{
-      setfilterData(result);
+      setFilterData(result);
       setMasterData(result);
     }).catch((error)=>{
       console.log(error)
@@ -42,31 +41,13 @@ export default function Chat({navigation, route}) {
 
   React.useEffect(()=>{
     getChats().then((result) =>{
-      setfilterData(result);
+      setFilterData(result);
       setMasterData(result);
     }).catch((error)=>{
       console.log(error)
     })
   }, [])
 
-  const FloatingButton = () => {
-    return (
-      <View style={{ position: 'absolute', bottom: '10%', right: 1 }}>
-        {/* addChat( "Users/"+route.params.username+"/Conversations", faker.internet.email()) */}
-        <Pressable onPress={()=>navigation.navigate("Add chat", {username:route.params.username})}>
-          <View style={{ 
-              height: 70,
-              width: 70,
-              borderRadius: 50,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-            <Ionicons name="add-outline"  size={40}/>
-          </View>
-        </Pressable>
-      </View>
-    );
-  };
 
   const searchFilter = (text) =>{
     if (text){
@@ -75,10 +56,10 @@ export default function Chat({navigation, route}) {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData)>-1;
       });
-      setfilterData(newData);
+      setFilterData(newData);
       setSearch(text);
     }else{
-      setfilterData(masterData);
+      setFilterData(masterData);
       setSearch(text);
     }
   }
@@ -134,7 +115,7 @@ function deleteFolder(ref) {
 }
 
 
-    const deleteRow = (id) =>{
+const deleteRow = (id) =>{
     firestore.collection('Chats').doc(id).delete()
     .then(() => {
       console.log('Document successfully deleted!');
@@ -172,15 +153,25 @@ function deleteFolder(ref) {
             <View>
                 
               <View style={{flexDirection:'row'}}>
-                <FloatingButton/>
                 <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
               </View>
 
-              <View >
-                <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} style={{marginTop:5, marginBottom:10,elevation:2, height:60, paddingHorizontal:15, borderRadius:50, backgroundColor:'white'}}/>
-                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>All messages</Text>
-              </View>
-            
+
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    height:60,
+                    borderRadius:50,
+                    marginBottom:10,
+                    elevation:2
+                }}>
+                    <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
+                    <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+                </View>
+                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>All Conversations</Text>
             </View>
         }
           renderHiddenItem = {({i, item}) => (
