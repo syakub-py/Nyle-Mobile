@@ -10,7 +10,6 @@ export default function Home({navigation, route}) {
   
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
-  const [profilePic, setProfilePic] = React.useState('');
   const [search, setSearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -61,6 +60,7 @@ export default function Home({navigation, route}) {
       setSearch(text);
     }
   }
+
     return (
       <View style={{flex:1, backgroundColor:'white'}}>
         <View style={{zIndex:0}}>
@@ -71,7 +71,7 @@ export default function Home({navigation, route}) {
                   <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
 
                 <View style={{marginTop:20, marginRight:20}}>
-                  <Image resizeMode='cover' source={{uri: route.params.picture}} style={{height:70, width:70, borderRadius:100}}/>
+                  <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:70, width:70, borderRadius:100}}/>
                 </View>
               </View>
               <View style={{

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
-import { auth, firestore }from './Components/Firebase';
+import { auth }from './Components/Firebase';
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -30,26 +30,10 @@ export default function Login({navigation}){
         const user = result.user;
     }
 
-    const getProfilePic = async () => {
-        const profilePictureQuery = firestore.collection("ProfilePictures").where("FileName", "==", username.toLocaleLowerCase());
-        try {
-            const result = await profilePictureQuery.get();
-            const profilePicUrls = result.docs.map((doc) => doc.data().url);
-            console.log(profilePicUrls)
-            return profilePicUrls.length > 0 ? profilePicUrls[0] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-        } catch (error) {
-            console.error("Error getting profile picture:", error);
-            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-        }
-    }
-
     React.useEffect(()=>{
         const unsubcribe = auth.onAuthStateChanged(user =>{
             if(user){
-                //gets the profile picture for the associated user
-                getProfilePic().then((result) => {
-                    navigation.navigate("Main Container", {username: user.email, profilePic: result})
-                });
+                navigation.navigate("Main Container", {username: user.email})
             }
         })
         return unsubcribe;

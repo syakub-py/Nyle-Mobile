@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, RefreshControl, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
-import {getstorage} from './Components/Firebase'
+import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -11,7 +11,6 @@ export default function SignUp({navigation}){
     const [password, setPassword] = React.useState('')
     const [profilePic, setProfilePic] = React.useState('')
     const [refreshing, setRefreshing] = React.useState(false);
-    const [profilePicUrl, setProfilePicUrl] = React.useState('')
 
     const handleSignUp = () =>{
         auth
@@ -39,23 +38,24 @@ export default function SignUp({navigation}){
         setTimeout(() => setRefreshing(false), 300);
     }
 
-    const upload = async (string) => {
+    const addUsernameToMap = async () => {
         try {
-            let downloadUrl = ""
-            const response = await fetch(string);
-            const blob = await response.blob();
-            const storageRef = getstorage.ref().child(`ProfilePictures/${username}`);
-            await storageRef.put(blob);
-            const url = await storageRef.getDownloadURL();
-            downloadUrl = url
-            console.log("Image uploaded successfully! Download URL: " + downloadUrl);
-            setProfilePicUrl(downloadUrl);
-            console.log(profilePicUrl)
+            // Upload profile picture to Firebase Storage and get the download URL
+            const profilePicRef = getstorage.ref().child(`profilePictures/${username}`);
+            await profilePicRef.put(profilePic);
+            const downloadUrl = await profilePicRef.getDownloadURL();
+
+            // Add username and profile picture download URL to Firestore
+            const docRef = firestore.collection("ProfilePictures").doc(username);
+            await docRef.set({
+                username: username,
+                profilePicUrl: downloadUrl
+            });
+            console.log("Username added to map successfully");
         } catch (error) {
-          console.error(error);
-          return "";
+            console.error("Error adding username to map:", error);
         }
-      };
+    };
 
     return(
         <View style={styles.container}>

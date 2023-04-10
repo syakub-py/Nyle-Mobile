@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {firestore} from "./Screens/Components/Firebase";
 
 
 //Screens
@@ -19,8 +20,30 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 export default function MainContainer({route}) {
+
+    const [profilePic, setProfilePic] = React.useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+    const getProfilePic = async () => {
+        const profilePictureQuery = firestore.collection("ProfilePictures").where("FileName", "==", route.params.username.toLocaleLowerCase());
+        try {
+            const result = await profilePictureQuery.get();
+            const profilePicUrls = result.docs.map((doc) => doc.data().url);
+            return profilePicUrls.length > 0 ? profilePicUrls[0] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        } catch (error) {
+            console.error("Error getting profile picture:", error);
+            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        }
+    }
+
+    React.useEffect(()=>{
+        // gets the profile picture for the associated user
+        getProfilePic().then((result)=>{
+            setProfilePic(result)
+        })
+    },[])
+
+
     return (
-        <Tab.Navigator initialRouteName = {home} 
+        <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({
           tabBarHideOnKeyboard:true,
           headerShown:false,
@@ -64,7 +87,7 @@ export default function MainContainer({route}) {
            
         })}>
            
-           <Tab.Screen name = {Home} component = {home} initialParams={{ username: route.params.username, picture:route.params.profilePic}}/>
+           <Tab.Screen name = {Home} component = {home} initialParams={{ username: route.params.username, profilePicture:profilePic}}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost} initialParams={{ username: route.params.username }}/>
            <Tab.Screen name = {Chat} component = {chat} initialParams={{ username: route.params.username }}/>
