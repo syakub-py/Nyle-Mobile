@@ -113,7 +113,7 @@ export default function AddPost({route}){
             details: details,
             description: description,
             pic: UrlList,
-            profilePic: `https://randomuser.me/api/portraits/${faker.helpers.randomize(['women', 'men'])}/${randomNumber}.jpg`,
+            profilePic: route.params.profilePicture,
             coordinates: coordinates,
             views: 0,
             date: new Date().toLocaleString(),

@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, TextInput, TouchableOpacity } from 'react-native';
 import faker from 'faker';
-import {firestore} from './Components/Firebase'
+import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
@@ -26,7 +26,6 @@ export default function Chat({navigation, route}) {
         });
       })
       return results;
-
     }
 
 
@@ -102,10 +101,53 @@ export default function Chat({navigation, route}) {
     return "";
   }
 
-  const deleteRow = (id) =>{
+// Delete a folder and all its contents
+function deleteFolder(ref) {
+    ref.listAll().then(function(dir) {
+        dir.items.forEach(function(fileRef) {
+            // Delete file
+            fileRef.delete().then(function() {
+                // File deleted successfully
+                console.log("file deleted")
+            }).catch(function(error) {
+                // Error deleting file
+                console.log(error)
+
+            });
+        });
+        dir.prefixes.forEach(function(folderRef) {
+            // Recursively delete subfolder
+            deleteFolder(folderRef);
+        });
+        // Delete the parent folder once all files and subfolders have been deleted
+        ref.delete().then(function() {
+            // Folder deleted successfully
+            console.log("folder deleted")
+        }).catch(function(error) {
+            // Error deleting folder
+            console.log(error)
+        });
+    }).catch(function(error) {
+        // Error listing items in folder
+        console.log(error)
+    });
+}
+
+
+    const deleteRow = (id) =>{
     firestore.collection('Chats').doc(id).delete()
     .then(() => {
       console.log('Document successfully deleted!');
+      const picRef = getstorage.ref(`MessageImages/${id}`);
+      picRef
+          .delete()
+          .then(() => {
+            deleteFolder(picRef);
+            console.log(`Deleted folder with id: ${id}`);
+          })
+          .catch((error) => {
+            console.log("Error deleting picture:", error);
+          });
     })
     .catch((error) => {
       console.error('Error deleting document: ', error);
