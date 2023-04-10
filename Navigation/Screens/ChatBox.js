@@ -58,7 +58,6 @@ export default function ChatBox({route, navigation}) {
         })
         setImageUrls(currentImageUrls);
 
-        console.log("current image urls: " + currentImageUrls)
     }
   }
 
@@ -67,7 +66,6 @@ export default function ChatBox({route, navigation}) {
         const title = uuidv4();
 
         downloadUrls = await upload(imageUrls);
-        console.log("upload results: " + downloadUrls);
 
         const mappedMessage = {
             _id:title,
@@ -85,30 +83,29 @@ export default function ChatBox({route, navigation}) {
     }, [imageUrls])
 
 
-  const renderBubble = (props) => {
-    const wrapperStyle = {
-      right: {
-        backgroundColor: 'black',
-        borderWidth: 3,
-        borderRadius: 18,
-        ...(imageUrls.length > 0 && { marginBottom: 90 }),
-      },
+    const renderBubble = (props) => {
+        const wrapperStyle = {
+            right: {
+                backgroundColor: 'black',
+                borderWidth: 3,
+                borderRadius: 18,
+                ...(imageUrls.length > 0 && { marginBottom: 90 }),
+            },
+        };
+        return (
+            <Bubble
+                {...props}
+                wrapperStyle={wrapperStyle}
+                textStyle={{
+                    right: {
+                        color: '#fff',
+                    },
+                }}/>
+        );
     };
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={wrapperStyle}
-        textStyle={{
-          right: {
-            color: '#fff',
-          },
-        }}
-      />
-    );
-  };
-  
-  const upload = async (array) => {
-    console.log("image array passed into upload function: " + array)
+
+
+    const upload = async (array) => {
     const UrlDownloads = [];
     try {
       for (const element of array) {
@@ -207,7 +204,6 @@ export default function ChatBox({route, navigation}) {
       </View>
 
       <GiftedChat
-        inverted 
         messages={messages}
         onSend={messages => onSend(messages)}
         alwaysShowSend
@@ -215,18 +211,31 @@ export default function ChatBox({route, navigation}) {
         user={{_id:route.params.userId}}
         renderBubble={renderBubble}
         renderActions={renderActions}
-        // renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
         renderMessageImage={(props) => {
-            return(
-                <Image
-                    source={{ uri: props.currentMessage.image[0]}}
-                    style={{ width: 200, height: 200, borderTopRightRadius:15, borderTopLeftRadius:15 }}
-                    resizeMode="cover"
-                />
-                )
-            }
-        }
+            return (
+                <View style={{ width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} style={{ width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15 }}>
+                        {
+                            props.currentMessage.image.map((image, index) => {
+                            return (
+                                <Image
+                                    key={index}
+                                    source={{ uri: image }}
+                                    style={{
+                                        width: 200,
+                                        height: 200,
+                                        borderTopRightRadius: 15,
+                                        borderTopLeftRadius: 15
+                                    }}
+                                    resizeMode="cover"
+                                />
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+            );
+        }}
       />
   </SafeAreaView> 
   )

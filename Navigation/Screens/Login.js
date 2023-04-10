@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
-import { auth }from './Components/Firebase';
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import firebase from 'firebase/app';
+import { auth } from './Components/Firebase';
+import "firebase/auth";
+import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -10,7 +12,6 @@ export default function Login({navigation}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
-    
     const handleEmailAndPasswordLogin = () => {
         auth
         .signInWithEmailAndPassword(username, password)
@@ -21,13 +22,18 @@ export default function Login({navigation}){
         .catch(error => alert(error.message))
     }
 
-    const GoogleAuth = new GoogleAuthProvider();
-    const handleGoogleLogin = async () =>{
-        const result = await auth.signInWithPopup(GoogleAuth)
-        const credential = GoogleAuth.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
+    const handleGoogleLogin = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithRedirect(auth, provider);
+            const result = await getRedirectResult(auth);
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            const user = result.user;
+            console.log(user);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     React.useEffect(()=>{
