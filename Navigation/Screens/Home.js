@@ -37,7 +37,12 @@ export default function Home({navigation, route}) {
 
   React.useEffect(()=>{
     getPosts().then((result) =>{
-      const masterPostList = result
+      let masterPostList = result
+      if (masterPostList){
+        masterPostList = masterPostList.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date);
+        });
+      }
       setfilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
@@ -90,7 +95,11 @@ export default function Home({navigation, route}) {
               </View>
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
-                <Ionicons name='filter-outline' size={25} style={{position:'absolute', right:25}}/>
+
+                <Pressable>
+                  <Ionicons name='filter-outline' size={25} style={{position:'absolute', right:25}}/>
+                </Pressable>
+
               </View>
             </View>
 

@@ -55,7 +55,7 @@ export default function ChatBox({route, navigation}) {
   };
 
   const SelectImages = async () => {
-    let result= await ImagePicker.launchImageLibraryAsync({
+      let result= await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: [4, 3],
       quality: 1,
