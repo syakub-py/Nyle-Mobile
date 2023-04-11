@@ -7,14 +7,17 @@ import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestoreLite} from './Components/Firebase'
 
 export default function Home({navigation, route}) {
-  
+  // State variables using React Hooks:
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
+  // Function to refresh the data
   const onRefresh = () => {
+    // Set the refreshing state to true
     setRefreshing(true);
+    // Retrieve posts from the database and update the state variables
     getPosts().then((result) =>{
       const masterPostList = result
       setfilterData(masterPostList);
@@ -22,16 +25,20 @@ export default function Home({navigation, route}) {
     }).catch((error)=>{
       Alert(error)
     })
-    setTimeout(() => setRefreshing(false), 1000);
+    // Wait for 0.3 seconds before setting the refreshing state to false
+    setTimeout(() => setRefreshing(false), 300);
   };
-  
+
+  // Function to retrieve posts from the database
   const getPosts = async ()=>{
     let results =[];
     const postCollection = collection(firestoreLite, "AllPosts");
     const postSnapshot = await getDocs(postCollection);
+    // Iterate through each document and push the data to the results array
     postSnapshot.forEach(doc => {
       results.push(doc.data())
     });
+    // Sort the results by date in descending order
     if (results){
       results = results.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
@@ -40,6 +47,7 @@ export default function Home({navigation, route}) {
     return results;
   }
 
+  // Effect hook to retrieve posts from the database on component mount
   React.useEffect(()=>{
     getPosts().then((result) =>{
       const masterPostList = result
@@ -51,6 +59,7 @@ export default function Home({navigation, route}) {
 
   }, [])
 
+  // Function to filter the data based on search input
   const searchFilter = (text) => {
     if (text){
       const newData = masterData.filter((item) =>{
@@ -66,7 +75,7 @@ export default function Home({navigation, route}) {
     }
   }
 
-    return (
+  return (
       <View style={{flex:1, backgroundColor:'white'}}>
         <View style={{zIndex:0}}>
           <FlatList
