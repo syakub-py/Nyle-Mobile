@@ -1,13 +1,22 @@
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import * as React from 'react';
-import { View,Text, Pressable, Image, TouchableOpacity, ScrollView, RefreshControl} from 'react-native';
+import {
+    View,
+    Text,
+    Pressable,
+    Image,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl,
+    Dimensions,
+    ProgressBarAndroid
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from './Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
-
 
 export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
@@ -16,6 +25,8 @@ export default function ChatBox({route, navigation}) {
   const [refresh, setRefreshing] = React.useState(false);
   let downloadUrls =[]
   const [state, setState] = React.useState({active:0})
+  const [indeterminate, setIndeterminate] = React.useState(false);
+  const {width} = Dimensions.get("window");
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -40,11 +51,11 @@ export default function ChatBox({route, navigation}) {
   
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 500);
+    setTimeout(() => setRefreshing(false), 1);
   };
 
   const SelectImages = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result= await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: [4, 3],
       quality: 1,
@@ -58,7 +69,6 @@ export default function ChatBox({route, navigation}) {
             currentImageUrls.push(element.uri)
         })
         setImageUrls(currentImageUrls);
-
     }
   }
 
@@ -100,24 +110,24 @@ export default function ChatBox({route, navigation}) {
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             }
         };
+
         return (
             <Bubble
-                {...props}
-                wrapperStyle={wrapperStyle}
-                textStyle={{
-                    right: {
-                        color: '#fff',
-                    },
-
-                }}/>
+            {...props}
+            wrapperStyle={wrapperStyle}
+            textStyle={{
+                right: {
+                    color: '#fff',
+                },
+            }}/>
         );
     };
-
 
     const upload = async (array) => {
     const UrlDownloads = [];
     if (array.length> 0){
         try {
+            setIndeterminate(true)
             for (const element of array) {
                 const filename = element.split("/").pop();
                 const response = await fetch(element);
@@ -129,6 +139,7 @@ export default function ChatBox({route, navigation}) {
                 UrlDownloads.push(url);
             }
             console.log("All images uploaded successfully!");
+            setIndeterminate(false)
             return UrlDownloads;
         } catch (error) {
             console.error(error);
@@ -138,6 +149,8 @@ export default function ChatBox({route, navigation}) {
         return [];
     }
   };
+
+
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
         if(slide !== state.active){
@@ -207,6 +220,7 @@ export default function ChatBox({route, navigation}) {
     );
   };
 
+
   return (  
     <SafeAreaView style={{flex:1}}>
       <View style={{marginLeft:10, flexDirection:'row'}}>
@@ -221,6 +235,22 @@ export default function ChatBox({route, navigation}) {
           <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
       </View>
+
+        <View >
+            <ProgressBarAndroid
+                styleAttr="Horizontal"
+                indeterminate={indeterminate}
+                style={{
+                    width: width,
+                    height: 10,
+                    marginTop: 5,
+                    marginBottom: 10,
+
+                }}
+                color="black"
+
+            />
+        </View>
 
       <GiftedChat
         messages={messages}

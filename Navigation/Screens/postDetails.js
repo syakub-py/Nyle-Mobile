@@ -15,16 +15,15 @@ export default function PostDetails({route, navigation}){
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
 
-    
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
           owners:[
             {
-                profilePic:route.params.ProfilePic,
+                profilePic:"",
                 username: route.params.username
             },
             {
-                profilePic:"",
+                profilePic:route.params.ProfilePic,
                 username: route.params.postedBy
             }
         ]
@@ -101,7 +100,7 @@ export default function PostDetails({route, navigation}){
                     </View>
                     
                     <View style={{flexDirection:'row', alignItems:'center'}}>
-                        <Image style={{height:30, width:30, margin:10}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
+                        <Image style={{height:30, width:30, margin:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black'}}>{route.params.Price}</Text>
                     </View>
 
@@ -112,29 +111,6 @@ export default function PostDetails({route, navigation}){
                             <Marker coordinate={route.params.coordinates}/>
                         </MapView>
                     </View>
-
-                    {/* <View>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Current Bids</Text>
-                        <ScrollView>
-                            {
-                                bids.map((item, index)=>(
-                                    <View style={{flexDirection:'row', width:'100%', justifyContent:'space-evenly', marginBottom:15}} key={index}>
-
-                                        <View style={{flexDirection:'row',alignItems:'center'}} >
-                                            <Avatar  size={55} source={{uri: item.profilePic}} rounded/>
-                                            <Text style={{fontWeight:'bold', paddingLeft:'5%'}}>Bid placed by {item.by}</Text>
-                                        </View>
-
-                                        <View style={{flexDirection:'row', alignItems:'center'}}>
-                                            <Avatar source={{uri: item.currency}} rounded/>
-                                            <Text style={{paddingLeft:'1%', fontSize:20, fontWeight:'600'}}>{item.price}</Text>
-                                        </View>
-
-                                    </View>
-                                ))
-                            }
-                        </ScrollView>
-                    </View> */}
 
                     <View>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
@@ -163,6 +139,5 @@ export default function PostDetails({route, navigation}){
                 </View>
             </View>  */}
         </View>
-
     )
 }
