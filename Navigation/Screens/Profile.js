@@ -149,11 +149,19 @@ const transactions =[
         });
   };
 
+  const markAsSold = (item) =>{
+    firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(()=>{
+      console.log("marked as sold")
+      onRefresh();
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
   return (
       <View >
             <SwipeListView
               data={userList}
-              rightOpenValue={-110}
+              rightOpenValue={-170}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
@@ -225,16 +233,22 @@ const transactions =[
                   <View style={{ position: 'absolute',
                   flexDirection:'row',
                   top: 0,
-                  right: 10,
+                  right: 70,
                   bottom: 0,
                   width: 100,
                   alignItems: 'center'}}>
                     <TouchableOpacity onPress={()=>deletePost(item)} style={{marginRight:20}}>
                       <Ionicons size={30} name='trash-outline' color={"red"}/>
                     </TouchableOpacity>
+
                     <TouchableOpacity onPress={()=>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
-                      <Ionicons size={30} name='create-outline' color={"Black"}/>
+                      <Ionicons size={30} name='create-outline' color={"black"}/>
                     </TouchableOpacity>
+
+                    <TouchableOpacity onPress={()=>markAsSold(item)}>
+                      <Ionicons name={'checkmark-circle-outline'} color={"green"} size={30} style={{marginLeft:20}}/>
+                    </TouchableOpacity>
+
                   </View>
                )
               }

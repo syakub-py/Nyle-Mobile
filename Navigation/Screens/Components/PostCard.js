@@ -11,12 +11,17 @@ export default function PostCard({data}){
       <View style ={{width:"100%", height:300}}>
         <ImageBackground source={{uri: data.pic[0]}} imageStyle ={{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
           <View style={{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:100, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-            
             <Pressable onPress={()=>{setIconName("bookmark")}}>
               <Ionicons name={iconName} size={25}/>
             </Pressable>
-
           </View>
+
+          {
+            (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }], justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>SOLD</Text>
+          </View>):(<View></View>)
+          }
+
             <View style={{flexDirection:'row'}}>
               <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic})}>
                 <Image style={{height:50, width:50, borderRadius:30, elevation:10, margin:12}} source={{uri:data.profilePic}}/>

@@ -177,7 +177,7 @@ export default function Home({navigation, route}) {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           renderItem = {({item}) => (
-            <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, ProfilePic:item.profilePic, DatePosted:item.date, postedBy:item.PostedBy, coordinates:item.coordinates, username:route.params.username, views:item.views})}>
+            <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, ProfilePic:item.profilePic, DatePosted:item.date, postedBy:item.PostedBy, coordinates:item.coordinates, username:route.params.username, views:item.views, sold:item.sold})}>
               <PostCard data ={item}/>
             </Pressable>
             )}
