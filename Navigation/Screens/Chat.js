@@ -66,7 +66,7 @@ export default function Chat({navigation, route}) {
 
   const findUser = (userArray)=>{
     for (let index = 0; index < userArray.length; index++) {
-      if (userArray[index].username!=route.params.username){
+      if (userArray[index].username!==route.params.username){
         return index
       }
     }
@@ -82,37 +82,40 @@ export default function Chat({navigation, route}) {
     return "";
   }
 
-// Delete a folder and all its contents
-function deleteFolder(ref) {
-    ref.listAll().then(function(dir) {
-        dir.items.forEach(function(fileRef) {
-            // Delete file
-            fileRef.delete().then(function() {
-                // File deleted successfully
-                console.log("file deleted")
+    // Delete a folder and all its contents
+    function deleteFolder(ref) {
+        if (ref instanceof getstorage.ref) {
+            ref.listAll().then(function(dir) {
+                dir.items.forEach(function(fileRef) {
+                    // Delete file
+                    fileRef.delete().then(function() {
+                        // File deleted successfully
+                        console.log("file deleted")
+                    }).catch(function(error) {
+                        // Error deleting file
+                        console.log(error)
+                    });
+                });
+                dir.prefixes.forEach(function(folderRef) {
+                    // Recursively delete subfolder
+                    deleteFolder(folderRef);
+                });
+                // Delete the parent folder once all files and subfolders have been deleted
+                ref.delete().then(function() {
+                    // Folder deleted successfully
+                    console.log("folder deleted")
+                }).catch(function(error) {
+                    // Error deleting folder
+                    console.log(error)
+                });
             }).catch(function(error) {
-                // Error deleting file
+                // Error listing items in folder
                 console.log(error)
-
             });
-        });
-        dir.prefixes.forEach(function(folderRef) {
-            // Recursively delete subfolder
-            deleteFolder(folderRef);
-        });
-        // Delete the parent folder once all files and subfolders have been deleted
-        ref.delete().then(function() {
-            // Folder deleted successfully
-            console.log("folder deleted")
-        }).catch(function(error) {
-            // Error deleting folder
-            console.log(error)
-        });
-    }).catch(function(error) {
-        // Error listing items in folder
-        console.log(error)
-    });
-}
+        } else {
+            console.log('Invalid reference object.');
+        }
+    }
 
 
 const deleteRow = (id) =>{

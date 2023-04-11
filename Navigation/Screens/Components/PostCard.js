@@ -17,7 +17,7 @@ export default function PostCard({data}){
           </View>
 
           {
-            (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }], justifyContent: 'center', alignItems: 'center' }}>
+            (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }],  justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>SOLD</Text>
           </View>):(<View></View>)
           }

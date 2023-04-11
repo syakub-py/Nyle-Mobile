@@ -236,21 +236,30 @@ export default function ChatBox({route, navigation}) {
         </View>
       </View>
 
-        <View >
-            <ProgressBarAndroid
-                styleAttr="Horizontal"
-                indeterminate={indeterminate}
-                style={{
-                    width: width,
-                    height: 10,
-                    marginTop: 5,
-                    marginBottom: 10,
+        {
+            (indeterminate)?(
+                <View>
+                    <ProgressBarAndroid
+                        styleAttr="Horizontal"
+                        indeterminate={indeterminate}
+                        style={{
+                            width: width,
+                            height: 10,
+                            marginTop: 5,
+                            marginBottom: 10,
 
-                }}
-                color="black"
+                        }}
+                        color="black"
 
-            />
-        </View>
+                    />
+                </View>
+            ):(
+                <View>
+
+                </View>
+            )
+        }
+
 
       <GiftedChat
         messages={messages}
