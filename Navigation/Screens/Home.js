@@ -26,23 +26,23 @@ export default function Home({navigation, route}) {
   };
   
   const getPosts = async ()=>{
-    const results =[];
+    let results =[];
     const postCollection = collection(firestoreLite, "AllPosts");
     const postSnapshot = await getDocs(postCollection);
     postSnapshot.forEach(doc => {
       results.push(doc.data())
     });
+    if (results){
+      results = results.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+    }
     return results;
   }
 
   React.useEffect(()=>{
     getPosts().then((result) =>{
-      let masterPostList = result
-      if (masterPostList){
-        masterPostList = masterPostList.sort((a, b) => {
-          return new Date(b.date) - new Date(a.date);
-        });
-      }
+      const masterPostList = result
       setfilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
@@ -96,8 +96,8 @@ export default function Home({navigation, route}) {
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
 
-                <Pressable>
-                  <Ionicons name='filter-outline' size={25} style={{position:'absolute', right:25}}/>
+                <Pressable style={{position:'absolute', right:25}}>
+                  <Ionicons name='filter-outline' size={25} />
                 </Pressable>
 
               </View>
