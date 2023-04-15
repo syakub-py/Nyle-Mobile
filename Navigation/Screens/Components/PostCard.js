@@ -30,8 +30,8 @@ export default function PostCard({data}){
               <View>
                 <Text style ={{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                 <View style={{flexDirection:'row', alignItems:'center'}}>
-                  <Image style={{height:17, width:17, marginTop:3, borderRadius:20}} source={{uri:data.currency}}/>
-                  <Text style={{color:'white', fontSize:15, elevation:1, margin:3, fontWeight:'500'}}>{data.price} </Text>
+                  <Image style={{height:20, width:20, marginTop:4, borderRadius:20}} source={{uri:data.currency}}/>
+                  <Text style={{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
                 </View>
               </View>
             </View>

@@ -1,5 +1,17 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, RefreshControl, ScrollView, TextInput, Image ,Pressable, Dimensions, Alert } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    RefreshControl,
+    ScrollView,
+    TextInput,
+    Image,
+    Pressable,
+    Dimensions,
+    Alert,
+    SafeAreaView
+} from 'react-native';
 import faker from 'faker';
 import {firestore, getstorage} from './Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
@@ -13,10 +25,15 @@ const height = width*1;
 
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);
+
     faker.seed(randomNumber);
-    const currencies = [{ label: 'BTC', value: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" },
-        { label: 'ETH', value: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png" },
-        { label: 'DOGE', value: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000" },]
+    const currencies = [
+        { label: 'Bitcoin', value: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" },
+        { label: 'Ethereum', value: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880" },
+        { label: 'Doge Coin', value: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1547792256" },
+        { label: 'USD', value: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389" },
+        { label: 'Solana', value: "https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422" },
+    ]
 
     const [refresh, setRefreshing] = React.useState(false);
     const [title, setTitle] = React.useState(faker.address.streetAddress(false));
@@ -109,7 +126,7 @@ export default function AddPost({route}){
             title: title,
             price: price,
             PostedBy: route.params.username,
-            currency: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png",
+            currency: currency.value,
             details: details,
             description: description,
             pic: UrlList,
@@ -140,7 +157,7 @@ export default function AddPost({route}){
 
 
     return(
-        <View style={{backgroundColor:'white'}}>
+        <SafeAreaView style={{backgroundColor:'white'}}>
             <ScrollView contentContainerStyle={{paddingBottom:60}} refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
                 {
@@ -220,16 +237,16 @@ export default function AddPost({route}){
                             data={currencies}
                             search
                             labelField="label"
-                            valueField="image"
+                            valueField="value"
                             placeholder={'Select item'}
                             searchPlaceholder="Search..."
                             value={currency}
-                            // onFocus={() => setIsFocus(true)}
-                            // onBlur={() => setIsFocus(false)}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
                             renderItem={renderCurrencyItem}
                             onChange={(item) => {
                                 setCurrency(item);
-                                // setIsFocus(false);
+                                setIsFocus(false);
                             }}
                         />
 
@@ -260,7 +277,7 @@ export default function AddPost({route}){
                     </View>
                 </Pressable>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 }
 

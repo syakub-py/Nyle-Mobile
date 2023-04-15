@@ -23,7 +23,7 @@ export default function Home({navigation, route}) {
       setfilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
-      Alert(error)
+      Alert.alert(error)
     })
     // Wait for 0.3 seconds before setting the refreshing state to false
     setTimeout(() => setRefreshing(false), 300);
@@ -54,7 +54,7 @@ export default function Home({navigation, route}) {
       setfilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
-      Alert(error)
+      Alert.alert(error)
     })
 
   }, [])

@@ -1,4 +1,4 @@
-import { View, Text, Image, Dimensions, ScrollView, Pressable, Alert} from 'react-native';
+import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import React from 'react';
@@ -13,6 +13,7 @@ export default function PostDetails({route, navigation}){
 
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
+
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
           owners:[
@@ -42,10 +43,10 @@ export default function PostDetails({route, navigation}){
     }
 
     return (
-        <View style={{flex:1}}>
+        <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style={{zIndex:1}}>
-                    <Avatar size={55} rounded source={{uri: route.params.ProfilePic}} containerStyle={{ position: 'absolute', top: 20, right: 20, elevation:5}}/>
+                    <Avatar size={55} rounded source={{uri: route.params.PostedByProfilePic}} containerStyle={{ position: 'absolute', top: 20, right: 20, elevation:5}}/>
                     <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
@@ -136,6 +137,6 @@ export default function PostDetails({route, navigation}){
                     </Pressable>
                 </View>
             </View>  */}
-        </View>
+        </SafeAreaView>
     )
 }

@@ -20,12 +20,11 @@ export default function Chat({navigation, route}) {
             if (doc.data().owners[i].username === route.params.username){
               results.push({data: doc.data(), id:doc.id})
             }
-            
           }
         });
       })
       return results;
-    }
+  }
 
 
   const onRefresh = () => {
@@ -83,39 +82,39 @@ export default function Chat({navigation, route}) {
   }
 
     // Delete a folder and all its contents
-    function deleteFolder(ref) {
-        if (ref instanceof getstorage.ref) {
-            ref.listAll().then(function(dir) {
-                dir.items.forEach(function(fileRef) {
-                    // Delete file
-                    fileRef.delete().then(function() {
-                        // File deleted successfully
-                        console.log("file deleted")
-                    }).catch(function(error) {
-                        // Error deleting file
-                        console.log(error)
-                    });
-                });
-                dir.prefixes.forEach(function(folderRef) {
-                    // Recursively delete subfolder
-                    deleteFolder(folderRef);
-                });
-                // Delete the parent folder once all files and subfolders have been deleted
-                ref.delete().then(function() {
-                    // Folder deleted successfully
-                    console.log("folder deleted")
+function deleteFolder(ref) {
+    if (ref instanceof getstorage.ref) {
+        ref.listAll().then(function(dir) {
+            dir.items.forEach(function(fileRef) {
+                // Delete file
+                fileRef.delete().then(function() {
+                    // File deleted successfully
+                    console.log("file deleted")
                 }).catch(function(error) {
-                    // Error deleting folder
+                    // Error deleting file
                     console.log(error)
                 });
+            });
+            dir.prefixes.forEach(function(folderRef) {
+                // Recursively delete subfolder
+                deleteFolder(folderRef);
+            });
+            // Delete the parent folder once all files and subfolders have been deleted
+            ref.delete().then(function() {
+                // Folder deleted successfully
+                console.log("folder deleted")
             }).catch(function(error) {
-                // Error listing items in folder
+                // Error deleting folder
                 console.log(error)
             });
-        } else {
-            console.log('Invalid reference object.');
-        }
+        }).catch(function(error) {
+            // Error listing items in folder
+            console.log(error)
+        });
+    } else {
+        console.log('Invalid reference object.');
     }
+}
 
 
 const deleteRow = (id) =>{
@@ -126,7 +125,7 @@ const deleteRow = (id) =>{
       picRef
           .delete()
           .then(() => {
-            deleteFolder(picRef);
+            deleteFolder('MessageImages');
             console.log(`Deleted folder with id: ${id}`);
           })
           .catch((error) => {
@@ -158,8 +157,6 @@ const deleteRow = (id) =>{
               <View style={{flexDirection:'row'}}>
                 <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
               </View>
-
-
                 <View style={{
                     flex: 1,
                     flexDirection: 'row',

@@ -100,6 +100,7 @@ export default function ChatBox({route, navigation}) {
                 backgroundColor: 'black',
                 borderWidth: 3,
                 borderRadius: 18,
+                flexWrap: 'wrap',
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             },
             left:{
@@ -107,6 +108,7 @@ export default function ChatBox({route, navigation}) {
                 borderWidth: 3,
                 borderRadius: 18,
                 borderColor:'#ebebeb',
+                flexWrap: 'wrap',
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             }
         };
@@ -185,7 +187,7 @@ export default function ChatBox({route, navigation}) {
           {
             (imageUrls.length > 0) ? (
               imageUrls.map((value, index) => (
-                <View key={index} style={{backgroundColor:'#F0F0F0'}}>
+                <View key={index} style={{backgroundColor:'#F0F0F0', elevation:2}}>
                   <Pressable style={{zIndex:1}} onPress={()=>deleteImages(index)}>
                     <View style={{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
                       <Ionicons name='remove-outline'  color={'white'} size={15} style={{elevation:1}}/>
@@ -193,7 +195,7 @@ export default function ChatBox({route, navigation}) {
                   </Pressable>
                   <Image
                     source={{ uri: value }}
-                    style={{ width: 70, height: 70, borderRadius: 15, marginLeft: 10 }}
+                    style={{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
                   />
                 </View>
               ))
