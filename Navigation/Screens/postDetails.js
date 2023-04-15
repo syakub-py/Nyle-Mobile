@@ -13,16 +13,15 @@ export default function PostDetails({route, navigation}){
 
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
-
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
           owners:[
             {
-                profilePic:"",
+                profilePic:route.params.CurrentUserProfilePic,
                 username: route.params.username
             },
             {
-                profilePic:route.params.ProfilePic,
+                profilePic:route.params.PostedByProfilePic,
                 username: route.params.postedBy
             }
         ]

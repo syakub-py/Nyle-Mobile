@@ -195,26 +195,44 @@ export default function AddPost({route}){
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
                     <View style={{flexDirection:'row', marginLeft:30}}>
                         <Dropdown
-                            style={{height:50,width:width/3, borderColor: 'gray', borderWidth: 0, borderRadius: 30, paddingHorizontal: 8,}}
+                            style={{
+                                height: 50,
+                                width: width / 3,
+                                borderRadius: 10,
+                                paddingHorizontal: 16,
+                                backgroundColor: 'lightgray',
+                            }}
                             placeholderStyle={{}}
                             selectedTextStyle={{}}
-                            inputSearchStyle={{}}
-                            iconStyle={{width: 20, height: 20,}}
+                            inputSearchStyle={{
+                                borderBottomWidth: 0,
+                                backgroundColor: '#f2f2f2',
+                                borderRadius: 20,
+                                paddingHorizontal: 12,
+                                marginHorizontal: 16,
+                                marginBottom: 8,
+                            }}
+                            iconStyle={{
+                                width: 20,
+                                height: 20,
+                                marginRight: 8,
+                            }}
                             data={currencies}
                             search
-                            // maxHeight={300}
                             labelField="label"
                             valueField="image"
-                            placeholder={!isFocus ? 'Select item' : '...'}
+                            placeholder={'Select item'}
                             searchPlaceholder="Search..."
-                            value={currency.label}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
+                            value={currency}
+                            // onFocus={() => setIsFocus(true)}
+                            // onBlur={() => setIsFocus(false)}
                             renderItem={renderCurrencyItem}
-                            onChange={item => {
-                                setCurrency(item.label);
-                                setIsFocus(false);
-                            }}/>
+                            onChange={(item) => {
+                                setCurrency(item);
+                                // setIsFocus(false);
+                            }}
+                        />
+
                         <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>  
                     </View>
                 </View>
