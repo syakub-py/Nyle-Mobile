@@ -1,23 +1,27 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Image, Pressable, RefreshControl, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
 import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
 
-export default function SignUp({navigation}){
+export default function SignUp(){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [profilePic, setProfilePic] = React.useState('')
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const handleSignUp = () =>{
+    const handleSignUp = ()=>{
         auth
         .createUserWithEmailAndPassword(username, password)
-        .then(userCredentials =>{
-            const user = userCredentials.user;
-        }).catch(error => alert(error.message))
+        .then(() =>{
+            addUsernameToMap().then(()=>{
+                console.log("added user to map")
+            }).catch((error)=>{
+                console.log(error)
+            });
+        }).catch((error)=> alert(error.message))
     }
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,7 +33,7 @@ export default function SignUp({navigation}){
         if (!result.canceled) {
             const fileJson = result.assets;
             setProfilePic(fileJson[0].uri);
-        };  
+        };
     };
 
     const removeProfilePhoto = () => {
@@ -38,7 +42,7 @@ export default function SignUp({navigation}){
         setTimeout(() => setRefreshing(false), 300);
     }
 
-    const addUsernameToMap = async () => {
+    const addUsernameToMap = async ()=> {
         try {
             // Upload profile picture to Firebase Storage and get the download URL
             const profilePicRef = getstorage.ref().child(`profilePictures/${username}`);
@@ -78,14 +82,14 @@ export default function SignUp({navigation}){
                     (
                         <View style={{margin:75, alignItems:'center'}}>
                             <Text style={{fontWeight:'bold'}}>Upload a Profile Picture</Text>
-                            <Ionicons name='person-circle-outline' size={100}/>
+                            <Image source={{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style={{height:150, width:150, borderRadius:100}}/>
                         </View>
                     )
                     }
                 </Pressable>
             </View>
 
-            <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text) => setUsername(text)} />
+            <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text)=> setUsername(text)} />
             <TextInput placeholder='Password' style = {styles.textInput} onChangeText={(text)=> setPassword(text)} secureTextEntry/>
 
             <Pressable style={styles.submitContainer} onPress={handleSignUp}>

@@ -14,6 +14,9 @@ const height = width*1;
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
+    const currencies = [{ label: 'BTC', value: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" },
+        { label: 'ETH', value: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png" },
+        { label: 'DOGE', value: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000" },]
 
     const [refresh, setRefreshing] = React.useState(false);
     const [title, setTitle] = React.useState(faker.address.streetAddress(false));
@@ -23,9 +26,7 @@ export default function AddPost({route}){
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     //urls for the phone
     const [imageUrls, setImageUrls] = React.useState([]);
-    const [currency, setCurrency] = React.useState(  [{ value: 'USD', label: 'USD', image: "https://logos-world.net/wp-content/uploads/2020/08/Bitcoin-Logo.png" },
-    { value: 'EUR', label: 'EUR', image: "https://w7.pngwing.com/pngs/368/176/png-transparent-ethereum-cryptocurrency-blockchain-bitcoin-logo-bitcoin-angle-triangle-logo-thumbnail.png" },
-    { value: 'GBP', label: 'GBP', image: "https://seeklogo.com/images/D/dogecoin-doge-logo-625F9D262A-seeklogo.com.png?v=637919377460000000" },]);
+    const [currency, setCurrency] = React.useState({label:'', value:''});
     const [isFocus, setIsFocus] = React.useState(false);    
 
 
@@ -49,7 +50,7 @@ export default function AddPost({route}){
           
 
     const upload = async (array) => {
-        const UrlDownloads = [];
+        const UrlDownloads= [];
         try {
           for (const element of array) {
             const filename = element.split("/").pop();
@@ -88,7 +89,6 @@ export default function AddPost({route}){
         setPrice('');
         setCoordinates({latitude: 0, longitude: 0,});
         setImageUrls([]);
-        
         onRefresh();
     }
 
@@ -103,7 +103,7 @@ export default function AddPost({route}){
         if (!collectionPath) {
             throw new Error('Error: collection name cannot be empty');
         }
-        const UrlList = await upload(imageUrls)
+        const UrlList= await upload(imageUrls)
         return firestore.collection(collectionPath).doc(title).set({
             id:randomNumber,
             title: title,
@@ -128,6 +128,16 @@ export default function AddPost({route}){
             console.log('Error adding document: ', error);
         });
     }
+
+    const renderCurrencyItem = (item) => {
+        return (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image source={{uri: item.value}} style={{ width: 30, height: 30, margin:10, borderRadius:50 }} />
+                <Text>{item.label}</Text>
+            </View>
+        );
+    };
+
 
     return(
         <View style={{backgroundColor:'white'}}>
@@ -169,7 +179,6 @@ export default function AddPost({route}){
                                 <Text style={{color:'white', fontSize:17, fontWeight:'700'}}>Tap here to add images</Text>
                             </View>
                         </Pressable>
-    
                     ):(
                     <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
                         <View style={{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
@@ -178,14 +187,12 @@ export default function AddPost({route}){
                     </Pressable>
                     )
                 }
-
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
                     <TextInput style={styles.textinput} onChangeText = {(text)=>{setTitle(text)}} value={title}/>
                 </View>
-
                 <View >
-                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
+                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
                     <View style={{flexDirection:'row', marginLeft:30}}>
                         <Dropdown
                             style={{height:50,width:width/3, borderColor: 'gray', borderWidth: 0, borderRadius: 30, paddingHorizontal: 8,}}
@@ -193,25 +200,23 @@ export default function AddPost({route}){
                             selectedTextStyle={{}}
                             inputSearchStyle={{}}
                             iconStyle={{width: 20, height: 20,}}
-                            data={currency}
+                            data={currencies}
                             search
                             // maxHeight={300}
                             labelField="label"
-                            valueField="value"
+                            valueField="image"
                             placeholder={!isFocus ? 'Select item' : '...'}
                             searchPlaceholder="Search..."
-                            value={currency}
+                            value={currency.label}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
-                            renderAccessory={() => <Image source={{uri: currency.image}} style={{ width: 30, height: 30 }} />}
-
+                            renderItem={renderCurrencyItem}
                             onChange={item => {
-                                setCurrency(item);
+                                setCurrency(item.label);
                                 setIsFocus(false);
-                        }}/>
+                            }}/>
                         <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>  
                     </View>
-                                      
                 </View>
 
                 <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
@@ -233,7 +238,7 @@ export default function AddPost({route}){
 
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
                     <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
-                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add a post (for testing purposes only)</Text>
+                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add post</Text>
                     </View>
                 </Pressable>
             </ScrollView>

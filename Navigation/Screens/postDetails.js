@@ -1,4 +1,3 @@
-import faker from 'faker';
 import { View, Text, Image, Dimensions, ScrollView, Pressable, Alert} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
@@ -8,7 +7,7 @@ import {firestore} from './Components/Firebase'
 
 
 const {width} = Dimensions.get("window");
-const height = width*1;
+const height = width * 1;
 
 export default function PostDetails({route, navigation}){
 
@@ -106,7 +105,7 @@ export default function PostDetails({route, navigation}){
 
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
-                    <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
+                    <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
                         <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
                             <Marker coordinate={route.params.coordinates}/>
                         </MapView>

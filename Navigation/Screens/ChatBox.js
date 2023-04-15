@@ -72,7 +72,7 @@ export default function ChatBox({route, navigation}) {
     }
   }
 
-    const onSend = React.useCallback(async (message)  => {
+    const onSend = React.useCallback(async (message)=> {
         const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
         const title = uuidv4();
 
@@ -208,8 +208,8 @@ export default function ChatBox({route, navigation}) {
           <InputToolbar
             {...props}
             primaryStyle={{
-              borderTopColor: '#E0E0E0',
               backgroundColor: '#F0F0F0',
+              // borderRadius:50,
               paddingHorizontal: 5,
               paddingTop: 5,
               paddingBottom:5
@@ -247,7 +247,6 @@ export default function ChatBox({route, navigation}) {
                             height: 10,
                             marginTop: 5,
                             marginBottom: 10,
-
                         }}
                         color="black"
 
@@ -275,13 +274,7 @@ export default function ChatBox({route, navigation}) {
                 return (
                     <View style={{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                         <Pressable onPress={()=>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
-                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} onScroll={change}
-                                        style={{
-                                            width: 200,
-                                            height: 200,
-                                            borderTopRightRadius: 15,
-                                            borderTopLeftRadius: 15
-                                        }}>
+                            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled={true} onScroll={change} style={{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                                 {
                                     props.currentMessage.image.map((image, index) => {
                                         return (

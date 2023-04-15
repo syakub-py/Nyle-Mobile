@@ -3,7 +3,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from "./Screens/Components/Firebase";
 
-
 //Screens
 import home from './Screens/Home'
 import wallet from './Screens/Wallet'
@@ -11,11 +10,11 @@ import chat from './Screens/Chat'
 import profile from './Screens/Profile'
 import addPost from './Screens/AddPost';
 
-const Home = 'Home';
-const Wallet = 'Wallet';
-const AddPost ='Add Post';
-const Chat = 'Chat';
-const Profile = 'Profile';
+const Home= 'Home';
+const Wallet= 'Wallet';
+const AddPost='Add Post';
+const Chat= 'Chat';
+const Profile= 'Profile';
 
 
 const Tab = createBottomTabNavigator();
@@ -29,7 +28,7 @@ export default function MainContainer({route}) {
             const profilePicUrls = result.docs.map((doc) => doc.data().url);
             return profilePicUrls.length > 0 ? profilePicUrls[0] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         } catch (error) {
-            console.error("Error getting profile picture:", error);
+            console.error("Error getting profile picture returning default picture:", error);
             return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         }
     }
@@ -39,7 +38,7 @@ export default function MainContainer({route}) {
         getProfilePic().then((result)=>{
             setProfilePic(result)
         })
-    },[])
+    },[route.params.username])
 
 
     return (

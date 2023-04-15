@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, ImageBackground, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import PostCard from './Components/PostCard.js';
 
 export default function Categories({navigation, route}){
