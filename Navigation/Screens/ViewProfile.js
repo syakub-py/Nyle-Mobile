@@ -55,19 +55,23 @@ export default function ViewProfile({route}){
                         </View>
 
                         <View style={{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <View style={{flexDirection:'column', alignItems:'center', paddingRight:20}}>
+                            <View style={{flexDirection:'column', alignItems:'center'}}>
                                 <Ionicons size={20} name={'star'} color={'#ebd61e'}/>
                                 <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>4.9</Text>
                             </View>
 
-                            <View style={{flexDirection:'column', alignItems:'center', paddingRight:20}}>
+                            <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
+
+                            <View style={{flexDirection:'column', alignItems:'center'}}>
                                 <Text style={{fontSize:20, fontWeight:'500'}}>{UsersPosts.length}</Text>
                                 <Text style={{fontSize:15, fontWeight:'400', color:'lightgray'}}>Posts</Text>
                             </View>
 
+                            <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
+
                             <View style={{flexDirection:'column', alignItems:'center'}}>
                                 <Text style={{fontSize:20, fontWeight:'500'}}>{getSoldItems()}</Text>
-                                <Text style={{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold</Text>
+                                <Text style={{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
                             </View>
                         </View>
 

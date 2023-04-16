@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, Text, FlatList, Image, Pressable, TextInput, Alert, RefreshControl } from 'react-native';
+import {View, Text, FlatList, Image, Pressable, TextInput, Alert, RefreshControl, ScrollView} from 'react-native';
 import PostCard from './Components/PostCard.js';
-import CategoryCard from './Components/CategoryCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestoreLite} from './Components/Firebase'
+import {Value} from "react-native-reanimated";
 
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
@@ -12,7 +12,8 @@ export default function Home({navigation, route}) {
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
+  const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
   // Function to refresh the data
   const onRefresh = () => {
     // Set the refreshing state to true
@@ -59,6 +60,10 @@ export default function Home({navigation, route}) {
 
   }, [])
 
+  const handleCategoryPress = (index) => {
+    setSelectedCategoryIndex(index);
+  };
+
   // Function to filter the data based on search input
   const searchFilter = (text) => {
     if (text){
@@ -88,6 +93,17 @@ export default function Home({navigation, route}) {
                   <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:70, width:70, borderRadius:100}}/>
                 </View>
               </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+                {
+                  categories.map((category, index) => (
+                      <Pressable key={index} onPress={() => handleCategoryPress(index)} style={{backgroundColor: selectedCategoryIndex === index ? 'black' : '#ebebeb', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                        <Text style={{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                          {category}
+                        </Text>
+                      </Pressable>
+                  ))
+                }
+              </ScrollView>
               <View style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -102,6 +118,7 @@ export default function Home({navigation, route}) {
                 <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
                 <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
               </View>
+
               <View style={{flexDirection:'row', alignItems:'center'}}>
                 <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
 
@@ -110,66 +127,8 @@ export default function Home({navigation, route}) {
                 </Pressable>
 
               </View>
+
             </View>
-
-
-        //     <View>
-        //     <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,}}>
-        //     <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
-
-        //       <View style={{marginTop:20, marginRight:20}}>
-        //         <Image resizeMode='cover' source={{uri:"https://randomuser.me/api/portraits/men/94.jpg"}} style={{height:70, width:70, borderRadius:100}}/>
-        //       </View>
-        //     </View>
-        //       <View style={{
-        //           flex: 1,
-        //           flexDirection: 'row',
-        //           justifyContent: 'center',
-        //           alignItems: 'center',
-        //           backgroundColor: '#fff',
-        //           height:60,
-        //           borderRadius:50,
-        //           margin:10,
-        //           elevation:2
-        //         }}>
-        //       <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
-        //       <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
-        //     </View>
-        //   <View>
-        //     <ScrollView scrollEventThrottle={16}>
-        //       <View>
-        //         <Text style={{fontSize: 20, fontWeight:'bold', paddingHorizontal:20}}>Categories</Text>
-        //       </View>
-        //       <View style={{height:130, marginTop: 10}}>
-        //         <ScrollView
-        //         horizontal
-        //         showsHorizontalScrollIndicator = {false}>
-        //           <Pressable onPress={() => navigation.navigate('categories', {Posts:TechPosts})}>
-        //             <CategoryCard IconName={'hardware-chip-outline'} />
-        //           </Pressable>
-
-        //           <Pressable onPress={() => navigation.navigate('categories', { Posts:CarPosts})}>
-        //             <CategoryCard IconName={'car-sport-outline'} />
-        //           </Pressable>
-
-        //           <Pressable onPress={() => navigation.navigate('categories', {Posts:HomePosts})}>
-        //             <CategoryCard IconName={'home-outline'} />
-        //           </Pressable>
-
-        //           <Pressable onPress={() => navigation.navigate('categories', {Posts:BikePosts})}>
-        //             <CategoryCard IconName={'bicycle-outline'}/>
-        //           </Pressable>
-
-        //           {/* <Pressable onPress={() => navigation.navigate('categories', {Posts:AppliencePosts})}>
-        //             <CategoryCard imageUri ={require("./CategoryImages/fridge.jpg")}/>
-        //           </Pressable> */}
-                  
-        //         </ScrollView>
-        //       </View>
-        //     </ScrollView>
-        //   </View>
-        // </View>
-
           }
 
           data={filteredData}
