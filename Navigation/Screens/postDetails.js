@@ -46,7 +46,6 @@ export default function PostDetails({route, navigation}){
         <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style={{zIndex:1}}>
-                    <Avatar size={55} rounded source={{uri: route.params.PostedByProfilePic}} containerStyle={{ position: 'absolute', top: 20, right: 20, elevation:5}}/>
                     <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
@@ -83,19 +82,26 @@ export default function PostDetails({route, navigation}){
                         }
                     </View>
                 </ScrollView>
-
+                <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
-                        <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+
+                        <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10}}>
+                            <Image source={{uri:route.params.PostedByProfilePic}} style={{height:50, width:50, borderRadius:10, alignSelf:'center'}}/>
+                            <View style={{margin:10,alignSelf:'center'}}>
+                                <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
+                                <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                            </View>
+                        </View>
+
                         <Pressable onPress={handleAddChat}>
-                            <View style={{height:60, width:60, borderRadius:100, backgroundColor:'black', elevation:10, margin:10}}>
-                                <Ionicons name="chatbox" color={'white'} size={30} style={{margin:15}}/>
+                            <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
+                                <Ionicons name="chatbubble-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
                             </View>
                         </Pressable>
                     </View>
 
                     <View>
                         <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>This post has {route.params.views} views</Text>
-                        <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>Posted By: {route.params.postedBy}</Text>
                     </View>
                     
                     <View style={{flexDirection:'row', alignItems:'center'}}>
