@@ -35,7 +35,7 @@ export default function Chat({navigation, route}) {
     }).catch((error)=>{
       console.log(error)
     })
-    setTimeout(() => setRefreshing(false), 1000);
+    setTimeout(() => setRefreshing(false), 300);
   };
 
   React.useEffect(()=>{
@@ -138,7 +138,6 @@ const deleteRow = (id) =>{
     onRefresh();
   }
   let randomNumber = Math.floor(Math.random() * 100);
-
     return (
       <SafeAreaView style={styles.container}>
           <SwipeListView

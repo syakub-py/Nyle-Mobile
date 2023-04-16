@@ -251,7 +251,6 @@ export default function ChatBox({route, navigation}) {
                             marginBottom: 10,
                         }}
                         color="black"
-
                     />
                 </View>
             ):(

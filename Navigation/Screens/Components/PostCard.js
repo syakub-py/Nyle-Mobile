@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
 export default function PostCard({data}){
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const [iconName, setIconName] = React.useState('bookmark-outline');
   return (
     <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 20, borderRadius:10, elevation:3}}>
@@ -24,7 +24,7 @@ export default function PostCard({data}){
           }
 
             <View style={{flexDirection:'row'}}>
-              <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic})}>
+              <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic, username:data.PostedBy})}>
                 <Image style={{height:50, width:50, borderRadius:30, elevation:10, margin:12}} source={{uri:data.profilePic}}/>
               </Pressable>
               <View>
