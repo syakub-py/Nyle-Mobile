@@ -11,6 +11,7 @@ export default function Home({navigation, route}) {
   const [filteredData, setfilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
+  const [categorySearch, setCategorySearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
@@ -90,10 +91,10 @@ export default function Home({navigation, route}) {
         return itemData.indexOf(textData)>-1;
       });
       setfilterData(newData);
-      setSearch(text);
+      setCategorySearch(text);
     }else{
       setfilterData(masterData);
-      setSearch(text);
+      setCategorySearch(text);
     }
   }
   return (
