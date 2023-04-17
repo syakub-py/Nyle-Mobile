@@ -108,6 +108,9 @@ export default function Home({navigation, route}) {
 
                 <View style={{marginTop:20, marginRight:20}}>
                   <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
+                  <View style={{backgroundColor:'#1b74fa', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
+                    <Ionicons name={'add-outline'} color={'white'} size={17}/>
+                  </View>
                 </View>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>

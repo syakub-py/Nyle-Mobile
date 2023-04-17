@@ -49,8 +49,8 @@ export default function MainContainer({route}) {
           tabBarActiveTintColor:"black",
           tabBarShowLabel:false,
           tabBarStyle: {
-            height: 70, 
-            borderRadius:30, 
+            height: 60,
+            borderRadius:20,
             backgroundColor: '#fff', 
             position: 'absolute',
             bottom: 20, 
