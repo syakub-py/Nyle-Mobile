@@ -11,23 +11,32 @@ export default function Chat({navigation, route}) {
   const [search, setSearch] = React.useState([])
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const getChats = async () =>{
-    const results = [];
-    const MyChatQuery = firestore.collection('Chats')
-    await MyChatQuery.get().then(ChatSnapshot =>{
-      ChatSnapshot.forEach(doc => {
-          for(let i = 0; i<doc.data().owners.length; i++){
-            if (doc.data().owners[i].username === route.params.username){
-              results.push({data: doc.data(), id:doc.id})
+    const getChats = async () => {
+        const results = [];
+        const MyChatQuery = firestore.collection('Chats');
+
+        await MyChatQuery.get().then(async (ChatSnapshot) => {
+            for (const doc of ChatSnapshot.docs) {
+                for (let i = 0; i < doc.data().owners.length; i++) {
+                    if (doc.data().owners[i].username === route.params.username) {
+                        const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                            .orderBy('createdAt', 'desc')
+                            .limit(1)
+                            .get();
+                        const latestMessageSnapshot = await latestMessageQuery;
+                        const latestMessageData = latestMessageSnapshot.docs[0].data();
+                        const latestMessage = latestMessageData.text;
+                        results.push({ data: doc.data(), id: doc.id, latestMessage });
+                    }
+                }
             }
-          }
         });
-      })
-      return results;
-  }
+        return results;
+    };
 
 
-  const onRefresh = () => {
+
+    const onRefresh = () => {
     setRefreshing(true);
     getChats().then((result) =>{
       setFilterData(result);
@@ -194,8 +203,9 @@ const deleteRow = (id) =>{
                   <Image
                   source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
                   style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}/>
-                  <View>
+                  <View style={{flexDirection:'column'}}>
                     <Text style ={{fontSize:18, fontWeight:'bold'}}>{username}</Text>
+                    <Text style={{color:'lightgray', fontSize:14, paddingTop:3}}>{item.latestMessage}</Text>
                   </View>
                 </View>
               </Pressable>

@@ -102,7 +102,7 @@ export default function Wallet({navigation, route}) {
           }}
           ListHeaderComponent = {
             <View style={{width:width, margin:10}}>
-              <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
+              <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10}}/>
               <View style={{marginBottom:10, alignItems:'center'}}>
                 <Text style={{fontWeight:'600', fontSize:50,}}>$968,495</Text>
                 <View style={{backgroundColor:'lightgreen', borderRadius:20}}>

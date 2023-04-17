@@ -42,6 +42,7 @@ export default function AddPost({route}){
     const [price, setPrice] = React.useState(randomNumber.toString());
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [category, setCategory] = React.useState('');
+    const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
     const [imageUrls, setImageUrls] = React.useState([]);
@@ -210,6 +211,48 @@ export default function AddPost({route}){
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
                     <TextInput style={styles.textinput} onChangeText = {(text)=>{setTitle(text)}} value={title}/>
+                </View>
+
+                <View>
+                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Category</Text>
+
+                <Dropdown
+                    style={{
+                        height: 50,
+                        borderRadius: 10,
+                        paddingHorizontal: 16,
+                        backgroundColor: 'lightgray',
+                        marginLeft:35, marginRight:35
+                    }}
+                    placeholderStyle={{}}
+                    selectedTextStyle={{}}
+                    inputSearchStyle={{
+                        borderBottomWidth: 0,
+                        backgroundColor: '#f2f2f2',
+                        borderRadius: 20,
+                        paddingHorizontal: 12,
+                        marginHorizontal: 16,
+                        marginBottom: 8,
+                    }}
+                    iconStyle={{
+                        width: 20,
+                        height: 20,
+                        marginRight: 8,
+                    }}
+                    data={categories}
+                    search
+                    labelField="Label"
+                    valueField="Value"
+                    placeholder={'Select item'}
+                    searchPlaceholder="Search..."
+                    value={currency}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={(item) => {
+                        setCategory(item.value);
+                        setIsFocus(false);
+                    }}
+                />
                 </View>
                 <View >
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
