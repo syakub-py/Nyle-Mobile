@@ -14,6 +14,7 @@ export default function Home({navigation, route}) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
+
   // Function to refresh the data
   const onRefresh = () => {
     // Set the refreshing state to true
@@ -62,6 +63,7 @@ export default function Home({navigation, route}) {
 
   const handleCategoryPress = (index) => {
     setSelectedCategoryIndex(index);
+    categoryFilter(categories[index])
   };
 
   // Function to filter the data based on search input
@@ -80,17 +82,31 @@ export default function Home({navigation, route}) {
     }
   }
 
+  const categoryFilter = (text) => {
+    if (text && text !== 'All'){
+      const newData = masterData.filter((item) =>{
+        const itemData = item.category ? item.category : ''
+        const textData = text;
+        return itemData.indexOf(textData)>-1;
+      });
+      setfilterData(newData);
+      setSearch(text);
+    }else{
+      setfilterData(masterData);
+      setSearch(text);
+    }
+  }
   return (
       <View style={{flex:1, backgroundColor:'white'}}>
         <View style={{zIndex:0}}>
           <FlatList
           ListHeaderComponent={
             <View>
-                <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,}}>
-                  <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100, marginLeft:20}}/>
+                <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
+                  <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20}}/>
 
                 <View style={{marginTop:20, marginRight:20}}>
-                  <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:70, width:70, borderRadius:100}}/>
+                  <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
                 </View>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
@@ -110,17 +126,17 @@ export default function Home({navigation, route}) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#fff',
-                    height:60,
-                    borderRadius:50,
+                    height:50,
+                    borderRadius:15,
                     margin:10,
                     elevation:2
                   }}>
-                <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
-                <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+                <Ionicons name="search-outline" style={{paddingLeft: 20}} size={25} color ={'gray'}/>
+                <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
               <View style={{flexDirection:'row', alignItems:'center'}}>
-                <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Trending Posts</Text>
+                <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Latest Posts</Text>
 
                 <Pressable style={{position:'absolute', right:25}}>
                   <Ionicons name='filter-outline' size={25} />

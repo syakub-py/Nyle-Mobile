@@ -41,6 +41,8 @@ export default function AddPost({route}){
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState(randomNumber.toString());
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
+    const [category, setCategory] = React.useState('');
+
     //urls for the phone
     const [imageUrls, setImageUrls] = React.useState([]);
     const [currency, setCurrency] = React.useState({label:'', value:''});
@@ -134,6 +136,7 @@ export default function AddPost({route}){
             coordinates: coordinates,
             views: 0,
             sold: "false",
+            category:category,
             date: new Date().toLocaleString(),
         })
         .then(ref => {

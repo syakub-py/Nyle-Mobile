@@ -154,7 +154,7 @@ const deleteRow = (id) =>{
             <View>
                 
               <View style={{flexDirection:'row'}}>
-                <Image source={require('../Screens/Components/icon.png')} style={{height:100, width:100}}/>
+                <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75}}/>
               </View>
                 <View style={{
                     flex: 1,
@@ -162,15 +162,15 @@ const deleteRow = (id) =>{
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#fff',
-                    height:60,
-                    borderRadius:50,
+                    height:50,
+                    borderRadius:15,
                     marginBottom:10,
                     elevation:2
                 }}>
                     <Ionicons name="search-outline" style={{paddingLeft: 25}} size={25} color ={'gray'}/>
                     <TextInput placeholder='Search Chats...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
                 </View>
-                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>All Conversations</Text>
+                <Text style= {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
             </View>
         }
           renderHiddenItem = {({i, item}) => (

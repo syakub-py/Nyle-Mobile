@@ -100,7 +100,6 @@ export default function ChatBox({route, navigation}) {
                 backgroundColor: 'black',
                 borderWidth: 3,
                 borderRadius: 18,
-                flexWrap: 'wrap',
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             },
             left:{
@@ -108,7 +107,6 @@ export default function ChatBox({route, navigation}) {
                 borderWidth: 3,
                 borderRadius: 18,
                 borderColor:'#ebebeb',
-                flexWrap: 'wrap',
                 ...(imageUrls.length > 0 && { marginBottom: 90 }),
             }
         };
@@ -120,7 +118,11 @@ export default function ChatBox({route, navigation}) {
             textStyle={{
                 right: {
                     color: '#fff',
+                    flexWrap:'wrap'
                 },
+                left:{
+                    flexWrap:'wrap'
+                }
             }}/>
         );
     };

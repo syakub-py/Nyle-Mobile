@@ -1,6 +1,5 @@
 import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Avatar } from 'react-native-elements';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
@@ -54,15 +53,18 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                 <View>
+                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, left: 10, position: 'absolute', backgroundColor: 'black', borderRadius: 4, opacity: 0.6, alignItems:'center'}}>
+                            <Text style={{ color: 'white', fontWeight: 'bold'}}>{state.active + 1}/{images.length}</Text>
+                    </View>
+
+
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
                         {
                             images.map((image, key)=>(
                                 <Pressable onPress={()=>{navigation.navigate("Image Viewer", {pictures:images, index: key})}} key={key}>
                                     <View style={{width, height, position: 'relative'}} >
                                         <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
-                                        <View style={{height:20, width:25,zIndex:1,bottom:10,left:10, position:'absolute'}}>
-                                            <Text style={{color:"white", fontWeight:'bold'}}>{key+1}/{images.length}</Text>
-                                        </View>
+
                                     </View>
                                 </Pressable>
                                 )
@@ -82,9 +84,13 @@ export default function PostDetails({route, navigation}){
                         }
                     </View>
                 </ScrollView>
-                <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
-                    <View style={{flexDirection:"row", justifyContent:'space-between'}}>
 
+                <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+                {/*<View style={{flexDirection:'row', alignContent:'center'}}>*/}
+                {/*    <Ionicons name={'eye-outline'} size={20} />*/}
+                {/*    <Text style={{color: '#a8a5a5', fontSize:12, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>{route.params.views}</Text>*/}
+                {/*</View>*/}
+                    <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                         <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10}}>
                             <Image source={{uri:route.params.PostedByProfilePic}} style={{height:50, width:50, borderRadius:10, alignSelf:'center'}}/>
                             <View style={{margin:10,alignSelf:'center'}}>
@@ -93,6 +99,7 @@ export default function PostDetails({route, navigation}){
                             </View>
                         </View>
 
+
                         <Pressable onPress={handleAddChat}>
                             <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                                 <Ionicons name="chatbubble-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
@@ -100,9 +107,7 @@ export default function PostDetails({route, navigation}){
                         </Pressable>
                     </View>
 
-                    <View>
-                        <Text style={{color: '#a8a5a5', fontSize:17, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>This post has {route.params.views} views</Text>
-                    </View>
+
                     
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         <Image style={{height:30, width:30, margin:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
