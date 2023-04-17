@@ -26,14 +26,26 @@ export default function Chat({navigation, route}) {
                         const latestMessageSnapshot = await latestMessageQuery;
                         const latestMessageData = latestMessageSnapshot.docs[0].data();
                         const latestMessage = latestMessageData.text;
-                        results.push({ data: doc.data(), id: doc.id, latestMessage });
+                        if (latestMessageData.user.name === route.params.username){
+                            if (latestMessageData.image.length>0){
+                                results.push({ data: doc.data(), id: doc.id, latestMessage: "You: " + latestMessage, image:latestMessageData.image[0] });
+                            }else{
+                                results.push({ data: doc.data(), id: doc.id, latestMessage: "You: " + latestMessage, image:"" });
+                            }
+                        }else{
+                            if (latestMessageData.image.length>0) {
+                                results.push({ data: doc.data(), id: doc.id, latestMessage:latestMessage, image:latestMessageData.image[0] });
+                            }else {
+                                results.push({ data: doc.data(), id: doc.id, latestMessage:latestMessage, image:" " });
+
+                            }
+                        }
                     }
                 }
             }
         });
         return results;
     };
-
 
 
     const onRefresh = () => {
@@ -207,6 +219,18 @@ const deleteRow = (id) =>{
                     <Text style ={{fontSize:18, fontWeight:'bold'}}>{username}</Text>
                     <Text style={{color:'lightgray', fontSize:14, paddingTop:3}}>{item.latestMessage}</Text>
                   </View>
+                    {
+                        (item.image)?(
+                            <View style={{justifyContent:'center'}}>
+                                <Image source={{uri: item.image}} style={{height:50, width:50, borderRadius:4, position:'absolute', left:30}}/>
+                            </View>
+                        ):(
+                                <View>
+
+                                </View>
+                        )
+                    }
+
                 </View>
               </Pressable>
             )
