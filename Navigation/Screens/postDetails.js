@@ -12,6 +12,7 @@ export default function PostDetails({route, navigation}){
 
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
+    const [more, setMore] = React.useState(false)
 
     const handleAddChat = () =>{
         firestore.collection('Chats').add({
@@ -129,10 +130,10 @@ export default function PostDetails({route, navigation}){
 
                     <View style={{marginBottom:20}}>
                         <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Description}</Text>
+                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.Description : route.params.Description.slice(0, 500) + " ..."}</Text>
                     </View>
 
-                <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>Posted On: {route.params.DatePosted}</Text>
+                <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.DatePosted}</Text>
 
             </ScrollView>
             {/* <View style={{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>

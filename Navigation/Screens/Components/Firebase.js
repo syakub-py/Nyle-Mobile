@@ -6,7 +6,6 @@ import "firebase/compat/analytics"
 import 'firebase/compat/storage'
 var app = "";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyAS0OLIeH01QAyHZQxILWWUu3I2PJm3xz4",
   authDomain: "nyle-bd594.firebaseapp.com",

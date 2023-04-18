@@ -14,7 +14,7 @@ export default function Chat({navigation, route}) {
     const getChats = async () => {
         const results = [];
         const MyChatQuery = firestore.collection('Chats');
-
+        let latestMessageData;
         await MyChatQuery.get().then(async (ChatSnapshot) => {
             for (const doc of ChatSnapshot.docs) {
                 for (let i = 0; i < doc.data().owners.length; i++) {
@@ -24,21 +24,50 @@ export default function Chat({navigation, route}) {
                             .limit(1)
                             .get();
                         const latestMessageSnapshot = await latestMessageQuery;
-                        const latestMessageData = latestMessageSnapshot.docs[0].data();
-                        const latestMessage = latestMessageData.text;
-                        if (latestMessageData.user.name === route.params.username){
-                            if (latestMessageData.image.length>0){
-                                results.push({ data: doc.data(), id: doc.id, latestMessage: "You: " + latestMessage, image:latestMessageData.image[0] });
-                            }else{
-                                results.push({ data: doc.data(), id: doc.id, latestMessage: "You: " + latestMessage, image:"" });
+                        if (latestMessageSnapshot.docs.length>0){
+                            latestMessageData = latestMessageSnapshot.docs[0].data();
+                            const latestMessage = latestMessageData.text;
+                            if (latestMessageData.user.name === route.params.username) {
+                                if (latestMessageData.image.length > 0) {
+                                    results.push({
+                                        data: doc.data(),
+                                        id: doc.id,
+                                        latestMessage: "You: " + latestMessage,
+                                        image: latestMessageData.image[0]
+                                    });
+                                } else {
+                                    results.push({
+                                        data: doc.data(),
+                                        id: doc.id,
+                                        latestMessage: "You: " + latestMessage,
+                                        image: ""
+                                    });
+                                }
+                            } else {
+                                if (latestMessageData.image.length > 0) {
+                                    results.push({
+                                        data: doc.data(),
+                                        id: doc.id,
+                                        latestMessage: latestMessage,
+                                        image: latestMessageData.image[0]
+                                    });
+                                } else {
+                                    results.push({
+                                        data: doc.data(),
+                                        id: doc.id,
+                                        latestMessage: latestMessage,
+                                        image: " "
+                                    });
+
+                                }
                             }
                         }else{
-                            if (latestMessageData.image.length>0) {
-                                results.push({ data: doc.data(), id: doc.id, latestMessage:latestMessage, image:latestMessageData.image[0] });
-                            }else {
-                                results.push({ data: doc.data(), id: doc.id, latestMessage:latestMessage, image:" " });
-
-                            }
+                            results.push({
+                                data: doc.data(),
+                                id: doc.id,
+                                latestMessage: "",
+                                image: ""
+                            });
                         }
                     }
                 }
@@ -213,24 +242,22 @@ const deleteRow = (id) =>{
               <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                   <Image
-                  source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
-                  style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}/>
+                      source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
+                      style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}
+                  />
                   <View style={{flexDirection:'column'}}>
-                    <Text style ={{fontSize:18, fontWeight:'bold'}}>{username}</Text>
-                    <Text style={{color:'lightgray', fontSize:14, paddingTop:3}}>{item.latestMessage}</Text>
+                    <Text style ={{fontSize:18, fontWeight:'500'}}>{username}</Text>
+                    <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
                   </View>
                     {
                         (item.image)?(
                             <View style={{justifyContent:'center'}}>
-                                <Image source={{uri: item.image}} style={{height:50, width:50, borderRadius:4, position:'absolute', left:30}}/>
+                                <Image source={{uri: item.image}} style={{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
                             </View>
                         ):(
-                                <View>
-
-                                </View>
+                            <View/>
                         )
                     }
-
                 </View>
               </Pressable>
             )

@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestoreLite} from './Components/Firebase'
 import {Value} from "react-native-reanimated";
+import * as ImagePicker from "expo-image-picker";
 
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
@@ -30,6 +31,16 @@ export default function Home({navigation, route}) {
     })
     // Wait for 0.3 seconds before setting the refreshing state to false
     setTimeout(() => setRefreshing(false), 300);
+  };
+
+  const SelectProfilePic = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    // if (!result.canceled) {
+    // };
   };
 
   // Function to retrieve posts from the database

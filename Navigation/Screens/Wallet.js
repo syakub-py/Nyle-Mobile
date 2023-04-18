@@ -104,7 +104,7 @@ export default function Wallet({navigation, route}) {
             <View style={{width:width, margin:10}}>
               <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10}}/>
               <View style={{marginBottom:10, alignItems:'center'}}>
-                <Text style={{fontWeight:'600', fontSize:50,}}>$968,495</Text>
+                <Text style={{fontWeight:'600', fontSize:50,}}>$1,968,495</Text>
                 <View style={{backgroundColor:'lightgreen', borderRadius:20}}>
                   <View style={{flexDirection:'row',  margin:7}}>
                     <Text style={{fontSize:15, fontWeight:'bold', color:'black'}}><Ionicons name='arrow-up-outline' color={'black'} size={15}/>2.65%</Text>
