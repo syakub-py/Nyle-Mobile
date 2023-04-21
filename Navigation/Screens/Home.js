@@ -4,7 +4,6 @@ import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestoreLite} from './Components/Firebase'
-import {Value} from "react-native-reanimated";
 import * as ImagePicker from "expo-image-picker";
 
 export default function Home({navigation, route}) {

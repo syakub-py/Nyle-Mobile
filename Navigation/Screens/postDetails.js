@@ -4,7 +4,6 @@ import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 
-
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -46,7 +45,7 @@ export default function PostDetails({route, navigation}){
         <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style={{zIndex:1}}>
-                    <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
+                    <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
                         </Pressable>
@@ -54,8 +53,8 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                 <View>
-                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, left: 10, position: 'absolute', backgroundColor: 'black', borderRadius: 4, opacity: 0.6, alignItems:'center'}}>
-                            <Text style={{ color: 'white', fontWeight: 'bold'}}>{state.active + 1}/{images.length}</Text>
+                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, left: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
+                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
 
@@ -65,7 +64,6 @@ export default function PostDetails({route, navigation}){
                                 <Pressable onPress={()=>{navigation.navigate("Image Viewer", {pictures:images, index: key})}} key={key}>
                                     <View style={{width, height, position: 'relative'}} >
                                         <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
-
                                     </View>
                                 </Pressable>
                                 )

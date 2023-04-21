@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
-import firebase from 'firebase/app';
 import { auth } from './Components/Firebase';
 import "firebase/auth";
 import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
@@ -8,18 +7,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 export default function Login({navigation}){
-    
+
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
 
     const handleEmailAndPasswordLogin = () => {
         auth
-        .signInWithEmailAndPassword(username, password)
-        .then(userCredentials =>{
-            const user = userCredentials.user;
-
-        })
-        .catch(error => alert(error.message))
+            .signInWithEmailAndPassword(username, password)
+            .then(userCredentials =>{
+                const user = userCredentials.user;
+            })
+            .catch(error => alert(error.message))
     }
 
     const handleGoogleLogin = async () => {
@@ -49,11 +47,11 @@ export default function Login({navigation}){
         <ScrollView style ={styles.container}>
             <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                 <Image
-                source ={require('./Components/icon.png')}
-                style ={{
-                    height: 150,
-                    width: 150
-                }}/>
+                    source ={require('./Components/icon.png')}
+                    style ={{
+                        height: 150,
+                        width: 150
+                    }}/>
             </View>
             <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                 <Pressable>
@@ -86,7 +84,7 @@ export default function Login({navigation}){
                 <Pressable
                     style={styles.submitContainer}
                     onPress = {handleEmailAndPasswordLogin}
-                    >
+                >
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                 </Pressable>
 
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     },
 
     text: {
-      color: 'black',
+        color: 'black',
     },
     socialButton:{
         flexDirection:"row",
@@ -140,4 +138,3 @@ const styles = StyleSheet.create({
         shadowRadius: 20
     },
 });
-

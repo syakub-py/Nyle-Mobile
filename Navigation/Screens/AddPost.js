@@ -209,12 +209,12 @@ export default function AddPost({route}){
                     )
                 }
                 <View>
-                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Title</Text>
+                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:10}}>Title</Text>
                     <TextInput style={styles.textinput} onChangeText = {(text)=>{setTitle(text)}} value={title}/>
                 </View>
 
                 <View>
-                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Category</Text>
+                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:10}}>Category</Text>
 
                 <Dropdown
                     style={{
@@ -255,7 +255,7 @@ export default function AddPost({route}){
                 />
                 </View>
                 <View >
-                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Price</Text>
+                    <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
                     <View style={{flexDirection:'row', marginLeft:30}}>
                         <Dropdown
                             style={{
@@ -296,11 +296,11 @@ export default function AddPost({route}){
                             }}
                         />
 
-                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>  
+                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>
                     </View>
                 </View>
 
-                <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
+                <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
                 <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
                     <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress={dropMarker}>
                         <Marker coordinate={coordinates}/>
@@ -308,18 +308,18 @@ export default function AddPost({route}){
                 </View>
 
                 <View>
-                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Details</Text>
+                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
                     <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
                 </View>
 
                 <View>
-                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:20,}}>Description</Text>
+                    <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:10,}}>Description</Text>
                     <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
                     <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
-                        <Text style={{margin:20, color:"white", fontWeight:"bold"}}>Add post</Text>
+                        <Text style={{margin:10, color:"white", fontWeight:"bold"}}>Add post</Text>
                     </View>
                 </Pressable>
             </ScrollView>
