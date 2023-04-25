@@ -136,6 +136,7 @@ export default function AddPost({route}){
             profilePic: route.params.profilePicture,
             coordinates: coordinates,
             views: 0,
+            likes: [],
             sold: "false",
             category:category,
             date: new Date().toLocaleString(),

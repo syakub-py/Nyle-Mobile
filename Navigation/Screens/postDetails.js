@@ -12,7 +12,8 @@ export default function PostDetails({route, navigation}){
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
     const [more, setMore] = React.useState(false)
-
+    const [liked,setLiked] = React.useState(false)
+    const likes = route.params.Likes
     const handleAddChat = () =>{
 
         firestore.collection('Chats').add({
@@ -34,6 +35,33 @@ export default function PostDetails({route, navigation}){
             Alert.alert('Error adding document: ', error);
         });
     }
+
+    const handleLike = async () => {
+        const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
+        setLiked(true)
+        PostRef.get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const likesArray = doc.data().likes || [];
+                    // Modify the array as needed
+                    likesArray.push(route.params.username);
+                    // Write the updated array back to the document
+                    PostRef.update({ likes: likesArray })
+                        .then(() => {
+                            console.log('Value added to array');
+                        })
+                        .catch((error) => {
+                            console.error('Error adding value to array:', error);
+                        });
+                } else {
+                    console.error('Document does not exist');
+                }
+            })
+            .catch((error) => {
+                console.error('Error getting document:', error);
+            });
+    };
+
 
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
@@ -59,8 +87,16 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <View style={{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable>
-                            <Ionicons name='heart-outline' size={30}/>
+                        <Pressable onPress={()=>handleLike()}>
+                            {
+                                (liked || likes.includes(route.params.username))?(
+                                    <Ionicons name='heart' size={30} color={'#e6121d'}/>
+
+                                ):(
+                                    <Ionicons name='heart-outline' size={30}/>
+
+                                )
+                            }
                         </Pressable>
                     </View>
 
