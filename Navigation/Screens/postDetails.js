@@ -3,6 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
+import Picker from "react-native-picker-select";
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -13,35 +14,36 @@ export default function PostDetails({route, navigation}){
     const [state, setState] = React.useState({active:0})
     const [more, setMore] = React.useState(false)
     const [liked,setLiked] = React.useState(false)
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [selectedValue, setSelectedValue] = React.useState('Option 1');
     const likes = route.params.Likes
     const handleAddChat = () =>{
-
-        firestore.collection('Chats').add({
-          owners:[
-            {
-                profilePic:route.params.CurrentUserProfilePic,
-                username: route.params.username
-            },
-            {
-                profilePic:route.params.PostedByProfilePic,
-                username: route.params.postedBy
-            }
-        ]
-        })
-        .then(ref => {
-          Alert.alert("Added")
-        })
-        .catch(error => {
-            Alert.alert('Error adding document: ', error);
-        });
+        if (route.params.username!==route.params.postedBy) {
+            firestore.collection('Chats').add({
+                owners: [
+                    {
+                        profilePic: route.params.CurrentUserProfilePic,
+                        username: route.params.username
+                    },
+                    {
+                        profilePic: route.params.PostedByProfilePic,
+                        username: route.params.postedBy
+                    }
+                ]
+            }).then(ref => {
+                    Alert.alert("Added")
+                }).catch(error => {
+                    Alert.alert('Error adding document: ', error);
+                });
+        }
     }
 
     const handleLike = async () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
-        setLiked(true)
+        setLiked(!liked)
         PostRef.get()
             .then((doc) => {
-                if (doc.exists) {
+                if (doc.exists && !doc.data().likes.includes(route.params.username)) {
                     const likesArray = doc.data().likes || [];
                     // Modify the array as needed
                     likesArray.push(route.params.username);
@@ -54,7 +56,15 @@ export default function PostDetails({route, navigation}){
                             console.error('Error adding value to array:', error);
                         });
                 } else {
-                    console.error('Document does not exist');
+                    const likesArray = doc.data().likes || [];
+                    const updatedLikesArray = likesArray.filter((username) => username !== route.params.username);
+                    PostRef.update({ likes: updatedLikesArray })
+                        .then(() => {
+                            console.log('Value removed from array');
+                        })
+                        .catch((error) => {
+                            console.error('Error updating array:', error);
+                        });
                 }
             })
             .catch((error) => {
@@ -74,15 +84,23 @@ export default function PostDetails({route, navigation}){
         <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style={{zIndex:1}}>
-                    <View style={{position: 'absolute', top: 30, left: 25, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                    <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
+
                         </Pressable>
                     </View>
 
                     <View style={{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable >
+                        <Pressable onPress={() => setIsOpen(!isOpen)}>
                             <Ionicons name='reorder-three-outline' size={30}/>
+                            {/*{isOpen && (*/}
+                            {/*    <Picker*/}
+                            {/*        selectedValue={selectedValue}*/}
+                            {/*        onValueChange={(itemValue, itemIndex) =>*/}
+                            {/*            setSelectedValue(itemValue)*/}
+                            {/*        } items={{"label": "option 1"}}/>*/}
+                            {/*)}*/}
                         </Pressable>
                     </View>
 
@@ -117,11 +135,12 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
+                        {/* borderBottomLeftRadius:10, borderBottomRightRadius:10*/}
                         {
                             images.map((image, key)=>(
                                 <Pressable onPress={()=>{navigation.navigate("Image Viewer", {pictures:images, index: key})}} key={key}>
                                     <View style={{width, height, position: 'relative'}} >
-                                        <Image style={{width, height, borderBottomLeftRadius:10, borderBottomRightRadius:10}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
+                                        <Image style={{width, height}} resizeMode = {'cover'} source={{uri:image}} key ={key}/>
                                     </View>
                                 </Pressable>
                                 )
@@ -135,7 +154,7 @@ export default function PostDetails({route, navigation}){
                         {
                             images.map((i, k)=>(
                                 <Pressable key={k} onPress={()=>console.log("Button Pressed")}>
-                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:10, borderRadius:10}:{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}} key={k}/>
+                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key={k}/>
                                 </Pressable>
                             ))
                         }
@@ -147,8 +166,8 @@ export default function PostDetails({route, navigation}){
                 {/*    <Text style={{color: '#a8a5a5', fontSize:12, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>{route.params.views}</Text>*/}
                 {/*</View>*/}
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
-                        <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10}}>
-                            <Image source={{uri:route.params.PostedByProfilePic}} style={{height:50, width:50, borderRadius:10, alignSelf:'center'}}/>
+                        <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10, margin:10}}>
+                            <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                             <View style={{margin:10,alignSelf:'center'}}>
                                 <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
                                 <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>

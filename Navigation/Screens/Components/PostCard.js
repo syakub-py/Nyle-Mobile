@@ -6,18 +6,18 @@ import {firestore} from "./Firebase";
 
 export default function PostCard({data}){
   const navigation = useNavigation();
-  const [iconName, setIconName] = React.useState('heart-outline');
   const [liked,setLiked] = React.useState(false)
 
   const handleLike = async () => {
+      console.log(data.CurrentUsername)
     const PostRef = firestore.collection('AllPosts').doc(data.title);
-    setLiked(true)
+    setLiked(!liked)
     PostRef.get()
         .then((doc) => {
-          if (doc.exists && !doc.data().likes.includes(data.PostedBy)) {
+          if (doc.exists && !doc.data().likes.includes(data.CurrentUsername)) {
             const likesArray = doc.data().likes || [];
             // Modify the array as needed
-            likesArray.push(data.PostedBy);
+            likesArray.push(data.CurrentUsername);
             // Write the updated array back to the document
             PostRef.update({ likes: likesArray })
                 .then(() => {
@@ -27,8 +27,15 @@ export default function PostCard({data}){
                   console.error('Error adding value to array:', error);
                 });
           } else {
-            console.error('Document does not exist');
-          }
+              const likesArray = doc.data().likes || [];
+              const updatedLikesArray = likesArray.filter((username) => username !== data.CurrentUsername);
+              PostRef.update({ likes: updatedLikesArray })
+                  .then(() => {
+                      console.log('Value removed from array');
+                  })
+                  .catch((error) => {
+                      console.error('Error updating array:', error);
+                  });          }
         })
         .catch((error) => {
           console.error('Error getting document:', error);
