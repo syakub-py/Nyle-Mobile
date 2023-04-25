@@ -4,20 +4,19 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {firestore} from "./Firebase";
 
-export default function PostCard({data}){
+export default function PostCard({data, username}){
   const navigation = useNavigation();
   const [liked,setLiked] = React.useState(false)
 
   const handleLike = async () => {
-      console.log(data.CurrentUsername)
     const PostRef = firestore.collection('AllPosts').doc(data.title);
     setLiked(!liked)
     PostRef.get()
         .then((doc) => {
-          if (doc.exists && !doc.data().likes.includes(data.CurrentUsername)) {
+          if (doc.exists && !doc.data().likes.includes(username)) {
             const likesArray = doc.data().likes || [];
             // Modify the array as needed
-            likesArray.push(data.CurrentUsername);
+            likesArray.push(username);
             // Write the updated array back to the document
             PostRef.update({ likes: likesArray })
                 .then(() => {
@@ -28,7 +27,7 @@ export default function PostCard({data}){
                 });
           } else {
               const likesArray = doc.data().likes || [];
-              const updatedLikesArray = likesArray.filter((username) => username !== data.CurrentUsername);
+              const updatedLikesArray = likesArray.filter((user) => user !== username);
               PostRef.update({ likes: updatedLikesArray })
                   .then(() => {
                       console.log('Value removed from array');

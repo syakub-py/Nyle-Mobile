@@ -183,7 +183,7 @@ export default function Profile({navigation, route}) {
                 </View>
                 }
               renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, Likes:item.likes})}>
                   <PostCard data ={item}/>
                 </Pressable>
                 )}

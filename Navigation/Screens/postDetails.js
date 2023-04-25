@@ -9,14 +9,31 @@ const {width} = Dimensions.get("window");
 const height = width * 1;
 
 export default function PostDetails({route, navigation}){
-
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
     const [more, setMore] = React.useState(false)
     const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState('Option 1');
+    const [views, setViews] = React.useState(0)
     const likes = route.params.Likes
+
+    const handleViewCounter = () => {
+        const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
+        PostRef.get()
+            .then((doc) => {
+                const currentViews = doc.data().views;
+                setViews(currentViews + 1);
+                PostRef.update({ views: currentViews + 1 })
+                    .then(() => {
+                        console.log('Views incremented');
+                    })
+                    .catch((error) => {
+                        console.error('Error adding value to views:', error);
+                    });
+            });
+    };
+
     const handleAddChat = () =>{
         if (route.params.username!==route.params.postedBy) {
             firestore.collection('Chats').add({
@@ -80,6 +97,10 @@ export default function PostDetails({route, navigation}){
         }
     }
 
+    React.useEffect(()=>{
+        handleViewCounter()
+    }, [])
+
     return (
         <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
@@ -87,7 +108,6 @@ export default function PostDetails({route, navigation}){
                     <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
-
                         </Pressable>
                     </View>
 
@@ -135,7 +155,6 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
-                        {/* borderBottomLeftRadius:10, borderBottomRightRadius:10*/}
                         {
                             images.map((image, key)=>(
                                 <Pressable onPress={()=>{navigation.navigate("Image Viewer", {pictures:images, index: key})}} key={key}>
@@ -161,10 +180,37 @@ export default function PostDetails({route, navigation}){
                     </View>
                 </ScrollView>
 
-                {/*<View style={{flexDirection:'row', alignContent:'center'}}>*/}
-                {/*    <Ionicons name={'eye-outline'} size={20} />*/}
-                {/*    <Text style={{color: '#a8a5a5', fontSize:12, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>{route.params.views}</Text>*/}
-                {/*</View>*/}
+                <View style={{flexDirection:'row'}}>
+                    <View style={{
+                        flexDirection: 'row',
+                        backgroundColor: '#fff',
+                        borderRadius: 5,
+                        padding: 10,
+                        margin: 5,
+                    }}>
+                        <Ionicons name='heart' size={20} color={'#e6121d'}/>
+                        <Text style={{
+                            color: 'black',
+                            fontSize: 12,
+                            fontWeight: 'bold',
+                            marginLeft: 3,
+                            marginTop: 3
+                        }}>{likes.length}</Text>
+                    </View>
+                    <View style={{  flexDirection: 'row',
+                        backgroundColor: '#fff',
+                        borderRadius: 5,
+                        padding: 10,
+                        margin: 5,}}>
+                        <Ionicons name='eye' size={20} color={'black'}/>
+                        <Text style={{  color: 'black',
+                            fontSize: 12,
+                            fontWeight: 'bold',
+                            marginLeft: 3,
+                            marginTop: 3}}>{views}</Text>
+                    </View>
+                </View>
+
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                         <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10, margin:10}}>
                             <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
