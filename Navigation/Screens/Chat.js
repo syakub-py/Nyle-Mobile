@@ -243,7 +243,7 @@ const deleteRow = (id) =>{
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                   <Image
                       source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
-                      style = {{width: 60, height:60, borderRadius:50,marginRight:15,}}
+                      style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
                   />
                   <View style={{flexDirection:'column'}}>
                     <Text style ={{fontSize:18, fontWeight:'500'}}>{username}</Text>

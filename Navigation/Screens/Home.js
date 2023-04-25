@@ -115,13 +115,16 @@ export default function Home({navigation, route}) {
             <View>
                 <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20}}/>
+                  {/*add the logic to change the profile pic in firebase*/}
+                  <Pressable>
+                    <View style={{marginTop:20, marginRight:20}}>
+                      <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
+                      <View style={{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
+                        <Ionicons name={'add-outline'} color={'white'} size={17}/>
+                      </View>
+                    </View>
+                  </Pressable>
 
-                <View style={{marginTop:20, marginRight:20}}>
-                  <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
-                  <View style={{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
-                    <Ionicons name={'add-outline'} color={'white'} size={17}/>
-                  </View>
-                </View>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {

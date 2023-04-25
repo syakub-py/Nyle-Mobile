@@ -235,7 +235,7 @@ export default function ChatBox({route, navigation}) {
         </View>
 
         <View style={{ backgroundColor: 'transparent', flexDirection:'row', alignItems:'center'}}>
-          <Image style={{height:45, width:45, borderRadius:100}} source={{uri:route.params.avatar}}/>
+          <Image style={{height:45, width:45, borderRadius:15}} source={{uri:route.params.avatar}}/>
           <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
       </View>

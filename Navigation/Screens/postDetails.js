@@ -14,6 +14,7 @@ export default function PostDetails({route, navigation}){
     const [more, setMore] = React.useState(false)
 
     const handleAddChat = () =>{
+
         firestore.collection('Chats').add({
           owners:[
             {
@@ -45,18 +46,39 @@ export default function PostDetails({route, navigation}){
         <SafeAreaView style={{flex:1}}>
             <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style={{zIndex:1}}>
-                    <View style={{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                    <View style={{position: 'absolute', top: 30, left: 25, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
                             <Ionicons name='arrow-back-outline' size={30}/>
                         </Pressable>
                     </View>
+
+                    <View style={{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                        <Pressable >
+                            <Ionicons name='reorder-three-outline' size={30}/>
+                        </Pressable>
+                    </View>
+
+                    <View style={{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                        <Pressable>
+                            <Ionicons name='heart-outline' size={30}/>
+                        </Pressable>
+                    </View>
+
                 </View>
 
                 <View>
-                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, left: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
+                    <View style={{zIndex: 1, bottom: 50, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center'}}>
+                         <Text style={{color:'white',fontSize:30,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+                    </View>
+
+                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, right: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                             <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
+                    <View style={{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
+                        <Image style={{height:25, width:25, marginRight:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
+                        <Text style={{fontSize:25, fontWeight:'bold', color:'white'}}>{route.params.Price}</Text>
+                    </View>
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
                         {
@@ -84,7 +106,6 @@ export default function PostDetails({route, navigation}){
                     </View>
                 </ScrollView>
 
-                <Text style={{marginTop:10, marginBottom:10, marginLeft:15, fontSize:30, fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                 {/*<View style={{flexDirection:'row', alignContent:'center'}}>*/}
                 {/*    <Ionicons name={'eye-outline'} size={20} />*/}
                 {/*    <Text style={{color: '#a8a5a5', fontSize:12, fontWeight:'semi-bold', marginLeft:10, marginTop:10}}>{route.params.views}</Text>*/}
@@ -105,14 +126,7 @@ export default function PostDetails({route, navigation}){
                             </View>
                         </Pressable>
                     </View>
-
-
                     
-                    <View style={{flexDirection:'row', alignItems:'center'}}>
-                        <Image style={{height:30, width:30, margin:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black'}}>{route.params.Price}</Text>
-                    </View>
-
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                     <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
