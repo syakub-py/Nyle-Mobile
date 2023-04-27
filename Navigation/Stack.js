@@ -3,7 +3,7 @@ import SignUp from './Screens/SignUp';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import MainContainer from './MainContainer';
-import PostDetails from './Screens/postDetails';
+import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import Categories from './Screens/Categories';
 import ViewProfile from './Screens/ViewProfile';

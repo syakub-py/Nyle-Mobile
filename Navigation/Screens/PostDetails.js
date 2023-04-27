@@ -107,7 +107,7 @@ export default function PostDetails({route, navigation}){
                 <View style={{zIndex:1}}>
                     <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>navigation.goBack()}>
-                            <Ionicons name='arrow-back-outline' size={30}/>
+                            <Ionicons name='chevron-back-outline' size={30}/>
                         </Pressable>
                     </View>
 
@@ -132,7 +132,6 @@ export default function PostDetails({route, navigation}){
 
                                 ):(
                                     <Ionicons name='heart-outline' size={30}/>
-
                                 )
                             }
                         </Pressable>

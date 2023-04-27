@@ -102,8 +102,10 @@ export default function Wallet({navigation, route}) {
           }}
           ListHeaderComponent = {
             <View style={{width:width, margin:10}}>
+
               <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10}}/>
               <View style={{marginBottom:10, alignItems:'center'}}>
+
                 <Text style={{fontWeight:'600', fontSize:50,}}>$1,968,495</Text>
                 <View style={{backgroundColor:'lightgreen', borderRadius:20}}>
                   <View style={{flexDirection:'row',  margin:7}}>
@@ -112,13 +114,39 @@ export default function Wallet({navigation, route}) {
                     <Text style={{fontWeight:'bold'}}>$7,000</Text>
                   </View>
                 </View>
+
+                <View style={{flexDirection:"row",justifyContent:'space-between'}}>
+                  <View style={{alignItems:'center',margin:20}}>
+                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center'}}>
+                      <Ionicons name={"send"} size={20} color={"white"}/>
+                    </View>
+                    <Text>Send</Text>
+                  </View>
+
+                  <View style={{alignItems:'center', margin:20}}>
+                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center'}}>
+                      <Ionicons name={"download"} size={20} color={"white"}/>
+                    </View>
+                    <Text>Receive</Text>
+                  </View>
+
+                  <View style={{alignItems:'center', margin:20}}>
+                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
+                      <Ionicons name={"arrow-down-outline"} size={20} color={"white"}/>
+                      <Ionicons name={"arrow-up-outline"} size={20} color={"white"}/>
+                    </View>
+                    <Text>Transfer</Text>
+                  </View>
+
+                </View>
+
               </View>
 
-              <View style={{marginTop:20}}>
+              <View>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {
                   data.map((item, index) =>(
-                    <View style={{height:150, width:150, margin:10, backgroundColor:'white'}} key={index}>
+                    <View style={{height:150, width:150, margin:10, backgroundColor:'whitesmoke', borderRadius:10}} key={index}>
                       <View style = {{paddingHorizontal:5, paddingTop:3, alignItems:'center'}}>
                         <Avatar source={{uri: item.image}} size={50} rounded/>
                         <Text style = {{fontSize:17, fontWeight: 'bold', margin:7}}>{item.symbol.toUpperCase()}</Text>
@@ -142,7 +170,7 @@ export default function Wallet({navigation, route}) {
             walletValue = walletValue+item.current_price*2;
             return(
               <Pressable style ={{margin: 7}}>
-                <View style={{height: 55,  width:'100%',flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius:10}}>
+                <View style={{height: 55,  width:"100%",flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius:10, backgroundColor:'whitesmoke'}}>
                   <View style = {{width:35, margin:7}}>
                     <Image
                     source={{uri: item.image}}
