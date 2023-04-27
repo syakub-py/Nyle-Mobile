@@ -246,7 +246,7 @@ export default function AddPost({route}){
                     valueField="Value"
                     placeholder={'Select item'}
                     searchPlaceholder="Search..."
-                    value={currency}
+                    value={category}
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                     onChange={(item) => {
