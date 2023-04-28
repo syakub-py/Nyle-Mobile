@@ -3,7 +3,7 @@ import {View, Text, FlatList, Image, Pressable, TextInput, Alert, RefreshControl
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
-import {firestoreLite} from './Components/Firebase'
+import {firestoreLite, getstorage, firestore} from './Components/Firebase'
 import * as ImagePicker from "expo-image-picker";
 
 export default function Home({navigation, route}) {
@@ -38,8 +38,39 @@ export default function Home({navigation, route}) {
       aspect: [4, 3],
       quality: 1,
     });
-    // if (!result.canceled) {
-    // };
+    if (!result.canceled) {
+      // Fetch the image and create a blob
+      const response = await fetch(result.assets[0].uri);
+      const blob = await response.blob();
+
+      // Get a reference to the storage location for the profile image
+      const storageRef = getstorage.ref().child(`ProfileImages/${route.params.username}`);
+
+      // Upload the image to Firebase Storage
+      await storageRef.update(blob);
+      console.log("Profile Image uploaded successfully!");
+
+      // Get the download URL for the uploaded image
+      const url = await storageRef.getDownloadURL();
+
+      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
+      const ProfilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', route.params.username);
+
+      // Update the URL for the profile image in the Firestore document
+      ProfilePicRef.get().then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          doc.ref.update({ url: url })
+              .then(() => {
+                console.log('Profile picture updated');
+              })
+              .catch((error) => {
+                console.error('Error updating profile picture:', error);
+              });
+        });
+      }).catch((error) => {
+        console.error('Error getting document:', error);
+      });
+    }
   };
 
   // Function to retrieve posts from the database

@@ -45,12 +45,12 @@ export default function SignUp(){
     const addUsernameToMap = async ()=> {
         try {
             // Upload profile picture to Firebase Storage and get the download URL
-            const profilePicRef = getstorage.ref().child(`profilePictures/${username}`);
+            const profilePicRef = getstorage.ref().child(`ProfileImages/${username}`);
             await profilePicRef.put(profilePic);
             const downloadUrl = await profilePicRef.getDownloadURL();
 
             // Add username and profile picture download URL to Firestore
-            const docRef = firestore.collection("ProfilePictures").doc(username);
+            const docRef = firestore.collection("ProfileImages").doc(username);
             await docRef.set({
                 username: username,
                 FileName: downloadUrl
