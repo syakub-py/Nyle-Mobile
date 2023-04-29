@@ -17,7 +17,13 @@ export default function PostDetails({route, navigation}){
     const [selectedValue, setSelectedValue] = React.useState('Option 1');
     const [views, setViews] = React.useState(0)
     const likes = route.params.Likes
-
+    const items = [
+        { key: 'java', label: 'Java', value: 'java' },
+        { key: 'js', label: 'JavaScript', value: 'js' },
+        { key: 'python', label: 'Python', value: 'python' },
+        { key: 'ruby', label: 'Ruby', value: 'ruby' },
+        { key: 'csharp', label: 'C#', value: 'csharp' },
+    ];
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
         PostRef.get()
@@ -119,7 +125,11 @@ export default function PostDetails({route, navigation}){
                             {/*        selectedValue={selectedValue}*/}
                             {/*        onValueChange={(itemValue, itemIndex) =>*/}
                             {/*            setSelectedValue(itemValue)*/}
-                            {/*        } items={{"label": "option 1"}}/>*/}
+                            {/*        }>*/}
+                            {/*        {items.map(item => (*/}
+                            {/*            <Picker.Item key={item} label={item} value={item} />*/}
+                            {/*        ))}*/}
+                            {/*    </Picker>*/}
                             {/*)}*/}
                         </Pressable>
                     </View>
@@ -178,37 +188,6 @@ export default function PostDetails({route, navigation}){
                         }
                     </View>
                 </ScrollView>
-
-                <View style={{flexDirection:'row'}}>
-                    <View style={{
-                        flexDirection: 'row',
-                        backgroundColor: '#fff',
-                        borderRadius: 5,
-                        padding: 10,
-                        margin: 5,
-                    }}>
-                        <Ionicons name='heart' size={20} color={'#e6121d'}/>
-                        <Text style={{
-                            color: 'black',
-                            fontSize: 12,
-                            fontWeight: 'bold',
-                            marginLeft: 3,
-                            marginTop: 3
-                        }}>{likes.length}</Text>
-                    </View>
-                    <View style={{  flexDirection: 'row',
-                        backgroundColor: '#fff',
-                        borderRadius: 5,
-                        padding: 10,
-                        margin: 5,}}>
-                        <Ionicons name='eye' size={20} color={'black'}/>
-                        <Text style={{  color: 'black',
-                            fontSize: 12,
-                            fontWeight: 'bold',
-                            marginLeft: 3,
-                            marginTop: 3}}>{views}</Text>
-                    </View>
-                </View>
 
                     <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                         <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10, margin:10}}>

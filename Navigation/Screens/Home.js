@@ -148,7 +148,7 @@ export default function Home({navigation, route}) {
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20}}/>
 
                   {/*add the logic to change the profile pic in firebase*/}
-                  <Pressable>
+                  <Pressable onPress={()=>SelectProfilePic()}>
                     <View style={{marginTop:20, marginRight:20}}>
                       <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
                       <View style={{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
