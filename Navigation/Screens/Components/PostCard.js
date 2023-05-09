@@ -58,18 +58,20 @@ export default function PostCard({data, username}){
           postRef.get().then((doc) => {
               if (doc.exists) {
                   const data = doc.data();
-                  if (data.hasOwnProperty('USD')) {
+                  if (data.hasOwnProperty('USD') && price !== 0) {
                       postRef.update({ USD:(price*data.price).toFixed(2).toString()});
                   } else {
-                      postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
+
+                      if (price !== 0){
+                          postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
+                      }
+
                   }
               }
           });
       }
 
-      updateCurrencyPrice().then(()=>{
-          console.log("updated price in firebase")
-      })
+      updateCurrencyPrice().then(()=>{})
 
   }, [data.currency])
 
