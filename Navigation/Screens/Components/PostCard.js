@@ -53,6 +53,19 @@ export default function PostCard({data, username}){
           } catch (error) {
               console.log(error.message);
           }
+
+          const postRef = firestore.collection('AllPosts').doc(data.title);
+          postRef.get().then((doc) => {
+              if (doc.exists && doc.data().USD !== 0) {
+                  const data = doc.data();
+                  if (data.hasOwnProperty('USD')) {
+                      postRef.update({ USD: price });
+                  } else {
+                      postRef.set({ USD: price }, { merge: true });
+                  }
+              }
+          });
+
       }
       getCurrencyPrice().then(()=>{
           console.log("Got Price")
