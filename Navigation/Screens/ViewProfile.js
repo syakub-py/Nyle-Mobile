@@ -8,7 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 export default function ViewProfile({route}){
     const navigation = useNavigation();
     const [UsersPosts, setUserPosts] = React.useState([])
-    const getPosts = async () =>{
+    const getPosts = async () => {
         const results = [];
         const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
         await MyPostsQuery.get().then(postSnapshot =>{

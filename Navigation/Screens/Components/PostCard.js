@@ -1,12 +1,14 @@
-import {Text, View, Image, ImageBackground, Pressable, ScrollView} from 'react-native';
+import {Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import * as React from 'react';
 import {firestore} from "./Firebase";
+import axios from "axios";
 
 export default function PostCard({data, username}){
   const navigation = useNavigation();
   const [liked,setLiked] = React.useState(false)
+  const [price, setPrice] = React.useState(0)
 
   const handleLike = async () => {
     const PostRef = firestore.collection('AllPosts').doc(data.title);
@@ -40,6 +42,23 @@ export default function PostCard({data, username}){
           console.error('Error getting document:', error);
         });
   };
+  React.useEffect(()=>{
+      const getCurrencyPrice = async () => {
+          try {
+              const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=7d");
+              const filteredData = response.data.filter((item) => item.image === data.currency)
+              if (filteredData.length > 0) {
+                  setPrice(filteredData[0].current_price)
+              }
+          } catch (error) {
+              console.log(error.message);
+          }
+      }
+      getCurrencyPrice().then(()=>{
+          console.log("Got Price")
+      })
+  }, [data.currency])
+
   return (
     <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 20, borderRadius:10, elevation:3}}>
       <View style ={{width:"100%", height:300}}>
@@ -74,8 +93,8 @@ export default function PostCard({data, username}){
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                   <Image style={{height:20, width:20, marginTop:4, borderRadius:20}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
-
                 </View>
+                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number((price*data.price)).toLocaleString()}</Text>
               </View>
             </View>
 
