@@ -59,9 +59,9 @@ export default function PostCard({data, username}){
               if (doc.exists) {
                   const data = doc.data();
                   if (data.hasOwnProperty('USD')) {
-                      postRef.update({ USD: price });
+                      postRef.update({ USD:(price*data.price).toFixed(2).toString()});
                   } else {
-                      postRef.set({ USD: price }, { merge: true });
+                      postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
                   }
               }
           });
@@ -110,7 +110,7 @@ export default function PostCard({data, username}){
                   <Image style={{height:20, width:20, marginTop:4, borderRadius:20}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
                 </View>
-                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number((data.USD*data.price)).toLocaleString()}</Text>
+                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number(data.USD).toLocaleString()}</Text>
               </View>
             </View>
 
