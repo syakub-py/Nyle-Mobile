@@ -43,7 +43,7 @@ export default function PostCard({data, username}){
         });
   };
   React.useEffect(()=>{
-      const getCurrencyPrice = async () => {
+      const updateCurrencyPrice = async () => {
           try {
               const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=7d");
               const filteredData = response.data.filter((item) => item.image === data.currency)
@@ -65,12 +65,15 @@ export default function PostCard({data, username}){
                   }
               }
           });
-
       }
-      getCurrencyPrice().then(()=>{
-          console.log("Got Price")
+
+      updateCurrencyPrice().then(()=>{
+          console.log("updated price in firebase")
       })
+
   }, [data.currency])
+
+
 
   return (
     <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 20, borderRadius:10, elevation:3}}>
@@ -107,7 +110,7 @@ export default function PostCard({data, username}){
                   <Image style={{height:20, width:20, marginTop:4, borderRadius:20}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
                 </View>
-                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number((price*data.price)).toLocaleString()}</Text>
+                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number((data.USD*data.price)).toLocaleString()}</Text>
               </View>
             </View>
 
