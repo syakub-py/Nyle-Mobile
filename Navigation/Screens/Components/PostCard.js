@@ -56,7 +56,7 @@ export default function PostCard({data, username}){
 
           const postRef = firestore.collection('AllPosts').doc(data.title);
           postRef.get().then((doc) => {
-              if (doc.exists && doc.data().USD !== 0) {
+              if (doc.exists) {
                   const data = doc.data();
                   if (data.hasOwnProperty('USD')) {
                       postRef.update({ USD: price });
