@@ -249,7 +249,7 @@ export default function AddPost({route}){
                     onFocus={() => setIsFocus(true)}
                     onBlur={() => setIsFocus(false)}
                     onChange={(item) => {
-                        setCategory(item.value);
+                        setCategory(item);
                         setIsFocus(false);
                     }}
                 />

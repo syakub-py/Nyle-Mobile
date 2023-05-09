@@ -247,7 +247,14 @@ const deleteRow = (id) =>{
                   />
                   <View style={{flexDirection:'column'}}>
                     <Text style ={{fontSize:18, fontWeight:'500'}}>{username}</Text>
-                    <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
+                      {
+                          (item.latestMessage.length > 10)?(
+                              <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
+                          ):(
+                              <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10)}</Text>
+
+                          )
+                      }
                   </View>
                     {
                         (item.image)?(
