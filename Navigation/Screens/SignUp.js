@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
 
-export default function SignUp(){
+export default function SignUp({navigation}){
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
     const [profilePic, setProfilePic] = React.useState('')
@@ -33,7 +33,7 @@ export default function SignUp(){
         if (!result.canceled) {
             const fileJson = result.assets;
             setProfilePic(fileJson[0].uri);
-        };
+        }
     };
 
     const removeProfilePhoto = () => {
@@ -63,6 +63,12 @@ export default function SignUp(){
 
     return(
         <View style={styles.container}>
+
+            <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                <Pressable onPress={()=>navigation.goBack()}>
+                    <Ionicons name='chevron-back-outline' size={30}/>
+                </Pressable>
+            </View>
 
             <View style={{alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress={SelectImages}>
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white'
     },
     textInput:{
-        backgroundColor:'lightgray',
+        backgroundColor:'whitesmoke',
         paddingHorizontal:15,
         paddingVertical:10,
         borderRadius:10,

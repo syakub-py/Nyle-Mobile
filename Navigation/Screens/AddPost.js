@@ -25,7 +25,6 @@ const height = width*1;
 
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);
-
     faker.seed(randomNumber);
     const currencies = [
         { label: 'Bitcoin', value: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" },

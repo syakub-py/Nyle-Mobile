@@ -12,8 +12,7 @@ export default function Login({navigation}){
     const [password, setPassword] = React.useState('')
 
     const handleEmailAndPasswordLogin = () => {
-        auth
-            .signInWithEmailAndPassword(username, password)
+        auth.signInWithEmailAndPassword(username, password)
             .then(userCredentials =>{
                 const user = userCredentials.user;
             })
@@ -79,7 +78,10 @@ export default function Login({navigation}){
                     <Ionicons name='ellipse' size={20} style={{ position: 'absolute',}}/>
                     <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={{marginLeft:25}} secureTextEntry/>
                 </View>
-                <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
+                <Pressable onPress={() => navigation.navigate("Reset Password")}>
+                    <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
+
+                </Pressable>
 
                 <Pressable
                     style={styles.submitContainer}

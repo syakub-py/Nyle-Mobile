@@ -3,7 +3,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import Picker from "react-native-picker-select";
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -14,16 +13,9 @@ export default function PostDetails({route, navigation}){
     const [more, setMore] = React.useState(false)
     const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState('Option 1');
     const [views, setViews] = React.useState(0)
     const likes = route.params.Likes
-    const items = [
-        { key: 'java', label: 'Java', value: 'java' },
-        { key: 'js', label: 'JavaScript', value: 'js' },
-        { key: 'python', label: 'Python', value: 'python' },
-        { key: 'ruby', label: 'Ruby', value: 'ruby' },
-        { key: 'csharp', label: 'C#', value: 'csharp' },
-    ];
+
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
         PostRef.get()
@@ -120,17 +112,6 @@ export default function PostDetails({route, navigation}){
                     <View style={{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={() => setIsOpen(!isOpen)}>
                             <Ionicons name='reorder-three-outline' size={30}/>
-                            {/*{isOpen && (*/}
-                            {/*    <Picker*/}
-                            {/*        selectedValue={selectedValue}*/}
-                            {/*        onValueChange={(itemValue, itemIndex) =>*/}
-                            {/*            setSelectedValue(itemValue)*/}
-                            {/*        }>*/}
-                            {/*        {items.map(item => (*/}
-                            {/*            <Picker.Item key={item} label={item} value={item} />*/}
-                            {/*        ))}*/}
-                            {/*    </Picker>*/}
-                            {/*)}*/}
                         </Pressable>
                     </View>
 
@@ -154,7 +135,7 @@ export default function PostDetails({route, navigation}){
                          <Text style={{color:'white',fontSize:30,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                     </View>
 
-                    <View style={{ height: 20, width: 25, zIndex: 1, bottom: 10, right: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
+                    <View style={{ height: 20, width: 35, zIndex: 1, bottom: 10, right: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                             <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 

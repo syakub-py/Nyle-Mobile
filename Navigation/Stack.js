@@ -10,6 +10,7 @@ import ViewProfile from './Screens/ViewProfile';
 import EditPost from './Screens/EditPosts';
 import ViewImages from './Screens/ImageViewer';
 import CheckOut from './Screens/CheckOut';
+import ResetPassword from "./Screens/ResetPassword";
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -25,6 +26,8 @@ const Stack = () =>{
           <Stack.Screen name="Edit Post" component = {EditPost} />
           <Stack.Screen name="Image Viewer" component = {ViewImages} />
           <Stack.Screen name="Check Out" component = {CheckOut} />
+          <Stack.Screen name="Reset Password" component = {ResetPassword} />
+
         </Stack.Navigator>
       );
   }

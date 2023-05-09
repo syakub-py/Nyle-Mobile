@@ -19,26 +19,33 @@ const Profile= 'Profile';
 
 const Tab = createBottomTabNavigator();
 export default function MainContainer({route}) {
-
     const [profilePic, setProfilePic] = React.useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-    const getProfilePic = async () => {
-        const profilePictureQuery = firestore.collection("ProfilePictures").where("FileName", "==", route.params.username.toLocaleLowerCase());
+
+    const getProfilePic = React.useCallback(async () => {
+        const profilePictureQuery = firestore
+            .collection("ProfilePictures")
+            .where("FileName", "==", route.params.username.toLowerCase());
         try {
             const result = await profilePictureQuery.get();
             const profilePicUrls = result.docs.map((doc) => doc.data().url);
-            return profilePicUrls.length > 0 ? profilePicUrls[0] : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            const url = profilePicUrls.length > 0
+                ? profilePicUrls[0]
+                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            setProfilePic(url);
+            return url;
         } catch (error) {
-            console.error("Error getting profile picture returning default picture:", error);
-            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            console.error("Error getting profile picture:", error);
+            const url = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+            setProfilePic(url);
+            return url;
         }
-    }
+    }, [route.params.username, setProfilePic]);
 
-    React.useEffect(()=>{
-        // gets the profile picture for the associated user
-        getProfilePic().then((result)=>{
-            setProfilePic(result)
-        })
-    },[route.params.username])
+    React.useEffect(() => {
+        getProfilePic().then(r => {
+            console.log(r)
+        });
+    }, []);
 
 
     return (
@@ -51,14 +58,14 @@ export default function MainContainer({route}) {
           tabBarStyle: {
             height: 60,
             borderRadius:20,
-            backgroundColor: '#fff', 
+            backgroundColor: '#fff',
             position: 'absolute',
-            bottom: 20, 
-            left: 20, 
+            bottom: 20,
+            left: 20,
             right: 20,
-            alignItems: 'center', 
+            alignItems: 'center',
             justifyContent: 'center',
-            shadowColor: '#000', 
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 4,
@@ -68,6 +75,7 @@ export default function MainContainer({route}) {
             elevation: 5,
           },
           tabBarIcon: ({focused, color}) =>{
+
             let iconName;
             let rn = route.name;
             if (rn === Home){
@@ -83,15 +91,15 @@ export default function MainContainer({route}) {
             }
             return <Ionicons name = {iconName} size={32} color={color}/>
            },
-           
+
         })}>
-           
+
            <Tab.Screen name = {Home} component = {home} initialParams={{ username:route.params.username, profilePicture:profilePic}}/>
            <Tab.Screen name = {Wallet} component = {wallet}/>
            <Tab.Screen name = {AddPost} component = {addPost} initialParams={{ username: route.params.username , profilePicture:profilePic}}/>
            <Tab.Screen name = {Chat} component = {chat} initialParams={{ username: route.params.username }}/>
            <Tab.Screen name = {Profile} component = {profile} initialParams={{ username: route.params.username, profilePicture:profilePic}}/>
+
         </Tab.Navigator>
     );
   }
-  
