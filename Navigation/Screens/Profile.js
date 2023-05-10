@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet,Alert, ScrollView, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
+import { View, Text, StyleSheet,Alert, Switch, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -136,13 +136,6 @@ export default function Profile({navigation, route}) {
                     />
 
                     <Setting
-                      title = "Security"
-                      type = "button"
-                      onPress = {() => console.log("pressed button")}
-                      nameOfIcon = 'lock-closed-outline'
-                    />
-
-                    <Setting
                       title = "Appearance"
                       type = "button"
                       onPress = {() => console.log("pressed button")}
@@ -150,26 +143,17 @@ export default function Profile({navigation, route}) {
                     />
 
                     <Setting
-                      title = "Connect a wallet"
+                      title = "Wallet(s)"
                       type = "button"
                       onPress = {() => console.log("pressed button")}
                       nameOfIcon = "wallet-outline"
                     />
 
                     <Setting
-                      title = "2 factor Authentication"
-                      type = "button"
-                      onPress = {() => console.log("pressed button")}
-                      nameOfIcon='settings-outline'
-
-                    />
-
-                    <Setting
                       title = "Edit Profile"
                       type = "button"
-                      onPress = {() => console.log("pressed button")}
+                      onPress = {() => navigation.navigate("Edit Profile")}
                       nameOfIcon='person-outline'
-
                     />
                             
                     <Setting

@@ -112,7 +112,7 @@ export default function PostCard({data, username}){
                   <Image style={{height:20, width:20, marginTop:4, borderRadius:20}} source={{uri:data.currency}}/>
                   <Text style={{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
                 </View>
-                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number(data.USD).toLocaleString()}</Text>
+                  <Text style={{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number(data.USD).toLocaleString('en-US')}</Text>
               </View>
             </View>
 

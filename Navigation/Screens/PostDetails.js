@@ -142,7 +142,7 @@ export default function PostDetails({route, navigation}){
                     <View style={{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
                         <Image style={{height:25, width:25, marginRight:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
                         <Text style={{fontSize:25, fontWeight:'bold', color:'white', marginRight:10}}>{route.params.Price}</Text>
-                        <Text style={{fontSize:15, fontWeight:'bold', color:'white'}}>(${(route.params.USD).toLocaleString()})</Text>
+                        <Text style={{fontSize:15, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
                     </View>
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
