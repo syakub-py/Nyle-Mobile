@@ -195,9 +195,8 @@ export default function AddPost({route}){
                 {
                     (imageUrls.length === 0)? (
                         <Pressable onPress={SelectImages} style={{justifyContent:'center', alignItems:'center'}}>
-                            <View style={{height:height, width:width, borderBottomRightRadius:10, borderBottomLeftRadius:10, backgroundColor:'lightgray', justifyContent:'center', alignItems:'center'}}>
-                                <Ionicons name='images-outline' size={80} color={'white'}/>
-                                <Text style={{color:'white', fontSize:17, fontWeight:'700'}}>Tap here to add images</Text>
+                            <View style={{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
+                                <Ionicons name='images-outline' size={80} color={'lightgray'}/>
                             </View>
                         </Pressable>
                     ):(
@@ -221,7 +220,7 @@ export default function AddPost({route}){
                         height: 50,
                         borderRadius: 10,
                         paddingHorizontal: 16,
-                        backgroundColor: 'lightgray',
+                        backgroundColor: 'whitesmoke',
                         marginLeft:35, marginRight:35
                     }}
                     placeholderStyle={{}}
@@ -263,7 +262,7 @@ export default function AddPost({route}){
                                 width: width / 3,
                                 borderRadius: 10,
                                 paddingHorizontal: 16,
-                                backgroundColor: 'lightgray',
+                                backgroundColor: 'whitesmoke',
                             }}
                             placeholderStyle={{}}
                             selectedTextStyle={{}}
@@ -296,7 +295,7 @@ export default function AddPost({route}){
                             }}
                         />
 
-                        <TextInput style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>
+                        <TextInput style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText={(text)=>setPrice(text)}/>
                     </View>
                 </View>
 
@@ -309,12 +308,12 @@ export default function AddPost({route}){
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
-                    <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
+                    <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
                 </View>
 
                 <View>
                     <Text  style={{fontSize:35, fontWeight:'bold', color:'black',margin:10,}}>Description</Text>
-                    <TextInput multiline style={{backgroundColor:'lightgray', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
+                    <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
@@ -329,12 +328,10 @@ export default function AddPost({route}){
 
 const styles = StyleSheet.create({
     textinput:{
-        backgroundColor:'lightgray',
-        color:'gray',
+        backgroundColor:'whitesmoke',
         marginLeft:35,
         marginRight:35,
         fontSize:15,
-        fontWeight:'600',
         height:50,
         borderRadius:10,
         paddingHorizontal:15,

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View, Text, StyleSheet,Alert, Switch, Image, TouchableOpacity, Pressable, RefreshControl} from 'react-native';
+import {Alert, Image, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 
@@ -47,14 +47,10 @@ export default function Profile({navigation, route}) {
     return results;
   }
 
-  
-
-
   const onRefresh = () => {
     setRefreshing(true);
     getPosts().then((result) =>{
-      const userPostList = result
-      setUserList(userPostList);
+      setUserList(result);
     }).catch((error)=>{
       Alert.alert('Error Getting Posts: ', error)
     })
@@ -124,6 +120,11 @@ export default function Profile({navigation, route}) {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
+              ListFooterComponent={
+                <View style={{height:80}}>
+
+                </View>
+              }
               ListHeaderComponent= {
                 <View>
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10, marginTop:10}}/>
@@ -161,12 +162,14 @@ export default function Profile({navigation, route}) {
                   <SectionTitle title={'Your Posts'}/>
                 </View>
                 }
+
               renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, Likes:item.likes})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD,Likes:item.likes})}>
                   <PostCard data ={item}/>
                 </Pressable>
                 )}
-                renderHiddenItem = {({item}) => (
+
+              renderHiddenItem = {({item}) => (
                   <View style={{ position: 'absolute',
                   flexDirection:'row',
                   top: 0,

@@ -192,6 +192,11 @@ const deleteRow = (id) =>{
       <SafeAreaView style={styles.container}>
           <SwipeListView
           data = {filteredData}
+          ListFooterComponent={
+              <View style={{height:80}}>
+
+              </View>
+          }
           rightOpenValue={-50}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

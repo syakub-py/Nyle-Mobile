@@ -142,6 +142,11 @@ export default function Home({navigation, route}) {
       <View style={{flex:1, backgroundColor:'white'}}>
         <View style={{zIndex:0}}>
           <FlatList
+          ListFooterComponent={
+            <View style={{height:80}}>
+
+            </View>
+          }
           ListHeaderComponent={
             <View>
                 <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>

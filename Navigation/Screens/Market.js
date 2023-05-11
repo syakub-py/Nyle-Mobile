@@ -77,6 +77,11 @@ export default function Market({navigation, route}) {
         <View>
           <FlatList
           data = {data}
+          ListFooterComponent={
+            <View style={{height:100}}>
+
+            </View>
+          }
           keyExtractor = {item => item.id}
           contentContainerStyle ={{
             marginTop:20,
