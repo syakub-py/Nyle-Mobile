@@ -3,6 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
+import image from "react-native-reanimated/src/reanimated2/component/Image";
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -14,11 +15,15 @@ export default function PostDetails({route, navigation}){
     const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const [views, setViews] = React.useState(0)
-
     const [currentOffset, setCurrentOffset] = React.useState(0);
 
     const likes = route.params.Likes
     const scrollViewRef = React.useRef(null);
+
+    const handleButtonPress = (index) => {
+        setState(index);
+    };
+
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
         PostRef.get()
@@ -94,17 +99,22 @@ export default function PostDetails({route, navigation}){
     const change = ({ nativeEvent }) => {
         const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
         const newOffset = nativeEvent.contentOffset.x;
+        setCurrentOffset(newOffset);
 
         setState({ active: slide });
+        if (slide <= images.length-4) {
+            scrollViewRef.current.scrollTo({
+                x: 0,
+                animated: true,
+            });
+        }
 
         if (slide >= 6) {
+            setCurrentOffset(currentOffset + 10);
             scrollViewRef.current.scrollTo({
                 x: currentOffset,
                 animated: true,
             });
-            setCurrentOffset(currentOffset + 1);
-        } else if (newOffset !== currentOffset) {
-            setCurrentOffset(newOffset);
         }
     };
 
@@ -150,7 +160,7 @@ export default function PostDetails({route, navigation}){
                          <Text style={{color:'white',fontSize:30,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                     </View>
 
-                    <View style={{ height: 20, width: 35, zIndex: 1, bottom: 10, right: 10, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
+                    <View style={{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                             <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
@@ -178,7 +188,7 @@ export default function PostDetails({route, navigation}){
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k)=>(
-                                <Pressable key={k} onPress={()=>console.log("Button Pressed")}>
+                                <Pressable key={k} onPress={()=> {console.log(k+1)}}>
                                     <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key={k}/>
                                 </Pressable>
                             ))
