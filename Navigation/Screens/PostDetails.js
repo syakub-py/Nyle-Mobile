@@ -14,8 +14,11 @@ export default function PostDetails({route, navigation}){
     const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const [views, setViews] = React.useState(0)
-    const likes = route.params.Likes
 
+    const [currentOffset, setCurrentOffset] = React.useState(0);
+
+    const likes = route.params.Likes
+    const scrollViewRef = React.useRef(null);
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
         PostRef.get()
@@ -88,12 +91,24 @@ export default function PostDetails({route, navigation}){
     };
 
 
-    const change = ({nativeEvent}) =>{
-        const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
-        if(slide !== state.active){
-            setState({active: slide})
+    const change = ({ nativeEvent }) => {
+        const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+        const newOffset = nativeEvent.contentOffset.x;
+
+        setState({ active: slide });
+
+        if (slide >= 6) {
+            scrollViewRef.current.scrollTo({
+                x: currentOffset,
+                animated: true,
+            });
+            setCurrentOffset(currentOffset + 1);
+        } else if (newOffset !== currentOffset) {
+            setCurrentOffset(newOffset);
         }
-    }
+    };
+
+
 
     React.useEffect(()=>{
         handleViewCounter()
@@ -159,7 +174,7 @@ export default function PostDetails({route, navigation}){
                     </ScrollView>
                 </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}  ref={scrollViewRef}>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k)=>(
