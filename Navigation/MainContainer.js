@@ -5,13 +5,13 @@ import {firestore} from "./Screens/Components/Firebase";
 
 //Screens
 import home from './Screens/Home'
-import wallet from './Screens/Wallet'
+import market from './Screens/Market'
 import chat from './Screens/Chat'
 import profile from './Screens/Profile'
 import addPost from './Screens/AddPost';
 
 const Home= 'Home';
-const Wallet= 'Wallet';
+const Market= 'Market';
 const AddPost='Add Post';
 const Chat= 'Chat';
 const Profile= 'Profile';
@@ -80,8 +80,8 @@ export default function MainContainer({route}) {
             let rn = route.name;
             if (rn === Home){
               iconName = focused ? 'home' : 'home-outline';
-            }else if (rn === Wallet){
-              iconName = focused ? 'wallet' : 'wallet-outline';
+            }else if (rn === Market){
+              iconName = focused ? 'analytics' : 'analytics-outline';
             }else if (rn === Chat){
               iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
             }else if (rn === Profile){
@@ -95,7 +95,7 @@ export default function MainContainer({route}) {
         })}>
 
            <Tab.Screen name = {Home} component = {home} initialParams={{ username:route.params.username, profilePicture:profilePic}}/>
-           <Tab.Screen name = {Wallet} component = {wallet}/>
+           <Tab.Screen name = {Market} component = {market}/>
            <Tab.Screen name = {AddPost} component = {addPost} initialParams={{ username: route.params.username , profilePicture:profilePic}}/>
            <Tab.Screen name = {Chat} component = {chat} initialParams={{ username: route.params.username }}/>
            <Tab.Screen name = {Profile} component = {profile} initialParams={{ username: route.params.username, profilePicture:profilePic}}/>

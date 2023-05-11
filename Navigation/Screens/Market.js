@@ -5,8 +5,6 @@ import axios from 'axios'
 import moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
-import {firestoreLite} from './Components/Firebase'
-import {collection, getDocs} from "firebase/firestore/lite";
 
 const {width} = Dimensions.get("window");
 
@@ -55,36 +53,19 @@ export const getMarketData = async () => {
 
 
 
-export default function Wallet({navigation, route}) {
+export default function Market({navigation, route}) {
     const [data, setData] = React.useState([]);
-    const [wallet, setWallet] = React.useState([]);
 
-    const getWalletInfo = async ()=>{
-      const results =[];
-      const WalletInfoCollection = collection(firestoreLite, "Wallets/" + route.params.username);
-      const WalletInfoSnapshot = await getDocs(WalletInfoCollection);
-      WalletInfoSnapshot.forEach(doc => {
-        results.push(doc.data())
-      });
-      return results;
-    }
   
     React.useEffect(() => {
       const fetchMarketData = async () => {
         const marketData = await getMarketData();
         setData(marketData);
       }
-      // getWalletInfo().then((result) =>{
-      //   setWallet(result);
-      // }).catch((error)=>{
-      //   console.log(error)
-      // })
-
       fetchMarketData();
 
     }, [])
 
-    var walletValue = 96569;
     const chartConfig = {
       backgroundGradientFrom: '#1E2923',
       backgroundGradientTo: '#08130D',
@@ -104,43 +85,6 @@ export default function Wallet({navigation, route}) {
             <View style={{width:width, margin:10}}>
 
               <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10}}/>
-              <View style={{marginBottom:10, alignItems:'center'}}>
-
-                <Text style={{fontWeight:'600', fontSize:50,}}>$1,968,495</Text>
-                <View style={{backgroundColor:'lightgreen', borderRadius:20}}>
-                  <View style={{flexDirection:'row',  margin:7}}>
-                    <Text style={{fontSize:15, fontWeight:'bold', color:'black'}}><Ionicons name='arrow-up-outline' color={'black'} size={15}/>2.65%</Text>
-                    <Text style={{marginLeft:3, marginRight:3, fontWeight:'bold', opacity:0.5}}>|</Text>
-                    <Text style={{fontWeight:'bold'}}>$7,000</Text>
-                  </View>
-                </View>
-
-                <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-                  <View style={{alignItems:'center',margin:20}}>
-                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center'}}>
-                      <Ionicons name={"send"} size={20} color={"white"}/>
-                    </View>
-                    <Text>Send</Text>
-                  </View>
-
-                  <View style={{alignItems:'center', margin:20}}>
-                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center'}}>
-                      <Ionicons name={"download"} size={20} color={"white"}/>
-                    </View>
-                    <Text>Receive</Text>
-                  </View>
-
-                  <View style={{alignItems:'center', margin:20}}>
-                    <View style={{backgroundColor:'black', borderRadius:100, height:40, width:40, justifyContent:'center', alignItems:'center', flexDirection:'row'}}>
-                      <Ionicons name={"arrow-down-outline"} size={20} color={"white"}/>
-                      <Ionicons name={"arrow-up-outline"} size={20} color={"white"}/>
-                    </View>
-                    <Text>Transfer</Text>
-                  </View>
-
-                </View>
-
-              </View>
 
               <View>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -162,12 +106,10 @@ export default function Wallet({navigation, route}) {
                 </ScrollView>
               </View>
 
-              <Text style={{fontSize:17, fontWeight:'bold'}}>Coin Balances</Text>
+              <Text style={{fontSize:17, fontWeight:'bold'}}>Coin Prices</Text>
             </View>
           }
           renderItem ={({item}) => {
-            //needs to refresh in the screen
-            walletValue = walletValue+item.current_price*2;
             return(
               <Pressable style ={{margin: 7}}>
                 <View style={{height: 55,  width:"100%",flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius:10, backgroundColor:'whitesmoke'}}>
@@ -185,8 +127,7 @@ export default function Wallet({navigation, route}) {
                   </View>
               
                   <View style={{margin:10}}>
-                    <Text>Your Holdings: $ {item.current_price*2}</Text>
-                    <Text style ={{fontSize:11, color: 'gray'}}>Current Value: $ {item.current_price}</Text>
+                    <Text>Current Value: $ {item.current_price}</Text>
                   </View>
                 </View>
               </Pressable>

@@ -12,6 +12,7 @@ import ViewImages from './Screens/ImageViewer';
 import CheckOut from './Screens/CheckOut';
 import ResetPassword from "./Screens/ResetPassword";
 import EditProfile from "./Screens/EditProfile";
+import ConnectedWallets from "./Screens/ConnectedWallets";
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -29,6 +30,7 @@ const Stack = () =>{
           <Stack.Screen name="Check Out" component = {CheckOut} />
           <Stack.Screen name="Reset Password" component = {ResetPassword} />
           <Stack.Screen name="Edit Profile" component = {EditProfile} />
+          <Stack.Screen name="Connected Wallets" component = {ConnectedWallets} />
 
         </Stack.Navigator>
       );

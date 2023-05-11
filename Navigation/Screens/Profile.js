@@ -115,6 +115,7 @@ export default function Profile({navigation, route}) {
       console.log(error)
     })
   }
+
   return (
       <View style={{backgroundColor:'white'}}>
             <SwipeListView
@@ -135,17 +136,11 @@ export default function Profile({navigation, route}) {
                     title = 'Account Settings'
                     />
 
-                    <Setting
-                      title = "Appearance"
-                      type = "button"
-                      onPress = {() => console.log("pressed button")}
-                      nameOfIcon = 'eye-outline'
-                    />
 
                     <Setting
                       title = "Wallet(s)"
                       type = "button"
-                      onPress = {() => console.log("pressed button")}
+                      onPress = {() => navigation.navigate("Connected Wallets")}
                       nameOfIcon = "wallet-outline"
                     />
 
