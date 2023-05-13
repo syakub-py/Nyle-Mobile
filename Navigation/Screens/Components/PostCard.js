@@ -36,7 +36,8 @@ export default function PostCard({data, username}){
                   })
                   .catch((error) => {
                       console.error('Error updating array:', error);
-                  });          }
+                  });
+            }
         })
         .catch((error) => {
           console.error('Error getting document:', error);
