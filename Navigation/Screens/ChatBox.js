@@ -30,7 +30,7 @@ export default function ChatBox({route, navigation}) {
 
   if (messages){
     messages = messages.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+        return new Date(b.createdAt) - new Date(a.createdAt);
     });
   }
 
@@ -83,6 +83,8 @@ export default function ChatBox({route, navigation}) {
             createdAt: new Date().toString(),
             text:message[0].text,
             image: downloadUrls,
+            sent : true,
+            received : false,
             user:{
                 _id:route.params.userId,
                 name:route.params.username,
@@ -113,17 +115,17 @@ export default function ChatBox({route, navigation}) {
 
         return (
             <Bubble
-            {...props}
-            wrapperStyle={wrapperStyle}
-            textStyle={{
-                right: {
-                    color: '#fff',
-                    flexWrap:'wrap'
-                },
-                left:{
-                    flexWrap:'wrap'
-                }
-            }}/>
+                {...props}
+                wrapperStyle={wrapperStyle}
+                textStyle={{
+                    right: {
+                        color: '#fff',
+                        flexWrap: 'wrap'
+                    },
+                    left: {
+                        flexWrap: 'wrap'
+                    }
+                }}/>
         );
     };
 
@@ -162,15 +164,17 @@ export default function ChatBox({route, navigation}) {
         }
     }
 
-  const renderSend = () =>{
-    return(
-      <TouchableOpacity onPress={onSend}>
-        <View style={{backgroundColor:'black', padding:11, borderRadius:20, margin:5}}>
-          <Ionicons name={'send-outline'} size={15} color={'white'}/>
-        </View>
-      </TouchableOpacity>
-    )
-  };
+    const markAsRead =async () =>{
+        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
+        await unreadMessagesRef.get().then((docs)=>{
+            docs.forEach((doc) =>{
+                const currentMessageData = doc.data()
+                if (currentMessageData.user.name !== route.params.username){
+                    doc.ref.update({received: true})
+                }
+            })
+        })
+    }
 
   const renderInputToolbar = (props) => {
     return (
@@ -213,7 +217,6 @@ export default function ChatBox({route, navigation}) {
             {...props}
             primaryStyle={{
               backgroundColor: '#F0F0F0',
-              // borderRadius:50,
               paddingHorizontal: 5,
               paddingTop: 5,
               paddingBottom:5
@@ -224,6 +227,11 @@ export default function ChatBox({route, navigation}) {
     );
   };
 
+    React.useEffect(()=>{
+        markAsRead().then(()=>{
+            console.log("updating unread messages...")
+        })
+    },[])
 
   return (  
     <SafeAreaView style={{flex:1}}>
