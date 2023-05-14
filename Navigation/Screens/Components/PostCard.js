@@ -95,12 +95,6 @@ export default function PostCard({data, username}){
                         </Pressable>
                     </View>
 
-                    {/*/!*needs to get finished*!/*/}
-                    {/*{*/}
-                    {/*    (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }],  justifyContent: 'center', alignItems: 'center' }}>*/}
-                    {/*        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>SOLD</Text>*/}
-                    {/*    </View>):(null)*/}
-                    {/*}*/}
 
                     <View style={{flexDirection:'row'}}>
                         <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic, username:data.PostedBy})}>
@@ -117,34 +111,6 @@ export default function PostCard({data, username}){
                         </View>
                     </View>
 
-                    {/*<View style={{flexDirection:'row',  position: 'absolute', top:260, left: 7,}}>*/}
-                    {/*    <View style={{*/}
-                    {/*        flexDirection: 'row',*/}
-                    {/*        backgroundColor: 'transparent',*/}
-                    {/*        borderRadius: 5,*/}
-                    {/*        margin: 5,*/}
-                    {/*    }}>*/}
-                    {/*        <Ionicons name='heart' size={20} color={'#e6121d'}/>*/}
-                    {/*        <Text style={{*/}
-                    {/*            color: 'white',*/}
-                    {/*            fontSize: 12,*/}
-                    {/*            fontWeight: 'bold',*/}
-                    {/*            marginLeft: 3,*/}
-                    {/*            marginTop: 3*/}
-                    {/*        }}>{data.likes.length}</Text>*/}
-                    {/*    </View>*/}
-                    {/*    <View style={{  flexDirection: 'row',*/}
-                    {/*        backgroundColor: 'transparent',*/}
-                    {/*        borderRadius: 5,*/}
-                    {/*        margin: 5,}}>*/}
-                    {/*        <Ionicons name='eye' size={20} color={'white'}/>*/}
-                    {/*        <Text style={{  color: 'white',*/}
-                    {/*            fontSize: 12,*/}
-                    {/*            fontWeight: 'bold',*/}
-                    {/*            marginLeft: 3,*/}
-                    {/*            marginTop: 3}}>{data.views}</Text>*/}
-                    {/*    </View>*/}
-                    {/*</View>*/}
 
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ position: 'absolute', top:230, width:"100%"}} >
                         <View style={{flexDirection:'row', alignItems:'center'}}>
@@ -172,9 +138,44 @@ export default function PostCard({data, username}){
                             }
                         </View>
                     </ScrollView>
-
                 </ImageBackground>
             </View>
         </View>
     )
 }
+
+
+{/*/!*needs to get finished*!/*/}
+{/*{*/}
+{/*    (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }],  justifyContent: 'center', alignItems: 'center' }}>*/}
+{/*        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>SOLD</Text>*/}
+{/*    </View>):(null)*/}
+{/*}*/}
+{/*<View style={{flexDirection:'row',  position: 'absolute', top:260, left: 7,}}>*/}
+{/*    <View style={{*/}
+{/*        flexDirection: 'row',*/}
+{/*        backgroundColor: 'transparent',*/}
+{/*        borderRadius: 5,*/}
+{/*        margin: 5,*/}
+{/*    }}>*/}
+{/*        <Ionicons name='heart' size={20} color={'#e6121d'}/>*/}
+{/*        <Text style={{*/}
+{/*            color: 'white',*/}
+{/*            fontSize: 12,*/}
+{/*            fontWeight: 'bold',*/}
+{/*            marginLeft: 3,*/}
+{/*            marginTop: 3*/}
+{/*        }}>{data.likes.length}</Text>*/}
+{/*    </View>*/}
+{/*    <View style={{  flexDirection: 'row',*/}
+{/*        backgroundColor: 'transparent',*/}
+{/*        borderRadius: 5,*/}
+{/*        margin: 5,}}>*/}
+{/*        <Ionicons name='eye' size={20} color={'white'}/>*/}
+{/*        <Text style={{  color: 'white',*/}
+{/*            fontSize: 12,*/}
+{/*            fontWeight: 'bold',*/}
+{/*            marginLeft: 3,*/}
+{/*            marginTop: 3}}>{data.views}</Text>*/}
+{/*    </View>*/}
+{/*</View>*/}

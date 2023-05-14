@@ -16,13 +16,9 @@ export default function PostDetails({route, navigation}){
     const [isOpen, setIsOpen] = React.useState(false);
     const [views, setViews] = React.useState(0)
     const [currentOffset, setCurrentOffset] = React.useState(0);
-
     const likes = route.params.Likes
     const scrollViewRef = React.useRef(null);
 
-    const handleButtonPress = (index) => {
-        setState(index);
-    };
 
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
