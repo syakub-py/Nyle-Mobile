@@ -44,7 +44,7 @@ export default function Home({navigation, route}) {
       const blob = await response.blob();
 
       // Get a reference to the storage location for the profile image
-      const storageRef = getstorage.ref().child(`ProfileImages/${route.params.username}`);
+      const storageRef = getstorage.ref().child(`ProfilePictures/${route.params.username}`);
 
       // Upload the image to Firebase Storage
       await storageRef.update(blob);

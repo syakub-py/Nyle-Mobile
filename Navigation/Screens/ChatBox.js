@@ -5,7 +5,6 @@ import {
     Text,
     Pressable,
     Image,
-    TouchableOpacity,
     ScrollView,
     RefreshControl,
     Dimensions,
@@ -17,7 +16,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
-
 export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
@@ -32,6 +30,22 @@ export default function ChatBox({route, navigation}) {
     messages = messages.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
     });
+  }
+
+  const clearMessages = () =>{
+      const today = new Date();
+      const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const query = messagesRef.where('timestamp', '<', thirtyDaysAgo);
+
+      return query.get().then((snapshot) => {
+          const batch = firestore.batch();
+
+          snapshot.forEach((doc) => {
+              batch.delete(doc.ref);
+          });
+
+          return batch.commit();
+      });
   }
 
   const renderActions = () => (
@@ -228,9 +242,15 @@ export default function ChatBox({route, navigation}) {
   };
 
     React.useEffect(()=>{
+
+        clearMessages().then(() => {
+            console.log("clearing old messages...")
+        })
+
         markAsRead().then(()=>{
             console.log("updating unread messages...")
         })
+
     },[])
 
   return (  

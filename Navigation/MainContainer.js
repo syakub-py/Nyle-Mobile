@@ -42,9 +42,7 @@ export default function MainContainer({route}) {
     }, [route.params.username, setProfilePic]);
 
     React.useEffect(() => {
-        getProfilePic().then(r => {
-            console.log(r)
-        });
+        getProfilePic().then(()=> {});
     }, []);
 
 
