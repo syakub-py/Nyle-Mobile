@@ -35,7 +35,7 @@ export default function AddPost({route}){
     ]
 
     const [refresh, setRefreshing] = React.useState(false);
-    const [title, setTitle] = React.useState(faker.address.streetAddress(false));
+    const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState('');
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState(randomNumber.toString());
@@ -64,7 +64,7 @@ export default function AddPost({route}){
                 currentImageUrls.push(element.uri)
             })
             setImageUrls(currentImageUrls);
-        };  
+        }
     };
           
 

@@ -3,7 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import image from "react-native-reanimated/src/reanimated2/component/Image";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -157,7 +157,7 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <View style={{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
-                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
+                        <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
                     <View style={{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
@@ -165,6 +165,14 @@ export default function PostDetails({route, navigation}){
                         <Text style={{fontSize:25, fontWeight:'bold', color:'white', marginRight:10}}>{route.params.Price}</Text>
                         <Text style={{fontSize:15, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
                     </View>
+
+
+                    {/*<LinearGradient*/}
+                    {/*    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' , backgroundColor:'transparent'}}*/}
+                    {/*    colors={['rgba(255, 255, 255, 0.7)', 'rgba(255, 255, 255, 0.5)']}*/}
+                    {/*>*/}
+                    {/*    <Text>This is a test</Text>*/}
+                    {/*</LinearGradient>*/}
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
                         {

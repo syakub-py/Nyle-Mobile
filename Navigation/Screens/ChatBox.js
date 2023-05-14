@@ -8,7 +8,7 @@ import {
     ScrollView,
     RefreshControl,
     Dimensions,
-    ProgressBarAndroid
+    ProgressBarAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from './Components/Firebase'
@@ -144,30 +144,30 @@ export default function ChatBox({route, navigation}) {
     };
 
     const upload = async (array) => {
-    const UrlDownloads = [];
-    if (array.length> 0){
-        try {
-            setIndeterminate(true)
-            for (const element of array) {
-                const filename = element.split("/").pop();
-                const response = await fetch(element);
-                const blob = await response.blob();
-                const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
-                await storageRef.put(blob);
-                console.log("Image uploaded successfully!");
-                const url = await storageRef.getDownloadURL();
-                UrlDownloads.push(url);
+        const UrlDownloads = [];
+        if (array.length> 0){
+            try {
+                setIndeterminate(true)
+                for (const element of array) {
+                    const filename = element.split("/").pop();
+                    const response = await fetch(element);
+                    const blob = await response.blob();
+                    const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
+                    await storageRef.put(blob);
+                    console.log("Image uploaded successfully!");
+                    const url = await storageRef.getDownloadURL();
+                    UrlDownloads.push(url);
+                }
+                console.log("All images uploaded successfully!");
+                setIndeterminate(false)
+                return UrlDownloads;
+            } catch (error) {
+                console.error(error);
+                return [];
             }
-            console.log("All images uploaded successfully!");
-            setIndeterminate(false)
-            return UrlDownloads;
-        } catch (error) {
-            console.error(error);
+        }else{
             return [];
         }
-    }else{
-        return [];
-    }
   };
 
 
