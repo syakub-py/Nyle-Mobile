@@ -159,7 +159,6 @@ export default function Profile({navigation, route}) {
       console.log("checking deleted posts...")
     })
   },[])
-
   return (
       <View style={{backgroundColor:'white'}}>
             <SwipeListView
