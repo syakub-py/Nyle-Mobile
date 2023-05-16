@@ -68,17 +68,39 @@ export default function Profile({navigation, route}) {
   
   React.useEffect(()=>{
     getPosts().then((result) =>{
-      const userPostList = result
-      setUserList(userPostList);
+      setUserList(result);
     }).catch((error)=>{
       Alert.alert('Error Getting Posts: ', error)
     })
   }, [])
 
-  const deletePost = (item) => {
+  const moveToDelete = async (item) =>{
+    try {
+      // Get the source document
+      const sourceDocRef = firestore.collection("AllPosts").doc(item.title);
+      const sourceDoc = await sourceDocRef.get();
+
+      // Get the data from the source document
+      const sourceData = sourceDoc.data();
+
+      // Create a reference to the destination collection
+      const destinationCollectionRef = firestore.collection("DeletedPosts").doc(item.title);
+
+      // Create a new document in the destination collection with the source document data
+      await destinationCollectionRef.set(sourceData);
+
+      await sourceDocRef.delete()
+      onRefresh();
+      console.log('Document moved to delete folder successfully!');
+    } catch (error) {
+      console.error('Error moving document:', error);
+    }
+  }
+
+  const deletePost = (item, collectionName) => {
     console.log("Deleting post:", item.title);
     firestore
-        .collection("AllPosts")
+        .collection(collectionName)
         .doc(item.title)
         .delete()
         .then(() => {
@@ -103,6 +125,26 @@ export default function Profile({navigation, route}) {
         });
   };
 
+
+  const clearDeleted = () =>{
+    const sourceDocRef = firestore.collection("DeletedPosts");
+
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const query = sourceDocRef.where('date', '<', thirtyDaysAgo);
+
+    return query.get().then((snapshot) => {
+      const batch = firestore.batch();
+
+      snapshot.forEach((doc) => {
+        console.log("deleting Posts...")
+        deletePost(doc.data(), "DeletedPosts");
+      });
+
+      return batch.commit();
+    });
+  }
+
   const markAsSold = (item) =>{
     firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(()=>{
       console.log("marked as sold")
@@ -111,6 +153,12 @@ export default function Profile({navigation, route}) {
       console.log(error)
     })
   }
+
+  React.useEffect(()=>{
+    clearDeleted().then(()=>{
+      console.log("checking deleted posts...")
+    })
+  },[])
 
   return (
       <View style={{backgroundColor:'white'}}>
@@ -158,6 +206,13 @@ export default function Profile({navigation, route}) {
                       onPress = {handleSignOut}
                       nameOfIcon = 'log-out-outline'
                     />
+
+                  <Setting
+                      title = "Recently Deleted Posts"
+                      type = "button"
+                      onPress = {()=>navigation.navigate("Deleted Posts", {username:route.params.username})}
+                      nameOfIcon = 'trash-outline'
+                  />
                   
                   <SectionTitle title={'Your Posts'}/>
                 </View>
@@ -177,7 +232,7 @@ export default function Profile({navigation, route}) {
                   bottom: 0,
                   width: 100,
                   alignItems: 'center'}}>
-                    <TouchableOpacity onPress={()=>deletePost(item)} style={{marginRight:20}}>
+                    <TouchableOpacity onPress={()=>moveToDelete(item)} style={{marginRight:20}}>
                       <Ionicons size={30} name='trash-outline' color={"red"}/>
                     </TouchableOpacity>
 

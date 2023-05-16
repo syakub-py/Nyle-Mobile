@@ -1,8 +1,7 @@
 import * as React from 'react';
-import {View, StyleSheet, TextInput, Button, Pressable, Text, Image} from 'react-native';
+import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as ImagePicker from "expo-image-picker";
 
 export default function EditProfile({navigation}){
     const [username, setUsername] = React.useState('');
@@ -42,12 +41,12 @@ export default function EditProfile({navigation}){
 
             alert('Password update successful.');
         } catch (error) {
-            alert('Error updating password');
+            alert('Error updating password: '+ error);
         }
     };
 
     return(
-        <View style={{ flex: 1, padding: 16 }}>
+        <View style={{ flex: 1, padding: 16 , justifyContent:'center'}}>
 
             <View
                 style={{
@@ -82,14 +81,13 @@ export default function EditProfile({navigation}){
             />
             <Pressable
                 style={{
-                    backgroundColor: 'blue',
+                    backgroundColor: 'black',
                     padding: 10,
                     borderRadius: 5,
                     marginBottom: 12,
                     alignItems: 'center',
                 }}
-                onPress={() => updateUsername(username)}
-            >
+                onPress={() => updateUsername(username)}>
                 <Text style={{ color: 'white' }}>Update Username</Text>
             </Pressable>
 
@@ -102,12 +100,13 @@ export default function EditProfile({navigation}){
                     paddingHorizontal: 8,
                 }}
                 placeholder="Password"
+                secureTextEntry
                 value={password}
                 onChangeText={text => setPassword(text)}
             />
             <Pressable
                 style={{
-                    backgroundColor: 'blue',
+                    backgroundColor: 'black',
                     padding: 10,
                     borderRadius: 5,
                     alignItems: 'center',

@@ -35,7 +35,7 @@ export default function ChatBox({route, navigation}) {
   const clearMessages = () =>{
       const today = new Date();
       const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const query = messagesRef.where('timestamp', '<', thirtyDaysAgo);
+      const query = messagesRef.where('createdAt', '<', thirtyDaysAgo);
 
       return query.get().then((snapshot) => {
           const batch = firestore.batch();
