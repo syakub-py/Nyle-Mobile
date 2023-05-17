@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from "./Screens/Components/Firebase";
 
 //Screens
 import home from './Screens/Home'
@@ -19,31 +18,7 @@ const Profile= 'Profile';
 
 const Tab = createBottomTabNavigator();
 export default function MainContainer({route}) {
-    const [profilePic, setProfilePic] = React.useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-
-    const getProfilePic = React.useCallback(async () => {
-        const profilePictureQuery = firestore
-            .collection("ProfilePictures")
-            .where("FileName", "==", route.params.username.toLowerCase());
-        try {
-            const result = await profilePictureQuery.get();
-            const profilePicUrls = result.docs.map((doc) => doc.data().url);
-            const url = profilePicUrls.length > 0
-                ? profilePicUrls[0]
-                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-            setProfilePic(url);
-            return url;
-        } catch (error) {
-            console.error("Error getting profile picture:", error);
-            const url = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-            setProfilePic(url);
-            return url;
-        }
-    }, [route.params.username, setProfilePic]);
-
-    React.useEffect(() => {
-        getProfilePic().then(()=> {});
-    }, []);
+    const profilePic= "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
 
     return (

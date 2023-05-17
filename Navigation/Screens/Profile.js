@@ -176,7 +176,7 @@ export default function Profile({navigation, route}) {
                 <View>
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10, marginTop:10}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
-                        <Image source = {{uri:route.params.profilePic,}} style = {styles.image} resizeMode ="cover"/>
+                        <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode ="cover"/>
                         <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>
                   </View>
 

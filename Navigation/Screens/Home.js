@@ -8,7 +8,7 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
-  const [filteredData, setfilterData] = React.useState([]);
+  const [filteredData, setFilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [categorySearch, setCategorySearch] = React.useState([]);
@@ -23,7 +23,7 @@ export default function Home({navigation, route}) {
     // Retrieve posts from the database and update the state variables
     getPosts().then((result) =>{
       const masterPostList = result
-      setfilterData(masterPostList);
+      setFilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
       Alert.alert(error)
@@ -39,37 +39,53 @@ export default function Home({navigation, route}) {
       quality: 1,
     });
     if (!result.canceled) {
-      // Fetch the image and create a blob
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
+      try {
+        // Fetch the image and create a blob
+        const response = await fetch(result.assets[0]);
+        const blob = await response.blob();
 
-      // Get a reference to the storage location for the profile image
-      const storageRef = getstorage.ref().child(`ProfilePictures/${route.params.username}`);
+        // Get a reference to the storage location for the profile image
+        const storageRef = getstorage.ref(`ProfilePictures/${route.params.username}`);
 
-      // Upload the image to Firebase Storage
-      await storageRef.update(blob);
-      console.log("Profile Image uploaded successfully!");
+        // Upload the new image to Firebase Storage
+        await storageRef.put(blob);
 
-      // Get the download URL for the uploaded image
-      const url = await storageRef.getDownloadURL();
+        console.log("Profile Image uploaded successfully!");
 
-      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
-      const ProfilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', route.params.username);
+        // Get the download URL for the uploaded image
+        const url = await storageRef.getDownloadURL();
 
-      // Update the URL for the profile image in the Firestore document
-      ProfilePicRef.get().then((querySnapshot) => {
-        querySnapshot.docs.forEach((doc) => {
-          doc.ref.update({ url: url })
-              .then(() => {
-                console.log('Profile picture updated');
-              })
-              .catch((error) => {
-                console.error('Error updating profile picture:', error);
-              });
+        // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
+        const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', route.params.username);
+
+        // Update the URL for the profile image in the Firestore document
+        profilePicRef.get().then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            // Create the document if it doesn't exist
+            firestore.collection('ProfilePictures').add({ FileName: route.params.username, url })
+                .then(() => {
+                  console.log('Profile picture created');
+                })
+                .catch((error) => {
+                  console.error('Error creating profile picture:', error);
+                });
+          } else {
+            querySnapshot.forEach((doc) => {
+              doc.ref.update({ url })
+                  .then(() => {
+                    console.log('Profile picture updated');
+                  })
+                  .catch((error) => {
+                    console.error('Error updating profile picture:', error);
+                  });
+            });
+          }
+        }).catch((error) => {
+          console.error('Error getting document:', error);
         });
-      }).catch((error) => {
-        console.error('Error getting document:', error);
-      });
+      } catch (error) {
+        console.error('Error uploading profile image:', error);
+      }
     }
   };
 
@@ -95,7 +111,7 @@ export default function Home({navigation, route}) {
   React.useEffect(()=>{
     getPosts().then((result) =>{
       const masterPostList = result
-      setfilterData(masterPostList);
+      setFilterData(masterPostList);
       setMasterData(masterPostList);
     }).catch((error)=>{
       Alert.alert(error)
@@ -116,10 +132,10 @@ export default function Home({navigation, route}) {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData)>-1;
       });
-      setfilterData(newData);
+      setFilterData(newData);
       setSearch(text);
     }else{
-      setfilterData(masterData);
+      setFilterData(masterData);
       setSearch(text);
     }
   }
@@ -131,10 +147,10 @@ export default function Home({navigation, route}) {
         const textData = text;
         return itemData.indexOf(textData)>-1;
       });
-      setfilterData(newData);
+      setFilterData(newData);
       setCategorySearch(text);
     }else{
-      setfilterData(masterData);
+      setFilterData(masterData);
       setCategorySearch(text);
     }
   }
@@ -152,8 +168,7 @@ export default function Home({navigation, route}) {
                 <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20}}/>
 
-                  {/*add the logic to change the profile pic in firebase*/}
-                  <Pressable onPress={()=>SelectProfilePic()}>
+                  <Pressable onPress={SelectProfilePic}>
                     <View style={{marginTop:20, marginRight:20}}>
                       <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
                       <View style={{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
