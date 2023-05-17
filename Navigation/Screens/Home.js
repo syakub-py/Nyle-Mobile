@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {View, Text, FlatList, Image, Pressable, TextInput, Alert, RefreshControl, ScrollView} from 'react-native';
+import {Alert, FlatList, Image, Pressable, RefreshControl, ScrollView, Text, TextInput, View} from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {collection, getDocs} from 'firebase/firestore/lite'
-import {firestoreLite, getstorage, firestore} from './Components/Firebase'
+import {firestore, firestoreLite, getstorage} from './Components/Firebase'
 import * as ImagePicker from "expo-image-picker";
 
 export default function Home({navigation, route}) {
@@ -144,8 +144,7 @@ export default function Home({navigation, route}) {
     if (text && text !== 'All'){
       const newData = masterData.filter((item) =>{
         const itemData = item.category ? item.category : ''
-        const textData = text;
-        return itemData.indexOf(textData)>-1;
+        return itemData.indexOf(text)>-1;
       });
       setFilterData(newData);
       setCategorySearch(text);

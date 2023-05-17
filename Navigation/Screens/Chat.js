@@ -77,6 +77,8 @@ export default function Chat({navigation, route}) {
     };
 
 
+
+
     const onRefresh = () => {
     setRefreshing(true);
     getChats().then((result) =>{

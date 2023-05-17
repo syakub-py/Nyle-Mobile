@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {firestore} from './Screens/Components/Firebase'
+import {View} from "react-native";
+import {useCollectionData} from "react-firebase-hooks/firestore"
 
 //Screens
 import home from './Screens/Home'
@@ -19,6 +22,31 @@ const Profile= 'Profile';
 const Tab = createBottomTabNavigator();
 export default function MainContainer({route}) {
     const profilePic= "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    const [received,setReceived] = React.useState(true)
+
+    const MyChatQuery = firestore.collection('Chats');
+
+    MyChatQuery.get().then(async (ChatSnapshot) => {
+        for (const doc of ChatSnapshot.docs) {
+            for (let i = 0; i < doc.data().owners.length; i++) {
+                if (doc.data().owners[i].username === route.params.username) {
+                    const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                        .orderBy('createdAt', 'desc')
+                        .limit(1);
+
+                    latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
+                        if (!latestMessageSnapshot.empty) {
+                            const latestMessage = latestMessageSnapshot.docs[0].data();
+                            setReceived(latestMessage.received)
+                        }
+                    })
+                }
+            }
+        }
+    });
+
+
+
 
 
     return (
@@ -54,16 +82,31 @@ export default function MainContainer({route}) {
             let rn = route.name;
             if (rn === Home){
               iconName = focused ? 'home' : 'home-outline';
+              return <Ionicons name = {iconName} size={32} color={color}/>
             }else if (rn === Market){
               iconName = focused ? 'analytics' : 'analytics-outline';
+              return <Ionicons name = {iconName} size={32} color={color}/>
             }else if (rn === Chat){
               iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
+              if (received === false){
+                  return(
+                      <View>
+                          <View style={{backgroundColor:'red', height:13, width:13, borderRadius:10, zIndex:1, position:'absolute', left:0, top:0}}/>
+                          <Ionicons name = {iconName} size={32} color={color}/>
+                      </View>
+                  )
+              }else {
+                  return(
+                      <Ionicons name = {iconName} size={32} color={color}/>
+                  )
+              }
             }else if (rn === Profile){
               iconName = focused ? 'person-circle' : 'person-circle-outline';
+              return <Ionicons name = {iconName} size={32} color={color}/>
             }else if (rn === AddPost){
               iconName = focused ? 'add-circle' : 'add-circle-outline';
+              return <Ionicons name = {iconName} size={32} color={color}/>
             }
-            return <Ionicons name = {iconName} size={32} color={color}/>
            },
 
         })}>
