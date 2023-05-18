@@ -36,7 +36,6 @@ export default function MainContainer({route}) {
                     latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
                         if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
                             const latestMessage = latestMessageSnapshot.docs[0].data();
-
                             setReceived(latestMessage.received)
                         }
                     })
