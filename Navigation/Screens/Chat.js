@@ -14,72 +14,52 @@ export default function Chat({navigation, route}) {
     const getChats = async () => {
         const results = [];
         const MyChatQuery = firestore.collection('Chats');
-        let latestMessageData;
-        await MyChatQuery.onSnapshot(async (ChatSnapshot) => {
-            for (const doc of ChatSnapshot.docs) {
-                for (let i = 0; i < doc.data().owners.length; i++) {
-                    if (doc.data().owners[i].username === route.params.username) {
-                        const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-                            .orderBy('createdAt', 'desc')
-                            .limit(1)
-                            .get();
-                        const latestMessageSnapshot = await latestMessageQuery;
-                        if (latestMessageSnapshot.docs.length>0){
-                            latestMessageData = latestMessageSnapshot.docs[0].data();
-                            const latestMessage = latestMessageData.text;
-                            if (latestMessageData.user.name === route.params.username) {
-                                if (latestMessageData.image.length > 0) {
-                                    results.push({
-                                        data: doc.data(),
-                                        id: doc.id,
-                                        latestMessage: "You: " + latestMessage,
-                                        image: latestMessageData.image[0],
-                                        received: true
-                                    });
-                                } else {
-                                    results.push({
-                                        data: doc.data(),
-                                        id: doc.id,
-                                        latestMessage: "You: " + latestMessage,
-                                        image: "",
-                                        received: true
-                                    });
-                                }
-                            } else {
-                                if (latestMessageData.image.length > 0) {
-                                    results.push({
-                                        data: doc.data(),
-                                        id: doc.id,
-                                        latestMessage: latestMessage,
-                                        image: latestMessageData.image[0],
-                                        received: latestMessageData.received
-                                    });
-                                } else {
-                                    results.push({
-                                        data: doc.data(),
-                                        id: doc.id,
-                                        latestMessage: latestMessage,
-                                        image: " ",
-                                        received:latestMessageData.received
-                                    });
+        const ChatSnapshot = await MyChatQuery.get();
+        const chatDocs = ChatSnapshot.docs;
 
-                                }
-                            }
-                        }else{
-                            results.push({
-                                data: doc.data(),
-                                id: doc.id,
-                                latestMessage: "",
-                                image: "",
-                                received:true
-                            });
-                        }
+        for (const doc of chatDocs) {
+            console.log(doc.data().owners)
+            if (doc.data().owners.some(item => item.username === route.params.username)){
+                const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                    .orderBy('createdAt', 'desc')
+                    .limit(1);
+
+                const latestMessageSnapshot = await latestMessageQuery.get();
+                const latestMessageDocs = latestMessageSnapshot.docs;
+
+                if (latestMessageDocs.length > 0) {
+                    const latestMessageData = latestMessageDocs[0].data();
+                    const latestMessage = latestMessageData.text;
+                    const received = latestMessageData.received;
+                    const image = latestMessageData.image.length > 0 ? latestMessageData.image[0] : "";
+
+                    const chatData = {
+                        data: doc.data(),
+                        id: doc.id,
+                        latestMessage,
+                        image,
+                        received
+                    };
+
+                    if (latestMessageData.user.name === route.params.username) {
+                        chatData.latestMessage = "You: " + latestMessage;
                     }
+                    results.push(chatData);
+                } else {
+                    results.push({
+                        data: doc.data(),
+                        id: doc.id,
+                        latestMessage: "",
+                        image: "",
+                        received: true
+                    });
                 }
             }
-        });
+        }
+
         return results;
     };
+
 
 
 
