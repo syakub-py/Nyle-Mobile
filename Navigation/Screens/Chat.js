@@ -15,7 +15,7 @@ export default function Chat({navigation, route}) {
         const results = [];
         const MyChatQuery = firestore.collection('Chats');
         let latestMessageData;
-        await MyChatQuery.get().then(async (ChatSnapshot) => {
+        await MyChatQuery.onSnapshot(async (ChatSnapshot) => {
             for (const doc of ChatSnapshot.docs) {
                 for (let i = 0; i < doc.data().owners.length; i++) {
                     if (doc.data().owners[i].username === route.params.username) {
@@ -33,14 +33,16 @@ export default function Chat({navigation, route}) {
                                         data: doc.data(),
                                         id: doc.id,
                                         latestMessage: "You: " + latestMessage,
-                                        image: latestMessageData.image[0]
+                                        image: latestMessageData.image[0],
+                                        received: true
                                     });
                                 } else {
                                     results.push({
                                         data: doc.data(),
                                         id: doc.id,
                                         latestMessage: "You: " + latestMessage,
-                                        image: ""
+                                        image: "",
+                                        received: true
                                     });
                                 }
                             } else {
@@ -49,14 +51,16 @@ export default function Chat({navigation, route}) {
                                         data: doc.data(),
                                         id: doc.id,
                                         latestMessage: latestMessage,
-                                        image: latestMessageData.image[0]
+                                        image: latestMessageData.image[0],
+                                        received: latestMessageData.received
                                     });
                                 } else {
                                     results.push({
                                         data: doc.data(),
                                         id: doc.id,
                                         latestMessage: latestMessage,
-                                        image: " "
+                                        image: " ",
+                                        received:latestMessageData.received
                                     });
 
                                 }
@@ -66,7 +70,8 @@ export default function Chat({navigation, route}) {
                                 data: doc.data(),
                                 id: doc.id,
                                 latestMessage: "",
-                                image: ""
+                                image: "",
+                                received:true
                             });
                         }
                     }
@@ -248,15 +253,17 @@ const deleteRow = (id) =>{
             return(
               <Pressable onPress={() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key={index}>
                 <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
-                  <Image
-                      source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
-                      style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
-                  />
-                  <View style={{flexDirection:'column'}}>
+                    <View>
+                        <Image
+                            source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
+                            style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
+                        />
+                    </View>
 
+                  <View style={{flexDirection:'column'}}>
                       {
                           (username.length > 10)?(
-                              <Text style ={{fontSize:18, fontWeight:'500'}}>{username.slice(0, 15) + " ..."}</Text>
+                              <Text style ={{fontSize:18, fontWeight:'500'}}>{username.slice(0, 18) + "..."}</Text>
                           ):(
                               <Text style ={{fontSize:18, fontWeight:'500'}}>{username}</Text>
                           )
@@ -264,11 +271,11 @@ const deleteRow = (id) =>{
 
                       {
                           (item.latestMessage.length > 10)?(
-                              <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
+                              <Text style={item.received?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
                           ):(
-                              <Text style={{color:'gray', fontSize:14, paddingTop:3}}>{item.latestMessage.slice(0, 10)}</Text>
-
+                              <Text style={item.received?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
                           )
+
                       }
                   </View>
                     {

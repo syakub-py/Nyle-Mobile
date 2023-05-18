@@ -33,10 +33,10 @@ export default function MainContainer({route}) {
                     const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
                         .orderBy('createdAt', 'desc')
                         .limit(1);
-
                     latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
-                        if (!latestMessageSnapshot.empty) {
+                        if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
                             const latestMessage = latestMessageSnapshot.docs[0].data();
+
                             setReceived(latestMessage.received)
                         }
                     })
@@ -91,7 +91,7 @@ export default function MainContainer({route}) {
               if (received === false){
                   return(
                       <View>
-                          <View style={{backgroundColor:'red', height:13, width:13, borderRadius:10, zIndex:1, position:'absolute', left:0, top:0}}/>
+                          <View style={{backgroundColor:'red', height:13, width:13, borderRadius:10, elevation:2,zIndex:1, position:'absolute', left:0, top:0}}/>
                           <Ionicons name = {iconName} size={32} color={color}/>
                       </View>
                   )
