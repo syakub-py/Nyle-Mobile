@@ -1,6 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { View, Text, StyleSheet,SafeAreaView,Image, RefreshControl, Pressable, TextInput, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    SafeAreaView,
+    Image,
+    RefreshControl,
+    Pressable,
+    TextInput,
+    TouchableOpacity,
+    Alert
+} from 'react-native';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -118,61 +129,27 @@ export default function Chat({navigation, route}) {
     }
 
     // Delete a folder and all its contents
-    function deleteFolder(ref) {
-        if (ref instanceof getstorage.ref) {
-            ref.listAll().then(function(dir) {
-                dir.items.forEach(function(fileRef) {
-                    // Delete file
-                    fileRef.delete().then(function() {
-                        // File deleted successfully
-                        console.log("file deleted")
-                    }).catch(function(error) {
-                        // Error deleting file
-                        console.log(error)
-                    });
-                });
-                dir.prefixes.forEach(function(folderRef) {
-                    // Recursively delete subfolder
-                    deleteFolder(folderRef);
-                });
-                // Delete the parent folder once all files and subfolders have been deleted
-                ref.delete().then(function() {
-                    // Folder deleted successfully
-                    console.log("folder deleted")
-                }).catch(function(error) {
-                    // Error deleting folder
-                    console.log(error)
-                });
-            }).catch(function(error) {
-                // Error listing items in folder
-                console.log(error)
-            });
-        } else {
-            console.log('Invalid reference object.');
-        }
-    }
-
-
-    const deleteRow = (id) =>{
-        firestore.collection('Chats').doc(id).delete()
-            .then(() => {
-                console.log('Document successfully deleted!');
-                const picRef = getstorage.ref(`MessageImages/${id}`);
-                picRef
-                    .delete()
-                    .then(() => {
-                        deleteFolder('MessageImages');
-                        console.log(`Deleted folder with id: ${id}`);
+    const deleteChat=(chat)=>{
+        firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs)=>{
+            docs.forEach((doc)=>{
+                if(doc.data().image.length > 0){
+                    doc.data().image.forEach((picture)=>{
+                        let imageRef = getstorage.refFromURL(picture)
+                        imageRef.delete().then(()=>{
+                            console.log("deleted: " + imageRef.name)
+                        })
                     })
-                    .catch((error) => {
-                        console.log("Error deleting picture:", error);
-                    });
+                }
             })
-            .catch((error) => {
-                console.error('Error deleting document: ', error);
-            });
-        onRefresh();
+
+            firestore.collection('Chats').doc(chat.id).delete().then(()=>{
+                console.log('Chat document successfully deleted!');
+                onRefresh();
+            })
+        })
     }
+
+
     let randomNumber = Math.floor(Math.random() * 100);
     return (
         <SafeAreaView style={styles.container}>
@@ -222,7 +199,7 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key={i}>
-                        <TouchableOpacity onPress={()=>{deleteRow(item.id)}}>
+                        <TouchableOpacity onPress={()=>{deleteChat(item)}}>
                             <Ionicons size={25} name='trash-outline' color={"red"}/>
                         </TouchableOpacity>
                     </View>
