@@ -8,7 +8,7 @@ import {
     ScrollView,
     RefreshControl,
     Dimensions,
-    ProgressBarAndroid,
+    ActivityIndicator
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from './Components/Firebase'
@@ -271,17 +271,7 @@ export default function ChatBox({route, navigation}) {
         {
             (indeterminate)?(
                 <View>
-                    <ProgressBarAndroid
-                        styleAttr="Horizontal"
-                        indeterminate={indeterminate}
-                        style={{
-                            width: width,
-                            height: 10,
-                            marginTop: 5,
-                            marginBottom: 10,
-                        }}
-                        color="black"
-                    />
+                    <ActivityIndicator size="large" color="black" animating={indeterminate} />
                 </View>
             ):(
                 <View>
