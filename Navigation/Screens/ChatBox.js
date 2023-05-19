@@ -23,7 +23,7 @@ export default function ChatBox({route, navigation}) {
   const [refresh, setRefreshing] = React.useState(false);
   let downloadUrls =[]
   const [state, setState] = React.useState({active:0})
-  const [indeterminate, setIndeterminate] = React.useState(false);
+  const [animating, setAnimating] = React.useState(false);
   const {width} = Dimensions.get("window");
 
   if (messages){
@@ -147,7 +147,7 @@ export default function ChatBox({route, navigation}) {
         const UrlDownloads = [];
         if (array.length> 0){
             try {
-                setIndeterminate(true)
+                setAnimating(true)
                 for (const element of array) {
                     const filename = element.split("/").pop();
                     const response = await fetch(element);
@@ -159,7 +159,7 @@ export default function ChatBox({route, navigation}) {
                     UrlDownloads.push(url);
                 }
                 console.log("All images uploaded successfully!");
-                setIndeterminate(false)
+                setAnimating(false)
                 return UrlDownloads;
             } catch (error) {
                 console.error(error);
@@ -269,9 +269,9 @@ export default function ChatBox({route, navigation}) {
       </View>
 
         {
-            (indeterminate)?(
+            (animating)?(
                 <View>
-                    <ActivityIndicator size="large" color="black" animating={indeterminate} />
+                    <ActivityIndicator size="large" color="black" animating={animating} />
                 </View>
             ):(
                 <View>

@@ -10,7 +10,8 @@ import {
     Pressable,
     Dimensions,
     Alert,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator
 } from 'react-native';
 import faker from 'faker';
 import {firestore, getstorage} from './Components/Firebase';
@@ -40,6 +41,7 @@ export default function AddPost({route}){
     const [details, setDetails] = React.useState('');
     const [price, setPrice] = React.useState(randomNumber.toString());
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
+    const [animating, setAnimating] = React.useState(false);
     const [category, setCategory] = React.useState("All");
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
@@ -70,6 +72,7 @@ export default function AddPost({route}){
 
     const upload = async (array) => {
         const UrlDownloads= [];
+        setAnimating(true)
         try {
           for (const element of array) {
             const filename = element.split("/").pop();
@@ -83,6 +86,8 @@ export default function AddPost({route}){
           }
           console.log("All images uploaded successfully!");
           console.log(UrlDownloads)
+          setAnimating(false)
+
           return UrlDownloads;
         } catch (error) {
           console.error(error);
@@ -163,6 +168,17 @@ export default function AddPost({route}){
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
             <ScrollView contentContainerStyle={{paddingBottom:60}} refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
+                {
+                    (animating)?(
+                        <View>
+                            <ActivityIndicator size="large" color="black" animating={animating} />
+                        </View>
+                    ):(
+                        <View>
+
+                        </View>
+                    )
+                }
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
                 {
                     imageUrls.map((item, index)=>(
