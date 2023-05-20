@@ -3,7 +3,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
 import {View} from "react-native";
-import {useCollectionData} from "react-firebase-hooks/firestore"
 
 //Screens
 import home from './Screens/Home'

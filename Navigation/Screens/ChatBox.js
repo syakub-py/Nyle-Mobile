@@ -7,7 +7,6 @@ import {
     Image,
     ScrollView,
     RefreshControl,
-    Dimensions,
     ActivityIndicator
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,7 +23,6 @@ export default function ChatBox({route, navigation}) {
   let downloadUrls =[]
   const [state, setState] = React.useState({active:0})
   const [animating, setAnimating] = React.useState(false);
-  const {width} = Dimensions.get("window");
 
   if (messages){
     messages = messages.sort((a, b) => {
@@ -148,6 +146,7 @@ export default function ChatBox({route, navigation}) {
         if (array.length> 0){
             try {
                 setAnimating(true)
+                console.log("uploading chat image...")
                 for (const element of array) {
                     const filename = element.split("/").pop();
                     const response = await fetch(element);
@@ -170,7 +169,6 @@ export default function ChatBox({route, navigation}) {
         }
   };
 
-
     const change = ({nativeEvent}) =>{
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
         if(slide !== state.active){
@@ -192,7 +190,7 @@ export default function ChatBox({route, navigation}) {
 
   const renderInputToolbar = (props) => {
     return (
-      <View style={{flex:1 }}>
+      <View style={{flex:1}}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -208,15 +206,32 @@ export default function ChatBox({route, navigation}) {
             (imageUrls.length > 0) ? (
               imageUrls.map((value, index) => (
                 <View key={index} style={{backgroundColor:'#F0F0F0', elevation:2}}>
-                  <Pressable style={{zIndex:1}} onPress={()=>deleteImages(index)}>
-                    <View style={{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
-                      <Ionicons name='remove-outline'  color={'white'} size={15} style={{elevation:1}}/>
-                    </View>
-                  </Pressable>
-                  <Image
-                    source={{ uri: value }}
-                    style={{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
-                  />
+                    {
+                        (animating)?(
+                            <View>
+                                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
+                                    <ActivityIndicator size="large" color="black" />
+                                </View>
+                                <Image
+                                    source={{ uri: value }}
+                                    style={{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
+                                />
+                            </View>
+                        ):(
+                            <View>
+                                <Pressable style={{zIndex:1}} onPress={()=>deleteImages(index)}>
+                                    <View style={{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
+                                        <Ionicons name='remove-outline'  color={'white'} size={15} style={{elevation:1}}/>
+                                    </View>
+                                </Pressable>
+                                <Image
+                                    source={{ uri: value }}
+                                    style={{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
+                                />
+                            </View>
+                        )
+                    }
+
                 </View>
               ))
             ) : (
@@ -267,19 +282,6 @@ export default function ChatBox({route, navigation}) {
           <Text style={{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
       </View>
-
-        {
-            (animating)?(
-                <View>
-                    <ActivityIndicator size="large" color="black" animating={animating} />
-                </View>
-            ):(
-                <View>
-
-                </View>
-            )
-        }
-
 
       <GiftedChat
         messages={messages}

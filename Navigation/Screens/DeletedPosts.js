@@ -102,7 +102,7 @@ export default function DeletedPosts({route, navigation}){
     const deleteAllPosts = () =>{
         deletedPostList.forEach((doc , index) =>{
             deletePost(doc)
-            console.log("Deleted all posts");
+            console.log("Deleted all posts!");
         })
     }
 

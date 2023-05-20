@@ -229,7 +229,6 @@ export default function Chat({navigation, route}) {
                                         ):(
                                             <Text style={(item.received)?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
                                         )
-
                                     }
                                 </View>
                                 {

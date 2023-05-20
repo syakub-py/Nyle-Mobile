@@ -36,7 +36,7 @@ export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const getPosts = async () =>{
+  const getPosts = async () =>  {
     const results = [];
     const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
     await MyPostsQuery.get().then(postSnapshot =>{

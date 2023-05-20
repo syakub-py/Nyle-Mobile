@@ -20,13 +20,13 @@ import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Dropdown } from 'react-native-element-dropdown';
 
-
 const {width} = Dimensions.get("window");
 const height = width*1;
 
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
+
     const currencies = [
         { label: 'Bitcoin', value: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" },
         { label: 'Ethereum', value: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880" },

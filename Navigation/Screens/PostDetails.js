@@ -1,9 +1,8 @@
 import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Circle } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import { LinearGradient } from 'expo-linear-gradient';
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -167,13 +166,6 @@ export default function PostDetails({route, navigation}){
                     </View>
 
 
-                    {/*<LinearGradient*/}
-                    {/*    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' , backgroundColor:'transparent'}}*/}
-                    {/*    colors={['rgba(255, 255, 255, 0.7)', 'rgba(255, 255, 255, 0.5)']}*/}
-                    {/*>*/}
-                    {/*    <Text>This is a test</Text>*/}
-                    {/*</LinearGradient>*/}
-
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={change}>
                         {
                             images.map((image, key)=>(
@@ -212,16 +204,24 @@ export default function PostDetails({route, navigation}){
 
                         <Pressable onPress={handleAddChat}>
                             <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                                <Ionicons name="chatbubble-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
+                                <Ionicons name="chatbox-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
                             </View>
                         </Pressable>
+
                     </View>
                     
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                     <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
-                        <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} >
+                        <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                             <Marker coordinate={route.params.coordinates}/>
+                            <Circle
+                                center={route.params.coordinates}
+                                radius={1200}
+                                fillColor="rgba(255, 0, 0, 0.2)"
+                                strokeColor="rgba(255, 0, 0, 0.7)"
+                                strokeWidth={1}
+                            />
                         </MapView>
                     </View>
 
