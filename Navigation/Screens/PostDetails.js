@@ -35,26 +35,43 @@ export default function PostDetails({route, navigation}){
             });
     };
 
-    const handleAddChat = () =>{
-        if (route.params.username!==route.params.postedBy) {
-            firestore.collection('Chats').add({
-                owners: [
-                    {
-                        profilePic: route.params.CurrentUserProfilePic,
-                        username: route.params.username
-                    },
-                    {
-                        profilePic: route.params.PostedByProfilePic,
-                        username: route.params.postedBy
-                    }
-                ]
-            }).then(ref => {
-                    Alert.alert("Added")
-                }).catch(error => {
+    const handleAddChat = () => {
+        if (route.params.username !== route.params.postedBy) {
+            firestore
+                .collection('Chats')
+                .add({
+                    owners: [
+                        {
+                            profilePic: route.params.CurrentUserProfilePic,
+                            username: route.params.username,
+                        },
+                        {
+                            profilePic: route.params.PostedByProfilePic,
+                            username: route.params.postedBy,
+                        },
+                    ],
+                })
+                .then((ref) => {
+                   const owners =  [
+                        {
+                            profilePic: route.params.CurrentUserProfilePic,
+                            username: route.params.username,
+                        },
+                        {
+                            profilePic: route.params.PostedByProfilePic,
+                            username: route.params.postedBy,
+                        },
+                    ];
+
+                    const username = owners[1].username
+                    navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners)})
+
+                })
+                .catch((error) => {
                     Alert.alert('Error adding document: ', error);
                 });
         }
-    }
+    };
 
     const handleLike = async () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
@@ -113,6 +130,14 @@ export default function PostDetails({route, navigation}){
         }
     };
 
+    const findUser = (userArray)=>{
+        for (let index = 0; index < userArray.length; index++) {
+            if (userArray[index].username!==route.params.username){
+                return index
+            }
+        }
+        return "";
+    }
 
 
     React.useEffect(()=>{
