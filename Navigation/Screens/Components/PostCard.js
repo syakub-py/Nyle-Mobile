@@ -22,20 +22,20 @@ export default function PostCard({data, username}){
                     // Write the updated array back to the document
                     PostRef.update({ likes: likesArray })
                         .then(() => {
-                            console.log('Value added to array');
+                            console.log('Liked!');
                         })
                         .catch((error) => {
-                            console.error('Error adding value to array:', error);
+                            console.error('Error adding Like:', error);
                         });
                 } else {
                     const likesArray = doc.data().likes || [];
                     const updatedLikesArray = likesArray.filter((user) => user !== username);
                     PostRef.update({ likes: updatedLikesArray })
                         .then(() => {
-                            console.log('Value removed from array');
+                            console.log('Like removed');
                         })
                         .catch((error) => {
-                            console.error('Error updating array:', error);
+                            console.error('Error removing Like:', error);
                         });          }
             })
             .catch((error) => {

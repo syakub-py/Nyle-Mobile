@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
+
 export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)

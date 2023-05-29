@@ -65,7 +65,6 @@ export default function PostDetails({route, navigation}){
 
                     const username = owners[1].username
                     navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners)})
-
                 })
                 .catch((error) => {
                     Alert.alert('Error adding document: ', error);
@@ -85,20 +84,20 @@ export default function PostDetails({route, navigation}){
                     // Write the updated array back to the document
                     PostRef.update({ likes: likesArray })
                         .then(() => {
-                            console.log('Value added to array');
+                            console.log('Liked!');
                         })
                         .catch((error) => {
-                            console.error('Error adding value to array:', error);
+                            console.error('Error adding Like:', error);
                         });
                 } else {
                     const likesArray = doc.data().likes || [];
                     const updatedLikesArray = likesArray.filter((username) => username !== route.params.username);
                     PostRef.update({ likes: updatedLikesArray })
                         .then(() => {
-                            console.log('Value removed from array');
+                            console.log('Like removed');
                         })
                         .catch((error) => {
-                            console.error('Error updating array:', error);
+                            console.error('Error removing like:', error);
                         });
                 }
             })
