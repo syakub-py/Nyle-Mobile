@@ -299,7 +299,7 @@ export default function AddPost({route}){
                             search
                             labelField="label"
                             valueField="value"
-                            placeholder={'Select item'}
+                            placeholder={'Select a currency'}
                             searchPlaceholder="Search..."
                             value={currency}
                             onFocus={() => setIsFocus(true)}
@@ -333,10 +333,11 @@ export default function AddPost({route}){
                 </View>
 
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
-                    <View style={{margin:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
+                    <View style={{marginBottom:20, marginLeft:10, marginRight:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:10, color:"white", fontWeight:"bold"}}>Add post</Text>
                     </View>
                 </Pressable>
+
             </ScrollView>
         </SafeAreaView>
     );

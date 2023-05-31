@@ -80,20 +80,21 @@ export default function PostCard({data, username}){
         <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius:10, elevation:3}}>
             <View style ={{width:"100%", height:300}}>
                 <ImageBackground source={{uri: data.pic[index]}} imageStyle ={{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
+                     <View style={{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
+                            <Pressable onPress={()=>handleLike()}>
+                                {
+                                    (liked || data.likes.includes(data.PostedBy))?(
+                                        <Ionicons name='heart' size={25} color={'#e6121d'}/>
+
+                                    ):(
+                                        <Ionicons name='heart-outline' size={25}/>
+                                    )
+                                }
+                            </Pressable>
+                        </View>
 
 
-                    <View style={{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-                        <Pressable onPress={()=>handleLike()}>
-                            {
-                                (liked || data.likes.includes(data.PostedBy))?(
-                                    <Ionicons name='heart' size={25} color={'#e6121d'}/>
 
-                                ):(
-                                    <Ionicons name='heart-outline' size={25}/>
-                                )
-                            }
-                        </Pressable>
-                    </View>
 
 
                     <View style={{flexDirection:'row'}}>
@@ -112,7 +113,7 @@ export default function PostCard({data, username}){
                     </View>
 
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ position: 'absolute', top:225, width:"100%"}} >
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ position: 'absolute', top:215, width:"100%"}} >
                         <View style={{flexDirection:'row', alignItems:'center'}}>
                             {
                                 data.pic.map((i, k)=>(
@@ -123,6 +124,21 @@ export default function PostCard({data, username}){
                             }
                         </View>
                     </ScrollView>
+                    <View style={{position: 'absolute', top:280, left:10}}>
+                        {
+                            (data.sold === "true")?(
+                                <View style={{flexDirection:"row", alignItems:"center"}}>
+                                    <View style={{backgroundColor:"red", height:10, width:10, borderRadius:10}}></View>
+                                    <Text style={{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Sold</Text>
+                                </View>
+                            ):(
+                                <View style={{flexDirection:"row", alignItems:"center"}}>
+                                    <View style={{backgroundColor:"lightgreen", height:10, width:10, borderRadius:10}}></View>
+                                    <Text style={{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Available</Text>
+                                </View>
+                            )
+                        }
+                    </View>
 
                 </ImageBackground>
             </View>
@@ -130,12 +146,6 @@ export default function PostCard({data, username}){
     )
 }
 
-{/*/!*needs to get finished*!/*/}
-{/*{*/}
-{/*    (data.sold === "true")? (<View style={{ position: 'absolute', top:250, right: 0, backgroundColor: 'red', height: 30, width: 70, transform: [{ rotate: '-45deg' }],  justifyContent: 'center', alignItems: 'center' }}>*/}
-{/*        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>SOLD</Text>*/}
-{/*    </View>):(null)*/}
-{/*}*/}
 {/*<View style={{flexDirection:'row',  position: 'absolute', top:260, left: 7,}}>*/}
 {/*    <View style={{*/}
 {/*        flexDirection: 'row',*/}
