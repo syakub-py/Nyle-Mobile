@@ -85,7 +85,6 @@ export default function PostCard({data, username}){
                                 {
                                     (liked || data.likes.includes(data.PostedBy))?(
                                         <Ionicons name='heart' size={25} color={'#e6121d'}/>
-
                                     ):(
                                         <Ionicons name='heart-outline' size={25}/>
                                     )
@@ -98,9 +97,16 @@ export default function PostCard({data, username}){
 
 
                     <View style={{flexDirection:'row'}}>
-                        <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic, username:data.PostedBy})}>
-                            <Image style={{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source={{uri:data.profilePic, elevation:2}}/>
-                        </Pressable>
+                        {
+                            (username !== data.PostedBy)?(
+                                <Pressable onPress={() => navigation.navigate("view profile", {ProfileImage: data.profilePic, postedByUsername:data.PostedBy, currentUsername:username})}>
+                                    <Image style={{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source={{uri:data.profilePic, elevation:2}}/>
+                                </Pressable>
+                            ):(
+                                <Image style={{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source={{uri:data.profilePic, elevation:2}}/>
+                            )
+                        }
+
 
                         <View>
                             <Text style ={{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>

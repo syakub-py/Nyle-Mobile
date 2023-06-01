@@ -14,7 +14,10 @@ export default function Home({navigation, route}) {
   const [categorySearch, setCategorySearch] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
+  const [selectedPostFilterIndex, setSelectedPostFilterIndex] = React.useState(0);
+
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
+  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest"]
 
   // Function to refresh the data
   const onRefresh = () => {
@@ -98,6 +101,7 @@ export default function Home({navigation, route}) {
     postSnapshot.forEach(doc => {
       results.push(doc.data())
     });
+
     // Sort the results by date in descending order
     if (results){
       results = results.sort((a, b) => {
@@ -124,6 +128,9 @@ export default function Home({navigation, route}) {
     categoryFilter(categories[index])
   };
 
+  const handlePostFilterPress = (index) => {
+    setSelectedPostFilterIndex(index);
+  };
   // Function to filter the data based on search input
   const searchFilter = (text) => {
     if (text){
@@ -153,6 +160,39 @@ export default function Home({navigation, route}) {
       setCategorySearch(text);
     }
   }
+
+  const postFilter = (text) =>{
+    if (text && text !== 'Latest Posts'){
+      if (text === 'Most Expensive') {
+        const newData = masterData.filter((item) =>{
+          const itemData = item.category ? item.category : ''
+          return itemData.indexOf(text)>-1;
+        });
+        setFilterData(newData);
+      }
+      if (text === 'Trending') {
+        const newData = masterData.sort((a, b) => {
+          const viewsA = a.views ? a.views : 0;
+          const viewsB = b.views ? b.views : 0;
+          return viewsB - viewsA;
+        });
+        setFilterData(newData);
+      }
+      // if (text === 'Cheapest') {
+      //   const newData = masterData.filter((item) =>{
+      //     const itemData = item.category ? item.category : ''
+      //     return itemData.indexOf(text)>-1;
+      //   });
+      //   setFilterData(newData);
+      //   setCategorySearch(text);
+      // }
+
+    }else{
+      setFilterData(masterData);
+    }
+  }
+
+
   return (
       <View style={{flex:1, backgroundColor:'white'}}>
         <View style={{zIndex:0}}>
@@ -203,14 +243,17 @@ export default function Home({navigation, route}) {
                 <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
-              <View style={{flexDirection:'row', alignItems:'center'}}>
-                <Text style={{color:'black', fontWeight:'bold', fontSize:20, paddingHorizontal:20}}>Latest Posts</Text>
-
-                <Pressable style={{position:'absolute', right:25}}>
-                  <Ionicons name='filter-outline' size={25} />
-                </Pressable>
-
-              </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+                {
+                  postFilters.map((filters, index) => (
+                      <Pressable key={index} onPress={() => handlePostFilterPress(index)} style={{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                        <Text style={{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                          {filters}
+                        </Text>
+                      </Pressable>
+                  ))
+                }
+              </ScrollView>
 
             </View>
           }

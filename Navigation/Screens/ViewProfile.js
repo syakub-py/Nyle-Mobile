@@ -10,7 +10,7 @@ export default function ViewProfile({route}){
     const [UsersPosts, setUserPosts] = React.useState([])
     const getPosts = async () => {
         const results = [];
-        const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
+        const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
         await MyPostsQuery.get().then(postSnapshot =>{
             postSnapshot.forEach(doc => {
                 results.push(doc.data())
@@ -50,16 +50,17 @@ export default function ViewProfile({route}){
                         <View style={{alignItems:'center', paddingTop:60}}>
                             <Image resizeMode='cover' source={{uri: route.params.ProfileImage}} style={{height:200, width:200, borderRadius:100}}/>
                             <View>
-                                <Text style={{fontSize:25, fontWeight:'700', paddingTop:10}}>{route.params.username}</Text>
+                                <Text style={{fontSize:25, fontWeight:'700', paddingTop:10}}>{route.params.postedByUsername}</Text>
                             </View>
                         </View>
 
                         <View style={{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <View style={{flexDirection:'column', alignItems:'center'}}>
-                                <Ionicons size={20} name={'star'} color={'#ebd61e'}/>
-                                <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>4.9</Text>
-                            </View>
-
+                            <Pressable onPress={()=>{navigation.navigate("Reviews", {username: route.params.postedByUsername, currentUser: route.params.currentUsername})}}>
+                                <View style={{flexDirection:'column', alignItems:'center'}}>
+                                    <Ionicons size={20} name={'star'} color={'#ebd61e'}/>
+                                    <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>4.9</Text>
+                                </View>
+                            </Pressable>
                             <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                             <View style={{flexDirection:'column', alignItems:'center'}}>

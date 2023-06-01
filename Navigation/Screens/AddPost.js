@@ -21,7 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Dropdown } from 'react-native-element-dropdown';
 
 const {width} = Dimensions.get("window");
-const height = width*1;
+const height = width * 1;
 
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);

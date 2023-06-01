@@ -10,7 +10,6 @@ import {
     Pressable,
     TextInput,
     TouchableOpacity,
-    Alert
 } from 'react-native';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
