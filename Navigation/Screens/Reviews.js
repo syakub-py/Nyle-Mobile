@@ -10,7 +10,7 @@ export default function Reviews({route, navigation}){
         const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.username)
         await MyReviewsQuery.get().then(postSnapshot =>{
             postSnapshot.forEach(doc => {
-                results.push(doc.data())
+                results.push({id: doc.id, ...doc.data()});
             });
         })
         if (results){
@@ -29,6 +29,7 @@ export default function Reviews({route, navigation}){
 
     return(
         <View style={{flex:1}}>
+
             <FlatList data={ReviewList}
                       ListHeaderComponent ={
                           <View>
@@ -51,6 +52,7 @@ export default function Reviews({route, navigation}){
                 bottom:16,
                 right: 16,
             }}>
+
                 <Pressable style={{
                     width: 56,
                     height: 56,
@@ -62,7 +64,9 @@ export default function Reviews({route, navigation}){
                 }} onPress={() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
                     <Ionicons name="pencil" size={24} color="white" />
                 </Pressable>
+
             </View>
+
         </View>
     )
 

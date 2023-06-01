@@ -46,7 +46,7 @@ export default function ViewProfile({route}){
 
     },[])
 
-    const getSoldItems = () =>{
+    const getSoldItems = () => {
         var counter =0
         for (let i = 0; i < UsersPosts.length; i++) {
             if (UsersPosts[i].sold === 'true'){

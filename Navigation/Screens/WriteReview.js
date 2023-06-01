@@ -15,6 +15,7 @@ export default function WriteReview({route, navigation}) {
             Title: Title,
             ReviewMessage :ReviewMessage,
             stars:Stars+1,
+            Replies :[],
             DatePosted: new Date().toLocaleString(),
         }).then(ref => {
                 console.log('Added document with ID: ' + ref.id);
@@ -37,8 +38,8 @@ export default function WriteReview({route, navigation}) {
                 <View style={{flexDirection:"row", marginTop:10, marginBottom:10}}>
                     {
                         Array.from({ length: 5 }, (_, index) => (
-                            <Pressable onPress={() => setStars(index)}>
-                                <Ionicons key={index} size={20} name={index <= Stars ? 'star' : 'star-outline'}
+                            <Pressable key={index} onPress={() => setStars(index)}>
+                                <Ionicons  size={20} name={index <= Stars ? 'star' : 'star-outline'}
                                           color={index <= Stars?"#ebd61e":'black'} />
                             </Pressable>
                         ))
