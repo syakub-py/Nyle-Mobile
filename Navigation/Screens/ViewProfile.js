@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, Pressable,Dimensions, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Image, Pressable } from 'react-native';
 import React from "react";
 import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 export default function ViewProfile({route}){
     const navigation = useNavigation();
     const [UsersPosts, setUserPosts] = React.useState([])
+    const [rating, setRating] = React.useState(0)
+
     const getPosts = async () => {
         const results = [];
         const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
@@ -19,10 +21,29 @@ export default function ViewProfile({route}){
         return results;
     }
 
+    const generateRating = async () =>{
+        let sum = 0;
+        let counter = 0
+        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.postedByUsername)
+        await MyReviewsQuery.get().then(postSnapshot =>{
+            postSnapshot.forEach(doc => {
+                sum = sum +doc.data().stars
+                counter++;
+            });
+        })
+
+        return sum/counter
+    }
+
     React.useEffect(()=>{
         getPosts().then((result)=>{
             setUserPosts(result)
         })
+        generateRating().then((result)=>{
+            setRating(result)
+        })
+
+
     },[])
 
     const getSoldItems = () =>{
@@ -34,7 +55,7 @@ export default function ViewProfile({route}){
         }
         return counter
     }
-    
+
     return(
         <SafeAreaView>
             <View>
@@ -58,7 +79,7 @@ export default function ViewProfile({route}){
                             <Pressable onPress={()=>{navigation.navigate("Reviews", {username: route.params.postedByUsername, currentUser: route.params.currentUsername})}}>
                                 <View style={{flexDirection:'column', alignItems:'center'}}>
                                     <Ionicons size={20} name={'star'} color={'#ebd61e'}/>
-                                    <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>4.9</Text>
+                                    <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toLocaleString()}</Text>
                                 </View>
                             </Pressable>
                             <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
