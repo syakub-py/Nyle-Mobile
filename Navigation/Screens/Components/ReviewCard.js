@@ -13,8 +13,8 @@ import {firestore} from "./Firebase";
 
 
 /*
-@param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
-@param currentUser = string (current username)
+    @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
+    @param currentUser = string (current username)
  */
 
 export default function ReviewCard({data, currentUser}){
@@ -25,10 +25,7 @@ export default function ReviewCard({data, currentUser}){
         const doc = await docRef.get();
 
         if (doc.exists) {
-            let existingReplies = [doc.data().Replies];
-            if (!existingReplies) {
-                existingReplies = [];
-            }
+            let existingReplies = doc.data().Replies || [];
 
             const newReply = {
                 username: currentUser,
@@ -37,7 +34,7 @@ export default function ReviewCard({data, currentUser}){
             };
 
             const updatedReplies = [...existingReplies, newReply];
-            await docRef.update({ Replies: updatedReplies })
+            await docRef.update({ Replies: updatedReplies });
         }
     };
 
@@ -107,7 +104,7 @@ export default function ReviewCard({data, currentUser}){
             <ScrollView>
                 {
                     data.Replies.map((reply, index)=>(
-                        <View key={index} style={{marginLeft:30}}>
+                        <View key={index} style={{marginLeft:30, marginTop:5}}>
                             <Text style={{fontWeight:'bold'}}>{reply.username}</Text>
                             <Text>{reply.message}</Text>
                         </View>

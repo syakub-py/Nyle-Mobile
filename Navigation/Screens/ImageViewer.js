@@ -9,7 +9,6 @@ import React from "react";
 * */
 
 export default function ViewImages({ route, navigation }) {
-    console.log(route.params)
     const { pictures, index } = route.params;
 
     const getImages = (array) => {

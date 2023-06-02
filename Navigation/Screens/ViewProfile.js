@@ -9,9 +9,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
-* */
+*/
 export default function ViewProfile({route}){
-    console.log(route.params)
     const navigation = useNavigation();
     const [UsersPosts, setUserPosts] = React.useState([])
     const [rating, setRating] = React.useState(0)

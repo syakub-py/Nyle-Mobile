@@ -5,7 +5,7 @@ import ReviewCard from "./Components/ReviewCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 /*
-    @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe:user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
+    @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
 
