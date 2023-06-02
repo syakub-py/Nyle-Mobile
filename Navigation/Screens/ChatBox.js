@@ -16,7 +16,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
 
+/*
+    @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
+ */
+
 export default function ChatBox({route, navigation}) {
+    console.log(route.params)
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = React.useState([]);

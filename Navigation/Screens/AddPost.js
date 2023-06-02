@@ -23,7 +23,12 @@ import { Dropdown } from 'react-native-element-dropdown';
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
+/*
+    @route.params = {profilePicture: url of the profile, username: current username}
+* */
+
 export default function AddPost({route}){
+    console.log(route.params)
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
 

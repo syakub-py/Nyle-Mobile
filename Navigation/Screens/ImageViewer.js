@@ -3,7 +3,13 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {Pressable, View} from "react-native";
 import React from "react";
 
+
+/*
+    @route.params = {index: index to start, pictures: array of urls to show}
+* */
+
 export default function ViewImages({ route, navigation }) {
+    console.log(route.params)
     const { pictures, index } = route.params;
 
     const getImages = (array) => {

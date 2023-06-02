@@ -6,6 +6,9 @@ import {collection, getDocs} from 'firebase/firestore/lite'
 import {firestore, firestoreLite, getstorage} from './Components/Firebase'
 import * as ImagePicker from "expo-image-picker";
 
+/*
+  @route.params = {profilePicture: current profile picture, username: current username}
+* */
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
   const [filteredData, setFilterData] = React.useState([]);

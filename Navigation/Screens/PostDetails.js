@@ -7,6 +7,10 @@ import {firestore} from './Components/Firebase'
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
+
+/*
+    @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
+* */
 export default function PostDetails({route, navigation}){
     const images = route.params.images
     const [state, setState] = React.useState({active:0})

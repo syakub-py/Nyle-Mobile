@@ -15,6 +15,11 @@ import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
+
+/*
+    @route.params = {username: current username}
+ */
+
 export default function Chat({navigation, route}) {
     const [filteredData, setFilterData] = React.useState([]);
     const [masterData, setMasterData] = React.useState([]);

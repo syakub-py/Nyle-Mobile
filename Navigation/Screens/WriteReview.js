@@ -3,6 +3,10 @@ import {firestore} from "./Components/Firebase";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+/*
+    @route.params = {postedBy:user the review was posted by, username:current username}
+*/
+
 export default function WriteReview({route, navigation}) {
     const [ReviewMessage, setReviewMessage] = React.useState("")
     const [Title, setTitle] = React.useState("")

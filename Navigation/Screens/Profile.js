@@ -7,6 +7,10 @@ import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 
 
+/*
+  @route.params = {profilePicture: url of the profile, username: current username}
+*/
+
 const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20, marginLeft:10}}>
@@ -35,6 +39,8 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
 export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+
+  console.log(route.params)
 
   const getPosts = async () =>  {
     const results = [];
@@ -211,6 +217,13 @@ export default function Profile({navigation, route}) {
                       type = "button"
                       onPress = {()=>navigation.navigate("Deleted Posts", {username:route.params.username})}
                       nameOfIcon = 'trash-outline'
+                  />
+
+                  <Setting
+                      title = "View Your Reviews"
+                      type = "button"
+                      onPress = {()=>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
+                      nameOfIcon = 'star-outline'
                   />
                   
                   <SectionTitle title={'Your Posts'}/>

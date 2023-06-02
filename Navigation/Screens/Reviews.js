@@ -3,6 +3,12 @@ import React from "react";
 import {firestore} from "./Components/Firebase";
 import ReviewCard from "./Components/ReviewCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+/*
+    @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe:user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
+*/
+
+
 export default function Reviews({route, navigation}){
     const [ReviewList, setReviewList] = React.useState([])
     const getReviews = async () =>{
@@ -44,7 +50,7 @@ export default function Reviews({route, navigation}){
                           </View>
                       }
                       renderItem={({item})=>(
-                          <ReviewCard data ={item}/>
+                          <ReviewCard data ={item} currentUser={route.params.currentUser}/>
                       )}/>
 
             <View style={{
