@@ -221,7 +221,7 @@ export default function Chat({navigation, route}) {
                                 <View style={{flexDirection:'column'}}>
                                     {
                                         (username.length > 10)?(
-                                            <Text style ={{fontSize:18, fontWeight:'500'}}>{username.slice(0, 18) + "..."}</Text>
+                                            <Text style ={{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
                                         ):(
                                             <Text style ={{fontSize:18, fontWeight:'500'}}>{username}</Text>
                                         )

@@ -21,7 +21,6 @@ import * as ImagePicker from 'expo-image-picker';
  */
 
 export default function ChatBox({route, navigation}) {
-    console.log(route.params)
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
   let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = React.useState([]);

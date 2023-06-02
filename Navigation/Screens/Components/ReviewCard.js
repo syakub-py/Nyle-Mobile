@@ -18,7 +18,6 @@ import {firestore} from "./Firebase";
  */
 
 export default function ReviewCard({data, currentUser}){
-    console.log(data)
     const [open, setOpen] = React.useState(false);
     const [reply, setReply] = React.useState("")
     const SendReply = async () => {
@@ -48,8 +47,6 @@ export default function ReviewCard({data, currentUser}){
         })
     }
 
-    // console.log(data.Reviewe)
-    // console.log(currentUser)
 
 
     return(

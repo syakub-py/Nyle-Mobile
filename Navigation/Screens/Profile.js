@@ -40,8 +40,6 @@ export default function Profile({navigation, route}) {
   const [userList, setUserList] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  console.log(route.params)
-
   const getPosts = async () =>  {
     const results = [];
     const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
@@ -220,7 +218,7 @@ export default function Profile({navigation, route}) {
                   />
 
                   <Setting
-                      title = "View Your Reviews"
+                      title = "Your Reviews"
                       type = "button"
                       onPress = {()=>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
                       nameOfIcon = 'star-outline'

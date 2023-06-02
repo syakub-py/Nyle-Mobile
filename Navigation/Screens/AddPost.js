@@ -28,7 +28,6 @@ const height = width * 1;
 * */
 
 export default function AddPost({route}){
-    console.log(route.params)
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
 
