@@ -4,11 +4,12 @@ import {
     Image,
     Pressable,
     ScrollView,
-    TextInput
+    TextInput, TouchableOpacity,
 } from 'react-native';
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 
 
@@ -20,12 +21,14 @@ import {firestore} from "./Firebase";
 export default function ReviewCard({data, currentUser}){
     const [open, setOpen] = React.useState(false);
     const [reply, setReply] = React.useState("")
+    const [existingReplies, setExistingReplies] = React.useState(data.Replies)
+
     const SendReply = async () => {
         const docRef = firestore.collection("Reviews").doc(data.id);
         const doc = await docRef.get();
 
         if (doc.exists) {
-            let existingReplies = doc.data().Replies || [];
+            setExistingReplies(doc.data().Replies || []);
 
             const newReply = {
                 username: currentUser,
@@ -33,7 +36,8 @@ export default function ReviewCard({data, currentUser}){
                 datePosted: new Date()
             };
 
-            const updatedReplies = [...existingReplies, newReply];
+            setExistingReplies([...existingReplies, newReply])
+            const updatedReplies = [...existingReplies, newReply]
             await docRef.update({ Replies: updatedReplies });
         }
     };
@@ -44,10 +48,24 @@ export default function ReviewCard({data, currentUser}){
         })
     }
 
+    const handleDeleteReply = async (index) => {
 
+
+
+        const docRef = firestore.collection("Reviews").doc(data.id);
+        const doc = await docRef.get();
+
+        if (doc.exists) {
+            const updatedReplies = existingReplies.filter((_, i) => i !== index);
+            setExistingReplies(updatedReplies);
+
+            await docRef.update({ Replies: updatedReplies });
+            console.log("Deleted reply")
+        }
+    }
 
     return(
-        <View style={{ marginBottom: 10, margin: 10}}>
+        <View style={{ marginBottom: 10, margin: 10, backgroundColor:"whitesmoke"}}>
 
             <View>
                 <View style={{ flexDirection: "row"}}>
@@ -101,16 +119,54 @@ export default function ReviewCard({data, currentUser}){
 
             </View>
 
-            <ScrollView>
-                {
-                    data.Replies.map((reply, index)=>(
-                        <View key={index} style={{marginLeft:30, marginTop:5}}>
-                            <Text style={{fontWeight:'bold'}}>{reply.username}</Text>
-                            <Text>{reply.message}</Text>
-                        </View>
-                    ))
-                }
-            </ScrollView>
+            {
+                (data.Reviewe === currentUser)?(
+                    <SwipeListView
+                        data={existingReplies}
+                        rightOpenValue={-60}
+
+                        renderItem={({item, index})=>(
+                            <View key={index} style={{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
+                                <Text style={{fontWeight:'bold'}}>{item.username} (You)</Text>
+                                <Text>{item.message}</Text>
+                            </View>
+                            )
+                        }
+                        renderHiddenItem={({ item, index }) => (
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    width: 75,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                                key={index}
+                            >
+                                <TouchableOpacity onPress={() => handleDeleteReply(index)}>
+                                    <Ionicons size={25} name='trash-outline' color={'red'} />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+
+                    />
+
+                ):(
+                    <ScrollView>
+                        {
+                            existingReplies.map((reply, index)=>(
+                                <View key={index} style={{marginLeft:30, marginTop:5}}>
+                                    <Text style={{fontWeight:'bold'}}>{reply.username} </Text>
+                                    <Text>{reply.message}</Text>
+                                </View>
+                            ))
+                        }
+                    </ScrollView>
+                )
+            }
+
 
         </View>
     )

@@ -32,11 +32,10 @@ export default function ViewProfile({route}){
         const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.postedByUsername)
         await MyReviewsQuery.get().then(postSnapshot =>{
             postSnapshot.forEach(doc => {
-                sum = sum +doc.data().stars
+                sum = sum + doc.data().stars
                 counter++;
             });
         })
-
         return sum/counter
     }
 
@@ -73,10 +72,10 @@ export default function ViewProfile({route}){
                             </Pressable>
                         </View>
 
-                        <View style={{alignItems:'center', paddingTop:60}}>
-                            <Image resizeMode='cover' source={{uri: route.params.ProfileImage}} style={{height:200, width:200, borderRadius:100}}/>
+                        <View style={{alignItems:'center', paddingTop:10}}>
+                            <Image resizeMode='cover' source={{uri: route.params.ProfileImage}} style={{height:150, width:150, borderRadius:100}}/>
                             <View>
-                                <Text style={{fontSize:25, fontWeight:'700', paddingTop:10}}>{route.params.postedByUsername}</Text>
+                                <Text style={{fontSize:22, fontWeight:'700', paddingTop:10}}>{route.params.postedByUsername}</Text>
                             </View>
                         </View>
 
@@ -91,7 +90,7 @@ export default function ViewProfile({route}){
 
                             <View style={{flexDirection:'column', alignItems:'center'}}>
                                 <Text style={{fontSize:20, fontWeight:'500'}}>{UsersPosts.length}</Text>
-                                <Text style={{fontSize:15, fontWeight:'400', color:'lightgray'}}>Posts</Text>
+                                <Text style={{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
                             </View>
 
                             <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />

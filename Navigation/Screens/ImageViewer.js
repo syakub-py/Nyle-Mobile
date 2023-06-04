@@ -6,7 +6,7 @@ import React from "react";
 
 /*
     @route.params = {index: index to start, pictures: array of urls to show}
-* */
+*/
 
 export default function ViewImages({ route, navigation }) {
     const { pictures, index } = route.params;

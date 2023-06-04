@@ -30,34 +30,29 @@ export default function WriteReview({route, navigation}) {
     }
 
     return(
-        <View style={{flex:1}}>
-            <View style={{ position:'absolute', right:10, top:20}}>
-                <Pressable onPress={()=>navigation.goBack()}>
-                    <Ionicons name='close-outline' size={35}/>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+            <View style={{ position: 'absolute', top: 30, left: 10 }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' size={35} />
                 </Pressable>
             </View>
-            <View style={{paddingTop:40, margin:10}}>
-
-                <TextInput style={{height:40}} placeholder={"Title"} onChangeText={(text)=>setTitle(text)}/>
-                <View style={{flexDirection:"row", marginTop:10, marginBottom:10}}>
-                    {
-                        Array.from({ length: 5 }, (_, index) => (
-                            <Pressable key={index} onPress={() => setStars(index)}>
-                                <Ionicons  size={20} name={index <= Stars ? 'star' : 'star-outline'}
-                                          color={index <= Stars?"#ebd61e":'black'} />
-                            </Pressable>
-                        ))
-                    }
+            <View style={{ paddingTop: 70, paddingHorizontal: 10, margin: 10 }}>
+                <TextInput style={{ height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 }} placeholder="Title" onChangeText={(text) => setTitle(text)} />
+                <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10 }}>
+                    {Array.from({ length: 5 }, (_, index) => (
+                        <Pressable key={index} onPress={() => setStars(index)}>
+                            <Ionicons
+                                name={index <= Stars ? 'star' : 'star-outline'}
+                                style={{ fontSize: 20, marginRight: 5, color: index <= Stars ? '#ebd61e' : 'black' }}
+                            />
+                        </Pressable>
+                    ))}
                 </View>
-                <TextInput placeholder={"Review Message"} onChangeText={(text)=>setReviewMessage(text)} multiline/>
+                <TextInput style={{ height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top' }} placeholder="Review Message" onChangeText={(text) => setReviewMessage(text)} multiline />
+                <Pressable style={{ width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10 }} onPress={() => PostReview()}>
+                    <Text style={{ color: 'white', fontSize: 16 }}>Post Review</Text>
+                </Pressable>
             </View>
-
-            <Pressable style={{position:'absolute', bottom:10, left:10}} onPress={()=>PostReview()}>
-                <View style={{backgroundColor:'black', borderRadius:10}}>
-                    <Text style={{color:"white", margin:5}}>Post Review</Text>
-                </View>
-            </Pressable>
-
         </View>
     )
 }

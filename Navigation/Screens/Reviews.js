@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, Pressable } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, Pressable } from 'react-native';
 import React from "react";
 import {firestore} from "./Components/Firebase";
 import ReviewCard from "./Components/ReviewCard";
@@ -34,46 +34,55 @@ export default function Reviews({route, navigation}){
     },[])
 
     return(
-        <View style={{flex:1}}>
+        <SafeAreaView style={{flex:1, backgroundColor:'whitesmoke'}}>
 
             <FlatList data={ReviewList}
                       ListHeaderComponent ={
-                          <View>
-                              <View style={{flexDirection:'row'}}>
-                                  <View style={{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:20, marginTop:20}}>
-                                      <Pressable onPress={()=>navigation.goBack()}>
-                                          <Ionicons name='arrow-back-outline' size={30}/>
-                                      </Pressable>
+                          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                              <View style={{ position: 'absolute', top: 20, left: 0, zIndex: 1 }}>
+                                  <Pressable onPress={() => navigation.goBack()} style={{ padding: 10 }}>
+                                      <Ionicons name='arrow-back-outline' size={30} />
+                                  </Pressable>
+                              </View>
+                              <View >
+                                  <View style={{ height: 50, width: 90, backgroundColor: 'transparent', marginTop: 20 }}>
+                                      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Reviews</Text>
                                   </View>
                               </View>
-
                           </View>
                       }
                       renderItem={({item})=>(
                           <ReviewCard data ={item} currentUser={route.params.currentUser}/>
                       )}/>
 
-            <View style={{
-                position: 'absolute',
-                bottom:16,
-                right: 16,
-            }}>
 
-                <Pressable style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 28,
-                    backgroundColor: 'black',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    elevation: 6,
-                }} onPress={() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
-                    <Ionicons name="pencil" size={24} color="white" />
-                </Pressable>
+            {
+                (route.params.currentUser!==route.params.username)?(
+                    <View style={{
+                        position: 'absolute',
+                        bottom:16,
+                        right: 16,
+                    }}>
+                        <Pressable style={{
+                            width: 56,
+                            height: 56,
+                            borderRadius: 28,
+                            backgroundColor: 'black',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            elevation: 6,
+                        }} onPress={() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
+                            <Ionicons name="pencil" size={24} color="white" />
+                        </Pressable>
 
-            </View>
+                    </View>
+                ):(
+                    <View/>
+                )
+            }
 
-        </View>
+
+        </SafeAreaView>
     )
 
 }

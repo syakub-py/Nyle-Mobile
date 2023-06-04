@@ -7,10 +7,10 @@ import {firestore} from './Components/Firebase'
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
-
 /*
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
-* */
+*/
+
 export default function PostDetails({route, navigation}){
     const images = route.params.images
     const [state, setState] = React.useState({active:0})
@@ -220,23 +220,39 @@ export default function PostDetails({route, navigation}){
                     </View>
                 </ScrollView>
 
-                    <View style={{flexDirection:"row", justifyContent:'space-between'}}>
-                        <View style={{justifyContent:'center', flexDirection:'row', paddingHorizontal:10, margin:10}}>
-                            <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
-                            <View style={{margin:10,alignSelf:'center'}}>
-                                <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
-                                <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                {
+                    (route.params.postedBy !== route.params.username)?(
+                        <View style={{flexDirection:"row", justifyContent:'space-between'}}>
+                            <View style={{justifyContent:'center', flexDirection:'row', margin:10}}>
+                                <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                                <View style={{margin:10,alignSelf:'center'}}>
+                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
+                                    <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                                </View>
                             </View>
+
+
+                            <Pressable onPress={handleAddChat}>
+                                <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
+                                    <Ionicons name="chatbox-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
+                                </View>
+                            </Pressable>
+
                         </View>
-
-
-                        <Pressable onPress={handleAddChat}>
-                            <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                                <Ionicons name="chatbox-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
+                    ):(
+                        <View style={{flexDirection:"row", justifyContent:'space-between'}}>
+                            <View style={{justifyContent:'center', flexDirection:'row', margin:10}}>
+                                <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                                <View style={{margin:10,alignSelf:'center'}}>
+                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy} (You)</Text>
+                                    <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                                </View>
                             </View>
-                        </Pressable>
 
-                    </View>
+                        </View>
+                    )
+                }
+
                     
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>

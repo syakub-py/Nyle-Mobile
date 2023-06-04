@@ -55,6 +55,7 @@ export const getMarketData = async () => {
 
 export default function Market({navigation, route}) {
     const [data, setData] = React.useState([]);
+    const [articles, setArticles] = React.useState([]);
 
   
     React.useEffect(() => {
@@ -62,91 +63,96 @@ export default function Market({navigation, route}) {
         const marketData = await getMarketData();
         setData(marketData);
       }
+
+      const fetchCryptoNews = async () => {
+        try {
+          const response = await axios.get(
+              'https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&apiKey=0af11fce878b49a986b81ad1a90281b1'
+          );
+          setArticles(response.data.articles);
+          console.log(articles)
+        } catch (error) {
+          console.log('Error fetching crypto news:', error);
+        }
+      };
+
+      if (articles.length == 0){
+        fetchCryptoNews();
+      }
       fetchMarketData();
 
     }, [])
 
-    const chartConfig = {
-      backgroundGradientFrom: '#1E2923',
-      backgroundGradientTo: '#08130D',
-      color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    };
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="auto"/>
-        <View>
-          <FlatList
-          data = {data}
-          ListFooterComponent={
-            <View style={{height:100}}>
-
-            </View>
-          }
-          keyExtractor = {item => item.id}
-          contentContainerStyle ={{
-            marginTop:20,
-          }}
-          ListHeaderComponent = {
-            <View style={{width:width, margin:10}}>
-
-              <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10}}/>
-
+        <FlatList
+            data={articles}
+            keyExtractor={(item) => item.url}
+            ListHeaderComponent={
               <View>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {
-                  data.map((item, index) =>(
-                    <View style={{height:150, width:150, margin:10, backgroundColor:'whitesmoke', borderRadius:10}} key={index}>
-                      <View style = {{paddingHorizontal:5, paddingTop:3, alignItems:'center'}}>
-                        <Avatar source={{uri: item.image}} size={50} rounded/>
-                        <Text style = {{fontSize:17, fontWeight: 'bold', margin:7}}>{item.symbol.toUpperCase()}</Text>
-                        <Text style={{color:'black', fontWeight:'bold', fontSize:15}}>${item.current_price}</Text>
-                        <View style={{flexDirection:'row', margin:7}}>
-                            {item.price_change_percentage_24h<0?<Ionicons name='arrow-down-outline' style={{color:'red'}} size={20}/>:<Ionicons name='arrow-up-outline' style={{color:'lightgreen'}} size={20}/>}
-                          <Text style={item.price_change_percentage_24h>0?{color:'lightgreen'}:{color:'red'}}>% {Math.round(item.price_change_percentage_24h*100)/100}</Text>
-                        </View>  
-                      </View>
-                    </View>
-                  ))
-                  }
-                </ScrollView>
-              </View>
-
-              <Text style={{fontSize:17, fontWeight:'bold'}}>Coin Prices</Text>
-            </View>
-          }
-          renderItem ={({item}) => {
-            return(
-              <Pressable style ={{margin: 7}}>
-                <View style={{height: 55,  width:"100%",flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius:10, backgroundColor:'whitesmoke'}}>
-                  <View style = {{width:35, margin:7}}>
-                    <Image
-                    source={{uri: item.image}}
-                    style ={{
-                      height:30,
-                      width: 30,
-                    }}
-                    />
-                  </View>
-                  <View style = {{flex:1}}>
-                      <Text style = {{fontSize:15, fontWeight: 'bold'}}>{item.name}</Text>
-                  </View>
-              
-                  <View style={{margin:10}}>
-                    <Text>Current Value: $ {item.current_price}</Text>
-                  </View>
+                <Image
+                    source={require('../Screens/Components/icon.png')}
+                    style={{ height: 75, width: 75, marginLeft: 20, marginTop: 20 }}
+                />
+                <View>
+                  <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Coin Prices</Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {data.map((item, index) => (
+                        <View
+                            style={{
+                              height: 150,
+                              width: 150,
+                              margin: 10,
+                              backgroundColor: 'whitesmoke',
+                              borderRadius: 10,
+                              paddingHorizontal: 5,
+                              paddingTop: 3,
+                              alignItems: 'center',
+                            }}
+                            key={index}
+                        >
+                          <Avatar source={{ uri: item.image }} size={50} rounded />
+                          <Text style={{ fontSize: 17, fontWeight: 'bold', marginVertical: 7 }}>
+                            {item.symbol.toUpperCase()}
+                          </Text>
+                          <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 15 }}>
+                            ${item.current_price}
+                          </Text>
+                          <View style={{ flexDirection: 'row', marginVertical: 7 }}>
+                            {item.price_change_percentage_24h < 0 ? (
+                                <Ionicons name='arrow-down-outline' style={{ color: 'red' }} size={20} />
+                            ) : (
+                                <Ionicons name='arrow-up-outline' style={{ color: 'lightgreen' }} size={20} />
+                            )}
+                            <Text
+                                style={
+                                  item.price_change_percentage_24h > 0
+                                      ? { color: 'lightgreen', marginLeft: 5 }
+                                      : { color: 'red', marginLeft: 5 }
+                                }
+                            >
+                              % {Math.round(item.price_change_percentage_24h * 100) / 100}
+                            </Text>
+                          </View>
+                        </View>
+                    ))}
+                  </ScrollView>
+                  <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 20 }}>Latest News</Text>
                 </View>
-              </Pressable>
-            )
-          }}
-          />
-        </View>
-      </SafeAreaView>
+              </View>
+            }
+            renderItem={({ item }) => (
+                <View style={{ marginBottom: 16 }}>
+                  <Image source={{ uri: item.urlToImage }} style={{ height: 200, width: width-30, margin:15, borderRadius:20 }} />
+                  <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, marginLeft:15 }}>{item.title}</Text>
+                  <Text style={{ fontSize: 14, color: 'gray', marginBottom: 8, marginLeft:15}}>Author: {item.author}</Text>
+                </View>
+
+            )}
+            ListFooterComponent={
+              <View style={{height:80}}>
+              </View>
+            }
+        />
+
     );
 }
-  
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-  });

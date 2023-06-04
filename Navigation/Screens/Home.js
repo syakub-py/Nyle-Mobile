@@ -15,12 +15,13 @@ export default function Home({navigation, route}) {
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [categorySearch, setCategorySearch] = React.useState([]);
+
   const [refreshing, setRefreshing] = React.useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = React.useState(0);
 
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest"]
+  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked"]
 
   // Function to refresh the data
   const onRefresh = () => {
@@ -133,7 +134,9 @@ export default function Home({navigation, route}) {
 
   const handlePostFilterPress = (index) => {
     setSelectedPostFilterIndex(index);
+    postFilter(postFilters[index])
   };
+
   // Function to filter the data based on search input
   const searchFilter = (text) => {
     if (text){
@@ -164,12 +167,12 @@ export default function Home({navigation, route}) {
     }
   }
 
-  const postFilter = (text) =>{
-    if (text && text !== 'Latest Posts'){
+  const postFilter = (text) => {
+    if (text && text !== 'Latest Posts') {
       if (text === 'Most Expensive') {
-        const newData = masterData.filter((item) =>{
-          const itemData = item.category ? item.category : ''
-          return itemData.indexOf(text)>-1;
+        const newData = masterData.filter((item) => {
+          const itemData = item.category ? item.category : '';
+          return itemData.indexOf(text) > -1;
         });
         setFilterData(newData);
       }
@@ -181,19 +184,18 @@ export default function Home({navigation, route}) {
         });
         setFilterData(newData);
       }
-      // if (text === 'Cheapest') {
-      //   const newData = masterData.filter((item) =>{
-      //     const itemData = item.category ? item.category : ''
-      //     return itemData.indexOf(text)>-1;
-      //   });
-      //   setFilterData(newData);
-      //   setCategorySearch(text);
-      // }
-
-    }else{
+      if (text === 'Cheapest') {
+        const newData = masterData.sort((a, b) => {
+          const priceA = a.price ? a.price : 0;
+          const priceB = b.price ? b.price : 0;
+          return priceA - priceB;
+        });
+        setFilterData(newData);
+      }
+    } else {
       setFilterData(masterData);
     }
-  }
+  };
 
 
   return (
@@ -202,7 +204,6 @@ export default function Home({navigation, route}) {
           <FlatList
           ListFooterComponent={
             <View style={{height:80}}>
-
             </View>
           }
           ListHeaderComponent={

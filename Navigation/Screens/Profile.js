@@ -14,7 +14,7 @@ import firebase from "firebase/compat/app";
 const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20, marginLeft:10}}>
-      <Text style={{color: 'gray', fontSize:30, fontWeight:'bold'}}>{title}</Text>
+      <Text style={{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
     </View>)
     }
 
@@ -178,7 +178,7 @@ export default function Profile({navigation, route}) {
               }
               ListHeaderComponent= {
                 <View>
-                  <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:10, marginTop:10}}/>
+                  <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20, marginTop:20}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
                         <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode ="cover"/>
                         <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>

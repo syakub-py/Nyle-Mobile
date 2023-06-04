@@ -25,7 +25,7 @@ const height = width * 1;
 
 /*
     @route.params = {profilePicture: url of the profile, username: current username}
-* */
+*/
 
 export default function AddPost({route}){
     let randomNumber = Math.floor(Math.random() * 100);
