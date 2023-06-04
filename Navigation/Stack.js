@@ -16,6 +16,8 @@ import ConnectedWallets from "./Screens/ConnectedWallets";
 import DeletedPosts from "./Screens/DeletedPosts";
 import Reviews from "./Screens/Reviews";
 import WriteReview from "./Screens/WriteReview";
+import Map from "./Screens/Map";
+
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -37,6 +39,7 @@ const Stack = () =>{
           <Stack.Screen name="Deleted Posts" component = {DeletedPosts} />
           <Stack.Screen name="Reviews" component = {Reviews} />
           <Stack.Screen name="Write Review" component = {WriteReview} />
+          <Stack.Screen name="Map" component = {Map} />
         </Stack.Navigator>
       );
   }

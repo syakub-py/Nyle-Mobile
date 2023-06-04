@@ -185,7 +185,7 @@ export default function PostDetails({route, navigation}){
 
                 <View>
                     <View style={{zIndex: 1, bottom: 50, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center'}}>
-                         <Text style={{color:'white',fontSize:30,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
+                         <Text style={{color:'white',fontSize:20,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
                     </View>
 
                     <View style={{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
@@ -193,9 +193,9 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                     <View style={{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
-                        <Image style={{height:25, width:25, marginRight:10, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
-                        <Text style={{fontSize:25, fontWeight:'bold', color:'white', marginRight:10}}>{route.params.Price}</Text>
-                        <Text style={{fontSize:15, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
+                        <Image style={{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
+                        <Text style={{fontSize:20, fontWeight:'bold', color:'white', marginRight:10}}>{route.params.Price}</Text>
+                        <Text style={{fontSize:12, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
                     </View>
 
 
@@ -297,27 +297,28 @@ export default function PostDetails({route, navigation}){
                     </View>
                 </View>
 
-                    <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
-                    <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
-                        <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
-                            <Marker coordinate={route.params.coordinates}/>
-                            <Circle
-                                center={route.params.coordinates}
-                                radius={1200}
-                                fillColor="rgba(255, 0, 0, 0.2)"
-                                strokeColor="rgba(255, 0, 0, 0.7)"
-                                strokeWidth={1}
-                            />
-                        </MapView>
-                    </View>
-
+                    <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
+                    <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.coordinates})}}>
+                        <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
+                            <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
+                                <Marker coordinate={route.params.coordinates}/>
+                                <Circle
+                                    center={route.params.coordinates}
+                                    radius={1200}
+                                    fillColor="rgba(255, 0, 0, 0.2)"
+                                    strokeColor="rgba(255, 0, 0, 0.7)"
+                                    strokeWidth={1}
+                                />
+                            </MapView>
+                        </View>
+                    </Pressable>
                     <View>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
+                        <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Details}</Text>
                     </View>
 
                     <View style={{marginBottom:20}}>
-                        <Text style={{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
+                        <Text style={{fontSize:25, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.Description : route.params.Description.slice(0, 500) + " ..."}</Text>
                     </View>
 
