@@ -1,4 +1,4 @@
-import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView} from 'react-native';
+import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView, Modal} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker, Circle } from 'react-native-maps';
@@ -24,6 +24,9 @@ export default function PostDetails({route, navigation}){
     const scrollViewRef = React.useRef(null);
     const [rating, setRating] = React.useState(0)
 
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
 
     const handleViewCounter = () => {
         const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
@@ -145,8 +148,6 @@ export default function PostDetails({route, navigation}){
     }
 
 
-
-
     React.useEffect(()=>{
         handleViewCounter();
         generateRating(route.params.postedBy).then((result)=>{
@@ -169,6 +170,25 @@ export default function PostDetails({route, navigation}){
                             <Ionicons name='reorder-three-outline' size={30}/>
                         </Pressable>
                     </View>
+
+
+                    <Modal
+                        visible={isOpen}
+                        animationType="slide"
+                        onRequestClose={toggleDropdown}
+                        transparent={true}
+                    >
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                            <View style={{ width: 300, height: 300, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius:20}}>
+                                <Text style={{ fontSize: 18, paddingVertical: 10 }}>Report this Post</Text>
+                                <Text style={{ fontSize: 18, paddingVertical: 10 }}>Share this Post</Text>
+                                {/*<Text style={{ fontSize: 18, paddingVertical: 10 }}>Option 3</Text>*/}
+                            </View>
+                        </View>
+                    </Modal>
+
+
+
 
                     <View style={{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>handleLike()}>

@@ -13,16 +13,16 @@ export default function SignUp({navigation}){
     const [refreshing, setRefreshing] = React.useState(false);
 
     const handleSignUp = ()=>{
-        navigation.navigate("Terms of Service", {showButtons:true, username:username})
-        // auth
-        // .createUserWithEmailAndPassword(username, password)
-        // .then(() =>{
-        //     addUsernameToMap().then(()=>{
-        //         console.log("added user to map")
-        //     }).catch((error)=>{
-        //         console.log(error)
-        //     });
-        // }).catch((error)=> alert(error.message))
+        auth
+        .createUserWithEmailAndPassword(username, password)
+        .then(() =>{
+            addUsernameToMap().then(()=>{
+                navigation.navigate("Terms of Service", {showButtons:true, username:username})
+                console.log("added user to map")
+            }).catch((error)=>{
+                console.log(error)
+            });
+        }).catch((error)=> alert(error.message))
     }
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({

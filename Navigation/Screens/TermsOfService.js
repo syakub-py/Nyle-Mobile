@@ -8,11 +8,8 @@ import {
 import React from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
 export default function TermsOfService({route ,navigation}){
-
     const [TermsOfService, setTermsOfService] = React.useState("")
-
     const getTerms =async () =>{
         const Query = firestore.collection('Legal Docs').doc("Terms of Service");
         await Query.get().then((doc)=>{
