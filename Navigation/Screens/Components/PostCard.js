@@ -152,31 +152,3 @@ export default function PostCard({data, username}){
     )
 }
 
-{/*<View style={{flexDirection:'row',  position: 'absolute', top:260, left: 7,}}>*/}
-{/*    <View style={{*/}
-{/*        flexDirection: 'row',*/}
-{/*        backgroundColor: 'transparent',*/}
-{/*        borderRadius: 5,*/}
-{/*        margin: 5,*/}
-{/*    }}>*/}
-{/*        <Ionicons name='heart' size={20} color={'#e6121d'}/>*/}
-{/*        <Text style={{*/}
-{/*            color: 'white',*/}
-{/*            fontSize: 12,*/}
-{/*            fontWeight: 'bold',*/}
-{/*            marginLeft: 3,*/}
-{/*            marginTop: 3*/}
-{/*        }}>{data.likes.length}</Text>*/}
-{/*    </View>*/}
-{/*    <View style={{  flexDirection: 'row',*/}
-{/*        backgroundColor: 'transparent',*/}
-{/*        borderRadius: 5,*/}
-{/*        margin: 5,}}>*/}
-{/*        <Ionicons name='eye' size={20} color={'white'}/>*/}
-{/*        <Text style={{  color: 'white',*/}
-{/*            fontSize: 12,*/}
-{/*            fontWeight: 'bold',*/}
-{/*            marginLeft: 3,*/}
-{/*            marginTop: 3}}>{data.views}</Text>*/}
-{/*    </View>*/}
-{/*</View>*/}

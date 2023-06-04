@@ -268,7 +268,34 @@ export default function PostDetails({route, navigation}){
                     )
                 }
 
-                    
+                <View style={{flexDirection:'row'}}>
+                    <View style={{
+                        flexDirection: 'row',
+                        backgroundColor: 'transparent',
+                        borderRadius: 5,
+                        margin: 5,
+                    }}>
+                        <Ionicons name='heart' size={20} color={'#e6121d'}/>
+                        <Text style={{
+                            color: 'black',
+                            fontSize: 12,
+                            fontWeight: 'bold',
+                            marginLeft: 3,
+                            marginTop: 3
+                        }}>{route.params.Likes.length}</Text>
+                    </View>
+                    <View style={{  flexDirection: 'row',
+                        backgroundColor: 'transparent',
+                        borderRadius: 5,
+                        margin: 5,}}>
+                        <Ionicons name='eye' size={20} color={'black'}/>
+                        <Text style={{  color: 'black',
+                            fontSize: 12,
+                            fontWeight: 'bold',
+                            marginLeft: 3,
+                            marginTop: 3}}>{route.params.views}</Text>
+                    </View>
+                </View>
 
                     <Text style={{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                     <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
