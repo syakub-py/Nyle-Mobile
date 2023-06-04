@@ -6,6 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 
 export default function Map({route, navigation}){
+
     return(
         <View style={{flex:1}}>
             <View style={{zIndex:1}}>
@@ -16,7 +17,41 @@ export default function Map({route, navigation}){
                 </View>
             </View>
             <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
-                <Marker coordinate={route.params.coordinates}/>
+                <Marker coordinate={route.params.coordinates}>
+                    <View style={{ flexDirection: 'column', alignItems:'center'}}>
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                height: 55,
+                                width: 55,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 40,
+                                marginBottom: -3,
+                            }}
+                        >
+                            <Image
+                                source={{ uri: route.params.firstImage }}
+                                style={{ height: 45, width: 45, borderRadius: 35 }}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                width: 0,
+                                height: 0,
+                                borderTopWidth: 15,
+                                borderLeftWidth: 9,
+                                borderRightWidth: 9,
+                                borderStyle: 'solid',
+                                backgroundColor: 'transparent',
+                                borderTopColor: 'white',
+                                borderLeftColor: 'transparent',
+                                borderRightColor: 'transparent',
+                            }}
+                        />
+                    </View>
+
+                </Marker>
                 <Circle
                     center={route.params.coordinates}
                     radius={1200}

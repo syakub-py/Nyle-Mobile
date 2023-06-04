@@ -145,6 +145,8 @@ export default function PostDetails({route, navigation}){
     }
 
 
+
+
     React.useEffect(()=>{
         handleViewCounter();
         generateRating(route.params.postedBy).then((result)=>{
@@ -298,10 +300,45 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                     <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
-                    <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.coordinates})}}>
+                    <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.coordinates, firstImage:images[0]})}}>
                         <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
                             <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
-                                <Marker coordinate={route.params.coordinates}/>
+                                <Marker coordinate={route.params.coordinates}>
+                                    <View style={{ flexDirection: 'column', alignItems:'center'}}>
+                                        <View
+                                            style={{
+                                                backgroundColor: 'white',
+                                                height: 55,
+                                                width: 55,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                borderRadius: 40,
+                                                marginBottom: -3,
+                                            }}
+                                        >
+                                            <Image
+                                                source={{ uri: images[0] }}
+                                                style={{ height: 45, width: 45, borderRadius: 35 }}
+                                            />
+                                        </View>
+                                        <View
+                                            style={{
+                                                width: 0,
+                                                height: 0,
+                                                borderTopWidth: 15,
+                                                borderLeftWidth: 9,
+                                                borderRightWidth: 9,
+                                                borderStyle: 'solid',
+                                                backgroundColor: 'transparent',
+                                                borderTopColor: 'white',
+                                                borderLeftColor: 'transparent',
+                                                borderRightColor: 'transparent',
+                                            }}
+                                        />
+                                    </View>
+
+
+                                </Marker>
                                 <Circle
                                     center={route.params.coordinates}
                                     radius={1200}

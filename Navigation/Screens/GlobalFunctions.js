@@ -1,4 +1,5 @@
 import {firestore} from "./Components/Firebase";
+import React from "react";
 
 const generateRating = async (username) =>{
     let sum = 0;
