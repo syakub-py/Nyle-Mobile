@@ -202,13 +202,15 @@ export default function Profile({navigation, route}) {
                       onPress = {() => navigation.navigate("Edit Profile")}
                       nameOfIcon='person-outline'
                     />
-                            
+
                     <Setting
                       title = "Log Out"
                       type = "button"
                       onPress = {handleSignOut}
                       nameOfIcon = 'log-out-outline'
                     />
+
+
 
                   <Setting
                       title = "Recently Deleted Posts"
@@ -222,6 +224,13 @@ export default function Profile({navigation, route}) {
                       type = "button"
                       onPress = {()=>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
                       nameOfIcon = 'star-outline'
+                  />
+
+                  <Setting
+                      title = "Terms of Service"
+                      type = "button"
+                      onPress = {()=>{navigation.navigate("Terms of Service", {showButtons:false})}}
+                      nameOfIcon = 'alert-circle-outline'
                   />
                   
                   <SectionTitle title={'Your Posts'}/>

@@ -236,10 +236,16 @@ export default function PostDetails({route, navigation}){
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
                                     <Pressable onPress={() =>{navigation.navigate("Reviews", {username: route.params.postedBy, currentUser: route.params.username})}}>
-                                        <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
-                                            <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
-                                            <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            backgroundColor: 'transparent',
+                                            marginTop: 2
+                                        }}>
+                                            <Ionicons name="star" style={{ marginRight: 3 }} color="#ebd61e" size={13} />
+                                            <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
                                         </View>
+
                                     </Pressable>
 
                                 </View>
@@ -250,7 +256,6 @@ export default function PostDetails({route, navigation}){
                                     <Ionicons name="chatbox-ellipses-outline" color={'white'} size={30} style={{margin:15}}/>
                                 </View>
                             </Pressable>
-
                         </View>
                     ):(
                         <View style={{flexDirection:"row", justifyContent:'space-between'}}>
@@ -259,8 +264,8 @@ export default function PostDetails({route, navigation}){
                                 <View style={{margin:10,alignSelf:'center'}}>
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy} (You)</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
-                                        <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
+                                    <View style={{flexDirection:'row', alignItems:'center', marginTop:3}}>
+                                        <Ionicons name={'star'} style={{marginRight:3}} color={"#ebd61e"} size={13}/>
                                         <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
                                     </View>
                                 </View>
@@ -312,13 +317,13 @@ export default function PostDetails({route, navigation}){
                                                 width: 55,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                borderRadius: 40,
-                                                marginBottom: -3,
+                                                borderRadius: 18,
+                                                marginBottom: -4,
                                             }}
                                         >
                                             <Image
                                                 source={{ uri: images[0] }}
-                                                style={{ height: 45, width: 45, borderRadius: 35 }}
+                                                style={{ height: 45, width: 45, borderRadius: 15 }}
                                             />
                                         </View>
                                         <View
@@ -336,14 +341,12 @@ export default function PostDetails({route, navigation}){
                                             }}
                                         />
                                     </View>
-
-
                                 </Marker>
                                 <Circle
                                     center={route.params.coordinates}
                                     radius={1200}
-                                    fillColor="rgba(255, 0, 0, 0.2)"
-                                    strokeColor="rgba(255, 0, 0, 0.7)"
+                                    fillColor="rgba(66, 135, 245, 0.2)"
+                                    strokeColor="rgba(66, 135, 245, 0.7)"
                                     strokeWidth={1}
                                 />
                             </MapView>

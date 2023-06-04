@@ -1,6 +1,6 @@
 import MapView, { Marker, Circle } from 'react-native-maps';
 import React from 'react';
-import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView} from 'react-native';
+import {View, Text, Image, Dimensions, ScrollView, Pressable} from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 
@@ -26,13 +26,13 @@ export default function Map({route, navigation}){
                                 width: 55,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                borderRadius: 40,
+                                borderRadius: 18,
                                 marginBottom: -3,
                             }}
                         >
                             <Image
                                 source={{ uri: route.params.firstImage }}
-                                style={{ height: 45, width: 45, borderRadius: 35 }}
+                                style={{ height: 45, width: 45, borderRadius: 15 }}
                             />
                         </View>
                         <View
@@ -55,8 +55,8 @@ export default function Map({route, navigation}){
                 <Circle
                     center={route.params.coordinates}
                     radius={1200}
-                    fillColor="rgba(255, 0, 0, 0.2)"
-                    strokeColor="rgba(255, 0, 0, 0.7)"
+                    fillColor="rgba(66, 135, 245, 0.2)"
+                    strokeColor="rgba(66, 135, 245, 0.7)"
                     strokeWidth={1}
                 />
             </MapView>

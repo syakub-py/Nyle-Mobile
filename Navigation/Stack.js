@@ -17,7 +17,7 @@ import DeletedPosts from "./Screens/DeletedPosts";
 import Reviews from "./Screens/Reviews";
 import WriteReview from "./Screens/WriteReview";
 import Map from "./Screens/Map";
-
+import TermsOfService from "./Screens/TermsOfService";
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -40,6 +40,7 @@ const Stack = () =>{
           <Stack.Screen name="Reviews" component = {Reviews} />
           <Stack.Screen name="Write Review" component = {WriteReview} />
           <Stack.Screen name="Map" component = {Map} />
+          <Stack.Screen name="Terms of Service" component = {TermsOfService} />
         </Stack.Navigator>
       );
   }
