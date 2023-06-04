@@ -4,7 +4,7 @@ import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
 import {firestore} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import {generateRating} from "./GlobalFunctions";
 
 
 /*
@@ -26,27 +26,15 @@ export default function ViewProfile({route}){
         return results;
     }
 
-    const generateRating = async () =>{
-        let sum = 0;
-        let counter = 0
-        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.postedByUsername)
-        await MyReviewsQuery.get().then(postSnapshot =>{
-            postSnapshot.forEach(doc => {
-                sum = sum + doc.data().stars
-                counter++;
-            });
-        })
-        return sum/counter
-    }
+
 
     React.useEffect(()=>{
         getPosts().then((result)=>{
             setUserPosts(result)
         })
-        generateRating().then((result)=>{
+        generateRating(route.params.postedByUsername).then((result)=>{
             setRating(result)
         })
-
 
     },[])
 

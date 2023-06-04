@@ -3,6 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, { Marker, Circle } from 'react-native-maps';
 import {firestore} from './Components/Firebase'
+import {generateRating} from "./GlobalFunctions";
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -21,6 +22,7 @@ export default function PostDetails({route, navigation}){
     const [currentOffset, setCurrentOffset] = React.useState(0);
     const likes = route.params.Likes
     const scrollViewRef = React.useRef(null);
+    const [rating, setRating] = React.useState(0)
 
 
     const handleViewCounter = () => {
@@ -144,7 +146,10 @@ export default function PostDetails({route, navigation}){
 
 
     React.useEffect(()=>{
-        handleViewCounter()
+        handleViewCounter();
+        generateRating(route.params.postedBy).then((result)=>{
+            setRating(result)
+        })
     }, [])
 
     return (
@@ -228,9 +233,12 @@ export default function PostDetails({route, navigation}){
                                 <View style={{margin:10,alignSelf:'center'}}>
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                                    <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
+                                        <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
+                                        <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                                    </View>
                                 </View>
                             </View>
-
 
                             <Pressable onPress={handleAddChat}>
                                 <View style={{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
@@ -246,6 +254,10 @@ export default function PostDetails({route, navigation}){
                                 <View style={{margin:10,alignSelf:'center'}}>
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy} (You)</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                                    <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
+                                        <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
+                                        <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                                    </View>
                                 </View>
                             </View>
 
