@@ -233,10 +233,13 @@ export default function PostDetails({route, navigation}){
                                 <View style={{margin:10,alignSelf:'center'}}>
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
-                                        <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
-                                        <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
-                                    </View>
+                                    <Pressable onPress={() =>{navigation.navigate("Reviews", {username: route.params.postedBy, currentUser: route.params.username})}}>
+                                        <View style={{flexDirection:'row', alignItems:'center', backgroundColor:'whitesmoke', width:45, borderRadius:10, marginTop:3}}>
+                                            <Ionicons name={'star'} style={{margin:3}} color={"#ebd61e"} size={13}/>
+                                            <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                                        </View>
+                                    </Pressable>
+
                                 </View>
                             </View>
 

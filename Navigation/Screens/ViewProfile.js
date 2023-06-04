@@ -71,7 +71,7 @@ export default function ViewProfile({route}){
                             <Pressable onPress={()=>{navigation.navigate("Reviews", {username: route.params.postedByUsername, currentUser: route.params.currentUsername})}}>
                                 <View style={{flexDirection:'column', alignItems:'center'}}>
                                     <Ionicons size={20} name={'star'} color={'#ebd61e'}/>
-                                    <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toLocaleString()}</Text>
+                                    <Text style={{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
                                 </View>
                             </Pressable>
                             <View style={{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />

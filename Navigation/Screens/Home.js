@@ -8,20 +8,19 @@ import * as ImagePicker from "expo-image-picker";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
-* */
+*/
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
   const [filteredData, setFilterData] = React.useState([]);
   const [masterData, setMasterData] = React.useState([]);
   const [search, setSearch] = React.useState([]);
   const [categorySearch, setCategorySearch] = React.useState([]);
-
   const [refreshing, setRefreshing] = React.useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = React.useState(0);
 
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked"]
+  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
 
   // Function to refresh the data
   const onRefresh = () => {
