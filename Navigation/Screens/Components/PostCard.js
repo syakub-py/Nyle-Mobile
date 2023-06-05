@@ -93,9 +93,6 @@ export default function PostCard({data, username}){
                         </View>
 
 
-
-
-
                     <View style={{flexDirection:'row'}}>
                         {
                             (username !== data.PostedBy)?(

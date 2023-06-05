@@ -1,7 +1,7 @@
-import {View, Text, Image, Dimensions, ScrollView, Pressable, Alert, SafeAreaView, Modal} from 'react-native';
+import {Alert, Dimensions, FlatList, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import MapView, { Marker, Circle } from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating} from "./GlobalFunctions";
 
@@ -23,6 +23,7 @@ export default function PostDetails({route, navigation}){
     const likes = route.params.Likes
     const scrollViewRef = React.useRef(null);
     const [rating, setRating] = React.useState(0)
+    const [realEstateData, setRealEstateData] = React.useState([])
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -43,6 +44,16 @@ export default function PostDetails({route, navigation}){
                     });
             });
     };
+
+    const getRealEstateData = async (address) => {
+        try {
+            const response = await fetch(`http://192.168.86.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
+            return await response.json();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     const handleAddChat = () => {
         if (route.params.username !== route.params.postedBy) {
@@ -153,6 +164,12 @@ export default function PostDetails({route, navigation}){
         generateRating(route.params.postedBy).then((result)=>{
             setRating(result)
         })
+
+        getRealEstateData("79-33 213th").then((result)=>{
+            setRealEstateData(result)
+            console.log(result)
+        })
+
     }, [])
 
     return (
@@ -170,7 +187,6 @@ export default function PostDetails({route, navigation}){
                             <Ionicons name='reorder-three-outline' size={30}/>
                         </Pressable>
                     </View>
-
 
                     <Modal
                         visible={isOpen}
@@ -372,6 +388,9 @@ export default function PostDetails({route, navigation}){
                             </MapView>
                         </View>
                     </Pressable>
+
+
+
                     <View>
                         <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Details}</Text>
@@ -381,6 +400,12 @@ export default function PostDetails({route, navigation}){
                         <Text style={{fontSize:25, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.Description : route.params.Description.slice(0, 500) + " ..."}</Text>
                     </View>
+
+
+
+                <Text>Public Records Found on property </Text>
+                <Text>(beta only works in New York City)</Text>
+                <Text>{realEstateData}</Text>
 
                 <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.DatePosted}</Text>
 
