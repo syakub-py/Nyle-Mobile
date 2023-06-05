@@ -42,11 +42,6 @@ export default function MainContainer({route}) {
             }
         }
     });
-
-
-
-
-
     return (
         <Tab.Navigator initialRouteName = {home}
         screenOptions = {({route}) => ({

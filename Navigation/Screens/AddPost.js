@@ -172,27 +172,17 @@ export default function AddPost({route}){
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
             <ScrollView contentContainerStyle={{paddingBottom:60}} refreshControl={<RefreshControl refreshing ={refresh} onRefresh={onRefresh}/>} >
-                {
-                    (animating)?(
-                        <View>
-                            <ActivityIndicator size="large" color="black" animating={animating} />
-                        </View>
-                    ):(
-                        <View>
 
-                        </View>
-                    )
-                }
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
                 {
                     imageUrls.map((item, index)=>(
                         <View key={index}>
-                            <Image source={{uri:item}} style={{height:height, width:width, borderBottomRightRadius:10, borderBottomLeftRadius:10}}/>
+                            <Image source={{uri:item}} style={{height:height, width:width}}/>
                         </View>
                     ) )
                 }
                 </ScrollView>
-                
+
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {
@@ -336,6 +326,16 @@ export default function AddPost({route}){
                     <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue ={description} onChangeText={(text)=>setDescription(text)}/>
                 </View>
 
+                {
+                    (animating)?(
+                        <View>
+                            <ActivityIndicator size="large" color="black" animating={animating} />
+                        </View>
+                    ):(
+                        <View/>
+
+                    )
+                }
                 <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
                     <View style={{marginBottom:20, marginLeft:10, marginRight:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:10, color:"white", fontWeight:"bold"}}>Add post</Text>

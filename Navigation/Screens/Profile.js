@@ -181,7 +181,7 @@ export default function Profile({navigation, route}) {
                   <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20, marginTop:20}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
                         <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode ="cover"/>
-                        <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username}</Text>
+                        <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username.slice(0, 15) + "..."}</Text>
                   </View>
 
                     <SectionTitle
@@ -238,7 +238,7 @@ export default function Profile({navigation, route}) {
                 }
 
               renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD,Likes:item.likes})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes})}>
                   <PostCard data ={item}/>
                 </Pressable>
                 )}
@@ -283,7 +283,7 @@ export default function Profile({navigation, route}) {
       borderRadius: 100,
       overflow: 'hidden',
       paddingBottom: 50,
-      margin:30
+      margin:20
     },
 
   });

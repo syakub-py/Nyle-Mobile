@@ -32,7 +32,7 @@ export default function TermsOfService({route ,navigation}){
             <View style={{justifyContent:'center'}}>
                 <Text style={{ fontWeight:'bold', alignSelf:'center', fontSize:25}}>Terms Of Service</Text>
                 <View style={{margin:10, height:550}}>
-                    <ScrollView >
+                    <ScrollView>
                         <Text style={{color:'black'}}>
                             {TermsOfService}
                         </Text>
