@@ -81,4 +81,3 @@ def AddRecord():
 
 if "__main__" == __name__:
     app.run(host='192.168.86.115', port=5000)
-    # app.run()

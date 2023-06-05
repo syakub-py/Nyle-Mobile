@@ -131,7 +131,6 @@ export default function PostDetails({route, navigation}){
         const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
         const newOffset = nativeEvent.contentOffset.x;
         setCurrentOffset(newOffset);
-
         setState({ active: slide });
         if (slide <= images.length-4) {
             scrollViewRef.current.scrollTo({
@@ -165,9 +164,8 @@ export default function PostDetails({route, navigation}){
             setRating(result)
         })
 
-        getRealEstateData("79-33 213th").then((result)=>{
+        getRealEstateData("79-33 213 street").then((result)=>{
             setRealEstateData(result)
-            console.log(result)
         })
 
     }, [])
@@ -401,15 +399,35 @@ export default function PostDetails({route, navigation}){
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.Description : route.params.Description.slice(0, 500) + " ..."}</Text>
                     </View>
 
+                {
+                    (route.params.category === "Homes")?(
+                        <View style={{marginLeft: 30}}>
+                            <Text style={{fontSize: 25, fontWeight: 'bold', color: 'black'}}>Public Records
+                                for {route.params.PostTitle}</Text>
+                            <Text style={{fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5}}>Beta only works in
+                                New York City</Text>
+                            <ScrollView>
+                                {
+                                    realEstateData.map((record, index) => (
+                                        <View key={index} style={{flexDirection: "row", margin: 5}}>
+                                            <Text>{record.NAME}</Text>
+                                        </View>
+                                    ))
+                                }
+                            </ScrollView>
+                        </View>
+                        ):(
+                            <View>
+                            </View>
+                        )
 
+                }
 
-                <Text>Public Records Found on property </Text>
-                <Text>(beta only works in New York City)</Text>
-                <Text>{realEstateData}</Text>
 
                 <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.DatePosted}</Text>
 
             </ScrollView>
+
             {/*<View style={{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>*/}
             {/*    <View style={{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}
             {/*        <Pressable>*/}

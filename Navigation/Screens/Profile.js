@@ -15,7 +15,8 @@ const SectionTitle = ({title}) => {
   return(
     <View style = {{marginTop: 20, marginLeft:10}}>
       <Text style={{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
-    </View>)
+    </View>
+  )
     }
 
 const Setting = ({title, nameOfIcon,type, onPress}) => {
@@ -238,7 +239,7 @@ export default function Profile({navigation, route}) {
                 }
 
               renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes})}>
+                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
                   <PostCard data ={item}/>
                 </Pressable>
                 )}
