@@ -27,10 +27,12 @@ def GetProperty():
     cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_parties where NAME like '"+ lastName + ", " + firstName+"%' or NAME like '"+ lastName + "," + firstName+"%';")
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "PARTY TYPE", "NAME", "ADDRESS 1", "ADDRESS 2", "COUNTRY", "CITY", "STATE", "ZIP", "GOOD THROUGH DATE"])
+   
     data.drop(data.columns[data.columns.str.contains('NAME',case = False)],axis = 1, inplace = True)
     data.drop(data.columns[data.columns.str.contains('RECORD TYPE',case = False)],axis = 1, inplace = True)
     data.drop(data.columns[data.columns.str.contains('PARTY TYPE',case = False)],axis = 1, inplace = True)
     data.drop(data.columns[data.columns.str.contains('GOOD THROUGH DATE',case = False)],axis = 1, inplace = True)
+   
     data = data[(data['ZIP'] != '') & (data['ZIP'] != '00000') & (data['ADDRESS 1'] != "")]
     
     return jsonify(data.drop_duplicates().dropna().to_dict(orient='records'))
@@ -39,11 +41,16 @@ def GetProperty():
 @app.route('/api/getOwner/', methods = ['GET'])
 def GetOwner():
     address = request.args.get("address").upper().strip()
-    
     cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_parties where `ADDRESS 1` like '"+ address +"%';")
+
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "PARTY TYPE", "NAME", "ADDRESS 1", "ADDRESS 2", "COUNTRY", "CITY", "STATE", "ZIP", "GOOD THROUGH DATE"])
     data = data[(data['ZIP'] != '') & (data['ZIP'] != '00000') & (data['ADDRESS 1'] != "")]
+ 
+    data.drop(data.columns[data.columns.str.contains('DOCUMENT ID',case = False)],axis = 1, inplace = True)
+    data.drop(data.columns[data.columns.str.contains('RECORD TYPE',case = False)],axis = 1, inplace = True)
+    data.drop(data.columns[data.columns.str.contains('PARTY TYPE',case = False)],axis = 1, inplace = True)
+    data.drop(data.columns[data.columns.str.contains('GOOD THROUGH DATE',case = False)],axis = 1, inplace = True)
 
     return jsonify(data.drop_duplicates().dropna().to_dict(orient='records'))
 
@@ -51,6 +58,7 @@ def GetOwner():
 @app.route('/api/getDocInfo/', methods = ['GET'])
 def GetDocInfo():
     DocumentId = request.args.get("DocumentId").upper().strip()
+
     cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_master where DOCUMENT_ID = '"+DocumentId+"';")
 
     rows = cursor.fetchall()

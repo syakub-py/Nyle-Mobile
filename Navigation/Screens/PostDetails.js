@@ -1,4 +1,4 @@
-import {Alert, Dimensions, FlatList, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {Alert, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
@@ -34,6 +34,7 @@ export default function PostDetails({route, navigation}){
         PostRef.get()
             .then((doc) => {
                 const currentViews = doc.data().views;
+                console.log(currentViews)
                 setViews(currentViews + 1);
                 PostRef.update({ views: currentViews + 1 })
                     .then(() => {
@@ -164,7 +165,8 @@ export default function PostDetails({route, navigation}){
             setRating(result)
         })
 
-        getRealEstateData("79-33 213 street").then((result)=>{
+        //"79-33 213 street"
+        getRealEstateData(route.params.PostTitle).then((result)=>{
             setRealEstateData(result)
         })
 
@@ -200,9 +202,6 @@ export default function PostDetails({route, navigation}){
                             </View>
                         </View>
                     </Modal>
-
-
-
 
                     <View style={{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress={()=>handleLike()}>
@@ -388,7 +387,6 @@ export default function PostDetails({route, navigation}){
                     </Pressable>
 
 
-
                     <View>
                         <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
                         <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Details}</Text>
@@ -400,27 +398,35 @@ export default function PostDetails({route, navigation}){
                     </View>
 
                 {
-                    (route.params.category === "Homes")?(
-                        <View style={{marginLeft: 30}}>
-                            <Text style={{fontSize: 25, fontWeight: 'bold', color: 'black'}}>Public Records
-                                for {route.params.PostTitle}</Text>
-                            <Text style={{fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5}}>Beta only works in
-                                New York City</Text>
+                    (realEstateData.length === 0 && route.params.category === "Homes") ? (
+                        <View style={{ marginLeft: 30 }}>
+                            <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.PostTitle}</Text>
+                            <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
+                            <Text style={{ fontSize: 17, marginTop: 10 }}>Nothing to show here</Text>
+                        </View>
+                    ) : null
+                }
+
+                {
+                    (route.params.category === "Homes" && realEstateData.length > 0) ? (
+                        <View style={{ marginLeft: 25 }}>
+                            <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.PostTitle}</Text>
+                            <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
                             <ScrollView>
                                 {
                                     realEstateData.map((record, index) => (
-                                        <View key={index} style={{flexDirection: "row", margin: 5}}>
+                                        <View key={index} style={{ flexDirection: "row", margin: 5 }}>
                                             <Text>{record.NAME}</Text>
                                         </View>
                                     ))
                                 }
                             </ScrollView>
                         </View>
-                        ):(
-                            <View>
-                            </View>
-                        )
+                    ) : (
+                        <View>
 
+                        </View>
+                    )
                 }
 
 
