@@ -47,6 +47,13 @@ export default function AddPost({route}){
     const [coordinates, setCoordinates] = React.useState({latitude: 0, longitude: 0,});
     const [animating, setAnimating] = React.useState(false);
     const [category, setCategory] = React.useState("All");
+    const [VIN, setVIN] = React.useState("");
+    const [milage, setMilage] = React.useState("");
+    const [bedrooms, setBedrooms] = React.useState("");
+    const [bathrooms, setBathrooms] = React.useState("");
+    const [SQFT, setSQFT] = React.useState("");
+
+
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
@@ -116,7 +123,11 @@ export default function AddPost({route}){
         setDetails('');
         setPrice('');
         setCoordinates({latitude: 0, longitude: 0,});
+        setVIN("")
+        setMilage("")
         setImageUrls([]);
+        setBathrooms("")
+        setBedrooms("")
         onRefresh();
     }
 
@@ -127,36 +138,91 @@ export default function AddPost({route}){
         onRefresh();
     }
 
-    const addPosts = async (collectionPath, title, price, details, description, coordinates) =>{
+    const addPosts = async (collectionPath) =>{
         if (!collectionPath) {
             throw new Error('Error: collection name cannot be empty');
         }
+
         const UrlList= await upload(imageUrls)
-        return firestore.collection(collectionPath).doc(title).set({
-            id:randomNumber,
-            title: title,
-            price: price,
-            PostedBy: route.params.username,
-            currency: currency.value,
-            details: details,
-            description: description,
-            pic: UrlList,
-            profilePic: route.params.profilePicture,
-            coordinates: coordinates,
-            views: 0,
-            likes: [],
-            sold: "false",
-            category:category,
-            date: new Date().toLocaleString(),
-        })
-        .then(ref => {
-            console.log('Added document with ID: ' + title);
-            Alert.alert("Post added")
-            clear();
-        })
-        .catch(error => {
-            console.log('Error adding document: ', error);
-        });
+        if (category === "Auto"){
+            return firestore.collection(collectionPath).doc(title).set({
+                id:randomNumber,
+                title: title,
+                price: price,
+                PostedBy: route.params.username,
+                currency: currency.value,
+                Vin:VIN,
+                milage:milage,
+                description: description,
+                pic: UrlList,
+                profilePic: route.params.profilePicture,
+                coordinates: coordinates,
+                views: 0,
+                likes: [],
+                sold: "false",
+                category:category,
+                date: new Date().toLocaleString(),
+            }).then(ref => {
+                    console.log('Added document with ID: ' + title);
+                    Alert.alert("Post added")
+                    clear();
+                }).catch(error => {
+                    console.log('Error adding document: ', error);
+                });
+        }
+
+        else if (category === "Homes"){
+            return firestore.collection(collectionPath).doc(title).set({
+                id:randomNumber,
+                title: title,
+                price: price,
+                PostedBy: route.params.username,
+                currency: currency.value,
+                bedrooms:bedrooms,
+                bathrooms: bathrooms,
+                SQFT:SQFT,
+                description: description,
+                pic: UrlList,
+                profilePic: route.params.profilePicture,
+                coordinates: coordinates,
+                views: 0,
+                likes: [],
+                sold: "false",
+                category:category,
+                date: new Date().toLocaleString(),
+            }).then(ref => {
+                console.log('Added document with ID: ' + title);
+                Alert.alert("Post added")
+                clear();
+            }).catch(error => {
+                console.log('Error adding document: ', error);
+            });
+        }else {
+            return firestore.collection(collectionPath).doc(title).set({
+                id:randomNumber,
+                title: title,
+                price: price,
+                PostedBy: route.params.username,
+                currency: currency.value,
+                details:details,
+                description: description,
+                pic: UrlList,
+                profilePic: route.params.profilePicture,
+                coordinates: coordinates,
+                views: 0,
+                likes: [],
+                sold: "false",
+                category:category,
+                date: new Date().toLocaleString(),
+            }).then(ref => {
+                console.log('Added document with ID: ' + title);
+                Alert.alert("Post added")
+                clear();
+            }).catch(error => {
+                console.log('Error adding document: ', error);
+            });
+        }
+
     }
 
     const renderCurrencyItem = (item) => {
@@ -316,10 +382,49 @@ export default function AddPost({route}){
                     </MapView>
                 </View>
 
-                <View>
-                    <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
-                    <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
-                </View>
+                {
+                    (category !== "Homes" && category !== "Auto")?(
+                        <View>
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setDetails(text)}/>
+                        </View>
+                    ):(
+                        <View>
+                        </View>
+                    )
+                }
+                {
+                    (category === "Homes")?(
+                        <View>
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bedrooms</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setBedrooms(text)}/>
+
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bathrooms</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setBathrooms(text)}/>
+
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Square footage</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setSQFT(text)}/>
+                        </View>
+                    ):(
+                        <View>
+                        </View>
+                    )
+                }
+
+                {
+                    (category === "Auto" )?(
+                        <View>
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Milage</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setMilage(text)}/>
+
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>VIN</Text>
+                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setVIN(text)}/>
+                        </View>
+                    ):(
+                        <View>
+                        </View>
+                    )
+                }
 
                 <View>
                     <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10,}}>Description</Text>
@@ -336,7 +441,8 @@ export default function AddPost({route}){
 
                     )
                 }
-                <Pressable onPress={()=> {addPosts("AllPosts", title, price, details, description, coordinates)}}>
+
+                <Pressable onPress={()=> {addPosts("AllPosts")}}>
                     <View style={{marginBottom:20, marginLeft:10, marginRight:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style={{margin:10, color:"white", fontWeight:"bold"}}>Add post</Text>
                     </View>

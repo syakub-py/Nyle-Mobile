@@ -12,15 +12,16 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
+
 export default function PostDetails({route, navigation}){
-    const images = route.params.images
+    const images = route.params.item.pic
     const [state, setState] = React.useState({active:0})
     const [more, setMore] = React.useState(false)
     const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const [views, setViews] = React.useState(0)
     const [currentOffset, setCurrentOffset] = React.useState(0);
-    const likes = route.params.Likes
+    const likes = route.params.item.likes
     const scrollViewRef = React.useRef(null);
     const [rating, setRating] = React.useState(0)
     const [realEstateData, setRealEstateData] = React.useState([])
@@ -30,11 +31,10 @@ export default function PostDetails({route, navigation}){
     };
 
     const handleViewCounter = () => {
-        const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
+        const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
         PostRef.get()
             .then((doc) => {
                 const currentViews = doc.data().views;
-                console.log(currentViews)
                 setViews(currentViews + 1);
                 PostRef.update({ views: currentViews + 1 })
                     .then(() => {
@@ -51,13 +51,13 @@ export default function PostDetails({route, navigation}){
             const response = await fetch(`http://192.168.86.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
             return await response.json();
         } catch (error) {
-            console.error(error);
+            console.log("server offline");
         }
     };
 
 
     const handleAddChat = () => {
-        if (route.params.username !== route.params.postedBy) {
+        if (route.params.username !== route.params.item.PostedBy) {
             firestore
                 .collection('Chats')
                 .add({
@@ -67,22 +67,22 @@ export default function PostDetails({route, navigation}){
                             username: route.params.username,
                         },
                         {
-                            profilePic: route.params.PostedByProfilePic,
-                            username: route.params.postedBy,
+                            profilePic: route.params.item.profilePic,
+                            username: route.params.item.PostedBy,
                         },
                     ],
                 })
                 .then((ref) => {
-                   const owners =  [
+                   const owners =   [
                         {
                             profilePic: route.params.CurrentUserProfilePic,
                             username: route.params.username,
                         },
                         {
-                            profilePic: route.params.PostedByProfilePic,
-                            username: route.params.postedBy,
+                            profilePic: route.params.item.profilePic,
+                            username: route.params.item.PostedBy,
                         },
-                    ];
+                    ]
 
                     const username = owners[1].username
                     navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners)})
@@ -94,7 +94,7 @@ export default function PostDetails({route, navigation}){
     };
 
     const handleLike = async () => {
-        const PostRef = firestore.collection('AllPosts').doc(route.params.PostTitle);
+        const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
         setLiked(!liked)
         PostRef.get()
             .then((doc) => {
@@ -161,15 +161,16 @@ export default function PostDetails({route, navigation}){
 
     React.useEffect(()=>{
         handleViewCounter();
-        generateRating(route.params.postedBy).then((result)=>{
+        generateRating(route.params.item.PostedBy).then((result)=>{
             setRating(result)
         })
 
-        //"79-33 213 street"
-        getRealEstateData(route.params.PostTitle).then((result)=>{
-            setRealEstateData(result)
-        })
-
+        if (route.params.item.category === "Homes"){
+            //"79-33 213 street"
+            getRealEstateData(route.params.item.title).then((result)=>{
+                setRealEstateData(result)
+            })
+        }
     }, [])
 
     return (
@@ -198,7 +199,6 @@ export default function PostDetails({route, navigation}){
                             <View style={{ width: 300, height: 300, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius:20}}>
                                 <Text style={{ fontSize: 18, paddingVertical: 10 }}>Report this Post</Text>
                                 <Text style={{ fontSize: 18, paddingVertical: 10 }}>Share this Post</Text>
-                                {/*<Text style={{ fontSize: 18, paddingVertical: 10 }}>Option 3</Text>*/}
                             </View>
                         </View>
                     </Modal>
@@ -219,18 +219,10 @@ export default function PostDetails({route, navigation}){
                 </View>
 
                 <View>
-                    <View style={{zIndex: 1, bottom: 50, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center'}}>
-                         <Text style={{color:'white',fontSize:20,fontWeight:'bold'}}>{route.params.PostTitle}</Text>
-                    </View>
+
 
                     <View style={{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                         <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
-                    </View>
-
-                    <View style={{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
-                        <Image style={{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.Currency}}/>
-                        <Text style={{fontSize:20, fontWeight:'bold', color:'white', marginRight:10}}>{route.params.Price}</Text>
-                        <Text style={{fontSize:12, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
                     </View>
 
 
@@ -246,29 +238,63 @@ export default function PostDetails({route, navigation}){
                             )
                         }
                     </ScrollView>
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref={scrollViewRef}>
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                            {
+                                images.map((i, k)=>(
+                                    <Pressable key={k} onPress={()=> {console.log(k+1)}}>
+                                        <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key={k}/>
+                                    </Pressable>
+                                ))
+                            }
+                        </View>
+                    </ScrollView>
                 </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}  ref={scrollViewRef}>
-                    <View style={{flexDirection:'row', alignItems:'center'}}>
-                        {
-                            images.map((i, k)=>(
-                                <Pressable key={k} onPress={()=> {console.log(k+1)}}>
-                                    <Image source={{uri:i}} style={k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key={k}/>
-                                </Pressable>
-                            ))
-                        }
+
+                <View style={{marginLeft:10, marginTop:10}}>
+                    <View style={{ backgroundColor:'transparent'}}>
+                        <Text style={{color:'black',fontSize:23,fontWeight:'bold'}}>{route.params.item.title}</Text>
                     </View>
-                </ScrollView>
+
+                    <View style={{ backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row", marginTop:5}}>
+                        <Image style={{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode={'cover'} source={{uri:route.params.item.currency}}/>
+                        <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{route.params.item.price}</Text>
+                        <Text style={{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
+                    </View>
+                    {
+                        (route.params.item.category === "Homes")?(
+                            <View style={{flexDirection:"row", alignContent:'center', marginTop:5}}>
+                                <View style={{flexDirection:"row", alignContent:'center'}}>
+                                    <Ionicons name={'bed'} color={'black'} size={25}/>
+                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
+                                </View>
+
+                                <View style={{flexDirection:"row", alignContent:'center'}}>
+                                    <Ionicons name={'water'} color={'black'} size={25}/>
+                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
+                                </View>
+                                <View style={{flexDirection:"row", alignContent:'center'}}>
+                                    <Ionicons name={'expand'} color={'black'} size={25}/>
+                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
+                                </View>
+
+                            </View>
+                        ):null
+                    }
+                </View>
+
 
                 {
-                    (route.params.postedBy !== route.params.username)?(
+                    (route.params.item.PostedBy !== route.params.username)?(
                         <View style={{flexDirection:"row", justifyContent:'space-between'}}>
-                            <View style={{justifyContent:'center', flexDirection:'row', margin:10}}>
-                                <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                            <View style={{justifyContent:'center', flexDirection:'row'}}>
+                                <Image source={{uri:route.params.item.profilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                                 <View style={{margin:10,alignSelf:'center'}}>
-                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy}</Text>
+                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <Pressable onPress={() =>{navigation.navigate("Reviews", {username: route.params.postedBy, currentUser: route.params.username})}}>
+                                    <Pressable onPress={() =>{navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
                                         <View style={{
                                             flexDirection: 'row',
                                             alignItems: 'center',
@@ -278,9 +304,7 @@ export default function PostDetails({route, navigation}){
                                             <Ionicons name="star" style={{ marginRight: 3 }} color="#ebd61e" size={13} />
                                             <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
                                         </View>
-
                                     </Pressable>
-
                                 </View>
                             </View>
 
@@ -293,9 +317,9 @@ export default function PostDetails({route, navigation}){
                     ):(
                         <View style={{flexDirection:"row", justifyContent:'space-between'}}>
                             <View style={{justifyContent:'center', flexDirection:'row', margin:10}}>
-                                <Image source={{uri:route.params.PostedByProfilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                                <Image source={{uri:route.params.item.profilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                                 <View style={{margin:10,alignSelf:'center'}}>
-                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.postedBy} (You)</Text>
+                                    <Text style={{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy} (You)</Text>
                                     <Text style={{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
                                     <View style={{flexDirection:'row', alignItems:'center', marginTop:3}}>
                                         <Ionicons name={'star'} style={{marginRight:3}} color={"#ebd61e"} size={13}/>
@@ -307,7 +331,6 @@ export default function PostDetails({route, navigation}){
                         </View>
                     )
                 }
-
                 <View style={{flexDirection:'row'}}>
                     <View style={{
                         flexDirection: 'row',
@@ -322,7 +345,7 @@ export default function PostDetails({route, navigation}){
                             fontWeight: 'bold',
                             marginLeft: 3,
                             marginTop: 3
-                        }}>{route.params.Likes.length}</Text>
+                        }}>{route.params.item.likes.length}</Text>
                     </View>
                     <View style={{  flexDirection: 'row',
                         backgroundColor: 'transparent',
@@ -333,15 +356,15 @@ export default function PostDetails({route, navigation}){
                             fontSize: 12,
                             fontWeight: 'bold',
                             marginLeft: 3,
-                            marginTop: 3}}>{route.params.views}</Text>
+                            marginTop: 3}}>{route.params.item.views}</Text>
                     </View>
                 </View>
 
                     <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
-                    <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.coordinates, firstImage:images[0]})}}>
+                    <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
-                            <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
-                                <Marker coordinate={route.params.coordinates}>
+                            <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
+                                <Marker coordinate={route.params.item.coordinates}>
                                     <View style={{ flexDirection: 'column', alignItems:'center'}}>
                                         <View
                                             style={{
@@ -376,7 +399,7 @@ export default function PostDetails({route, navigation}){
                                     </View>
                                 </Marker>
                                 <Circle
-                                    center={route.params.coordinates}
+                                    center={route.params.item.coordinates}
                                     radius={1200}
                                     fillColor="rgba(66, 135, 245, 0.2)"
                                     strokeColor="rgba(66, 135, 245, 0.7)"
@@ -387,41 +410,52 @@ export default function PostDetails({route, navigation}){
                     </Pressable>
 
 
-                    <View>
-                        <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.Details}</Text>
-                    </View>
+                {
+                    (route.params.item.category !== "Homes" && route.params.item.category !== "Auto" )?(
+                        <View>
+                            <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
+                            <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
+                        </View>
+                    ):(
+                        <View></View>
+                    )
+                }
+
 
                     <View style={{marginBottom:20}}>
                         <Text style={{fontSize:25, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.Description : route.params.Description.slice(0, 500) + " ..."}</Text>
+                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
                     </View>
 
                 {
-                    (realEstateData.length === 0 && route.params.category === "Homes") ? (
+                    (realEstateData.length === 0 && route.params.item.category === "Homes") ? (
                         <View style={{ marginLeft: 30 }}>
-                            <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.PostTitle}</Text>
+                            <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
                             <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                            <Text style={{ fontSize: 17, marginTop: 10 }}>Nothing to show here</Text>
+                            <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 10 }}>Nothing to show here</Text>
                         </View>
                     ) : null
                 }
 
                 {
-                    (route.params.category === "Homes" && realEstateData.length > 0) ? (
-                        <View style={{ marginLeft: 25 }}>
-                            <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.PostTitle}</Text>
-                            <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                            <ScrollView>
-                                {
-                                    realEstateData.map((record, index) => (
-                                        <View key={index} style={{ flexDirection: "row", margin: 5 }}>
-                                            <Text>{record.NAME}</Text>
-                                        </View>
-                                    ))
-                                }
-                            </ScrollView>
+                    (route.params.item.category === "Homes" && realEstateData.length > 0) ? (
+                        <View>
+
+                            <View style={{ marginLeft: 25 }}>
+                                <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
+                                <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
+                                <ScrollView>
+                                    {
+                                        realEstateData.map((record, index) => (
+                                            <View key={index} style={{ flexDirection: "row", margin: 5 }}>
+                                                <Text>{record.NAME}</Text>
+                                            </View>
+                                        ))
+                                    }
+                                </ScrollView>
+                            </View>
                         </View>
+
                     ) : (
                         <View>
 
@@ -429,8 +463,7 @@ export default function PostDetails({route, navigation}){
                     )
                 }
 
-
-                <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.DatePosted}</Text>
+                <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 
             </ScrollView>
 

@@ -14,4 +14,26 @@ const generateRating = async (username) =>{
     return sum/counter
 }
 
+const generatePriceHomes =async (bedrooms, bathrooms) =>{
+    let price = 0;
+    let counter = 0
+
+    const similarPostsQuery =  firestore.collection('AllPosts').where("sold", "==", "true").where("bedrooms", "==", bedrooms).where("bathrooms", "==", bathrooms)
+
+    await similarPostsQuery.get().then(postSnapshot =>{
+        postSnapshot.forEach(doc => {
+            price = price + doc.data().price
+            counter++;
+        });
+
+    })
+    return price/counter
+}
+
+
+// const generatePriceAuto = () =>{
+//
+// }
+
+
 export {generateRating}

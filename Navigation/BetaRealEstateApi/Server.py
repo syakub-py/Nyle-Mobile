@@ -10,7 +10,7 @@ config = {
   'user': 'root',
   'password': 'ThisIsMysql101!',
   'host': 'localhost',
-  'database': 'realestatedata_db',
+  'database': 'nylerealestatedata',
   'connect_timeout': 60000
 }
 
@@ -24,7 +24,7 @@ cursor = db.cursor()
 def GetProperty():
     firstName = request.args.get("FirstName").upper().strip()
     lastName = request.args.get("LastName").upper().strip()
-    cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_parties where NAME like '"+ lastName + ", " + firstName+"%' or NAME like '"+ lastName + "," + firstName+"%';")
+    cursor.execute("SELECT  * FROM nylerealestatedata.acris_real_property_parties where NAME like '"+ lastName + ", " + firstName+"%' or NAME like '"+ lastName + "," + firstName+"%';")
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "PARTY TYPE", "NAME", "ADDRESS 1", "ADDRESS 2", "COUNTRY", "CITY", "STATE", "ZIP", "GOOD THROUGH DATE"])
    
@@ -41,7 +41,7 @@ def GetProperty():
 @app.route('/api/getOwner/', methods = ['GET'])
 def GetOwner():
     address = request.args.get("address").upper().strip()
-    cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_parties where `ADDRESS 1` like '"+ address +"%';")
+    cursor.execute("SELECT  * FROM nylerealestatedata.acris_real_property_parties where `ADDRESS 1` like '"+ address +"%';")
 
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "PARTY TYPE", "NAME", "ADDRESS 1", "ADDRESS 2", "COUNTRY", "CITY", "STATE", "ZIP", "GOOD THROUGH DATE"])
@@ -59,7 +59,7 @@ def GetOwner():
 def GetDocInfo():
     DocumentId = request.args.get("DocumentId").upper().strip()
 
-    cursor.execute("SELECT  * FROM realestatedata_db.acris_real_property_master where DOCUMENT_ID = '"+DocumentId+"';")
+    cursor.execute("SELECT  * FROM nylerealestatedata.acris_real_property_master where DOCUMENT_ID = '"+DocumentId+"';")
 
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "CRFN", "BOROUGH","DOC_TYPE", "DOC_DATE", "DOC_AMOUNT", "RECORDED_FILED", "MODIFIED_DATE", "REEL_YEAR", "REEL_NBR", "REEL_PAGE", "PCT_TRANSFERRED", "GOOD_THROUGH_DATE"])
@@ -78,7 +78,7 @@ def GetDocInfo():
 def AddRecord():
     owner =request.args.get("owner").upper().strip()
     address = request.args.get("address").upper().strip()
-    cursor.execute("INSERT INTO realestatedata_db.acris_real_property_parties where `ADDRESS 1` like '"+ address +"%';")
+    cursor.execute("INSERT INTO nylerealestatedata.acris_real_property_parties where `ADDRESS 1` like '"+ address +"%';")
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "PARTY TYPE", "NAME", "ADDRESS 1", "ADDRESS 2", "COUNTRY", "CITY", "STATE", "ZIP", "GOOD THROUGH DATE"])
    
