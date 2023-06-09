@@ -221,7 +221,7 @@ export default function PostDetails({route, navigation}){
                 <View>
 
 
-                    <View style={{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
+                    <View style={{ maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                         <Text style={{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
@@ -250,6 +250,36 @@ export default function PostDetails({route, navigation}){
                             }
                         </View>
                     </ScrollView>
+
+                    <View style={{flexDirection:'row', position: 'absolute',bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center', marginBottom:5, marginLeft:5, paddingHorizontal:3}}>
+                        <View style={{
+                            flexDirection: 'row',
+                            backgroundColor: 'transparent',
+                            borderRadius: 5,
+                            alignItems:'center'
+                        }}>
+                            <Ionicons name='heart' size={20} color={'#e6121d'}/>
+                            <Text style={{
+                                color: 'white',
+                                fontSize: 12,
+                                fontWeight: 'bold',
+                                marginLeft: 3,
+                                marginRight: 5,
+
+                            }}>{route.params.item.likes.length}</Text>
+                        </View>
+                        <View style={{  flexDirection: 'row',
+                            backgroundColor: 'transparent',
+                            borderRadius: 5,
+                            alignItems:'center'}}>
+                            <Ionicons name='eye' size={20} color={'white'}/>
+                            <Text style={{  color: 'white',
+                                fontSize: 12,
+                                fontWeight: 'bold',
+                                marginLeft: 3,}}>{route.params.item.views}</Text>
+                        </View>
+                    </View>
+
                 </View>
 
 
@@ -267,29 +297,64 @@ export default function PostDetails({route, navigation}){
                         (route.params.item.category === "Homes")?(
                             <View style={{flexDirection:"row", alignContent:'center', marginTop:5}}>
                                 <View style={{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name={'bed'} color={'black'} size={25}/>
-                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
+                                    <Ionicons name={'bed'} color={'black'} size={20}/>
+                                    <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
                                 </View>
 
                                 <View style={{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name={'water'} color={'black'} size={25}/>
-                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
+                                    <Ionicons name={'water'} color={'black'} size={20}/>
+                                    <Text style={{fontSize:15, color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
                                 </View>
                                 <View style={{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name={'expand'} color={'black'} size={25}/>
-                                    <Text style={{fontSize:20, fontWeight:'bold', color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
+                                    <Ionicons name={'expand'} color={'black'} size={20}/>
+                                    <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
                                 </View>
 
                             </View>
                         ):null
                     }
+
+                    {
+                        (route.params.item.category === "Auto") ? (
+                                <View style={{flexDirection:"column"}}>
+                                    <View style={{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
+
+                                        <View style={{flexDirection:"row", alignContent:'center'}}>
+                                            <Ionicons name={'car-outline'} color={'black'} size={20}/>
+                                            <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.mileage}</Text>
+                                        </View>
+
+                                        <View style={{flexDirection:"row", alignContent:'center'}}>
+                                            <Ionicons name={'information-circle-outline'} color={'black'} size={20}/>
+                                            <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.Vin}</Text>
+                                        </View>
+
+                                    </View>
+                                    <View style={{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
+
+                                        <View style={{flexDirection:"row", alignContent:'center'}}>
+                                            <Ionicons name={'hammer-outline'} color={'black'} size={20}/>
+                                            <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.make}</Text>
+                                        </View>
+
+                                        <View style={{flexDirection:"row", alignContent:'center'}}>
+                                            <Ionicons name={'information-circle-outline'} color={'black'} size={20}/>
+                                            <Text style={{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.model}</Text>
+                                        </View>
+
+                                    </View>
+                                </View>
+
+                        ) : null
+                    }
+
                 </View>
 
 
                 {
                     (route.params.item.PostedBy !== route.params.username)?(
                         <View style={{flexDirection:"row", justifyContent:'space-between'}}>
-                            <View style={{justifyContent:'center', flexDirection:'row'}}>
+                            <View style={{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
                                 <Image source={{uri:route.params.item.profilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                                 <View style={{margin:10,alignSelf:'center'}}>
                                     <Text style={{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
@@ -316,6 +381,7 @@ export default function PostDetails({route, navigation}){
                         </View>
                     ):(
                         <View style={{flexDirection:"row", justifyContent:'space-between'}}>
+
                             <View style={{justifyContent:'center', flexDirection:'row', margin:10}}>
                                 <Image source={{uri:route.params.item.profilePic}} style={{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                                 <View style={{margin:10,alignSelf:'center'}}>
@@ -331,34 +397,7 @@ export default function PostDetails({route, navigation}){
                         </View>
                     )
                 }
-                <View style={{flexDirection:'row'}}>
-                    <View style={{
-                        flexDirection: 'row',
-                        backgroundColor: 'transparent',
-                        borderRadius: 5,
-                        margin: 5,
-                    }}>
-                        <Ionicons name='heart' size={20} color={'#e6121d'}/>
-                        <Text style={{
-                            color: 'black',
-                            fontSize: 12,
-                            fontWeight: 'bold',
-                            marginLeft: 3,
-                            marginTop: 3
-                        }}>{route.params.item.likes.length}</Text>
-                    </View>
-                    <View style={{  flexDirection: 'row',
-                        backgroundColor: 'transparent',
-                        borderRadius: 5,
-                        margin: 5,}}>
-                        <Ionicons name='eye' size={20} color={'black'}/>
-                        <Text style={{  color: 'black',
-                            fontSize: 12,
-                            fontWeight: 'bold',
-                            marginLeft: 3,
-                            marginTop: 3}}>{route.params.item.views}</Text>
-                    </View>
-                </View>
+
 
                     <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
                     <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
@@ -462,6 +501,8 @@ export default function PostDetails({route, navigation}){
                         </View>
                     )
                 }
+
+
 
                 <Text style={{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 

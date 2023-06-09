@@ -48,10 +48,12 @@ export default function AddPost({route}){
     const [animating, setAnimating] = React.useState(false);
     const [category, setCategory] = React.useState("All");
     const [VIN, setVIN] = React.useState("");
-    const [milage, setMilage] = React.useState("");
+    const [mileage, setMileage] = React.useState("");
     const [bedrooms, setBedrooms] = React.useState("");
     const [bathrooms, setBathrooms] = React.useState("");
     const [SQFT, setSQFT] = React.useState("");
+    const [make, setMake] = React.useState("");
+    const [model, setModel] = React.useState("");
 
 
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
@@ -124,7 +126,7 @@ export default function AddPost({route}){
         setPrice('');
         setCoordinates({latitude: 0, longitude: 0,});
         setVIN("")
-        setMilage("")
+        setMileage("")
         setImageUrls([]);
         setBathrooms("")
         setBedrooms("")
@@ -152,7 +154,9 @@ export default function AddPost({route}){
                 PostedBy: route.params.username,
                 currency: currency.value,
                 Vin:VIN,
-                milage:milage,
+                mileage:mileage,
+                make:make,
+                model:model,
                 description: description,
                 pic: UrlList,
                 profilePic: route.params.profilePicture,
@@ -414,11 +418,17 @@ export default function AddPost({route}){
                 {
                     (category === "Auto" )?(
                         <View>
-                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Milage</Text>
-                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setMilage(text)}/>
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Make</Text>
+                            <TextInput style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setMake(text)}/>
+
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Model</Text>
+                            <TextInput style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setModel(text)}/>
+
+                            <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Mileage</Text>
+                            <TextInput style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setMileage(text)}/>
 
                             <Text  style={{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>VIN</Text>
-                            <TextInput multiline style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setVIN(text)}/>
+                            <TextInput style={{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText={(text)=>setVIN(text)}/>
                         </View>
                     ):(
                         <View>
