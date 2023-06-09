@@ -1,10 +1,22 @@
 import * as React from 'react';
-import {Alert, FlatList, Image, Pressable, RefreshControl, ScrollView, Text, TextInput, View} from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  FlatList,
+  Image,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {collection, getDocs} from 'firebase/firestore/lite'
-import {firestore, firestoreLite, getstorage} from './Components/Firebase'
+import {firestore, getstorage} from './Components/Firebase'
 import * as ImagePicker from "expo-image-picker";
+import {getPosts} from "./GlobalFunctions";
+
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -22,6 +34,7 @@ export default function Home({navigation, route}) {
 
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
   const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
+  const {width} = Dimensions.get("window");
 
   // Function to refresh the data
   const onRefresh = () => {
@@ -96,24 +109,6 @@ export default function Home({navigation, route}) {
     }
   };
 
-  // Function to retrieve posts from the database
-  const getPosts = async ()=>{
-    let results =[];
-    const postCollection = collection(firestoreLite, "AllPosts");
-    const postSnapshot = await getDocs(postCollection);
-    // Iterate through each document and push the data to the results array
-    postSnapshot.forEach(doc => {
-      results.push(doc.data())
-    });
-
-    // Sort the results by date in descending order
-    if (results){
-      results = results.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-      });
-    }
-    return results;
-  }
 
   // Effect hook to retrieve posts from the database on component mount
   React.useEffect(()=>{
@@ -200,10 +195,44 @@ export default function Home({navigation, route}) {
 
   return (
       <View style={{flex:1, backgroundColor:'white'}}>
+
+        <Pressable onPress={()=>navigation.navigate("Home Map View")}
+         style={{
+          position: 'absolute',
+          bottom: 90,
+          left: width / 2 - 40,
+          width: 80,
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: 10,
+          paddingHorizontal: 10,
+          zIndex: 1,
+          borderRadius: 20,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}>
+          <View style={{flexDirection: 'row'}}>
+            <Ionicons
+                name="map-outline"
+                size={15}
+                style={{ marginRight: 5 }}
+            />
+            <Text style={{fontWeight:'bold'}}>Map</Text>
+          </View>
+        </Pressable>
+
         <View style={{zIndex:0}}>
           <FlatList
           ListFooterComponent={
             <View style={{height:80}}>
+
             </View>
           }
           ListHeaderComponent={

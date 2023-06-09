@@ -4,7 +4,7 @@ import React from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating} from "./GlobalFunctions";
-
+import CustomMapMarker from "./Components/CustomMapMarker";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -404,38 +404,7 @@ export default function PostDetails({route, navigation}){
                         <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
                             <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                                 <Marker coordinate={route.params.item.coordinates}>
-                                    <View style={{ flexDirection: 'column', alignItems:'center'}}>
-                                        <View
-                                            style={{
-                                                backgroundColor: 'white',
-                                                height: 55,
-                                                width: 55,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                borderRadius: 18,
-                                                marginBottom: -4,
-                                            }}
-                                        >
-                                            <Image
-                                                source={{ uri: images[0] }}
-                                                style={{ height: 45, width: 45, borderRadius: 15 }}
-                                            />
-                                        </View>
-                                        <View
-                                            style={{
-                                                width: 0,
-                                                height: 0,
-                                                borderTopWidth: 15,
-                                                borderLeftWidth: 9,
-                                                borderRightWidth: 9,
-                                                borderStyle: 'solid',
-                                                backgroundColor: 'transparent',
-                                                borderTopColor: 'white',
-                                                borderLeftColor: 'transparent',
-                                                borderRightColor: 'transparent',
-                                            }}
-                                        />
-                                    </View>
+                                   <CustomMapMarker firstImage={images[0]}/>
                                 </Marker>
                                 <Circle
                                     center={route.params.item.coordinates}

@@ -1,8 +1,8 @@
 import MapView, { Marker, Circle } from 'react-native-maps';
 import React from 'react';
-import {View, Text, Image, Dimensions, ScrollView, Pressable} from 'react-native';
+import {View, Image, Pressable} from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import CustomMapMarker from "./Components/CustomMapMarker";
 
 
 export default function Map({route, navigation}){
@@ -18,39 +18,7 @@ export default function Map({route, navigation}){
             </View>
             <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                 <Marker coordinate={route.params.coordinates}>
-                    <View style={{ flexDirection: 'column', alignItems:'center'}}>
-                        <View
-                            style={{
-                                backgroundColor: 'white',
-                                height: 55,
-                                width: 55,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderRadius: 18,
-                                marginBottom: -3,
-                            }}
-                        >
-                            <Image
-                                source={{ uri: route.params.firstImage }}
-                                style={{ height: 45, width: 45, borderRadius: 15 }}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                width: 0,
-                                height: 0,
-                                borderTopWidth: 15,
-                                borderLeftWidth: 9,
-                                borderRightWidth: 9,
-                                borderStyle: 'solid',
-                                backgroundColor: 'transparent',
-                                borderTopColor: 'white',
-                                borderLeftColor: 'transparent',
-                                borderRightColor: 'transparent',
-                            }}
-                        />
-                    </View>
-
+                    <CustomMapMarker firstImage={route.params.firstImage}/>
                 </Marker>
                 <Circle
                     center={route.params.coordinates}

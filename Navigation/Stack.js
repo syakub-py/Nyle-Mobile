@@ -18,6 +18,7 @@ import Reviews from "./Screens/Reviews";
 import WriteReview from "./Screens/WriteReview";
 import Map from "./Screens/Map";
 import TermsOfService from "./Screens/TermsOfService";
+import HomeMapView from "./Screens/HomeMapView";
 // screenOptions={{headerShown:false}}
 const Stack = () =>{
     const Stack = createNativeStackNavigator();
@@ -41,6 +42,8 @@ const Stack = () =>{
           <Stack.Screen name="Write Review" component = {WriteReview} />
           <Stack.Screen name="Map" component = {Map} />
           <Stack.Screen name="Terms of Service" component = {TermsOfService} />
+          <Stack.Screen name="Home Map View" component = {HomeMapView} />
+
         </Stack.Navigator>
       );
   }

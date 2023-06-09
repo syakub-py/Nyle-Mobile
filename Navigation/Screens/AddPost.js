@@ -168,7 +168,6 @@ export default function AddPost({route}){
                 date: new Date().toLocaleString(),
             }).then(ref => {
                     console.log('Added document with ID: ' + title);
-                    Alert.alert("Post added")
                     clear();
                 }).catch(error => {
                     console.log('Error adding document: ', error);

@@ -1,5 +1,6 @@
-import {firestore} from "./Components/Firebase";
+import {firestore, firestoreLite} from "./Components/Firebase";
 import React from "react";
+import {collection, getDocs} from "firebase/firestore/lite";
 
 const generateRating = async (username) =>{
     let sum = 0;
@@ -12,6 +13,24 @@ const generateRating = async (username) =>{
         });
     })
     return sum/counter
+}
+
+const getPosts = async ()=>{
+    let results =[];
+    const postCollection = collection(firestoreLite, "AllPosts");
+    const postSnapshot = await getDocs(postCollection);
+    // Iterate through each document and push the data to the results array
+    postSnapshot.forEach(doc => {
+        results.push(doc.data())
+    });
+
+    // Sort the results by date in descending order
+    if (results){
+        results = results.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
+    }
+    return results;
 }
 
 const generatePriceHomes =async (bedrooms, bathrooms) =>{
@@ -36,4 +55,4 @@ const generatePriceHomes =async (bedrooms, bathrooms) =>{
 // }
 
 
-export {generateRating}
+export {generateRating, getPosts}
