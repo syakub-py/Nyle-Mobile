@@ -196,7 +196,7 @@ export default function Home({navigation, route}) {
   return (
       <View style={{flex:1, backgroundColor:'white'}}>
 
-        <Pressable onPress={()=>navigation.navigate("Home Map View")}
+        <Pressable onPress={()=>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
          style={{
           position: 'absolute',
           bottom: 90,

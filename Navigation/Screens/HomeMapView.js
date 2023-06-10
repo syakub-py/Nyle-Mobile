@@ -5,14 +5,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {getPosts} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
-export default function HomeMapView({navigation}){
+export default function HomeMapView({navigation, route}){
     const [masterData, setMasterData] = React.useState([]);
-    const [index, setIndex] = React.useState([]);
     const {width} = Dimensions.get("window");
-
-    // const itemWidth = 300 + 10;
-    // const offsetX = index * itemWidth;
-
 
     React.useEffect(()=>{
         getPosts().then((result) =>{
@@ -78,9 +73,12 @@ export default function HomeMapView({navigation}){
                     style={{ backgroundColor: 'transparent' }}>
                     {
                         masterData.map((item, index) => (
-                            <View key={index} style={{alignSelf:'center'}}>
-                                <MapPostCard data={item} />
-                            </View>
+                            <Pressable key={index} onPress={()=>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+                                <View  style={{alignSelf:'center'}}>
+                                    <MapPostCard data={item} />
+                                </View>
+                            </Pressable>
+
                         ))
                     }
                 </ScrollView>
