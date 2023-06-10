@@ -220,7 +220,7 @@ export default function Home({navigation, route}) {
         }}>
           <View style={{flexDirection: 'row'}}>
             <Ionicons
-                name="map-outline"
+                name="map"
                 size={15}
                 style={{ marginRight: 5 }}
             />
