@@ -2,7 +2,7 @@ import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
-import {View} from "react-native";
+import {Image, View} from "react-native";
 //Screens
 import home from './Screens/Home'
 import market from './Screens/Market'
@@ -93,8 +93,7 @@ export default function MainContainer({route}) {
                   )
               }
             }else if (rn === Profile){
-              iconName = focused ? 'person-circle' : 'person-circle-outline';
-              return <Ionicons name = {iconName} size={32} color={color}/>
+                return <Image source={{uri: profilePic}} style={focused?{height:37, width:37, borderRadius:20, borderWidth:2}:{height:32, width:32, borderRadius:20}}/>
             }else if (rn === AddPost){
               iconName = focused ? 'add-circle' : 'add-circle-outline';
               return <Ionicons name = {iconName} size={32} color={color}/>

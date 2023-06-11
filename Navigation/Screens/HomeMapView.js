@@ -46,7 +46,9 @@ export default function HomeMapView({navigation, route}){
         <View style={{ flex: 1 }}>
             <View style={{zIndex:1}}>
                 <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13,  alignItems:'center', justifyContent:'center'}}>
-                        <Ionicons name='chevron-back-outline' size={30}/>
+                       <Pressable onPress={()=>navigation.goBack()}>
+                           <Ionicons name='chevron-back-outline' size={30}/>
+                       </Pressable>
                 </View>
 
 
@@ -104,7 +106,7 @@ export default function HomeMapView({navigation, route}){
                     {
                         categories.map((category, index) => (
                             <Pressable key={index} onPress={() => handleCategoryPress(index)} style={{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                                <Text style={{color: selectedCategoryIndex === index ? '#ffffff' : 'lightgray', fontSize: 15, fontWeight:'400'}}>
+                                <Text style={{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight:'400'}}>
                                     {category}
                                 </Text>
                             </Pressable>

@@ -12,7 +12,7 @@ const generateRating = async (username) =>{
             counter++;
         });
     })
-    return sum/counter
+    return {rating:sum/counter, numOfReviews:counter}
 }
 
 const getPosts = async ()=>{

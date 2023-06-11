@@ -11,9 +11,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function MapPostCard({data, username}) {
     const [rating, setRating] = React.useState(0)
+    const [numOfReviews, setNumOfReviews] = React.useState(0)
+
     React.useEffect(()=>{
         generateRating(data.PostedBy).then((result)=>{
-            setRating(result)
+            setRating(result.rating)
+            setNumOfReviews(result.numOfReviews)
         })
     },[])
     return(
@@ -78,6 +81,7 @@ export default function MapPostCard({data, username}) {
                             )
                         }
                     </View>
+                    <Text style={{fontSize:10, color:'lightgrey', marginLeft:3}}>{numOfReviews} reviews</Text>
 
                 </View>
             </ImageBackground>

@@ -23,6 +23,7 @@ export default function PostDetails({route, navigation}){
     const likes = route.params.item.likes
     const scrollViewRef = React.useRef(null);
     const [rating, setRating] = React.useState(0)
+    const [numOfReviews, setNumOfReviews] = React.useState(0)
     const [realEstateData, setRealEstateData] = React.useState([])
 
     const toggleDropdown = () => {
@@ -128,7 +129,8 @@ export default function PostDetails({route, navigation}){
     React.useEffect(()=>{
         handleViewCounter();
         generateRating(route.params.item.PostedBy).then((result)=>{
-            setRating(result)
+            setRating(result.rating)
+            setNumOfReviews(result.numOfReviews)
         })
 
         if (route.params.item.category === "Homes"){
@@ -334,6 +336,7 @@ export default function PostDetails({route, navigation}){
                                         }}>
                                             <Ionicons name="star" style={{ marginRight: 3 }} color="#ebd61e" size={13} />
                                             <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
+                                            <Text style={{ fontSize: 10, color:'lightgrey' }}>{numOfReviews} reviews</Text>
                                         </View>
                                     </Pressable>
                                 </View>
