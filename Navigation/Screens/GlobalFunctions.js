@@ -33,6 +33,41 @@ const getPosts = async ()=>{
     return results;
 }
 
+const handleLike = async (doc, username) => {
+    const PostRef = firestore.collection('AllPosts').doc(doc);
+    PostRef.get()
+        .then((doc) => {
+            if (doc.exists && !doc.data().likes.includes(username)) {
+                const likesArray = doc.data().likes || [];
+                // Modify the array as needed
+                likesArray.push(username);
+                // Write the updated array back to the document
+                PostRef.update({ likes: likesArray })
+                    .then(() => {
+                        console.log('Liked!');
+                    })
+                    .catch((error) => {
+                        console.error('Error adding Like:', error);
+                    });
+            } else {
+                const likesArray = doc.data().likes || [];
+                const updatedLikesArray = likesArray.filter((username) => username !== username);
+                PostRef.update({ likes: updatedLikesArray })
+                    .then(() => {
+                        console.log('Like removed');
+                    })
+                    .catch((error) => {
+                        console.error('Error removing like:', error);
+                    });
+            }
+        })
+        .catch((error) => {
+            console.error('Error getting document:', error);
+        });
+};
+
+
+
 const generatePriceHomes =async (bedrooms, bathrooms) =>{
     let price = 0;
     let counter = 0
@@ -55,4 +90,4 @@ const generatePriceHomes =async (bedrooms, bathrooms) =>{
 // }
 
 
-export {generateRating, getPosts}
+export {generateRating, getPosts, handleLike}

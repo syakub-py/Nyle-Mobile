@@ -4,44 +4,12 @@ import {useNavigation} from '@react-navigation/native';
 import * as React from 'react';
 import {firestore} from "./Firebase";
 import axios from "axios";
-
+import {handleLike} from "../GlobalFunctions";
 export default function PostCard({data, username}){
     const navigation = useNavigation();
-    const [liked,setLiked] = React.useState(false)
     const [price, setPrice] = React.useState(0)
     const [index, setIndex] = React.useState(0)
-    const handleLike = async () => {
-        const PostRef = firestore.collection('AllPosts').doc(data.title);
-        setLiked(!liked)
-        PostRef.get()
-            .then((doc) => {
-                if (doc.exists && !doc.data().likes.includes(username)) {
-                    const likesArray = doc.data().likes || [];
-                    // Modify the array as needed
-                    likesArray.push(username);
-                    // Write the updated array back to the document
-                    PostRef.update({ likes: likesArray })
-                        .then(() => {
-                            console.log('Liked!');
-                        })
-                        .catch((error) => {
-                            console.error('Error adding Like:', error);
-                        });
-                } else {
-                    const likesArray = doc.data().likes || [];
-                    const updatedLikesArray = likesArray.filter((user) => user !== username);
-                    PostRef.update({ likes: updatedLikesArray })
-                        .then(() => {
-                            console.log('Like removed');
-                        })
-                        .catch((error) => {
-                            console.error('Error removing Like:', error);
-                        });          }
-            })
-            .catch((error) => {
-                console.error('Error getting document:', error);
-            });
-    };
+
     React.useEffect(()=>{
         const updateCurrencyPrice = async () => {
             try {
@@ -81,9 +49,9 @@ export default function PostCard({data, username}){
             <View style ={{width:"100%", height:300}}>
                 <ImageBackground source={{uri: data.pic[index]}} imageStyle ={{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
                      <View style={{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-                            <Pressable onPress={()=>handleLike()}>
+                            <Pressable onPress={()=>handleLike(data.title, username)}>
                                 {
-                                    (liked || data.likes.includes(data.PostedBy))?(
+                                    (data.likes.includes(data.PostedBy))?(
                                         <Ionicons name='heart' size={25} color={'#e6121d'}/>
                                     ):(
                                         <Ionicons name='heart-outline' size={25}/>

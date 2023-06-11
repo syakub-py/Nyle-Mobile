@@ -3,7 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import {generateRating} from "./GlobalFunctions";
+import {generateRating, handleLike} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -17,7 +17,6 @@ export default function PostDetails({route, navigation}){
     const images = route.params.item.pic
     const [state, setState] = React.useState({active:0})
     const [more, setMore] = React.useState(false)
-    const [liked,setLiked] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const [views, setViews] = React.useState(0)
     const [currentOffset, setCurrentOffset] = React.useState(0);
@@ -93,39 +92,6 @@ export default function PostDetails({route, navigation}){
         }
     };
 
-    const handleLike = async () => {
-        const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
-        setLiked(!liked)
-        PostRef.get()
-            .then((doc) => {
-                if (doc.exists && !doc.data().likes.includes(route.params.username)) {
-                    const likesArray = doc.data().likes || [];
-                    // Modify the array as needed
-                    likesArray.push(route.params.username);
-                    // Write the updated array back to the document
-                    PostRef.update({ likes: likesArray })
-                        .then(() => {
-                            console.log('Liked!');
-                        })
-                        .catch((error) => {
-                            console.error('Error adding Like:', error);
-                        });
-                } else {
-                    const likesArray = doc.data().likes || [];
-                    const updatedLikesArray = likesArray.filter((username) => username !== route.params.username);
-                    PostRef.update({ likes: updatedLikesArray })
-                        .then(() => {
-                            console.log('Like removed');
-                        })
-                        .catch((error) => {
-                            console.error('Error removing like:', error);
-                        });
-                }
-            })
-            .catch((error) => {
-                console.error('Error getting document:', error);
-            });
-    };
 
 
     const change = ({ nativeEvent }) => {
@@ -204,9 +170,9 @@ export default function PostDetails({route, navigation}){
                     </Modal>
 
                     <View style={{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress={()=>handleLike()}>
+                        <Pressable onPress={()=>handleLike(route.params.item.title, route.params.username)}>
                             {
-                                (liked || likes.includes(route.params.username))?(
+                                (likes.includes(route.params.username))?(
                                     <Ionicons name='heart' size={30} color={'#e6121d'}/>
 
                                 ):(
@@ -397,9 +363,10 @@ export default function PostDetails({route, navigation}){
                         </View>
                     )
                 }
+                <View style={{marginBottom:20}}>
+                    <Text style={{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
+                </View>
 
-
-                    <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
                     <Pressable onPress={() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style={{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
                             <MapView style={{height:"100%", width:"100%"}} initialCamera={{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
@@ -421,7 +388,6 @@ export default function PostDetails({route, navigation}){
                 {
                     (route.params.item.category !== "Homes" && route.params.item.category !== "Auto" )?(
                         <View>
-                            <Text style={{fontSize:25, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
                             <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
                         </View>
                     ):(
@@ -430,13 +396,10 @@ export default function PostDetails({route, navigation}){
                 }
 
 
-                    <View style={{marginBottom:20}}>
-                        <Text style={{fontSize:25, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
-                        <Text style={{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} onPress={()=>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
-                    </View>
+
 
                 {
-                    (realEstateData.length === 0 && route.params.item.category === "Homes") ? (
+                    (realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") ? (
                         <View style={{ marginLeft: 30 }}>
                             <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
                             <Text style={{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
@@ -446,7 +409,7 @@ export default function PostDetails({route, navigation}){
                 }
 
                 {
-                    (route.params.item.category === "Homes" && realEstateData.length > 0) ? (
+                    (route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData) ? (
                         <View>
 
                             <View style={{ marginLeft: 25 }}>
