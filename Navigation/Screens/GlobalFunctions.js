@@ -84,10 +84,20 @@ const generatePriceHomes =async (bedrooms, bathrooms) =>{
     return price/counter
 }
 
+const getCityState = async (lat, lng) => {
+    try {
+        const response = await fetch(`http://192.168.86.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);
+        return await response.json();
+    } catch (error) {
+        console.log("server offline");
+        return []
+    }
+};
+
 
 // const generatePriceAuto = () =>{
 //
 // }
 
 
-export {generateRating, getPosts, handleLike}
+export {generateRating, getPosts, handleLike, getCityState}

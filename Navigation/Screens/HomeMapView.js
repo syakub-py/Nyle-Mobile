@@ -2,17 +2,18 @@ import {Alert, Dimensions, Pressable, ScrollView, Text, TextInput, View} from 'r
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {getPosts} from "./GlobalFunctions";
+import {getPosts, getCityState} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 export default function HomeMapView({navigation, route}){
     const [masterData, setMasterData] = React.useState([]);
     const [filteredData, setFilterData] = React.useState([]);
 
-    const {width} = Dimensions.get("window");
     const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
     const [categorySearch, setCategorySearch] = React.useState([]);
     const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
+    const [city, setCity] = React.useState("")
+    const [state, setState] = React.useState("")
 
     React.useEffect(()=>{
         getPosts().then((result) =>{
@@ -21,6 +22,12 @@ export default function HomeMapView({navigation, route}){
         }).catch((error)=>{
             Alert.alert(error)
         })
+
+        getCityState().then((result)=>{
+            setState(result.state)
+            setCity(result.city)
+        })
+
     }, [])
 
     const handleCategoryPress = (index) => {
@@ -54,7 +61,7 @@ export default function HomeMapView({navigation, route}){
 
                 <View style={{position: 'absolute', alignSelf:'center', height:100, width:130, backgroundColor:'transparent',  alignItems:'center', justifyContent:'center', flexDirection:"row"}}>
                         <Ionicons name='location' size={30} style={{marginRight:5}} color={"red"}/>
-                        <Text style={{fontSize:18, fontWeight:'bold'}}>New York, NY</Text>
+                        <Text style={{fontSize:18, fontWeight:'bold'}}>{city}, {state}</Text>
                 </View>
 
                 <View style={{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13,  alignItems:'center', justifyContent:'center'}}>

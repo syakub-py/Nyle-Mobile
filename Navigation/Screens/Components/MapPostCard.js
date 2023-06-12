@@ -19,6 +19,7 @@ export default function MapPostCard({data, username}) {
             setNumOfReviews(result.numOfReviews)
         })
     },[])
+
     return(
         <View style={{
             flex:1,
