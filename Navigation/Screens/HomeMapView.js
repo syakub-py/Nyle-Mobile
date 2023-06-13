@@ -23,7 +23,7 @@ export default function HomeMapView({navigation, route}){
             Alert.alert(error)
         })
 
-        getCityState().then((result)=>{
+        getCityState(40.735081, -73.759658).then((result)=>{
             setState(result.state)
             setCity(result.city)
         })

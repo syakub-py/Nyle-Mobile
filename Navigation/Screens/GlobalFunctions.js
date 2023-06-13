@@ -86,11 +86,11 @@ const generatePriceHomes =async (bedrooms, bathrooms) =>{
 
 const getCityState = async (lat, lng) => {
     try {
-        const response = await fetch(`http://192.168.86.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);
+        const response = await fetch(`http://192.168.255.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);
         return await response.json();
     } catch (error) {
         console.log("server offline");
-        return []
+        return {city:"", state:""}
     }
 };
 

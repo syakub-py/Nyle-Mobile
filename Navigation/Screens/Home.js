@@ -45,6 +45,8 @@ export default function Home({navigation, route}) {
       const masterPostList = result
       setFilterData(masterPostList);
       setMasterData(masterPostList);
+
+
     }).catch((error)=>{
       Alert.alert(error)
     })

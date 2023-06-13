@@ -48,7 +48,7 @@ export default function PostDetails({route, navigation}){
 
     const getRealEstateData = async (address) => {
         try {
-            const response = await fetch(`http://192.168.86.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
+            const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
             return await response.json();
         } catch (error) {
             console.log("server offline");
