@@ -16,9 +16,113 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 
+const onRefresh = (setRefreshing, getChats, setFilterData, setMasterData, route) => {
+    setRefreshing(true);
+    getChats(route).then((result) => {
+        setFilterData(result);
+        setMasterData(result);
+    }).catch((error) => {
+        console.log(error)
+    })
+    setTimeout(() => setRefreshing(false), 300);
+};
+
+const findUser = (userArray, route) => {
+    for (let index = 0; index < userArray.length; index++) {
+        if (userArray[index].username !== route.params.username) return index
+    }
+    return "";
+}
+
+const findProfilePic = (userArray, route) => {
+    for (let index = 0; index < userArray.length; index++) {
+        if (userArray[index].username === route.params.username) return index   
+    }
+    return "";
+}
+
+const searchFilter = (text, masterData, setFilterData, setSearch) => {
+    if (text) {
+        const newData = masterData.filter((item) => {
+            const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase()
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData)>-1;
+        });
+        setFilterData(newData);
+        setSearch(text);
+    } else {
+        setFilterData(masterData);
+        setSearch(text);
+    }
+}
+
+// Delete a folder and all its contents
+const deleteChat = (chat) => {
+    firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
+        docs.forEach((doc) => {
+            if (!_.isEmpty(doc.data().image)) {
+                doc.data().image.forEach((picture) => {
+                    let imageRef = getstorage.refFromURL(picture)
+                    imageRef.delete()
+                })
+            }
+        })
+
+        firestore.collection('Chats').doc(chat.id).delete().then(() => {
+            onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
+        })
+    })
+}
+
+const getChats = async (route) => {
+    const results = [];
+    const MyChatQuery = firestore.collection('Chats');
+    const ChatSnapshot = await MyChatQuery.get();
+    const chatDocs = ChatSnapshot.docs;
+
+    for (const doc of chatDocs) {
+        if (doc.data().owners.some(item => item.username === route.params.username)) {
+            const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                .orderBy('createdAt', 'desc')
+                .limit(1);
+
+            const latestMessageSnapshot = await latestMessageQuery.get();
+            const latestMessageDocs = latestMessageSnapshot.docs;
+
+            if (!_.isEmpty(latestMessageDocs)) {
+                const latestMessageData = latestMessageDocs[0].data();
+                const latestMessage = latestMessageData.text;
+                const received = latestMessageData.received;
+                const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
+
+                const chatData = {
+                    data: doc.data(),
+                    id: doc.id,
+                    latestMessage,
+                    image,
+                    received
+                };
+
+                if (latestMessageData.user.name === route.params.username) chatData.latestMessage = "You: " + latestMessage;
+
+                results.push(chatData);
+            } else {
+                results.push({
+                    data: doc.data(),
+                    id: doc.id,
+                    latestMessage: "",
+                    image: "",
+                    received: true
+                });
+            }
+        }
+    }
+    return results;
+};
+
 /*
     @route.params = {username: current username}
- */
+*/
 
 export default function Chat({navigation, route}) {
     const [filteredData, setFilterData] = useState([]);
@@ -26,66 +130,8 @@ export default function Chat({navigation, route}) {
     const [search, setSearch] = useState([])
     const [refreshing, setRefreshing] = useState(false);
 
-    const getChats = async () => {
-        const results = [];
-        const MyChatQuery = firestore.collection('Chats');
-        const ChatSnapshot = await MyChatQuery.get();
-        const chatDocs = ChatSnapshot.docs;
-
-        for (const doc of chatDocs) {
-            if (doc.data().owners.some(item => item.username === route.params.username)) {
-                const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-                    .orderBy('createdAt', 'desc')
-                    .limit(1);
-
-                const latestMessageSnapshot = await latestMessageQuery.get();
-                const latestMessageDocs = latestMessageSnapshot.docs;
-
-                if (!_.isEmpty(latestMessageDocs)) {
-                    const latestMessageData = latestMessageDocs[0].data();
-                    const latestMessage = latestMessageData.text;
-                    const received = latestMessageData.received;
-                    const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
-
-                    const chatData = {
-                        data: doc.data(),
-                        id: doc.id,
-                        latestMessage,
-                        image,
-                        received
-                    };
-
-                    if (latestMessageData.user.name === route.params.username) chatData.latestMessage = "You: " + latestMessage;
-
-                    results.push(chatData);
-                } else {
-                    results.push({
-                        data: doc.data(),
-                        id: doc.id,
-                        latestMessage: "",
-                        image: "",
-                        received: true
-                    });
-                }
-            }
-        }
-
-        return results;
-    };
-
-    const onRefresh = () => {
-        setRefreshing(true);
-        getChats().then((result) => {
-            setFilterData(result);
-            setMasterData(result);
-        }).catch((error) => {
-            console.log(error)
-        })
-        setTimeout(() => setRefreshing(false), 300);
-    };
-
     useEffect(() => {
-        getChats().then((result) => {
+        getChats(route).then((result) => {
             setFilterData(result);
             setMasterData(result);
         }).catch((error) => {
@@ -93,55 +139,12 @@ export default function Chat({navigation, route}) {
         })
     }, [])
 
-    const searchFilter = (text) => {
-        if (text) {
-            const newData = masterData.filter((item) => {
-                const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase()
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData)>-1;
-            });
-            setFilterData(newData);
-            setSearch(text);
-        } else {
-            setFilterData(masterData);
-            setSearch(text);
-        }
+    const handleSearchFilter = (text) => {
+        searchFilter(text, masterData, setFilterData, setSearch)
     }
 
-    const findUser = (userArray) => {
-        for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username !== route.params.username) return index
-        }
-        return "";
-    }
+    const randomNumber = Math.floor(Math.random() * 100);
 
-    const findProfilePic = (userArray) => {
-        for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username === route.params.username) return index   
-        }
-        return "";
-    }
-
-    // Delete a folder and all its contents
-    const deleteChat = (chat) => {
-        firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
-            docs.forEach((doc) => {
-                if (!_.isEmpty(doc.data().image)) {
-                    doc.data().image.forEach((picture) => {
-                        let imageRef = getstorage.refFromURL(picture)
-                        imageRef.delete()
-                    })
-                }
-            })
-
-            firestore.collection('Chats').doc(chat.id).delete().then(() => {
-                onRefresh();
-            })
-        })
-    }
-
-
-    let randomNumber = Math.floor(Math.random() * 100);
     return (
         <SafeAreaView style = {styles.container}>
             <SwipeListView
@@ -153,7 +156,7 @@ export default function Chat({navigation, route}) {
                 }
                 rightOpenValue = {-50}
                 refreshControl = {
-                    <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
+                    <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route)} />
                 }
                 key = {randomNumber}
                 contentContainerStyle = {{
@@ -177,7 +180,7 @@ export default function Chat({navigation, route}) {
                             elevation:2
                         }}>
                             <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
-                            <TextInput placeholder ='Search Chats...' value = {search} onChangeText = {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+                            <TextInput placeholder ='Search Chats...' value = {search} onChangeText = {(text) => handleSearchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
                         </View>
                         <Text style = {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
                     </View>
@@ -196,13 +199,13 @@ export default function Chat({navigation, route}) {
                     </View>
                 )}
                 renderItem = {({item, index}) => {
-                    const username = item.data.owners[findUser(item.data.owners)].username
+                    const username = item.data.owners[findUser(item.data.owners, route)].username
                     return (
-                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key = {index}>
+                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners, route)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, route)].profilePic, userId:findUser(item.data.owners, route)})}} key = {index}>
                             <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                                 <View>
                                     <Image
-                                        source = {{uri: item.data.owners[findUser(item.data.owners)].profilePic}}
+                                        source = {{uri: item.data.owners[findUser(item.data.owners, route)].profilePic}}
                                         style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
                                     />
                                 </View>

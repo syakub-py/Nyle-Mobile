@@ -17,39 +17,49 @@ import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
 import _ from "lodash"
 
+const clearMessages = async (messagesRef) => {
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const query = messagesRef.where('createdAt', '<', thirtyDaysAgo);
+
+    return query.get().then((snapshot) => {
+      const batch = firestore.batch();
+
+      snapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+      });
+
+      return batch.commit();
+    });
+}
+
+const markAsRead = async () => {
+    const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
+    await unreadMessagesRef.get().then((docs) => {
+        docs.forEach((doc) => {
+            const currentMessageData = doc.data()
+            if (currentMessageData.user.name !== route.params.username) doc.ref.update({received: true})
+        })
+    })
+}
+
 /*
     @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
  */
 
 export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
-  let [messages] = useCollectionData(messagesRef)
   const [imageUrls, setImageUrls] = useState([]);
   const [refresh, setRefreshing] = useState(false);
-  let downloadUrls =[]
   const [state, setState] = useState({active:0})
   const [animating, setAnimating] = useState(false);
+  let downloadUrls =[]
+  let [messages] = useCollectionData(messagesRef)
 
   if (messages) {
     messages = messages.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
     });
-  }
-
-  const clearMessages = () => {
-      const today = new Date();
-      const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const query = messagesRef.where('createdAt', '<', thirtyDaysAgo);
-
-      return query.get().then((snapshot) => {
-          const batch = firestore.batch();
-
-          snapshot.forEach((doc) => {
-              batch.delete(doc.ref);
-          });
-
-          return batch.commit();
-      });
   }
 
   const renderActions = () => (
@@ -73,11 +83,11 @@ export default function ChatBox({route, navigation}) {
   };
 
   const SelectImages = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-      allowsMultipleSelection: true
+    let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    aspect: [4, 3],
+    quality: 1,
+    allowsMultipleSelection: true
     });
   
     if (!result.canceled) {
@@ -176,16 +186,6 @@ export default function ChatBox({route, navigation}) {
         if (slide !== state.active) setState({active: slide})
     }
 
-    const markAsRead = async () => {
-        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
-        await unreadMessagesRef.get().then((docs) => {
-            docs.forEach((doc) => {
-                const currentMessageData = doc.data()
-                if (currentMessageData.user.name !== route.params.username) doc.ref.update({received: true})
-            })
-        })
-    }
-
   const renderInputToolbar = (props) => {
     return (
       <View style = {{flex:1}}>
@@ -255,7 +255,7 @@ export default function ChatBox({route, navigation}) {
   };
 
     useEffect(() => {
-        clearMessages()
+        clearMessages(messagesRef)
         markAsRead()
     }, [])
 
