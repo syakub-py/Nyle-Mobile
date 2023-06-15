@@ -19,7 +19,8 @@ const SectionTitle = ({title}) => {
 }
 
 const Setting = ({title, nameOfIcon,type, onPress}) => {
-  if (type == "button") {
+  if (type !== "button") return <View></View>
+  else {
     return (
       <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center', width:'100%', marginLeft:20}} onPress = {onPress}>
         <View style = {{flexDirection:'row'}}>
@@ -27,10 +28,6 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
           <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
         </View>
       </TouchableOpacity>
-    )
-  } else {
-    return (
-      <View></View>
     )
   }
 }

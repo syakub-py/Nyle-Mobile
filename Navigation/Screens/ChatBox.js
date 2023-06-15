@@ -283,7 +283,8 @@ export default function ChatBox({route, navigation}) {
         renderActions = {renderActions}
         renderInputToolbar = {renderInputToolbar}
         renderMessageImage = {(props) => {
-            if (props.currentMessage.image.length > 0) {
+            if (props.currentMessage.image.length === 0) return <View></View>
+            else {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                         <Pressable onPress = {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
@@ -314,12 +315,6 @@ export default function ChatBox({route, navigation}) {
                         </Pressable>
                     </View>
                 );
-            } else {
-                return (
-                    <View>
-
-                    </View>
-                )
             }
         }
       }

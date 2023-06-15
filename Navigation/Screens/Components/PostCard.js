@@ -39,7 +39,6 @@ export default function PostCard({data, username}) {
 
     }, [data.currency])
 
-
     return (
         <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius:10, elevation:3}}>
             <View style = {{width:"100%", height:300}}>
@@ -55,7 +54,6 @@ export default function PostCard({data, username}) {
                                 }
                             </Pressable>
                         </View>
-
 
                     <View style = {{flexDirection:'row'}}>
                         {

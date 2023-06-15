@@ -17,6 +17,7 @@ const Chat = 'Chat';
 const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
+
 export default function MainContainer({route}) {
   const profilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   const [received,setReceived] = useState(true)
@@ -40,6 +41,7 @@ export default function MainContainer({route}) {
       }
     }
   });
+  
   return (
     <Tab.Navigator initialRouteName = {home}
     screenOptions = {({route}) => ({
@@ -79,16 +81,13 @@ export default function MainContainer({route}) {
           return <Ionicons name = {iconName} size = {32} color = {color}/>
         } else if (rn === Chat) {
           iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
-          if (received === false) {
+          if (received === true) return <Ionicons name = {iconName} size = {32} color = {color}/>
+          else {
             return (
-                <View>
-                    <View style = {{backgroundColor:'red', height:13, width:13, borderRadius:10, elevation:2,zIndex:1, position:'absolute', left:0, top:0}}/>
-                    <Ionicons name = {iconName} size = {32} color = {color}/>
-                </View>
-            )
-          } else {
-            return (
-              <Ionicons name = {iconName} size = {32} color = {color}/>
+              <View>
+                <View style = {{backgroundColor:'red', height:13, width:13, borderRadius:10, elevation:2,zIndex:1, position:'absolute', left:0, top:0}}/>
+                <Ionicons name = {iconName} size = {32} color = {color}/>
+              </View>
             )
           }
         } else if (rn === Profile) {

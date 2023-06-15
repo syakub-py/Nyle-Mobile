@@ -70,7 +70,7 @@ export default function Market({navigation, route}) {
       }
     };
 
-    if (articles.length == 0) fetchCryptoNews();
+    if (articles.length === 0) fetchCryptoNews();
     
     fetchMarketData();
 
