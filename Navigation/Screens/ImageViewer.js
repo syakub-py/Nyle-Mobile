@@ -21,11 +21,11 @@ export default function ViewImages({ route, navigation }) {
 
     return (
         <ImageViewer
-            imageUrls={getImages(pictures)}
-            enableSwipeDown={true}
-            renderHeader={() => (
+            imageUrls= {getImages(pictures)}
+            enableSwipeDown= {true}
+            renderHeader= {() => (
                 <View
-                    style={{
+                    style = {{
                         position: 'absolute',
                         top: 30,
                         left: 15,
@@ -39,13 +39,13 @@ export default function ViewImages({ route, navigation }) {
                         justifyContent: 'center',
                     }}
                 >
-                    <Pressable onPress={handlePressClose}>
-                        <Ionicons name="close-outline" size={30} />
+                    <Pressable onPress= {handlePressClose}>
+                        <Ionicons name ="close-outline" size = {30} />
                     </Pressable>
                 </View>
             )}
-            onSwipeDown={handlePressClose}
-            index={index}
+            onSwipeDown= {handlePressClose}
+            index= {index}
             backgroundColor="transparent"
         />
     );

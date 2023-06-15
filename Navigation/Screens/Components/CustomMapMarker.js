@@ -1,11 +1,11 @@
-import {Alert, FlatList, Image, Pressable, RefreshControl, ScrollView, Text, TextInput, View} from 'react-native';
+import {Image, View} from 'react-native';
 import React from 'react';
 
 export default function CustomMapMarker({firstImage}) {
-    return(
-        <View style={{ flexDirection: 'column', alignItems:'center'}}>
+    return (
+        <View style = {{ flexDirection: 'column', alignItems:'center'}}>
             <View
-                style={{
+                style = {{
                     backgroundColor: 'white',
                     height: 55,
                     width: 55,
@@ -16,12 +16,12 @@ export default function CustomMapMarker({firstImage}) {
                 }}
             >
                 <Image
-                    source={{ uri: firstImage }}
-                    style={{ height: 45, width: 45, borderRadius: 15 }}
+                    source = {{ uri: firstImage }}
+                    style = {{ height: 45, width: 45, borderRadius: 15 }}
                 />
             </View>
             <View
-                style={{
+                style = {{
                     width: 0,
                     height: 0,
                     borderTopWidth: 15,

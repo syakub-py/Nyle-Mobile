@@ -1,11 +1,11 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-export default function EditProfile({navigation}){
-    const [username, setUsername] = React.useState('');
-    const [password, setPassword] = React.useState('');
+export default function EditProfile({navigation}) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     const updateUsername = async (newUsername) => {
         try {
@@ -45,11 +45,11 @@ export default function EditProfile({navigation}){
         }
     };
 
-    return(
-        <View style={{ flex: 1, padding: 16 , justifyContent:'center'}}>
+    return (
+        <View style = {{ flex: 1, padding: 16 , justifyContent:'center'}}>
 
             <View
-                style={{
+                style = {{
                     position: 'absolute',
                     top: 30,
                     left: 15,
@@ -63,12 +63,12 @@ export default function EditProfile({navigation}){
                     justifyContent: 'center',
                 }}
             >
-                <Pressable onPress={() => {navigation.goBack()}}>
-                    <Ionicons name='chevron-back-outline' size={30}/>
+                <Pressable onPress= {() => {navigation.goBack()}}>
+                    <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
             <TextInput
-                style={{
+                style = {{
                     height: 40,
                     borderColor: 'gray',
                     borderWidth: 1,
@@ -76,23 +76,23 @@ export default function EditProfile({navigation}){
                     paddingHorizontal: 8,
                 }}
                 placeholder="Username"
-                value={username}
-                onChangeText={text => setUsername(text)}
+                value = {username}
+                onChangeText= {text => setUsername(text)}
             />
             <Pressable
-                style={{
+                style = {{
                     backgroundColor: 'black',
                     padding: 10,
                     borderRadius: 5,
                     marginBottom: 12,
                     alignItems: 'center',
                 }}
-                onPress={() => updateUsername(username)}>
-                <Text style={{ color: 'white' }}>Update Username</Text>
+                onPress= {() => updateUsername(username)}>
+                <Text style = {{ color: 'white' }}>Update Username</Text>
             </Pressable>
 
             <TextInput
-                style={{
+                style = {{
                     height: 40,
                     borderColor: 'gray',
                     borderWidth: 1,
@@ -101,19 +101,19 @@ export default function EditProfile({navigation}){
                 }}
                 placeholder="Password"
                 secureTextEntry
-                value={password}
-                onChangeText={text => setPassword(text)}
+                value = {password}
+                onChangeText= {text => setPassword(text)}
             />
             <Pressable
-                style={{
+                style = {{
                     backgroundColor: 'black',
                     padding: 10,
                     borderRadius: 5,
                     alignItems: 'center',
                 }}
-                onPress={() => updatePassword(password)}
+                onPress= {() => updatePassword(password)}
             >
-                <Text style={{ color: 'white' }}>Update Password</Text>
+                <Text style = {{ color: 'white' }}>Update Password</Text>
             </Pressable>
         </View>
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
 import {getstorage, firestore} from './Components/Firebase'
@@ -6,23 +6,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
 
-export default function SignUp({navigation}){
-    const [username, setUsername] = React.useState('')
-    const [password, setPassword] = React.useState('')
-    const [profilePic, setProfilePic] = React.useState('')
-    const [refreshing, setRefreshing] = React.useState(false);
+export default function SignUp({navigation}) {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [profilePic, setProfilePic] = useState('')
+    const [refreshing, setRefreshing] = useState(false);
 
-    const handleSignUp = ()=>{
+    const handleSignUp = () => {
         auth
         .createUserWithEmailAndPassword(username, password)
-        .then(() =>{
-            addUsernameToMap().then(()=>{
+        .then(() => {
+            addUsernameToMap().then(() => {
                 navigation.navigate("Terms of Service", {showButtons:true, username:username})
                 console.log("added user to map")
-            }).catch((error)=>{
+            }).catch((error) => {
                 console.log(error)
             });
-        }).catch((error)=> alert(error.message))
+        }).catch((error) => alert(error.message))
     }
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,7 +43,7 @@ export default function SignUp({navigation}){
         setTimeout(() => setRefreshing(false), 300);
     }
 
-    const addUsernameToMap = async ()=> {
+    const addUsernameToMap = async () => {
         try {
             // Upload profile picture to Firebase Storage and get the download URL
             const profilePicRef = getstorage.ref().child(`ProfileImages/${username}`);
@@ -62,44 +62,44 @@ export default function SignUp({navigation}){
         }
     };
 
-    return(
-        <View style={styles.container}>
+    return (
+        <View style = {styles.container}>
 
-            <View style={{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                <Pressable onPress={()=>navigation.goBack()}>
-                    <Ionicons name='chevron-back-outline' size={30}/>
+            <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+                <Pressable onPress= {() =>navigation.goBack()}>
+                    <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
 
-            <View style={{alignItems:'center', justifyContent:'center'}}>
-                <Pressable onPress={SelectImages}>
+            <View style = {{alignItems:'center', justifyContent:'center'}}>
+                <Pressable onPress= {SelectImages}>
                     {
                     (profilePic != '') ? (
-                        <View style={{margin:60, alignItems:'center'}}>
-                            <Pressable style={{position:'absolute', left:5, top:10, zIndex:1}} onPress={removeProfilePhoto}>
-                                <View style={{backgroundColor:'red', height:30, width:30, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
-                                    <Ionicons name='remove-outline' color={'white'} size={20} style={{}}/>
+                        <View style = {{margin:60, alignItems:'center'}}>
+                            <Pressable style = {{position:'absolute', left:5, top:10, zIndex:1}} onPress= {removeProfilePhoto}>
+                                <View style = {{backgroundColor:'red', height:30, width:30, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
+                                    <Ionicons name ='remove-outline' color= {'white'} size = {20} style = {{}}/>
                                 </View>
                             </Pressable>
  
-                            <Image source={{uri:profilePic}} style={{height:150, width:150, borderRadius:100}}/>
-                            <Text style={{margin:10, fontWeight:'bold'}}>{username}</Text>
+                            <Image source = {{uri:profilePic}} style = {{height:150, width:150, borderRadius:100}}/>
+                            <Text style = {{margin:10, fontWeight:'bold'}}>{username}</Text>
                         </View>
                     ):
                     (
-                        <View style={{margin:75, alignItems:'center'}}>
-                            <Text style={{fontWeight:'bold'}}>Upload a Profile Picture</Text>
-                            <Image source={{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style={{height:150, width:150, borderRadius:100}}/>
+                        <View style = {{margin:75, alignItems:'center'}}>
+                            <Text style = {{fontWeight:'bold'}}>Upload a Profile Picture</Text>
+                            <Image source = {{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style = {{height:150, width:150, borderRadius:100}}/>
                         </View>
                     )
                     }
                 </Pressable>
             </View>
 
-            <TextInput placeholder='Username' style = {styles.textInput} onChangeText={(text)=> setUsername(text)} />
-            <TextInput placeholder='Password' style = {styles.textInput} onChangeText={(text)=> setPassword(text)} secureTextEntry/>
+            <TextInput placeholder='Username' style = {styles.textInput} onChangeText= {(text) => setUsername(text)} />
+            <TextInput placeholder='Password' style = {styles.textInput} onChangeText= {(text) => setPassword(text)} secureTextEntry/>
 
-            <Pressable style={styles.submitContainer} onPress={handleSignUp}>
+            <Pressable style = {styles.submitContainer} onPress= {handleSignUp}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
             </Pressable>
         </View>

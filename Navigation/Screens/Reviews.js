@@ -9,17 +9,17 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 */
 
 
-export default function Reviews({route, navigation}){
-    const [ReviewList, setReviewList] = React.useState([])
-    const getReviews = async () =>{
+export default function Reviews({route, navigation}) {
+    const [ReviewList, setReviewList] = useState([])
+    const getReviews = async () => {
         let results = []
         const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.username)
-        await MyReviewsQuery.get().then(postSnapshot =>{
+        await MyReviewsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push({id: doc.id, ...doc.data()});
             });
         })
-        if (results){
+        if (results) {
             results = results.sort((a, b) => {
                 return new Date(b.DatePosted) - new Date(a.DatePosted);
             });
@@ -27,43 +27,43 @@ export default function Reviews({route, navigation}){
         return results;
     }
 
-    React.useEffect(()=>{
-        getReviews().then((result)=>{
+    useEffect(() => {
+        getReviews().then((result) => {
             setReviewList(result)
         })
-    },[])
+    }, [])
 
-    return(
-        <SafeAreaView style={{flex:1, backgroundColor:'whitesmoke'}}>
+    return (
+        <SafeAreaView style = {{flex:1, backgroundColor:'whitesmoke'}}>
 
-            <FlatList data={ReviewList}
-                      ListHeaderComponent ={
-                          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                              <View style={{ position: 'absolute', top: 20, left: 0, zIndex: 1 }}>
-                                  <Pressable onPress={() => navigation.goBack()} style={{ padding: 10 }}>
-                                      <Ionicons name='arrow-back-outline' size={30} />
+            <FlatList data= {ReviewList}
+                      ListHeaderComponent = {
+                          <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                              <View style = {{ position: 'absolute', top: 20, left: 0, zIndex: 1 }}>
+                                  <Pressable onPress= {() => navigation.goBack()} style = {{ padding: 10 }}>
+                                      <Ionicons name ='arrow-back-outline' size = {30} />
                                   </Pressable>
                               </View>
                               <View >
-                                  <View style={{ height: 50, width: 90, backgroundColor: 'transparent', marginTop: 20 }}>
-                                      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Reviews</Text>
+                                  <View style = {{ height: 50, width: 90, backgroundColor: 'transparent', marginTop: 20 }}>
+                                      <Text style = {{ fontSize: 18, fontWeight: 'bold' }}>Reviews</Text>
                                   </View>
                               </View>
                           </View>
                       }
-                      renderItem={({item})=>(
-                          <ReviewCard data ={item} currentUser={route.params.currentUser}/>
+                      renderItem= {({item}) =>(
+                          <ReviewCard data = {item} currentUser= {route.params.currentUser}/>
                       )}/>
 
 
             {
                 (route.params.currentUser!==route.params.username)?(
-                    <View style={{
+                    <View style = {{
                         position: 'absolute',
                         bottom:16,
                         right: 16,
                     }}>
-                        <Pressable style={{
+                        <Pressable style = {{
                             width: 56,
                             height: 56,
                             borderRadius: 28,
@@ -71,8 +71,8 @@ export default function Reviews({route, navigation}){
                             justifyContent: 'center',
                             alignItems: 'center',
                             elevation: 6,
-                        }} onPress={() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
-                            <Ionicons name="pencil" size={24} color="white" />
+                        }} onPress= {() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
+                            <Ionicons name ="pencil" size = {24} color="white" />
                         </Pressable>
 
                     </View>

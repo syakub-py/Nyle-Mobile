@@ -2,11 +2,11 @@ import {firestore, firestoreLite} from "./Components/Firebase";
 import React from "react";
 import {collection, getDocs} from "firebase/firestore/lite";
 
-const generateRating = async (username) =>{
+const generateRating = async (username) => {
     let sum = 0;
     let counter = 0
     const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", username)
-    await MyReviewsQuery.get().then(postSnapshot =>{
+    await MyReviewsQuery.get().then(postSnapshot => {
         postSnapshot.forEach(doc => {
             sum = sum + doc.data().stars
             counter++;
@@ -15,7 +15,7 @@ const generateRating = async (username) =>{
     return {rating:sum/counter, numOfReviews:counter}
 }
 
-const getPosts = async ()=>{
+const getPosts = async () => {
     let results =[];
     const postCollection = collection(firestoreLite, "AllPosts");
     const postSnapshot = await getDocs(postCollection);
@@ -25,7 +25,7 @@ const getPosts = async ()=>{
     });
 
     // Sort the results by date in descending order
-    if (results){
+    if (results) {
         results = results.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
         });
@@ -68,13 +68,13 @@ const handleLike = async (doc, username) => {
 
 
 
-const generatePriceHomes =async (bedrooms, bathrooms) =>{
+const generatePriceHomes =async (bedrooms, bathrooms) => {
     let price = 0;
     let counter = 0
 
     const similarPostsQuery =  firestore.collection('AllPosts').where("sold", "==", "true").where("bedrooms", "==", bedrooms).where("bathrooms", "==", bathrooms)
 
-    await similarPostsQuery.get().then(postSnapshot =>{
+    await similarPostsQuery.get().then(postSnapshot => {
         postSnapshot.forEach(doc => {
             price = price + doc.data().price
             counter++;
@@ -95,7 +95,7 @@ const getCityState = async (lat, lng) => {
 };
 
 
-// const generatePriceAuto = () =>{
+// const generatePriceAuto = () => {
 //
 // }
 

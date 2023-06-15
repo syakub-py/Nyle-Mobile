@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth } from './Components/Firebase';
 import "firebase/auth";
@@ -6,14 +6,14 @@ import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "fireb
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
-export default function Login({navigation}){
+export default function Login({navigation}) {
 
-    const [username, setUsername] = React.useState('')
-    const [password, setPassword] = React.useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
     const handleEmailAndPasswordLogin = () => {
         auth.signInWithEmailAndPassword(username, password)
-            .then(userCredentials =>{
+            .then(userCredentials => {
                 const user = userCredentials.user;
             })
             .catch(error => alert(error.message))
@@ -33,65 +33,65 @@ export default function Login({navigation}){
         }
     }
 
-    React.useEffect(()=>{
-        const unsubcribe = auth.onAuthStateChanged(user =>{
-            if(user){
+    useEffect(() => {
+        const unsubcribe = auth.onAuthStateChanged(user => {
+            if (user) {
                 navigation.navigate("Main Container", {username: user.email})
             }
         })
         return unsubcribe;
     }, []);
 
-    return(
-        <ScrollView style ={styles.container}>
-            <View style={{marginTop:69, alignItems:'center', justifyContent:'center'}}>
+    return (
+        <ScrollView style = {styles.container}>
+            <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                 <Image
-                    source ={require('./Components/icon.png')}
-                    style ={{
+                    source = {require('./Components/icon.png')}
+                    style = {{
                         height: 150,
                         width: 150
                     }}/>
             </View>
-            <View style ={{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
+            <View style = {{marginTop:40, flexDirection: "row", justifyContent:"center"}}>
                 <Pressable>
                     <View style = {styles.socialButton}>
-                        <Ionicons name='logo-facebook' size={20} style={{height:20, width:20, marginRight:5}}/>
-                        <Text style ={{fontSize:15, fontWeight:'500'}}>Facebook</Text>
+                        <Ionicons name ='logo-facebook' size = {20} style = {{height:20, width:20, marginRight:5}}/>
+                        <Text style = {{fontSize:15, fontWeight:'500'}}>Facebook</Text>
                     </View>
                 </Pressable>
 
-                <Pressable onPress={handleGoogleLogin}>
+                <Pressable onPress= {handleGoogleLogin}>
                     <View style = {styles.socialButton}>
-                        <Ionicons name='logo-google' size={20} style={{height:20, width:20, marginRight:5}}/>
-                        <Text style ={{fontSize:15, fontWeight:'500'}}>Google</Text>
+                        <Ionicons name ='logo-google' size = {20} style = {{height:20, width:20, marginRight:5}}/>
+                        <Text style = {{fontSize:15, fontWeight:'500'}}>Google</Text>
                     </View>
                 </Pressable>
             </View>
 
-            <View style={{justifyContent:'center', marginLeft:15, marginRight:15}}>
-                <Text style={[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}></Text>
-                <View style={{borderRadius:6, height:50, justifyContent:'center'}}>
-                    <Ionicons name='person-outline' size={20} style={{ position: 'absolute',}}/>
-                    <TextInput placeholder='Username' onChangeText={text => setUsername(text)} style={{marginLeft:25}}/>
+            <View style = {{justifyContent:'center', marginLeft:15, marginRight:15}}>
+                <Text style = {[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}></Text>
+                <View style = {{borderRadius:6, height:50, justifyContent:'center'}}>
+                    <Ionicons name ='person-outline' size = {20} style = {{ position: 'absolute',}}/>
+                    <TextInput placeholder='Username' onChangeText= {text => setUsername(text)} style = {{marginLeft:25}}/>
                 </View>
                 <View >
-                    <Ionicons name='ellipse' size={20} style={{ position: 'absolute',}}/>
-                    <TextInput placeholder='Password' onChangeText={text => setPassword(text) } style={{marginLeft:25}} secureTextEntry/>
+                    <Ionicons name ='ellipse' size = {20} style = {{ position: 'absolute',}}/>
+                    <TextInput placeholder='Password' onChangeText= {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
                 </View>
-                <Pressable onPress={() => navigation.navigate("Reset Password")}>
-                    <Text style={[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
+                <Pressable onPress= {() => navigation.navigate("Reset Password")}>
+                    <Text style = {[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
                 </Pressable>
 
                 <Pressable
-                    style={styles.submitContainer}
+                    style = {styles.submitContainer}
                     onPress = {handleEmailAndPasswordLogin}
                 >
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                 </Pressable>
 
-                <TouchableOpacity onPress={()=> navigation.navigate("Sign Up")}>
-                    <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style={[styles.text, styles.link]}>Register now</Text></Text>
+                <TouchableOpacity onPress= {() => navigation.navigate("Sign Up")}>
+                    <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style = {[styles.text, styles.link]}>Register now</Text></Text>
                 </TouchableOpacity>
 
             </View>

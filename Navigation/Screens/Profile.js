@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Alert, Image, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
@@ -12,25 +12,25 @@ import firebase from "firebase/compat/app";
 */
 
 const SectionTitle = ({title}) => {
-  return(
+  return (
     <View style = {{marginTop: 20, marginLeft:10}}>
-      <Text style={{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
+      <Text style = {{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
     </View>
   )
     }
 
 const Setting = ({title, nameOfIcon,type, onPress}) => {
-  if (type == "button"){
-    return(
+  if (type == "button") {
+    return (
       <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center', width:'100%', marginLeft:20}} onPress = {onPress}>
-        <View style={{flexDirection:'row'}}>
-          <Ionicons name={nameOfIcon} style={{color:'black', marginRight: 20}} size={25}/>
+        <View style = {{flexDirection:'row'}}>
+          <Ionicons name = {nameOfIcon} style = {{color:'black', marginRight: 20}} size = {25}/>
           <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
         </View>
       </TouchableOpacity>
     )
-  }else{
-    return(
+  } else {
+    return (
       <View></View>
     )
   }
@@ -38,13 +38,13 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
 
 
 export default function Profile({navigation, route}) {
-  const [userList, setUserList] = React.useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [userList, setUserList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getPosts = async () =>  {
     const results = [];
     const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
-    await MyPostsQuery.get().then(postSnapshot =>{
+    await MyPostsQuery.get().then(postSnapshot => {
       postSnapshot.forEach(doc => {
             results.push(doc.data())
         });
@@ -54,15 +54,15 @@ export default function Profile({navigation, route}) {
 
   const onRefresh = () => {
     setRefreshing(true);
-    getPosts().then((result) =>{
+    getPosts().then((result) => {
       setUserList(result);
-    }).catch((error)=>{
+    }).catch((error) => {
       Alert.alert('Error Getting Posts: ', error)
     })
     setTimeout(() => setRefreshing(false), 1000);
   };
 
-  const handleSignOut = async () =>{
+  const handleSignOut = async () => {
     try {
       await firebase.auth().signOut();
     } catch (error) {
@@ -71,15 +71,15 @@ export default function Profile({navigation, route}) {
     return navigation.navigate("Login")
   }
   
-  React.useEffect(()=>{
-    getPosts().then((result) =>{
+  useEffect(() => {
+    getPosts().then((result) => {
       setUserList(result);
-    }).catch((error)=>{
+    }).catch((error) => {
       Alert.alert('Error Getting Posts: ', error)
     })
   }, [])
 
-  const moveToDelete = async (item) =>{
+  const moveToDelete = async (item) => {
     try {
       // Get the source document
       const sourceDocRef = firestore.collection("AllPosts").doc(item.title);
@@ -131,7 +131,7 @@ export default function Profile({navigation, route}) {
   };
 
 
-  const clearDeleted = () =>{
+  const clearDeleted = () => {
     const sourceDocRef = firestore.collection("DeletedPosts");
 
     const today = new Date();
@@ -150,36 +150,36 @@ export default function Profile({navigation, route}) {
     });
   }
 
-  const markAsSold = (item) =>{
-    firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(()=>{
+  const markAsSold = (item) => {
+    firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(() => {
       console.log("marked as sold")
       onRefresh();
-    }).catch((error)=>{
+    }).catch((error) => {
       console.log(error)
     })
   }
 
-  React.useEffect(()=>{
-    clearDeleted().then(()=>{
+  useEffect(() => {
+    clearDeleted().then(() => {
       console.log("checking deleted posts...")
     })
-  },[])
+  }, [])
   return (
-      <View style={{backgroundColor:'white'}}>
+      <View style = {{backgroundColor:'white'}}>
             <SwipeListView
-              data={userList}
-              rightOpenValue={-170}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              data= {userList}
+              rightOpenValue = {-170}
+              refreshControl= {
+                <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
               }
-              ListFooterComponent={
-                <View style={{height:80}}>
+              ListFooterComponent= {
+                <View style = {{height:80}}>
 
                 </View>
               }
               ListHeaderComponent= {
                 <View>
-                  <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20, marginTop:20}}/>
+                  <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20, marginTop:20}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
                         <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode ="cover"/>
                         <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username.slice(0, 15) + "..."}</Text>
@@ -216,52 +216,52 @@ export default function Profile({navigation, route}) {
                   <Setting
                       title = "Recently Deleted Posts"
                       type = "button"
-                      onPress = {()=>navigation.navigate("Deleted Posts", {username:route.params.username})}
+                      onPress = {() =>navigation.navigate("Deleted Posts", {username:route.params.username})}
                       nameOfIcon = 'trash-outline'
                   />
 
                   <Setting
                       title = "Your Reviews"
                       type = "button"
-                      onPress = {()=>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
+                      onPress = {() =>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
                       nameOfIcon = 'star-outline'
                   />
 
                   <Setting
                       title = "Terms of Service"
                       type = "button"
-                      onPress = {()=>{navigation.navigate("Terms of Service", {showButtons:false})}}
+                      onPress = {() => {navigation.navigate("Terms of Service", {showButtons:false})}}
                       nameOfIcon = 'alert-circle-outline'
                   />
                   
-                  <SectionTitle title={'Your Posts'}/>
+                  <SectionTitle title = {'Your Posts'}/>
                 </View>
                 }
 
-              renderItem={({item}) => (
-                <Pressable onPress={() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
-                  <PostCard data ={item}/>
+              renderItem= {({item}) => (
+                <Pressable onPress= {() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
+                  <PostCard data = {item}/>
                 </Pressable>
                 )}
 
               renderHiddenItem = {({item}) => (
-                  <View style={{ position: 'absolute',
+                  <View style = {{ position: 'absolute',
                   flexDirection:'row',
                   top: 0,
                   right: 70,
                   bottom: 0,
                   width: 100,
                   alignItems: 'center'}}>
-                    <TouchableOpacity onPress={()=>moveToDelete(item)} style={{marginRight:20}}>
-                      <Ionicons size={30} name='trash-outline' color={"red"}/>
+                    <TouchableOpacity onPress= {() =>moveToDelete(item)} style = {{marginRight:20}}>
+                      <Ionicons size = {30} name ='trash-outline' color= {"red"}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
-                      <Ionicons size={30} name='create-outline' color={"black"}/>
+                    <TouchableOpacity onPress= {() =>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
+                      <Ionicons size = {30} name ='create-outline' color= {"black"}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={()=>markAsSold(item)}>
-                      <Ionicons name={'checkmark-circle-outline'} color={"green"} size={30} style={{marginLeft:20}}/>
+                    <TouchableOpacity onPress= {() =>markAsSold(item)}>
+                      <Ionicons name = {'checkmark-circle-outline'} color= {"green"} size = {30} style = {{marginLeft:20}}/>
                     </TouchableOpacity>
 
                   </View>
@@ -290,20 +290,20 @@ export default function Profile({navigation, route}) {
   });
 
 
-//   <View style={{marginTop:20}}>
-//   <Text style ={{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
-//   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+//   <View style = {{marginTop:20}}>
+//   <Text style = {{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
+//   <ScrollView horizontal showsHorizontalScrollIndicator= {false}>
 //     {
 //       transactions.map((item, index) =>(
-//         <View style={{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key={index}>
-//           <ImageBackground source={{uri:item.pic}}  imageStyle={{height:150, width:"100%",borderRadius:20}} resizeMode={'cover'}>
-//             <View style={{flexDirection:'row', paddingHorizontal:5, paddingTop:3}}>
-//               <Avatar source={{uri: item.profilePic}} rounded/>
-//               <Text style={{color:'white', fontWeight:'bold', paddingHorizontal:10, paddingTop:5}}>{item.title}</Text>
+//         <View style = {{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key= {index}>
+//           <ImageBackground source = {{uri:item.pic}}  imageStyle = {{height:150, width:"100%",borderRadius:20}} resizeMode = {'cover'}>
+//             <View style = {{flexDirection:'row', paddingHorizontal:5, paddingTop:3}}>
+//               <Avatar source = {{uri: item.profilePic}} rounded/>
+//               <Text style = {{color:'white', fontWeight:'bold', paddingHorizontal:10, paddingTop:5}}>{item.title}</Text>
 //             </View>
-//             <View style={{flexDirection:'row', alignItems:'center', paddingHorizontal:10}}>
-//               <Image style={{height:15, width:15, marginRight:3, marginLeft:3}} source={{uri:item.currency}}/>
-//               <Text style={{color:'white',}}>{item.price}</Text>
+//             <View style = {{flexDirection:'row', alignItems:'center', paddingHorizontal:10}}>
+//               <Image style = {{height:15, width:15, marginRight:3, marginLeft:3}} source = {{uri:item.currency}}/>
+//               <Text style = {{color:'white',}}>{item.price}</Text>
 //             </View>
 //           </ImageBackground>
 //         </View>

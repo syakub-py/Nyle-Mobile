@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Alert,
   Dimensions,
@@ -24,13 +24,13 @@ import {getPosts} from "./GlobalFunctions";
 
 export default function Home({navigation, route}) {
   // State variables using React Hooks:
-  const [filteredData, setFilterData] = React.useState([]);
-  const [masterData, setMasterData] = React.useState([]);
-  const [search, setSearch] = React.useState([]);
-  const [categorySearch, setCategorySearch] = React.useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
-  const [selectedPostFilterIndex, setSelectedPostFilterIndex] = React.useState(0);
+  const [filteredData, setFilterData] = useState([]);
+  const [masterData, setMasterData] = useState([]);
+  const [search, setSearch] = useState([]);
+  const [categorySearch, setCategorySearch] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
 
   const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
   const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
@@ -41,13 +41,13 @@ export default function Home({navigation, route}) {
     // Set the refreshing state to true
     setRefreshing(true);
     // Retrieve posts from the database and update the state variables
-    getPosts().then((result) =>{
+    getPosts().then((result) => {
       const masterPostList = result
       setFilterData(masterPostList);
       setMasterData(masterPostList);
 
 
-    }).catch((error)=>{
+    }).catch((error) => {
       Alert.alert(error)
     })
     // Wait for 0.3 seconds before setting the refreshing state to false
@@ -113,12 +113,12 @@ export default function Home({navigation, route}) {
 
 
   // Effect hook to retrieve posts from the database on component mount
-  React.useEffect(()=>{
-    getPosts().then((result) =>{
+  useEffect(() => {
+    getPosts().then((result) => {
       const masterPostList = result
       setFilterData(masterPostList);
       setMasterData(masterPostList);
-    }).catch((error)=>{
+    }).catch((error) => {
       Alert.alert(error)
     })
 
@@ -136,29 +136,29 @@ export default function Home({navigation, route}) {
 
   // Function to filter the data based on search input
   const searchFilter = (text) => {
-    if (text){
-      const newData = masterData.filter((item) =>{
+    if (text) {
+      const newData = masterData.filter((item) => {
         const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase()
         const textData = text.toUpperCase();
         return itemData.indexOf(textData)>-1;
       });
       setFilterData(newData);
       setSearch(text);
-    }else{
+    } else {
       setFilterData(masterData);
       setSearch(text);
     }
   }
 
   const categoryFilter = (text) => {
-    if (text && text !== 'All'){
-      const newData = masterData.filter((item) =>{
+    if (text && text !== 'All') {
+      const newData = masterData.filter((item) => {
         const itemData = item.category ? item.category : ''
         return itemData.indexOf(text)>-1;
       });
       setFilterData(newData);
       setCategorySearch(text);
-    }else{
+    } else {
       setFilterData(masterData);
       setCategorySearch(text);
     }
@@ -196,10 +196,10 @@ export default function Home({navigation, route}) {
 
 
   return (
-      <View style={{flex:1, backgroundColor:'white'}}>
+      <View style = {{flex:1, backgroundColor:'white'}}>
 
-        <Pressable onPress={()=>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
-         style={{
+        <Pressable onPress= {() =>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
+         style = {{
           position: 'absolute',
           bottom: 90,
           left: width / 2 - 40,
@@ -220,50 +220,50 @@ export default function Home({navigation, route}) {
           shadowRadius: 3.84,
           elevation: 5,
         }}>
-          <View style={{flexDirection: 'row'}}>
+          <View style = {{flexDirection: 'row'}}>
             <Ionicons
-                name="map"
-                size={15}
-                style={{ marginRight: 5 }}
+                name ="map"
+                size = {15}
+                style = {{ marginRight: 5 }}
             />
-            <Text style={{fontWeight:'bold'}}>Map</Text>
+            <Text style = {{fontWeight:'bold'}}>Map</Text>
           </View>
         </Pressable>
 
-        <View style={{zIndex:0}}>
+        <View style = {{zIndex:0}}>
           <FlatList
-          ListFooterComponent={
-            <View style={{height:80}}>
+          ListFooterComponent= {
+            <View style = {{height:80}}>
 
             </View>
           }
-          ListHeaderComponent={
+          ListHeaderComponent= {
             <View>
-                <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
-                  <Image source={require('../Screens/Components/icon.png')} style={{height:75, width:75, marginLeft:20}}/>
+                <View style = {{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
+                  <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20}}/>
 
-                  <Pressable onPress={SelectProfilePic}>
-                    <View style={{marginTop:20, marginRight:20}}>
-                      <Image resizeMode='cover' source={{uri: route.params.profilePicture}} style={{height:50, width:50, borderRadius:100, elevation:2}}/>
-                      <View style={{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name={'add-outline'} color={'white'} size={17}/>
+                  <Pressable onPress= {SelectProfilePic}>
+                    <View style = {{marginTop:20, marginRight:20}}>
+                      <Image resizeMode ='cover' source = {{uri: route.params.profilePicture}} style = {{height:50, width:50, borderRadius:100, elevation:2}}/>
+                      <View style = {{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
+                        <Ionicons name = {'add-outline'} color= {'white'} size = {17}/>
                       </View>
                     </View>
                   </Pressable>
 
               </View>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+              <ScrollView horizontal showsHorizontalScrollIndicator= {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   categories.map((category, index) => (
-                      <Pressable key={index} onPress={() => handleCategoryPress(index)} style={{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                        <Text style={{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                      <Pressable key= {index} onPress= {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                        <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {category}
                         </Text>
                       </Pressable>
                   ))
                 }
               </ScrollView>
-              <View style={{
+              <View style = {{
                     flex: 1,
                     flexDirection: 'row',
                     justifyContent: 'center',
@@ -274,15 +274,15 @@ export default function Home({navigation, route}) {
                     margin:10,
                     elevation:2
                   }}>
-                <Ionicons name="search-outline" style={{paddingLeft: 20}} size={25} color ={'gray'}/>
-                <TextInput placeholder='Search Nyle...' value={search} onChangeText={(text) => searchFilter(text)} placeholderTextColor={'gray'} style={{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
+                <Ionicons name ="search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
+                <TextInput placeholder='Search Nyle...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor= {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+              <ScrollView horizontal showsHorizontalScrollIndicator= {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   postFilters.map((filters, index) => (
-                      <Pressable key={index} onPress={() => handlePostFilterPress(index)} style={{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                        <Text style={{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                      <Pressable key= {index} onPress= {() => handlePostFilterPress(index)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                        <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {filters}
                         </Text>
                       </Pressable>
@@ -293,16 +293,16 @@ export default function Home({navigation, route}) {
             </View>
           }
 
-          data={filteredData}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          data= {filteredData}
+          refreshControl= {
+            <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
           }
           renderItem = {({item}) => (
-            <Pressable onPress={() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
-              <PostCard data ={item} username={route.params.username}/>
+            <Pressable onPress= {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+              <PostCard data = {item} username = {route.params.username}/>
             </Pressable>
             )}
-            keyExtractor={item => item.id}
+            keyExtractor= {item => item.id}
           />
         </View>
       </View>

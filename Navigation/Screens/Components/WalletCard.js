@@ -3,21 +3,21 @@ import {View, Text, StyleSheet, Image, TextInput} from 'react-native';
 
 const WalletCard = ({ wallet }) => {
     return (
-        <View style={styles.container}>
-            <View style={styles.walletContainer}>
-                <View style={styles.cardContainer}>
-                    <View style={styles.cardContent}>
-                        <View style={styles.walletLogoContainer}>
+        <View style = {styles.container}>
+            <View style = {styles.walletContainer}>
+                <View style = {styles.cardContainer}>
+                    <View style = {styles.cardContent}>
+                        <View style = {styles.walletLogoContainer}>
                             <Image
-                                source={{ uri: wallet.item.walletProvider }}
-                                style={styles.walletLogo}
+                                source = {{ uri: wallet.item.walletProvider }}
+                                style = {styles.walletLogo}
                             />
                         </View>
 
-                        <View style={styles.walletInfo}>
-                            <TextInput style={styles.walletName} value={wallet.item.name}/>
+                        <View style = {styles.walletInfo}>
+                            <TextInput style = {styles.walletName} value = {wallet.item.name}/>
                             <Text>${wallet.item.balance}</Text>
-                            <Text style={styles.walletAddress}>{wallet.item.address}</Text>
+                            <Text style = {styles.walletAddress}>{wallet.item.address}</Text>
                         </View>
                     </View>
                 </View>

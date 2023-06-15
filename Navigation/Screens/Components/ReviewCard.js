@@ -18,10 +18,10 @@ import { SwipeListView } from 'react-native-swipe-list-view';
     @param currentUser = string (current username)
  */
 
-export default function ReviewCard({data, currentUser}){
-    const [open, setOpen] = React.useState(false);
-    const [reply, setReply] = React.useState("")
-    const [existingReplies, setExistingReplies] = React.useState(data.Replies)
+export default function ReviewCard({data, currentUser}) {
+    const [open, setOpen] = useState(false);
+    const [reply, setReply] = useState("")
+    const [existingReplies, setExistingReplies] = useState(data.Replies)
 
     const SendReply = async () => {
         const docRef = firestore.collection("Reviews").doc(data.id);
@@ -42,8 +42,8 @@ export default function ReviewCard({data, currentUser}){
         }
     };
 
-    const handleSendReply = () =>{
-        SendReply().then(()=>{
+    const handleSendReply = () => {
+        SendReply().then(() => {
             console.log("Added Reply")
         })
     }
@@ -64,39 +64,39 @@ export default function ReviewCard({data, currentUser}){
         }
     }
 
-    return(
-        <View style={{ marginBottom: 10, margin: 10, backgroundColor:"whitesmoke"}}>
+    return (
+        <View style = {{ marginBottom: 10, margin: 10, backgroundColor:"whitesmoke"}}>
 
             <View>
-                <View style={{ flexDirection: "row"}}>
-                    <Image style={{ height: 50, width: 50, borderRadius: 50 }} source={{ uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }} />
-                    <View style={{ flexDirection: "column" }}>
-                        <Text style={{marginLeft:5}}>{data.Reviewer}</Text>
-                        <Text style={{marginLeft:5, fontWeight:'bold'}}>{data.Title}</Text>
-                        <View style={{ flexDirection: "row", marginLeft:5}}>
+                <View style = {{ flexDirection: "row"}}>
+                    <Image style = {{ height: 50, width: 50, borderRadius: 50 }} source = {{ uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }} />
+                    <View style = {{ flexDirection: "column" }}>
+                        <Text style = {{marginLeft:5}}>{data.Reviewer}</Text>
+                        <Text style = {{marginLeft:5, fontWeight:'bold'}}>{data.Title}</Text>
+                        <View style = {{ flexDirection: "row", marginLeft:5}}>
                             {
                                 Array.from({ length: data.stars }, (_, index) => (
-                                    <Ionicons key={index} size={17} name={"star"} color={"#ebd61e"} />
+                                    <Ionicons key= {index} size = {17} name = {"star"} color= {"#ebd61e"} />
                                 ))
                             }
                         </View>
                     </View>
                 </View>
 
-                <View style={{paddingBottom:10}}>
-                    <Text style={{marginTop:5}}>{data.ReviewMessage}</Text>
+                <View style = {{paddingBottom:10}}>
+                    <Text style = {{marginTop:5}}>{data.ReviewMessage}</Text>
                 </View>
 
                 {
                     (open)?(
-                        <View style={{flexDirection:'row', justifyContent:'center'}}>
-                            <View style={{ width:300}}>
-                                <TextInput multiline placeholder={"Write a reply"} onChangeText={(text)=>setReply(text)}/>
+                        <View style = {{flexDirection:'row', justifyContent:'center'}}>
+                            <View style = {{ width:300}}>
+                                <TextInput multiline placeholder= {"Write a reply"} onChangeText= {(text) =>setReply(text)}/>
                             </View>
 
-                            <Pressable onPress={handleSendReply}>
-                                <View style={{backgroundColor:'black', justifyContent:'center', borderRadius:30}}>
-                                    <Ionicons name={"send"} size={15} color={"white"} style={{margin:7}}/>
+                            <Pressable onPress= {handleSendReply}>
+                                <View style = {{backgroundColor:'black', justifyContent:'center', borderRadius:30}}>
+                                    <Ionicons name = {"send"} size = {15} color= {"white"} style = {{margin:7}}/>
                                 </View>
                             </Pressable>
 
@@ -104,9 +104,9 @@ export default function ReviewCard({data, currentUser}){
                     ):(
 
                         (data.Reviewe === currentUser)?(
-                            <Pressable onPress={()=>setOpen(!open)}>
-                                <View style={{position:"absolute", bottom:0, right:10}}>
-                                    <Ionicons name={"arrow-redo-outline"} size={20}/>
+                            <Pressable onPress= {() =>setOpen(!open)}>
+                                <View style = {{position:"absolute", bottom:0, right:10}}>
+                                    <Ionicons name = {"arrow-redo-outline"} size = {20}/>
                                 </View>
                             </Pressable>
                         ):(
@@ -122,19 +122,19 @@ export default function ReviewCard({data, currentUser}){
             {
                 (data.Reviewe === currentUser)?(
                     <SwipeListView
-                        data={existingReplies}
-                        rightOpenValue={-60}
+                        data= {existingReplies}
+                        rightOpenValue = {-60}
 
-                        renderItem={({item, index})=>(
-                            <View key={index} style={{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
-                                <Text style={{fontWeight:'bold'}}>{item.username} (You)</Text>
+                        renderItem= {({item, index}) =>(
+                            <View key= {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
+                                <Text style = {{fontWeight:'bold'}}>{item.username} (You)</Text>
                                 <Text>{item.message}</Text>
                             </View>
                             )
                         }
-                        renderHiddenItem={({ item, index }) => (
+                        renderHiddenItem= {({ item, index }) => (
                             <View
-                                style={{
+                                style = {{
                                     position: 'absolute',
                                     top: 0,
                                     right: 0,
@@ -143,10 +143,10 @@ export default function ReviewCard({data, currentUser}){
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}
-                                key={index}
+                                key= {index}
                             >
-                                <TouchableOpacity onPress={() => handleDeleteReply(index)}>
-                                    <Ionicons size={25} name='trash-outline' color={'red'} />
+                                <TouchableOpacity onPress= {() => handleDeleteReply(index)}>
+                                    <Ionicons size = {25} name ='trash-outline' color= {'red'} />
                                 </TouchableOpacity>
                             </View>
                         )}
@@ -156,9 +156,9 @@ export default function ReviewCard({data, currentUser}){
                 ):(
                     <ScrollView>
                         {
-                            existingReplies.map((reply, index)=>(
-                                <View key={index} style={{marginLeft:30, marginTop:5}}>
-                                    <Text style={{fontWeight:'bold'}}>{reply.username} </Text>
+                            existingReplies.map((reply, index) =>(
+                                <View key= {index} style = {{marginLeft:30, marginTop:5}}>
+                                    <Text style = {{fontWeight:'bold'}}>{reply.username} </Text>
                                     <Text>{reply.message}</Text>
                                 </View>
                             ))
