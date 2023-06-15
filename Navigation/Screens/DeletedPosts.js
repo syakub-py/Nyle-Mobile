@@ -35,13 +35,11 @@ export default function DeletedPosts({route, navigation}) {
     };
 
     const deletePost = (item) => {
-        console.log("Deleting post:", item.title);
         firestore
             .collection("DeletedPosts")
             .doc(item.title)
             .delete()
             .then(() => {
-                console.log("Deleted the Firestore data");
                 //delete each image
                 item.pic.forEach((picture, index) => {
                     const picRef = getstorage.refFromURL(picture);
@@ -52,7 +50,6 @@ export default function DeletedPosts({route, navigation}) {
                             picRef
                                 .delete()
                                 .then(() => {
-                                    console.log("Deleting image:", picRef.name);
                                 })
                                 .catch((error) => {
                                     console.log("Error deleting picture:", error);
@@ -65,7 +62,6 @@ export default function DeletedPosts({route, navigation}) {
                 });
                 Alert.alert("Posted deleted!");
                 onRefresh();
-                console.log("Post deleted")
             })
             .catch((error) => {
                 console.log("Error deleting document: " + JSON.stringify(error));
@@ -93,9 +89,7 @@ export default function DeletedPosts({route, navigation}) {
 
                 // Perform the necessary actions after restoration (e.g., refresh UI)
                 onRefresh();
-
-                console.log('Document restored successfully!');
-            } else console.log('Source document does not exist.' + item.title);
+            }
         } catch (error) {
             console.error('Error restoring document:', error);
         }
@@ -104,7 +98,6 @@ export default function DeletedPosts({route, navigation}) {
     const deleteAllPosts = () => {
         deletedPostList.forEach((doc , index) => {
             deletePost(doc)
-            console.log("Deleted all posts!");
         })
     }
 

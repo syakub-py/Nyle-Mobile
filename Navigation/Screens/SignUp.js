@@ -17,7 +17,6 @@ export default function SignUp({navigation}) {
         .then(() => {
             addUsernameToMap().then(() => {
                 navigation.navigate("Terms of Service", {showButtons:true, username:username})
-                console.log("added user to map")
             }).catch((error) => {
                 console.log(error)
             });
@@ -56,7 +55,6 @@ export default function SignUp({navigation}) {
                 username: username,
                 FileName: downloadUrl
             });
-            console.log("Username added to map successfully");
         } catch (error) {
             console.error("Error adding username to map:", error);
         }

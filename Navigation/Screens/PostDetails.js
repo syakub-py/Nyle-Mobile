@@ -37,7 +37,6 @@ export default function PostDetails({route, navigation}) {
                 setViews(currentViews + 1);
                 PostRef.update({ views: currentViews + 1 })
                     .then(() => {
-                        console.log('Views incremented');
                     })
                     .catch((error) => {
                         console.error('Error adding value to views:', error);

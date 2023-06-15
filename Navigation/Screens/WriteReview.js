@@ -22,7 +22,6 @@ export default function WriteReview({route, navigation}) {
             Replies :[],
             DatePosted: new Date().toLocaleString(),
         }).then(ref => {
-                console.log('Added document with ID: ' + ref.id);
                 navigation.goBack()
         }).catch(error => {
             console.log('Error adding document: ', error);

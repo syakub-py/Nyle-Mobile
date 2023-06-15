@@ -38,7 +38,6 @@ export default function EditPost({navigation, route}) {
     //         dateUpdated: new Date().toLocaleString(),
     //     })
     //     .then(ref => {
-    //         console.log('Edited document with ID: ' + newTitle);
     //     })
     //     .catch(error => {
     //         console.log('Error Editing document: ', error);

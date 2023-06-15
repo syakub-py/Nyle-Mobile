@@ -94,27 +94,23 @@ export default function Profile({navigation, route}) {
 
       await sourceDocRef.delete()
       onRefresh();
-      console.log('Document moved to delete folder successfully!');
     } catch (error) {
       console.error('Error moving document:', error);
     }
   }
 
   const deletePost = (item, collectionName) => {
-    console.log("Deleting post:", item.title);
     firestore
         .collection(collectionName)
         .doc(item.title)
         .delete()
         .then(() => {
-          console.log("Deleted the Firestore data");
           //delete each image
           item.pic.forEach((picture, index) => {
             const picRef = getstorage.refFromURL(picture);
             picRef
                 .delete()
                 .then(() => {
-                  console.log("Deleting image:", picRef.name);
                 })
                 .catch((error) => {
                   console.log("Error deleting picture:", error);
@@ -140,7 +136,6 @@ export default function Profile({navigation, route}) {
       const batch = firestore.batch();
 
       snapshot.forEach((doc) => {
-        console.log("deleting Posts...")
         deletePost(doc.data(), "DeletedPosts");
       });
 
@@ -150,7 +145,6 @@ export default function Profile({navigation, route}) {
 
   const markAsSold = (item) => {
     firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(() => {
-      console.log("marked as sold")
       onRefresh();
     }).catch((error) => {
       console.log(error)
@@ -158,10 +152,9 @@ export default function Profile({navigation, route}) {
   }
 
   useEffect(() => {
-    clearDeleted().then(() => {
-      console.log("checking deleted posts...")
-    })
+    clearDeleted()
   }, [])
+  
   return (
       <View style = {{backgroundColor:'white'}}>
             <SwipeListView

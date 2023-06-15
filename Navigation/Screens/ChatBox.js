@@ -151,18 +151,15 @@ export default function ChatBox({route, navigation}) {
         if (array.length > 0) {
             try {
                 setAnimating(true)
-                console.log("uploading chat image...")
                 for (const element of array) {
                     const filename = element.split("/").pop();
                     const response = await fetch(element);
                     const blob = await response.blob();
                     const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
                     await storageRef.put(blob);
-                    console.log("Image uploaded successfully!");
                     const url = await storageRef.getDownloadURL();
                     UrlDownloads.push(url);
                 }
-                console.log("All images uploaded successfully!");
                 setAnimating(false)
                 return UrlDownloads;
             } catch (error) {
@@ -257,14 +254,8 @@ export default function ChatBox({route, navigation}) {
   };
 
     useEffect(() => {
-        clearMessages().then(() => {
-            console.log("clearing old messages...")
-        })
-
-        markAsRead().then(() => {
-            console.log("updating unread messages...")
-        })
-
+        clearMessages()
+        markAsRead()
     }, [])
 
   return (  

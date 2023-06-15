@@ -94,12 +94,9 @@ export default function AddPost({route}) {
             const blob = await response.blob();
             const storageRef = getstorage.ref().child(`images/${title}/${filename}`);
             await storageRef.put(blob);
-            console.log("Image uploaded successfully!");
             const url = await storageRef.getDownloadURL();
             UrlDownloads.push(url);
           }
-          console.log("All images uploaded successfully!");
-          console.log(UrlDownloads)
           setAnimating(false)
 
           return UrlDownloads;
@@ -165,7 +162,6 @@ export default function AddPost({route}) {
                 category:category,
                 date: new Date().toLocaleString(),
             }).then(ref => {
-                    console.log('Added document with ID: ' + title);
                     clear();
                 }).catch(error => {
                     console.log('Error adding document: ', error);
@@ -192,7 +188,6 @@ export default function AddPost({route}) {
                 category:category,
                 date: new Date().toLocaleString(),
             }).then(ref => {
-                console.log('Added document with ID: ' + title);
                 Alert.alert("Post added")
                 clear();
             }).catch(error => {
@@ -216,14 +211,12 @@ export default function AddPost({route}) {
                 category:category,
                 date: new Date().toLocaleString(),
             }).then(ref => {
-                console.log('Added document with ID: ' + title);
                 Alert.alert("Post added")
                 clear();
             }).catch(error => {
                 console.log('Error adding document: ', error);
             });
         }
-
     }
 
     const renderCurrencyItem = (item) => {
@@ -234,7 +227,6 @@ export default function AddPost({route}) {
             </View>
         );
     };
-
 
     return (
         <SafeAreaView style = {{backgroundColor:'white'}}>

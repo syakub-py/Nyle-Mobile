@@ -62,10 +62,9 @@ export default function Market({navigation, route}) {
     const fetchCryptoNews = async () => {
       try {
         const response = await axios.get(
-            'https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&apiKey=0af11fce878b49a986b81ad1a90281b1'
+          'https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&apiKey=0af11fce878b49a986b81ad1a90281b1'
         );
         setArticles(response.data.articles);
-        console.log(articles)
       } catch (error) {
         console.log('Error fetching crypto news:', error);
       }

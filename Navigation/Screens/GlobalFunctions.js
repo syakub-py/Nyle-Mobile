@@ -43,7 +43,6 @@ const handleLike = async (doc, username) => {
                 // Write the updated array back to the document
                 PostRef.update({ likes: likesArray })
                     .then(() => {
-                        console.log('Liked!');
                     })
                     .catch((error) => {
                         console.error('Error adding Like:', error);
@@ -53,7 +52,6 @@ const handleLike = async (doc, username) => {
                 const updatedLikesArray = likesArray.filter((username) => username !== username);
                 PostRef.update({ likes: updatedLikesArray })
                     .then(() => {
-                        console.log('Like removed');
                     })
                     .catch((error) => {
                         console.error('Error removing like:', error);
@@ -65,7 +63,7 @@ const handleLike = async (doc, username) => {
         });
 };
 
-const generatePriceHomes =async (bedrooms, bathrooms) => {
+const generatePriceHomes = async (bedrooms, bathrooms) => {
     let price = 0;
     let counter = 0
 
@@ -90,7 +88,6 @@ const getCityState = async (lat, lng) => {
         return {city:"", state:""}
     }
 };
-
 
 // const generatePriceAuto = () => {
 //

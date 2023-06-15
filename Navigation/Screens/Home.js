@@ -72,8 +72,6 @@ export default function Home({navigation, route}) {
         // Upload the new image to Firebase Storage
         await storageRef.put(blob);
 
-        console.log("Profile Image uploaded successfully!");
-
         // Get the download URL for the uploaded image
         const url = await storageRef.getDownloadURL();
 
@@ -86,7 +84,6 @@ export default function Home({navigation, route}) {
             // Create the document if it doesn't exist
             firestore.collection('ProfilePictures').add({ FileName: route.params.username, url })
                 .then(() => {
-                  console.log('Profile picture created');
                 })
                 .catch((error) => {
                   console.error('Error creating profile picture:', error);
@@ -95,7 +92,6 @@ export default function Home({navigation, route}) {
             querySnapshot.forEach((doc) => {
               doc.ref.update({ url })
                   .then(() => {
-                    console.log('Profile picture updated');
                   })
                   .catch((error) => {
                     console.error('Error updating profile picture:', error);

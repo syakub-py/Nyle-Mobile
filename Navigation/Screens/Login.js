@@ -22,10 +22,7 @@ export default function Login({navigation}) {
         try {
             await signInWithRedirect(auth, provider);
             const result = await getRedirectResult(auth);
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            const user = result.user;
-            console.log(user);
+            GoogleAuthProvider.credentialFromResult(result);
         } catch (error) {
             console.log(error);
         }

@@ -129,15 +129,12 @@ export default function Chat({navigation, route}) {
                 if (doc.data().image.length > 0) {
                     doc.data().image.forEach((picture) => {
                         let imageRef = getstorage.refFromURL(picture)
-                        imageRef.delete().then(() => {
-                            console.log("deleted: " + imageRef.name)
-                        })
+                        imageRef.delete()
                     })
                 }
             })
 
             firestore.collection('Chats').doc(chat.id).delete().then(() => {
-                console.log('Chat document successfully deleted!');
                 onRefresh();
             })
         })

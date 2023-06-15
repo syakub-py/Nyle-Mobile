@@ -42,7 +42,6 @@ export default function ReviewCard({data, currentUser}) {
 
     const handleSendReply = () => {
         SendReply().then(() => {
-            console.log("Added Reply")
         })
     }
 
@@ -56,7 +55,6 @@ export default function ReviewCard({data, currentUser}) {
             setExistingReplies(updatedReplies);
 
             await docRef.update({ Replies: updatedReplies });
-            console.log("Deleted reply")
         }
     }
 

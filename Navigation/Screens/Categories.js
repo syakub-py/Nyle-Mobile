@@ -3,14 +3,13 @@ import { View, SafeAreaView, FlatList, ScrollView, TouchableOpacity, TextInput }
 import PostCard from './Components/PostCard.js';
 
 export default function Categories({navigation, route}) {
-  console.log(route.params)
   const [filteredData, setfilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState([]);// not using this - consider deleting
 
   useEffect(() => {
-      setfilterData(route.params.Posts);
-      setMasterData(route.params.Posts);
+    setfilterData(route.params.Posts);
+    setMasterData(route.params.Posts);
   }, [])
 
   const searchFilter = (text) => {
