@@ -15,7 +15,7 @@ export default function DeletedPosts({route, navigation}) {
 
     const getPosts = async () => {
         const results = [];
-        const MyPostsQuery =  firestore.collection('DeletedPosts').where("PostedBy", "== ", route.params.username)
+        const MyPostsQuery =  firestore.collection('DeletedPosts').where("PostedBy", "==", route.params.username)
         await MyPostsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push(doc.data())

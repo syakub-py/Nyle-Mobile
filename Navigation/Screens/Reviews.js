@@ -12,7 +12,7 @@ export default function Reviews({route, navigation}) {
     const [ReviewList, setReviewList] = useState([])
     const getReviews = async () => {
         let results = []
-        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "== ", route.params.username)
+        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.username)
         await MyReviewsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push({id: doc.id, ...doc.data()});

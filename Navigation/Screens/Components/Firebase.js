@@ -24,7 +24,6 @@ const firebaseConfig = {
 if (_.isEmpty(firebase.apps)) app = firebase.initializeApp(firebaseConfig);
 else app = firebase.app()
 
-
 const firestore = firebase.firestore()
 
 const firestoreLite = getFirestore(app)

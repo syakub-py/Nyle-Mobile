@@ -177,7 +177,7 @@ export default function ChatBox({route, navigation}) {
     }
 
     const markAsRead = async () => {
-        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "== ", false);
+        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
         await unreadMessagesRef.get().then((docs) => {
             docs.forEach((doc) => {
                 const currentMessageData = doc.data()

@@ -38,7 +38,7 @@ export default function Profile({navigation, route}) {
 
   const getPosts = async () =>  {
     const results = [];
-    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "== ", route.params.username)
+    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
     await MyPostsQuery.get().then(postSnapshot => {
       postSnapshot.forEach(doc => {
             results.push(doc.data())

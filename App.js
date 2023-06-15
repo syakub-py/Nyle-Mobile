@@ -4,8 +4,8 @@ import React from 'react';
 
 export default function App() {
   return (
-  <NavigationContainer>
-    <Stack/>
-  </NavigationContainer>
+    <NavigationContainer>
+      <Stack/>
+    </NavigationContainer>
   );
 }
