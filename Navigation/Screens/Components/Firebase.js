@@ -4,20 +4,20 @@ import 'firebase/compat/firestore'
 import {getFirestore} from 'firebase/firestore/lite'
 import "firebase/compat/analytics"
 import 'firebase/compat/storage'
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import _ from "lodash"
-dotenv.config()
+// dotenv.config()
 
 let app;
 
 const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
+  apiKey: "AIzaSyAS0OLIeH01QAyHZQxILWWUu3I2PJm3xz4",
+  authDomain: "nyle-bd594.firebaseapp.com",
+  projectId: "nyle-bd594",
+  storageBucket: "nyle-bd594.appspot.com",
+  messagingSenderId: "616674242131",
+  appId: "1:616674242131:web:7788508192e82a84b660a6",
+  measurementId: "G-70E5N2DBMC"
 };
 
 // Initialize Firebase

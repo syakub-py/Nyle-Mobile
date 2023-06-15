@@ -7,7 +7,7 @@ import {handleLike} from "../GlobalFunctions";
 import _ from "lodash"
 import CryptoDataService from '../../../Services/CryptoDataService';
 
-const updateCurrencyPrice = async () => {
+const updateCurrencyPrice = async (data) => {
     let price = 0;
     try {
         const response = await CryptoDataService.getMarketData();
@@ -36,7 +36,7 @@ export default function PostCard({data, username}) {
     const [index, setIndex] = useState(0)
 
     useEffect(() => {
-        updateCurrencyPrice()
+        updateCurrencyPrice(data)
 
     }, [data.currency])
 

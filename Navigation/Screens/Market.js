@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import CryptoDataService from '../../Services/CryptoDataService';
+import _ from "lodash";
+
 
 const {width} = Dimensions.get("window");
 

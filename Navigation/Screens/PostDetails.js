@@ -1,6 +1,6 @@
 import {Alert, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating, handleLike} from "./GlobalFunctions";
