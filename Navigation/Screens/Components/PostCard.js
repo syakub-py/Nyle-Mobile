@@ -5,6 +5,7 @@ import React, {useState, useEffect} from 'react';
 import {firestore} from "./Firebase";
 import axios from "axios";
 import {handleLike} from "../GlobalFunctions";
+import _ from "lodash"
 
 export default function PostCard({data, username}) {
     const navigation = useNavigation();
@@ -16,7 +17,7 @@ export default function PostCard({data, username}) {
             try {
                 const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
                 const filteredData = response.data.filter((item) => item.image === data.currency)
-                if (filteredData.length > 0) setPrice(filteredData[0].current_price)
+                if (!_.isEmpty(filteredData)) setPrice(filteredData[0].current_price)
             } catch (error) {
                 console.log(error.message);
             }

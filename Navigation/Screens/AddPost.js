@@ -19,6 +19,7 @@ import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Dropdown } from 'react-native-element-dropdown';
+import _ from "lodash"
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -262,7 +263,7 @@ export default function AddPost({route}) {
                 </ScrollView>
 
                 {
-                    (imageUrls.length === 0) ? (
+                    (_.isEmpty(imageUrls)) ? (
                         <Pressable onPress = {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
                             <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
                                 <Ionicons name ='images-outline' size = {80} color = {'lightgray'}/>

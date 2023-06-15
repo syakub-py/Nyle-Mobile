@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
 import * as ImagePicker from 'expo-image-picker';
+import _ from "lodash"
 
 /*
     @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
@@ -148,7 +149,7 @@ export default function ChatBox({route, navigation}) {
 
     const upload = async (array) => {
         const UrlDownloads = [];
-        if (array.length > 0) {
+        if (!_.isEmpty(array)) {
             try {
                 setAnimating(true)
                 for (const element of array) {
@@ -200,7 +201,7 @@ export default function ChatBox({route, navigation}) {
           }}
           refreshControl = {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>}>
           {
-            (imageUrls.length > 0) ? (
+            (!_.isEmpty(imageUrls)) ? (
               imageUrls.map((value, index) => (
                 <View key= {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
                     {
@@ -283,7 +284,7 @@ export default function ChatBox({route, navigation}) {
         renderActions = {renderActions}
         renderInputToolbar = {renderInputToolbar}
         renderMessageImage = {(props) => {
-            if (props.currentMessage.image.length === 0) return <View></View>
+            if (_.isEmpty(props.currentMessage.image)) return <View></View>
             else {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>

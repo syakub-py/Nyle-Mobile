@@ -14,7 +14,7 @@ import {
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
-
+import _ from "lodash"
 
 /*
     @route.params = {username: current username}
@@ -41,11 +41,11 @@ export default function Chat({navigation, route}) {
                 const latestMessageSnapshot = await latestMessageQuery.get();
                 const latestMessageDocs = latestMessageSnapshot.docs;
 
-                if (latestMessageDocs.length > 0) {
+                if (!_.isEmpty(latestMessageDocs)) {
                     const latestMessageData = latestMessageDocs[0].data();
                     const latestMessage = latestMessageData.text;
                     const received = latestMessageData.received;
-                    const image = latestMessageData.image.length > 0 ? latestMessageData.image[0] : "";
+                    const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
 
                     const chatData = {
                         data: doc.data(),
@@ -126,7 +126,7 @@ export default function Chat({navigation, route}) {
     const deleteChat= (chat) => {
         firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
             docs.forEach((doc) => {
-                if (doc.data().image.length > 0) {
+                if (!_.isEmpty(doc.data().image)) {
                     doc.data().image.forEach((picture) => {
                         let imageRef = getstorage.refFromURL(picture)
                         imageRef.delete()

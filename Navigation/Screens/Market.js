@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, FlatList, Dimensions, Image, ScrollView} from 'react-native';
 import axios from 'axios'
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 
 const {width} = Dimensions.get("window");
 
 const formatSparkline = (numbers) => {
-  const sevenDaysAgo = moment().subtract(7, 'days').unix();
+  const sevenDaysAgo = dayjs().subtract(7, 'day').unix();
   let formattedSparkline = numbers.map((item, index) => {
     return{
       x: sevenDaysAgo + (index + 1) * 3600,
@@ -70,7 +70,7 @@ export default function Market({navigation, route}) {
       }
     };
 
-    if (articles.length === 0) fetchCryptoNews();
+    if (_.isEmpty(articles)) fetchCryptoNews();
     
     fetchMarketData();
 
