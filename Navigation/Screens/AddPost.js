@@ -30,17 +30,17 @@ const height = width * 1;
  * @returns 
  */
 
+const currencies = [
+    { label: 'Bitcoin', value: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" },
+    { label: 'Ethereum', value: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880" },
+    { label: 'Doge Coin', value: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1547792256" },
+    { label: 'USD', value: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389" },
+    { label: 'Solana', value: "https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422" },
+]
+
 export default function AddPost({route}) {
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
-
-    const currencies = [
-        { label: 'Bitcoin', value: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" },
-        { label: 'Ethereum', value: "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880" },
-        { label: 'Doge Coin', value: "https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1547792256" },
-        { label: 'USD', value: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389" },
-        { label: 'Solana', value: "https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422" },
-    ]
 
     const [refresh, setRefreshing] = useState(false);
     const [title, setTitle] = useState("");
@@ -58,14 +58,12 @@ export default function AddPost({route}) {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
 
-
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
     const [imageUrls, setImageUrls] = useState([]);
     const [currency, setCurrency] = useState({label:'', value:''});
     const [isFocus, setIsFocus] = useState(false);
-
 
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({

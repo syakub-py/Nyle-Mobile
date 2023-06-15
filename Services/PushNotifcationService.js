@@ -8,7 +8,6 @@ export const requestNotificationPermission = async () => {
     if (enabled) await messaging().getToken()
 };
 
-//This isn't being used:
 export const handleIncomingNotification = () => {
     messaging().onMessage(async (remoteMessage) => {
         console.log('Received a new notification', remoteMessage);
