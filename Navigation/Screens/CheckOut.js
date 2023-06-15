@@ -8,36 +8,38 @@ import CryptoDataService from '../../Services/CryptoDataService';
 
 const { width } = Dimensions.get('window')
 
-export default function CheckOut({route, navigation}) {
-    const [marketData, setMarketData] = useState([])
-    const [value, setValue] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
+const [marketData, setMarketData] = useState([])
+const [value, setValue] = useState(null);
+const [isFocus, setIsFocus] = useState(false);
 
-    const getMarketData = async () => {
-        try {
-          const response = await CryptoDataService.getMarketData();
-          return (response.data);
-        } catch (error) {
-          console.log(error.message);
-        }
+const getMarketData = async () => {
+    try {
+        const response = await CryptoDataService.getMarketData();
+        return (response.data);
+    } catch (error) {
+        console.log(error.message);
     }
+}
 
-    useEffect(() => {
-        getMarketData().then((response) => {
-            setMarketData(response)
-        })
-    }, [])
-    
-    const data = [
-        { label: 'Account used: 4563 (Coinbase)', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
-      ];    
+useEffect(() => {
+    getMarketData().then((response) => {
+        setMarketData(response)
+    })
+}, [])
+
+const data = [
+    { label: 'Account used: 4563 (Coinbase)', value: '1' },
+    { label: 'Item 2', value: '2' },
+    { label: 'Item 3', value: '3' },
+    { label: 'Item 4', value: '4' },
+    { label: 'Item 5', value: '5' },
+    { label: 'Item 6', value: '6' },
+    { label: 'Item 7', value: '7' },
+    { label: 'Item 8', value: '8' },
+];
+
+export default function CheckOut({route, navigation}) {
+
     
     return (
       <View style = {{backgroundColor:'white', flex:1}}>

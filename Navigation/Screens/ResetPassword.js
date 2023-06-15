@@ -3,18 +3,18 @@ import {View, Text, StyleSheet, Pressable, TextInput, Image} from 'react-native'
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-export default function ResetPassword({navigation}) {
-    const [username, setUsername] = useState('')
-    const handleResetPassword = () => {
-        auth.sendPasswordResetEmail(username)
-            .then(() => {
-                alert('Password reset email sent successfully!');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+const [username, setUsername] = useState('')
+const handleResetPassword = () => {
+    auth.sendPasswordResetEmail(username)
+        .then(() => {
+            alert('Password reset email sent successfully!');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
 
+export default function ResetPassword({navigation}) {
     return (
         <View style = {styles.container}>
             <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>

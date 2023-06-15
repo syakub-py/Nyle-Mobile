@@ -5,28 +5,30 @@ import "firebase/auth";
 import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
+const [username, setUsername] = useState('')
+const [password, setPassword] = useState('')
+
+const handleEmailAndPasswordLogin = () => {
+    auth.signInWithEmailAndPassword(username, password)
+        .then(userCredentials => {
+            const user = userCredentials.user;
+        })
+        .catch(error => alert(error.message))
+}
+
+const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+        await signInWithRedirect(auth, provider);
+        const result = await getRedirectResult(auth);
+        GoogleAuthProvider.credentialFromResult(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export default function Login({navigation}) {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-
-    const handleEmailAndPasswordLogin = () => {
-        auth.signInWithEmailAndPassword(username, password)
-            .then(userCredentials => {
-                const user = userCredentials.user;
-            })
-            .catch(error => alert(error.message))
-    }
-
-    const handleGoogleLogin = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-            await signInWithRedirect(auth, provider);
-            const result = await getRedirectResult(auth);
-            GoogleAuthProvider.credentialFromResult(result);
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {

@@ -12,47 +12,78 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
+const [state, setState] = useState({active:0})
+const [more, setMore] = useState(false)
+const [isOpen, setIsOpen] = useState(false);
+const [views, setViews] = useState(0)
+const [currentOffset, setCurrentOffset] = useState(0);
+const scrollViewRef = useRef(null);
+const [rating, setRating] = useState(0)
+const [numOfReviews, setNumOfReviews] = useState(0)
+const [realEstateData, setRealEstateData] = useState([])
+
+const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+};
+
+const handleViewCounter = () => {
+    const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
+    PostRef.get()
+        .then((doc) => {
+            const currentViews = doc.data().views;
+            setViews(currentViews + 1);
+            PostRef.update({ views: currentViews + 1 })
+                .then(() => {
+                })
+                .catch((error) => {
+                    console.error('Error adding value to views:', error);
+                });
+        });
+};
+
+
+const findUser = (userArray, username) => {
+    for (let index = 0; index < userArray.length; index++) {
+        if (userArray[index].username !== username) return index
+    }
+    return "";
+}
+
+const getRealEstateData = async (address) => {
+    try {
+        const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
+        return await response.json();
+    } catch (error) {
+        console.log("server offline");
+        return []
+    }
+};
+
+const change = ({ nativeEvent }) => {
+    const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+    const newOffset = nativeEvent.contentOffset.x;
+    setCurrentOffset(newOffset);
+    setState({ active: slide });
+    if (slide <= images.length-4) {
+        scrollViewRef.current.scrollTo({
+            x: 0,
+            animated: true,
+        });
+    }
+
+    if (slide >= 6) {
+        setCurrentOffset(currentOffset + 10);
+        scrollViewRef.current.scrollTo({
+            x: currentOffset,
+            animated: true,
+        });
+    }
+};
+
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
-    const [state, setState] = useState({active:0})
-    const [more, setMore] = useState(false)
-    const [isOpen, setIsOpen] = useState(false);
-    const [views, setViews] = useState(0)
-    const [currentOffset, setCurrentOffset] = useState(0);
     const likes = route.params.item.likes
-    const scrollViewRef = useRef(null);
-    const [rating, setRating] = useState(0)
-    const [numOfReviews, setNumOfReviews] = useState(0)
-    const [realEstateData, setRealEstateData] = useState([])
 
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const handleViewCounter = () => {
-        const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
-        PostRef.get()
-            .then((doc) => {
-                const currentViews = doc.data().views;
-                setViews(currentViews + 1);
-                PostRef.update({ views: currentViews + 1 })
-                    .then(() => {
-                    })
-                    .catch((error) => {
-                        console.error('Error adding value to views:', error);
-                    });
-            });
-    };
-
-    const getRealEstateData = async (address) => {
-        try {
-            const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
-            return await response.json();
-        } catch (error) {
-            console.log("server offline");
-            return []
-        }
-    };
 
     const handleAddChat = () => {
         if (route.params.username !== route.params.item.PostedBy) {
@@ -83,7 +114,7 @@ export default function PostDetails({route, navigation}) {
                     ]
 
                     const username = owners[1].username
-                    navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners)})
+                    navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, route.params.username)})
                 })
                 .catch((error) => {
                     Alert.alert('Error adding document: ', error);
@@ -91,35 +122,6 @@ export default function PostDetails({route, navigation}) {
         }
     };
 
-
-
-    const change = ({ nativeEvent }) => {
-        const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-        const newOffset = nativeEvent.contentOffset.x;
-        setCurrentOffset(newOffset);
-        setState({ active: slide });
-        if (slide <= images.length-4) {
-            scrollViewRef.current.scrollTo({
-                x: 0,
-                animated: true,
-            });
-        }
-
-        if (slide >= 6) {
-            setCurrentOffset(currentOffset + 10);
-            scrollViewRef.current.scrollTo({
-                x: currentOffset,
-                animated: true,
-            });
-        }
-    };
-
-    const findUser = (userArray) => {
-        for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username !== route.params.username) return index
-        }
-        return "";
-    }
 
 
     useEffect(() => {

@@ -5,14 +5,14 @@ import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function SignUp({navigation}) {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [profilePic, setProfilePic] = useState('')
-    const [refreshing, setRefreshing] = useState(false);
 
-    const handleSignUp = () => {
-        auth
+const [username, setUsername] = useState('')
+const [password, setPassword] = useState('')
+const [profilePic, setProfilePic] = useState('')
+const [refreshing, setRefreshing] = useState(false);
+
+const handleSignUp = () => {
+    auth
         .createUserWithEmailAndPassword(username, password)
         .then(() => {
             addUsernameToMap().then(() => {
@@ -21,45 +21,46 @@ export default function SignUp({navigation}) {
                 console.log(error)
             });
         }).catch((error) => alert(error.message))
+}
+
+const SelectImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [4, 3],
+        quality: 1,
+    });
+
+    if (!result.canceled) {
+        const fileJson = result.assets;
+        setProfilePic(fileJson[0].uri);
     }
-    
-    const SelectImages = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          aspect: [4, 3],
-          quality: 1,
+};
+
+const removeProfilePhoto = () => {
+    setRefreshing(true);
+    setProfilePic('')
+    setTimeout(() => setRefreshing(false), 300);
+}
+
+const addUsernameToMap = async () => {
+    try {
+        // Upload profile picture to Firebase Storage and get the download URL
+        const profilePicRef = getstorage.ref().child(`ProfileImages/${username}`);
+        await profilePicRef.put(profilePic);
+        const downloadUrl = await profilePicRef.getDownloadURL();
+
+        // Add username and profile picture download URL to Firestore
+        const docRef = firestore.collection("ProfileImages").doc(username);
+        await docRef.set({
+            username: username,
+            FileName: downloadUrl
         });
-      
-        if (!result.canceled) {
-            const fileJson = result.assets;
-            setProfilePic(fileJson[0].uri);
-        }
-    };
-
-    const removeProfilePhoto = () => {
-        setRefreshing(true);
-        setProfilePic('')
-        setTimeout(() => setRefreshing(false), 300);
+    } catch (error) {
+        console.error("Error adding username to map:", error);
     }
+};
 
-    const addUsernameToMap = async () => {
-        try {
-            // Upload profile picture to Firebase Storage and get the download URL
-            const profilePicRef = getstorage.ref().child(`ProfileImages/${username}`);
-            await profilePicRef.put(profilePic);
-            const downloadUrl = await profilePicRef.getDownloadURL();
-
-            // Add username and profile picture download URL to Firestore
-            const docRef = firestore.collection("ProfileImages").doc(username);
-            await docRef.set({
-                username: username,
-                FileName: downloadUrl
-            });
-        } catch (error) {
-            console.error("Error adding username to map:", error);
-        }
-    };
-
+export default function SignUp({navigation}) {
     return (
         <View style = {styles.container}>
 

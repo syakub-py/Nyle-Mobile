@@ -7,16 +7,13 @@ import React from "react";
     @route.params = {index: index to start, pictures: array of urls to show}
 */
 
+const getImages = (array) => {
+    return array.map((image) => ({ url: image }));
+};
+
+
 export default function ViewImages({ route, navigation }) {
     const { pictures, index } = route.params;
-
-    const getImages = (array) => {
-        return array.map((image) => ({ url: image }));
-    };
-
-    const handlePressClose = () => {
-        navigation.goBack();
-    };
 
     return (
         <ImageViewer
@@ -38,12 +35,12 @@ export default function ViewImages({ route, navigation }) {
                         justifyContent: 'center',
                     }}
                 >
-                    <Pressable onPress = {handlePressClose}>
+                    <Pressable onPress = {()=>{navigation.goBack();}}>
                         <Ionicons name = "close-outline" size = {30} />
                     </Pressable>
                 </View>
             )}
-            onSwipeDown = {handlePressClose}
+            onSwipeDown = {()=>{navigation.goBack();}}
             index = {index}
             backgroundColor = "transparent"
         />

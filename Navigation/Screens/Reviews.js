@@ -1,5 +1,5 @@
 import { View, Text, FlatList, SafeAreaView, Pressable } from 'react-native';
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {firestore} from "./Components/Firebase";
 import ReviewCard from "./Components/ReviewCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -8,26 +8,28 @@ import Ionicons from "react-native-vector-icons/Ionicons";
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-export default function Reviews({route, navigation}) {
-    const [ReviewList, setReviewList] = useState([])
-    const getReviews = async () => {
-        let results = []
-        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.username)
-        await MyReviewsQuery.get().then(postSnapshot => {
-            postSnapshot.forEach(doc => {
-                results.push({id: doc.id, ...doc.data()});
-            });
-        })
-        if (results) {
-            results = results.sort((a, b) => {
-                return new Date(b.DatePosted) - new Date(a.DatePosted);
-            });
-        }
-        return results;
+const [ReviewList, setReviewList] = useState([])
+const getReviews = async (username) => {
+    let results = []
+    const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==",username)
+    await MyReviewsQuery.get().then(postSnapshot => {
+        postSnapshot.forEach(doc => {
+            results.push({id: doc.id, ...doc.data()});
+        });
+    })
+    if (results) {
+        results = results.sort((a, b) => {
+            return new Date(b.DatePosted) - new Date(a.DatePosted);
+        });
     }
+    return results;
+}
+
+export default function Reviews({route, navigation}) {
+
 
     useEffect(() => {
-        getReviews().then((result) => {
+        getReviews( route.params.username).then((result) => {
             setReviewList(result)
         })
     }, [])

@@ -6,15 +6,36 @@ import {getPosts, getCityState} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 
-export default function HomeMapView({navigation, route}) {
-    const [masterData, setMasterData] = useState([]);
-    const [filteredData, setFilterData] = useState([]);
 
-    const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-    const [categorySearch, setCategorySearch] = useState([]);
-    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-    const [city, setCity] = useState("")
-    const [state, setState] = useState("")
+const [masterData, setMasterData] = useState([]);
+const [filteredData, setFilterData] = useState([]);
+
+const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
+const [categorySearch, setCategorySearch] = useState([]);
+const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+const [city, setCity] = useState("")
+const [state, setState] = useState("")
+
+const handleCategoryPress = (index) => {
+    setSelectedCategoryIndex(index);
+    categoryFilter(categories[index])
+};
+
+const categoryFilter = (text) => {
+    if (text && text !== 'All') {
+        const newData = masterData.filter((item) => {
+            const itemData = item.category ? item.category : ''
+            return itemData.indexOf(text)>-1;
+        });
+        setFilterData(newData);
+        setCategorySearch(text);
+    } else {
+        setFilterData(masterData);
+        setCategorySearch(text);
+    }
+}
+
+export default function HomeMapView({navigation, route}) {
 
     useEffect(() => {
         getPosts().then((result) => {
@@ -31,24 +52,7 @@ export default function HomeMapView({navigation, route}) {
 
     }, [])
 
-    const handleCategoryPress = (index) => {
-        setSelectedCategoryIndex(index);
-        categoryFilter(categories[index])
-    };
 
-    const categoryFilter = (text) => {
-        if (text && text !== 'All') {
-            const newData = masterData.filter((item) => {
-                const itemData = item.category ? item.category : ''
-                return itemData.indexOf(text)>-1;
-            });
-            setFilterData(newData);
-            setCategorySearch(text);
-        } else {
-            setFilterData(masterData);
-            setCategorySearch(text);
-        }
-    }
 
     return (
         <View style = {{ flex: 1 }}>

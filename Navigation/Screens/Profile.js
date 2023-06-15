@@ -32,42 +32,44 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
   }
 }
 
+const getPosts = async (username) =>  {
+  const results = [];
+  const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", username)
+  await MyPostsQuery.get().then(postSnapshot => {
+    postSnapshot.forEach(doc => {
+      results.push(doc.data())
+    });
+  })
+  return results;
+}
+
+const onRefresh = () => {
+  setRefreshing(true);
+  getPosts().then((result) => {
+    setUserList(result);
+  }).catch((error) => {
+    Alert.alert('Error Getting Posts: ', error)
+  })
+  setTimeout(() => setRefreshing(false), 1000);
+};
+
+const handleSignOut = async () => {
+  try {
+    await firebase.auth().signOut();
+  } catch (error) {
+    console.error(error);
+  }
+  return navigation.navigate("Login")
+}
+
 export default function Profile({navigation, route}) {
   const [userList, setUserList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getPosts = async () =>  {
-    const results = [];
-    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
-    await MyPostsQuery.get().then(postSnapshot => {
-      postSnapshot.forEach(doc => {
-            results.push(doc.data())
-        });
-      })
-    return results;
-  }
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    getPosts().then((result) => {
-      setUserList(result);
-    }).catch((error) => {
-      Alert.alert('Error Getting Posts: ', error)
-    })
-    setTimeout(() => setRefreshing(false), 1000);
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await firebase.auth().signOut();
-    } catch (error) {
-      console.error(error);
-    }
-    return navigation.navigate("Login")
-  }
   
   useEffect(() => {
-    getPosts().then((result) => {
+    getPosts(route.params.username).then((result) => {
       setUserList(result);
     }).catch((error) => {
       Alert.alert('Error Getting Posts: ', error)

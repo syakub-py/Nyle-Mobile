@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, FlatList, Image, Pressable } from 'react-native';
-import React from "react";
+import React, {useState, useEffect} from "react";
 import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
 import {firestore} from "./Components/Firebase";
@@ -10,39 +10,43 @@ import {generateRating} from "./GlobalFunctions";
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
 */
 
-export default function ViewProfile({route}) {
-    const navigation = useNavigation();
-    const [UsersPosts, setUserPosts] = useState([])
-    const [rating, setRating] = useState(0)
 
-    const getPosts = async () => {
-        const results = [];
-        const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
-        await MyPostsQuery.get().then(postSnapshot => {
-            postSnapshot.forEach(doc => {
-                results.push(doc.data())
-            });
-        })
-        return results;
+const navigation = useNavigation();
+const [UsersPosts, setUserPosts] = useState([])
+const [rating, setRating] = useState(0)
+
+const getPosts = async () => {
+    const results = [];
+    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
+    await MyPostsQuery.get().then(postSnapshot => {
+        postSnapshot.forEach(doc => {
+            results.push(doc.data())
+        });
+    })
+    return results;
+}
+
+
+
+const getSoldItems = () => {
+    let counter = 0
+    for (let i = 0; i < UsersPosts.length; i++) {
+        if (UsersPosts[i].sold === 'true') counter++
     }
+    return counter
+}
+
+export default function ViewProfile({route}) {
 
     useEffect(() => {
         getPosts().then((result) => {
             setUserPosts(result)
         })
         generateRating(route.params.postedByUsername).then((result) => {
-            setRating(result)
+            setRating(result.rating)
         })
 
     }, [])
-
-    const getSoldItems = () => {
-        let counter = 0
-        for (let i = 0; i < UsersPosts.length; i++) {
-            if (UsersPosts[i].sold === 'true') counter++
-        }
-        return counter
-    }
 
     return (
         <SafeAreaView>

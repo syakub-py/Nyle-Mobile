@@ -1,32 +1,33 @@
 import {View, Text, Pressable, TextInput} from 'react-native';
 import {firestore} from "./Components/Firebase";
-import React from "react";
+import React,{useState,} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 /*
     @route.params = {postedBy:user the review was posted by, username:current username}
 */
 
-export default function WriteReview({route, navigation}) {
-    const [ReviewMessage, setReviewMessage] = useState("")
-    const [Title, setTitle] = useState("")
-    const [Stars, setStars] = useState(0)
 
-    const PostReview = () => {
-        return firestore.collection("Reviews").add({
-            Reviewer: route.params.username,
-            Reviewe: route.params.PostedBy,
-            Title: Title,
-            ReviewMessage :ReviewMessage,
-            stars:Stars+1,
-            Replies :[],
-            DatePosted: new Date().toLocaleString(),
-        }).then(ref => {
-                navigation.goBack()
-        }).catch(error => {
-            console.log('Error adding document: ', error);
-        });
-    }
+const [ReviewMessage, setReviewMessage] = useState("")
+const [Title, setTitle] = useState("")
+const [Stars, setStars] = useState(0)
+
+const PostReview = (username, PostedBy, navigation) => {
+    return firestore.collection("Reviews").add({
+        Reviewer: username,
+        Reviewe: PostedBy,
+        Title: Title,
+        ReviewMessage :ReviewMessage,
+        stars:Stars+1,
+        Replies :[],
+        DatePosted: new Date().toLocaleString(),
+    }).then(ref => {
+        navigation.goBack()
+    }).catch(error => {
+        console.log('Error adding document: ', error);
+    });
+}
+export default function WriteReview({route, navigation}) {
 
     return (
         <View style = {{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -48,7 +49,7 @@ export default function WriteReview({route, navigation}) {
                     ))}
                 </View>
                 <TextInput style = {{ height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top' }} placeholder = "Review Message" onChangeText = {(text) => setReviewMessage(text)} multiline />
-                <Pressable style = {{ width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10 }} onPress = {() => PostReview()}>
+                <Pressable style = {{ width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10 }} onPress = {() => PostReview(route.params.username,route.params.PostedBy, navigation)}>
                     <Text style = {{ color: 'white', fontSize: 16 }}>Post Review</Text>
                 </Pressable>
             </View>

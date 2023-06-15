@@ -3,47 +3,51 @@ import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+
+
+const [username, setUsername] = useState('');
+const [password, setPassword] = useState('');
+
+const updateUsername = async (newUsername) => {
+    try {
+        // Get the current user
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+            console.error('No authenticated user found.');
+            return;
+        }
+
+        // Update the username in the user profile
+        await currentUser.updateProfile({ displayName: newUsername });
+
+        alert('Username reset successful.');
+    } catch (error) {
+        alert('Error resetting username');
+    }
+};
+
+const updatePassword = async (newPassword) => {
+    try {
+        // Get the current user
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+            alert('No authenticated user found.');
+            return;
+        }
+
+        // Update the password
+        await currentUser.updatePassword(newPassword);
+
+        alert('Password update successful.');
+    } catch (error) {
+        alert('Error updating password: '+ error);
+    }
+};
+
 export default function EditProfile({navigation}) {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
-    const updateUsername = async (newUsername) => {
-        try {
-            // Get the current user
-            const currentUser = auth.currentUser;
-
-            if (!currentUser) {
-                console.error('No authenticated user found.');
-                return;
-            }
-
-            // Update the username in the user profile
-            await currentUser.updateProfile({ displayName: newUsername });
-
-            alert('Username reset successful.');
-        } catch (error) {
-            alert('Error resetting username');
-        }
-    };
-
-    const updatePassword = async (newPassword) => {
-        try {
-            // Get the current user
-            const currentUser = auth.currentUser;
-
-            if (!currentUser) {
-                alert('No authenticated user found.');
-                return;
-            }
-
-            // Update the password
-            await currentUser.updatePassword(newPassword);
-
-            alert('Password update successful.');
-        } catch (error) {
-            alert('Error updating password: '+ error);
-        }
-    };
 
     return (
         <View style = {{ flex: 1, padding: 16 , justifyContent:'center'}}>

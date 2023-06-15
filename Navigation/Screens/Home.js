@@ -22,92 +22,160 @@ import {getPosts} from "./GlobalFunctions";
   @route.params = {profilePicture: current profile picture, username: current username}
 */
 
-export default function Home({navigation, route}) {
-  // State variables using React Hooks:
-  const [filteredData, setFilterData] = useState([]);
-  const [masterData, setMasterData] = useState([]);
-  const [search, setSearch] = useState([]);
-  const [categorySearch, setCategorySearch] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
+// State variables using React Hooks:
+const [filteredData, setFilterData] = useState([]);
+const [masterData, setMasterData] = useState([]);
+const [search, setSearch] = useState([]);
+const [categorySearch, setCategorySearch] = useState([]);
+const [refreshing, setRefreshing] = useState(false);
+const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
 
-  const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-  const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
-  const {width} = Dimensions.get("window");
+const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
+const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
+const {width} = Dimensions.get("window");
 
-  // Function to refresh the data
-  const onRefresh = () => {
-    // Set the refreshing state to true
-    setRefreshing(true);
-    // Retrieve posts from the database and update the state variables
-    getPosts().then((result) => {
-      const masterPostList = result
-      setFilterData(masterPostList);
-      setMasterData(masterPostList);
+// Function to refresh the data
+const onRefresh = () => {
+  // Set the refreshing state to true
+  setRefreshing(true);
+  // Retrieve posts from the database and update the state variables
+  getPosts().then((result) => {
+    const masterPostList = result
+    setFilterData(masterPostList);
+    setMasterData(masterPostList);
 
 
-    }).catch((error) => {
-      Alert.alert(error)
-    })
-    // Wait for 0.3 seconds before setting the refreshing state to false
-    setTimeout(() => setRefreshing(false), 300);
-  };
+  }).catch((error) => {
+    Alert.alert(error)
+  })
+  // Wait for 0.3 seconds before setting the refreshing state to false
+  setTimeout(() => setRefreshing(false), 300);
+};
 
-  const SelectProfilePic = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      try {
-        // Fetch the image and create a blob
-        const response = await fetch(result.assets[0]);
-        const blob = await response.blob();
+const SelectProfilePic = async (username) => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    aspect: [4, 3],
+    quality: 1,
+  });
+  if (!result.canceled) {
+    try {
+      // Fetch the image and create a blob
+      const response = await fetch(result.assets[0]);
+      const blob = await response.blob();
 
-        // Get a reference to the storage location for the profile image
-        const storageRef = getstorage.ref(`ProfilePictures/${route.params.username}`);
+      // Get a reference to the storage location for the profile image
+      const storageRef = getstorage.ref(`ProfilePictures/${username}`);
 
-        // Upload the new image to Firebase Storage
-        await storageRef.put(blob);
+      // Upload the new image to Firebase Storage
+      await storageRef.put(blob);
 
-        // Get the download URL for the uploaded image
-        const url = await storageRef.getDownloadURL();
+      // Get the download URL for the uploaded image
+      const url = await storageRef.getDownloadURL();
 
-        // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
-        const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', route.params.username);
+      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
+      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', usernamee);
 
-        // Update the URL for the profile image in the Firestore document
-        profilePicRef.get().then((querySnapshot) => {
-          if (querySnapshot.empty) {
-            // Create the document if it doesn't exist
-            firestore.collection('ProfilePictures').add({ FileName: route.params.username, url })
+      // Update the URL for the profile image in the Firestore document
+      profilePicRef.get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          // Create the document if it doesn't exist
+          firestore.collection('ProfilePictures').add({ FileName: username, url })
+              .then(() => {
+              })
+              .catch((error) => {
+                console.error('Error creating profile picture:', error);
+              });
+        } else {
+          querySnapshot.forEach((doc) => {
+            doc.ref.update({ url })
                 .then(() => {
                 })
                 .catch((error) => {
-                  console.error('Error creating profile picture:', error);
+                  console.error('Error updating profile picture:', error);
                 });
-          } else {
-            querySnapshot.forEach((doc) => {
-              doc.ref.update({ url })
-                  .then(() => {
-                  })
-                  .catch((error) => {
-                    console.error('Error updating profile picture:', error);
-                  });
-            });
-          }
-        }).catch((error) => {
-          console.error('Error getting document:', error);
-        });
-      } catch (error) {
-        console.error('Error uploading profile image:', error);
-      }
+          });
+        }
+      }).catch((error) => {
+        console.error('Error getting document:', error);
+      });
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
     }
-  };
+  }
+};
 
 
+const handleCategoryPress = (index) => {
+  setSelectedCategoryIndex(index);
+  categoryFilter(categories[index])
+};
+
+const handlePostFilterPress = (index) => {
+  setSelectedPostFilterIndex(index);
+  postFilter(postFilters[index])
+};
+
+// Function to filter the data based on search input
+const searchFilter = (text) => {
+  if (text) {
+    const newData = masterData.filter((item) => {
+      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase()
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData)>-1;
+    });
+    setFilterData(newData);
+    setSearch(text);
+  } else {
+    setFilterData(masterData);
+    setSearch(text);
+  }
+}
+
+const categoryFilter = (text) => {
+  if (text && text !== 'All') {
+    const newData = masterData.filter((item) => {
+      const itemData = item.category ? item.category : ''
+      return itemData.indexOf(text)>-1;
+    });
+    setFilterData(newData);
+    setCategorySearch(text);
+  } else {
+    setFilterData(masterData);
+    setCategorySearch(text);
+  }
+}
+
+const postFilter = (text) => {
+  if (text && text !== 'Latest Posts') {
+    if (text === 'Most Expensive') {
+      const newData = masterData.filter((item) => {
+        const itemData = item.category ? item.category : '';
+        return itemData.indexOf(text) > -1;
+      });
+      setFilterData(newData);
+    }
+    if (text === 'Trending') {
+      const newData = masterData.sort((a, b) => {
+        const viewsA = a.views ? a.views : 0;
+        const viewsB = b.views ? b.views : 0;
+        return viewsB - viewsA;
+      });
+      setFilterData(newData);
+    }
+    if (text === 'Cheapest') {
+      const newData = masterData.sort((a, b) => {
+        const priceA = a.price ? a.price : 0;
+        const priceB = b.price ? b.price : 0;
+        return priceA - priceB;
+      });
+      setFilterData(newData);
+    }
+  } else setFilterData(masterData);
+};
+
+export default function Home({navigation, route}) {
   // Effect hook to retrieve posts from the database on component mount
   useEffect(() => {
     getPosts().then((result) => {
@@ -119,74 +187,6 @@ export default function Home({navigation, route}) {
     })
 
   }, [])
-
-  const handleCategoryPress = (index) => {
-    setSelectedCategoryIndex(index);
-    categoryFilter(categories[index])
-  };
-
-  const handlePostFilterPress = (index) => {
-    setSelectedPostFilterIndex(index);
-    postFilter(postFilters[index])
-  };
-
-  // Function to filter the data based on search input
-  const searchFilter = (text) => {
-    if (text) {
-      const newData = masterData.filter((item) => {
-        const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase()
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData)>-1;
-      });
-      setFilterData(newData);
-      setSearch(text);
-    } else {
-      setFilterData(masterData);
-      setSearch(text);
-    }
-  }
-
-  const categoryFilter = (text) => {
-    if (text && text !== 'All') {
-      const newData = masterData.filter((item) => {
-        const itemData = item.category ? item.category : ''
-        return itemData.indexOf(text)>-1;
-      });
-      setFilterData(newData);
-      setCategorySearch(text);
-    } else {
-      setFilterData(masterData);
-      setCategorySearch(text);
-    }
-  }
-
-  const postFilter = (text) => {
-    if (text && text !== 'Latest Posts') {
-      if (text === 'Most Expensive') {
-        const newData = masterData.filter((item) => {
-          const itemData = item.category ? item.category : '';
-          return itemData.indexOf(text) > -1;
-        });
-        setFilterData(newData);
-      }
-      if (text === 'Trending') {
-        const newData = masterData.sort((a, b) => {
-          const viewsA = a.views ? a.views : 0;
-          const viewsB = b.views ? b.views : 0;
-          return viewsB - viewsA;
-        });
-        setFilterData(newData);
-      }
-      if (text === 'Cheapest') {
-        const newData = masterData.sort((a, b) => {
-          const priceA = a.price ? a.price : 0;
-          const priceB = b.price ? b.price : 0;
-          return priceA - priceB;
-        });
-        setFilterData(newData);
-      }
-    } else setFilterData(masterData);
-  };
 
   return (
       <View style = {{flex:1, backgroundColor:'white'}}>
@@ -235,7 +235,7 @@ export default function Home({navigation, route}) {
                 <View style = {{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
                   <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20}}/>
 
-                  <Pressable onPress = {SelectProfilePic}>
+                  <Pressable onPress = {SelectProfilePic(route.params.username)}>
                     <View style = {{marginTop:20, marginRight:20}}>
                       <Image resizeMode ='cover' source = {{uri: route.params.profilePicture}} style = {{height:50, width:50, borderRadius:100, elevation:2}}/>
                       <View style = {{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>

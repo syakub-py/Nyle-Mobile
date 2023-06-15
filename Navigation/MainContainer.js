@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
 import {Image, View} from "react-native";
+
 //Screens
 import home from './Screens/Home'
 import market from './Screens/Market'
@@ -18,30 +19,35 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 
+
+const isReceived = async () =>{
+    const [received,setReceived] = useState(true)
+
+    const MyChatQuery = firestore.collection('Chats');
+
+    MyChatQuery.get().then(async (ChatSnapshot) => {
+        for (const doc of ChatSnapshot.docs) {
+            for (let i = 0; i < doc.data().owners.length; i++) {
+                if (doc.data().owners[i].username === route.params.username) {
+                    const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                        .orderBy('createdAt', 'desc')
+                        .limit(1);
+                    latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
+                        if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
+                            const latestMessage = latestMessageSnapshot.docs[0].data();
+                            setReceived(latestMessage.received)
+                        }
+                    })
+                }
+            }
+        }
+    });
+    return received
+}
+
 export default function MainContainer({route}) {
   const profilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  const [received,setReceived] = useState(true)
 
-  const MyChatQuery = firestore.collection('Chats');
-
-  MyChatQuery.get().then(async (ChatSnapshot) => {
-    for (const doc of ChatSnapshot.docs) {
-      for (let i = 0; i < doc.data().owners.length; i++) {
-        if (doc.data().owners[i].username === route.params.username) {
-            const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-              .orderBy('createdAt', 'desc')
-              .limit(1);
-            latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
-                if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
-                  const latestMessage = latestMessageSnapshot.docs[0].data();
-                  setReceived(latestMessage.received)
-                }
-            })
-        }
-      }
-    }
-  });
-  
   return (
     <Tab.Navigator initialRouteName = {home}
     screenOptions = {({route}) => ({
@@ -81,7 +87,7 @@ export default function MainContainer({route}) {
           return <Ionicons name = {iconName} size = {32} color = {color}/>
         } else if (rn === Chat) {
           iconName = focused ? 'chatbox-ellipses' : 'chatbox-ellipses-outline';
-          if (received === true) return <Ionicons name = {iconName} size = {32} color = {color}/>
+          if (isReceived()) return <Ionicons name = {iconName} size = {32} color = {color}/>
           else {
             return (
               <View>
