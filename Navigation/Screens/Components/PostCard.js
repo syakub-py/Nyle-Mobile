@@ -3,40 +3,40 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {firestore} from "./Firebase";
-import axios from "axios";
 import {handleLike} from "../GlobalFunctions";
 import _ from "lodash"
+import CryptoDataService from '../../../Services/CryptoDataService';
+
+const updateCurrencyPrice = async () => {
+    let price = 0;
+    try {
+        const response = await CryptoDataService.getMarketData();
+        const filteredData = response.data.filter((item) => item.image === data.currency)
+        if (!_.isEmpty(filteredData)) price = (filteredData[0].current_price)
+    } catch (error) {
+        console.log(error.message);
+    }
+
+    const postRef = firestore.collection('AllPosts').doc(data.title);
+    postRef.get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.price).toFixed(2).toString()});
+            else {
+                if (price !== 0) {
+                    postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
+                }
+            }
+        }
+    });
+}
 
 export default function PostCard({data, username}) {
     const navigation = useNavigation();
-    const [price, setPrice] = useState(0)
     const [index, setIndex] = useState(0)
 
     useEffect(() => {
-        const updateCurrencyPrice = async () => {
-            try {
-                const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
-                const filteredData = response.data.filter((item) => item.image === data.currency)
-                if (!_.isEmpty(filteredData)) setPrice(filteredData[0].current_price)
-            } catch (error) {
-                console.log(error.message);
-            }
-
-            const postRef = firestore.collection('AllPosts').doc(data.title);
-            postRef.get().then((doc) => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price*data.price).toFixed(2).toString()});
-                    else {
-                        if (price !== 0) {
-                            postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
-                        }
-                    }
-                }
-            });
-        }
-
-        updateCurrencyPrice().then(() => {})
+        updateCurrencyPrice()
 
     }, [data.currency])
 

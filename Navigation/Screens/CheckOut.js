@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import RNSwipeVerify from 'react-native-swipe-verify'
-import axios from 'axios'
 import { Dropdown } from 'react-native-element-dropdown';
+import CryptoDataService from '../../Services/CryptoDataService';
 
 const { width } = Dimensions.get('window')
 
@@ -15,9 +15,8 @@ export default function CheckOut({route, navigation}) {
 
     const getMarketData = async () => {
         try {
-          const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
-          const data = response.data;
-          return data;
+          const response = await CryptoDataService.getMarketData();
+          return (response.data);
         } catch (error) {
           console.log(error.message);
         }

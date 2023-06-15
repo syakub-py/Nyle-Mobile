@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, FlatList, Dimensions, Image, ScrollView} from 'react-native';
-import axios from 'axios'
 import dayjs from 'dayjs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
+import CryptoDataService from '../../Services/CryptoDataService';
 
 const {width} = Dimensions.get("window");
 
@@ -37,11 +37,10 @@ const formatMarketData = (data) => {
   return formattedData;
 }
 
-export const getMarketData = async () => {
+const getMarketData = async () => {
   try {
-    const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
-    const data = response.data;
-    const formattedResponse = formatMarketData(data);
+    const response = await CryptoDataService.getMarketData();
+    const formattedResponse = formatMarketData(response.data);
     return formattedResponse;
   } catch (error) {
     console.log(error.message);
@@ -61,9 +60,7 @@ export default function Market({navigation, route}) {
 
     const fetchCryptoNews = async () => {
       try {
-        const response = await axios.get(
-          'https://newsapi.org/v2/everything?q=crypto&sortBy=publishedAt&apiKey=0af11fce878b49a986b81ad1a90281b1'
-        );
+        const response = await CryptoDataService.getNewsData();
         setArticles(response.data.articles);
       } catch (error) {
         console.log('Error fetching crypto news:', error);
