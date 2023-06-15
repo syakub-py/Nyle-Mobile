@@ -53,7 +53,7 @@ export default function ChatBox({route, navigation}) {
 
   const renderActions = () => (
       <View style = {{justifyContent:'center', alignItems:'center', margin:7}}>
-        <Pressable onPress= {SelectImages}>
+        <Pressable onPress = {SelectImages}>
           <Ionicons name ='images' size = {25}/>
         </Pressable>
       </View>    
@@ -193,7 +193,7 @@ export default function ChatBox({route, navigation}) {
       <View style = {{flex:1}}>
         <ScrollView
           horizontal
-          showsHorizontalScrollIndicator= {false}
+          showsHorizontalScrollIndicator = {false}
           style = {{
             position: 'absolute',
             bottom: 55,
@@ -201,7 +201,7 @@ export default function ChatBox({route, navigation}) {
             right: 0,
             height: 75,
           }}
-          refreshControl= {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>}>
+          refreshControl = {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>}>
           {
             (imageUrls.length > 0) ? (
               imageUrls.map((value, index) => (
@@ -210,7 +210,7 @@ export default function ChatBox({route, navigation}) {
                         (animating) ? (
                             <View>
                                 <View style = {{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
-                                    <ActivityIndicator size = "large" color= "black" />
+                                    <ActivityIndicator size = "large" color = "black" />
                                 </View>
                                 <Image
                                     source = {{ uri: value }}
@@ -219,9 +219,9 @@ export default function ChatBox({route, navigation}) {
                             </View>
                         ):(
                             <View>
-                                <Pressable style = {{zIndex:1}} onPress= {() =>deleteImages(index)}>
+                                <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index)}>
                                     <View style = {{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
-                                        <Ionicons name ='remove-outline'  color= {'white'} size = {15} style = {{elevation:1}}/>
+                                        <Ionicons name ='remove-outline'  color = {'white'} size = {15} style = {{elevation:1}}/>
                                     </View>
                                 </Pressable>
                                 <Image
@@ -271,7 +271,7 @@ export default function ChatBox({route, navigation}) {
     <SafeAreaView style = {{flex:1}}>
       <View style = {{marginLeft:10, flexDirection:'row'}}>
         <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:10}}>
-            <Pressable onPress= {() =>navigation.goBack()}>
+            <Pressable onPress = {() =>navigation.goBack()}>
                 <Ionicons name ='arrow-back-outline' size = {35}/>
             </Pressable>
         </View>
@@ -289,14 +289,14 @@ export default function ChatBox({route, navigation}) {
         scrollToBottom
         user = {{_id:route.params.userId}}
         renderBubble = {renderBubble}
-        renderActions= {renderActions}
+        renderActions = {renderActions}
         renderInputToolbar = {renderInputToolbar}
         renderMessageImage = {(props) => {
             if (props.currentMessage.image.length > 0) {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
-                        <Pressable onPress= {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
-                            <ScrollView horizontal= {true} showsHorizontalScrollIndicator= {false} pagingEnabled= {true} onScroll= {change} style = {{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
+                        <Pressable onPress = {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
+                            <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false} pagingEnabled= {true} onScroll = {change} style = {{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                                 {
                                     props.currentMessage.image.map((image, index) => {
                                         return (

@@ -155,7 +155,7 @@ export default function Chat({navigation, route}) {
                     </View>
                 }
                 rightOpenValue = {-50}
-                refreshControl= {
+                refreshControl = {
                     <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
                 }
                 key = {randomNumber}
@@ -180,7 +180,7 @@ export default function Chat({navigation, route}) {
                             elevation:2
                         }}>
                             <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
-                            <TextInput placeholder='Search Chats...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor= {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+                            <TextInput placeholder ='Search Chats...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
                         </View>
                         <Text style = {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
                     </View>
@@ -193,15 +193,15 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key= {i}>
-                        <TouchableOpacity onPress= {() => {deleteChat(item)}}>
-                            <Ionicons size = {25} name ='trash-outline' color= {"red"}/>
+                        <TouchableOpacity onPress = {() => {deleteChat(item)}}>
+                            <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
                     </View>
                 )}
                 renderItem = {({item, index}) => {
                     const username = item.data.owners[findUser(item.data.owners)].username
                     return (
-                        <Pressable onPress= {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key= {index}>
+                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key= {index}>
                             <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                                 <View>
                                     <Image

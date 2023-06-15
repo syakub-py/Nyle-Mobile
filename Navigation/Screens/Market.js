@@ -39,7 +39,7 @@ const formatMarketData = (data) => {
 
 export const getMarketData = async () => {
   try {
-    const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
+    const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
     const data = response.data;
     const formattedResponse = formatMarketData(data);
     return formattedResponse;
@@ -79,8 +79,8 @@ export default function Market({navigation, route}) {
 
   return (
     <FlatList
-      data= {articles}
-      keyExtractor= {(item) => item.url}
+      data = {articles}
+      keyExtractor = {(item) => item.url}
       ListHeaderComponent= {
         <View>
           <Image
@@ -89,7 +89,7 @@ export default function Market({navigation, route}) {
           />
           <View>
             <Text style = {{ fontSize: 24, fontWeight: 'bold' }}>Coin Prices</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator= {false}>
+            <ScrollView horizontal showsHorizontalScrollIndicator = {false}>
               {data.map((item, index) => (
                   <View
                       style = {{
@@ -120,8 +120,8 @@ export default function Market({navigation, route}) {
                       <Text
                           style = {
                             item.price_change_percentage_24h > 0
-                                ? { color: 'lightgreen', marginLeft: 5 }
-                                : { color: 'red', marginLeft: 5 }
+                              ? { color: 'lightgreen', marginLeft: 5 }
+                              : { color: 'red', marginLeft: 5 }
                           }
                       >
                         % {Math.round(item.price_change_percentage_24h * 100) / 100}

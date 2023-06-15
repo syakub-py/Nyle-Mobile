@@ -1,5 +1,4 @@
 import {firestore, firestoreLite} from "./Components/Firebase";
-import React from "react";
 import {collection, getDocs} from "firebase/firestore/lite";
 
 const generateRating = async (username) => {
@@ -65,8 +64,6 @@ const handleLike = async (doc, username) => {
             console.error('Error getting document:', error);
         });
 };
-
-
 
 const generatePriceHomes =async (bedrooms, bathrooms) => {
     let price = 0;

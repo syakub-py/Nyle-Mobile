@@ -85,7 +85,7 @@ export default function AddPost({route}) {
     };
 
     const upload = async (array) => {
-        const UrlDownloads= [];
+        const UrlDownloads = [];
         setAnimating(true)
         try {
           for (const element of array) {
@@ -238,9 +238,9 @@ export default function AddPost({route}) {
 
     return (
         <SafeAreaView style = {{backgroundColor:'white'}}>
-            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl= {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>} >
+            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>} >
 
-                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator= {false}>
+                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false}>
                 {
                     imageUrls.map((item, index) =>(
                         <View key= {index}>
@@ -250,15 +250,15 @@ export default function AddPost({route}) {
                 }
                 </ScrollView>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator= {false} style = {{alignSelf:'center'}}>
+                <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{alignSelf:'center'}}>
                     <View style = {{flexDirection:'row', alignItems:'center'}}>
                         {
                             imageUrls.map((i, k) =>(
                                 <Pressable key= {k}>
-                                    <Pressable style = {{zIndex:1}} onPress= {() => {deleteImages(k)}}>
+                                    <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(k)}}>
                                         <View style = {styles.shadowBox}>
                                             <View style = {styles.circle}>
-                                                <Ionicons name ='remove-outline' color= {'white'} size = {15} style = {{elevation:1}}/>
+                                                <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation:1}}/>
                                             </View>
                                         </View>
                                     </Pressable>
@@ -271,15 +271,15 @@ export default function AddPost({route}) {
 
                 {
                     (imageUrls.length === 0) ? (
-                        <Pressable onPress= {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
+                        <Pressable onPress = {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
                             <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
-                                <Ionicons name ='images-outline' size = {80} color= {'lightgray'}/>
+                                <Ionicons name ='images-outline' size = {80} color = {'lightgray'}/>
                             </View>
                         </Pressable>
                     ):(
-                    <Pressable onPress= {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
+                    <Pressable onPress = {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
                         <View style = {{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
-                            <Ionicons name ='add-outline' size = {40} color= {'white'}/>
+                            <Ionicons name ='add-outline' size = {40} color = {'white'}/>
                         </View>
                     </Pressable>
                     )
@@ -315,15 +315,15 @@ export default function AddPost({route}) {
                         height: 20,
                         marginRight: 8,
                     }}
-                    data= {categories}
+                    data = {categories}
                     search
                     labelField= "Label"
                     valueField= "Value"
-                    placeholder= {'Select item'}
-                    searchPlaceholder= "Search..."
+                    placeholder = {'Select item'}
+                    searchPlaceholder = "Search..."
                     value = {category}
-                    onFocus= {() => setIsFocus(true)}
-                    onBlur= {() => setIsFocus(false)}
+                    onFocus = {() => setIsFocus(true)}
+                    onBlur = {() => setIsFocus(false)}
                     onChange = {(item) => {
                         setCategory(item.Value);
                         setIsFocus(false);
@@ -356,15 +356,15 @@ export default function AddPost({route}) {
                                 height: 20,
                                 marginRight: 8,
                             }}
-                            data= {currencies}
+                            data = {currencies}
                             search
                             labelField= "label"
                             valueField= "value"
-                            placeholder= {'Select a currency'}
-                            searchPlaceholder= "Search..."
+                            placeholder = {'Select a currency'}
+                            searchPlaceholder = "Search..."
                             value = {currency}
-                            onFocus= {() => setIsFocus(true)}
-                            onBlur= {() => setIsFocus(false)}
+                            onFocus = {() => setIsFocus(true)}
+                            onBlur = {() => setIsFocus(false)}
                             renderItem= {renderCurrencyItem}
                             onChange = {(item) => {
                                 setCurrency(item);
@@ -378,7 +378,7 @@ export default function AddPost({route}) {
 
                 <Text style = {{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
                 <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
-                    <MapView style = {{height:"100%", width:"100%"}} initialCamera= {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress= {dropMarker}>
+                    <MapView style = {{height:"100%", width:"100%"}} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
                         <Marker coordinate = {coordinates}/>
                     </MapView>
                 </View>
@@ -441,7 +441,7 @@ export default function AddPost({route}) {
                 {
                     (animating) ? (
                         <View>
-                            <ActivityIndicator size = "large" color= "black" animating= {animating} />
+                            <ActivityIndicator size = "large" color = "black" animating= {animating} />
                         </View>
                     ):(
                         <View/>
@@ -449,7 +449,7 @@ export default function AddPost({route}) {
                     )
                 }
 
-                <Pressable onPress= {() => {addPosts("AllPosts")}}>
+                <Pressable onPress = {() => {addPosts("AllPosts")}}>
                     <View style = {{marginBottom:20, marginLeft:10, marginRight:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>
                         <Text style = {{margin:10, color:"white", fontWeight:"bold"}}>Add post</Text>
                     </View>

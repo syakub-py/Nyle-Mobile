@@ -1,5 +1,5 @@
-import { Text, StyleSheet, Image, View, Pressable,Dimensions, ScrollView } from 'react-native'
-import React, { Component } from 'react'
+import { Text, View, Pressable,Dimensions, ScrollView } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import RNSwipeVerify from 'react-native-swipe-verify'
@@ -15,7 +15,7 @@ export default function CheckOut({route, navigation}) {
 
     const getMarketData = async () => {
         try {
-          const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
+          const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order =market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
           const data = response.data;
           return data;
         } catch (error) {
@@ -38,16 +38,14 @@ export default function CheckOut({route, navigation}) {
         { label: 'Item 6', value: '6' },
         { label: 'Item 7', value: '7' },
         { label: 'Item 8', value: '8' },
-      ];
-    
-    
+      ];    
     
     return (
       <View style = {{backgroundColor:'white', flex:1}}>
         <ScrollView>
             <View style = {{flexDirection:'row', justifyContent:'space-evenly'}}>
                 <View style = {{position: 'absolute', top: 20, left: 20, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:70, opacity:0.8, alignItems:'center', justifyContent:'center'}}>
-                    <Pressable onPress= {() =>navigation.goBack()}>
+                    <Pressable onPress = {() =>navigation.goBack()}>
                         <Ionicons name ='arrow-back-outline' size = {30}/>
                     </Pressable>
                 </View>
@@ -62,16 +60,16 @@ export default function CheckOut({route, navigation}) {
                     selectedTextStyle = {{}}
                     inputSearchStyle = {{}}
                     iconStyle = {{width: 20, height: 20,}}
-                    data= {data}
+                    data = {data}
                     search
                     maxHeight= {300}
                     labelField= "label"
                     valueField= "value"
-                    placeholder= {!isFocus ? 'Select a wallet' : '...'}
-                    searchPlaceholder= "Search..."
+                    placeholder = {!isFocus ? 'Select a wallet' : '...'}
+                    searchPlaceholder = "Search..."
                     value = {value}
-                    onFocus= {() => setIsFocus(true)}
-                    onBlur= {() => setIsFocus(false)}
+                    onFocus = {() => setIsFocus(true)}
+                    onBlur = {() => setIsFocus(false)}
                     onChange = {item => {
                         setValue(item.name);
                         setIsFocus(false);
@@ -108,16 +106,16 @@ export default function CheckOut({route, navigation}) {
                     selectedTextStyle = {{}}
                     inputSearchStyle = {{}}
                     iconStyle = {{width: 20, height: 20,}}
-                    data= {marketData}
+                    data = {marketData}
                     search
                     maxHeight= {300}
                     labelField= "name"
                     valueField= "image"
-                    placeholder= {!isFocus ? 'Select item' : '...'}
-                    searchPlaceholder= "Search..."
+                    placeholder = {!isFocus ? 'Select item' : '...'}
+                    searchPlaceholder = "Search..."
                     value = {value}
-                    onFocus= {() => setIsFocus(true)}
-                    onBlur= {() => setIsFocus(false)}
+                    onFocus = {() => setIsFocus(true)}
+                    onBlur = {() => setIsFocus(false)}
                     // renderLeftIcon= {({ image }) => {
                     //     return (
                     //     <Image source = {{ uri: image }} style = {{ width: 30, height: 30 }} />
@@ -133,16 +131,16 @@ export default function CheckOut({route, navigation}) {
             <RNSwipeVerify 
                 width= {width - 100}
                 buttonSize = {60}
-                borderColor= "#fff"
-                borderRadius= {30}
-                buttonColor= "black"
-                backgroundColor= "#ececec"
+                borderColor = "#fff"
+                borderRadius = {30}
+                buttonColor = "black"
+                backgroundColor = "#ececec"
                 textColor = 'black'
                 okButton= {{ visible: false, duration: 400 }}
                 onVerified= {() => {
                     console.log("swiped")
                 }}
-                icon= {<Ionicons name ='chevron-forward-outline' size = {30} color= {'white'}/>}>
+                icon= {<Ionicons name ='chevron-forward-outline' size = {30} color = {'white'}/>}>
             <Text>Swipe to Confirm</Text>
           </RNSwipeVerify>
 

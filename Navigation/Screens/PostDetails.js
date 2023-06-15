@@ -47,7 +47,7 @@ export default function PostDetails({route, navigation}) {
 
     const getRealEstateData = async (address) => {
         try {
-            const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
+            const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address =${address.toUpperCase()}`);
             return await response.json();
         } catch (error) {
             console.log("server offline");
@@ -143,13 +143,13 @@ export default function PostDetails({route, navigation}) {
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style = {{zIndex:1}}>
                     <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress= {() =>navigation.goBack()}>
+                        <Pressable onPress = {() =>navigation.goBack()}>
                             <Ionicons name ='chevron-back-outline' size = {30}/>
                         </Pressable>
                     </View>
 
                     <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress= {() => setIsOpen(!isOpen)}>
+                        <Pressable onPress = {() => setIsOpen(!isOpen)}>
                             <Ionicons name ='reorder-three-outline' size = {30}/>
                         </Pressable>
                     </View>
@@ -169,10 +169,10 @@ export default function PostDetails({route, navigation}) {
                     </Modal>
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress= {() =>handleLike(route.params.item.title, route.params.username)}>
+                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
                             {
                                 (likes.includes(route.params.username)) ? (
-                                    <Ionicons name ='heart' size = {30} color= {'#e6121d'}/>
+                                    <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
 
                                 ):(
                                     <Ionicons name ='heart-outline' size = {30}/>
@@ -189,10 +189,10 @@ export default function PostDetails({route, navigation}) {
                         <Text style = {{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
 
-                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator= {false} onScroll= {change}>
+                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) =>(
-                                <Pressable onPress= {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
+                                <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
                                     <View style = {{width, height, position: 'relative'}} >
                                         <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                     </View>
@@ -202,11 +202,11 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator= {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref= {scrollViewRef}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref= {scrollViewRef}>
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 images.map((i, k) =>(
-                                    <Pressable key= {k} onPress= {() => {console.log(k+1)}}>
+                                    <Pressable key= {k} onPress = {() => {console.log(k+1)}}>
                                         <Image source = {{uri:i}} style = {k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key= {k}/>
                                     </Pressable>
                                 ))
@@ -221,7 +221,7 @@ export default function PostDetails({route, navigation}) {
                             borderRadius: 5,
                             alignItems:'center'
                         }}>
-                            <Ionicons name ='heart' size = {20} color= {'#e6121d'}/>
+                            <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
                             <Text style = {{
                                 color: 'white',
                                 fontSize: 12,
@@ -235,7 +235,7 @@ export default function PostDetails({route, navigation}) {
                             backgroundColor: 'transparent',
                             borderRadius: 5,
                             alignItems:'center'}}>
-                            <Ionicons name ='eye' size = {20} color= {'white'}/>
+                            <Ionicons name ='eye' size = {20} color = {'white'}/>
                             <Text style = {{  color: 'white',
                                 fontSize: 12,
                                 fontWeight: 'bold',
@@ -260,16 +260,16 @@ export default function PostDetails({route, navigation}) {
                         (route.params.item.category === "Homes") ? (
                             <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
                                 <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'bed'} color= {'black'} size = {20}/>
+                                    <Ionicons name = {'bed'} color = {'black'} size = {20}/>
                                     <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
                                 </View>
 
                                 <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'water'} color= {'black'} size = {20}/>
+                                    <Ionicons name = {'water'} color = {'black'} size = {20}/>
                                     <Text style = {{fontSize:15, color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
                                 </View>
                                 <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'expand'} color= {'black'} size = {20}/>
+                                    <Ionicons name = {'expand'} color = {'black'} size = {20}/>
                                     <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
                                 </View>
 
@@ -283,12 +283,12 @@ export default function PostDetails({route, navigation}) {
                                     <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
 
                                         <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'car-outline'} color= {'black'} size = {20}/>
+                                            <Ionicons name = {'car-outline'} color = {'black'} size = {20}/>
                                             <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.mileage}</Text>
                                         </View>
 
                                         <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'information-circle-outline'} color= {'black'} size = {20}/>
+                                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
                                             <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.Vin}</Text>
                                         </View>
 
@@ -296,12 +296,12 @@ export default function PostDetails({route, navigation}) {
                                     <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
 
                                         <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'hammer-outline'} color= {'black'} size = {20}/>
+                                            <Ionicons name = {'hammer-outline'} color = {'black'} size = {20}/>
                                             <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.make}</Text>
                                         </View>
 
                                         <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'information-circle-outline'} color= {'black'} size = {20}/>
+                                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
                                             <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.model}</Text>
                                         </View>
 
@@ -322,14 +322,14 @@ export default function PostDetails({route, navigation}) {
                                 <View style = {{margin:10,alignSelf:'center'}}>
                                     <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
                                     <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <Pressable onPress= {() => {navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
+                                    <Pressable onPress = {() => {navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
                                         <View style = {{
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             backgroundColor: 'transparent',
                                             marginTop: 2
                                         }}>
-                                            <Ionicons name = "star" style = {{ marginRight: 3 }} color= "#ebd61e" size = {13} />
+                                            <Ionicons name = "star" style = {{ marginRight: 3 }} color = "#ebd61e" size = {13} />
                                             <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
                                             <Text style = {{ fontSize: 10, color:'lightgrey', marginLeft:3}}>({numOfReviews} reviews)</Text>
                                         </View>
@@ -337,9 +337,9 @@ export default function PostDetails({route, navigation}) {
                                 </View>
                             </View>
 
-                            <Pressable onPress= {handleAddChat}>
+                            <Pressable onPress = {handleAddChat}>
                                 <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                                    <Ionicons name = "chatbox-ellipses-outline" color= {'white'} size = {30} style = {{margin:15}}/>
+                                    <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                                 </View>
                             </Pressable>
                         </View>
@@ -352,7 +352,7 @@ export default function PostDetails({route, navigation}) {
                                     <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy} (You)</Text>
                                     <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
                                     <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
-                                        <Ionicons name = {'star'} style = {{marginRight:3}} color= {"#ebd61e"} size = {13}/>
+                                        <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
                                         <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
                                     </View>
                                 </View>
@@ -362,20 +362,20 @@ export default function PostDetails({route, navigation}) {
                     )
                 }
                 <View style = {{marginBottom:20}}>
-                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress= {() =>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
+                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
                 </View>
 
-                    <Pressable onPress= {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
+                    <Pressable onPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
-                            <MapView style = {{height:"100%", width:"100%"}} initialCamera= {{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
+                            <MapView style = {{height:"100%", width:"100%"}} initialCamera = {{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                                 <Marker coordinate = {route.params.item.coordinates}>
                                    <CustomMapMarker firstImage = {images[0]}/>
                                 </Marker>
                                 <Circle
-                                    center= {route.params.item.coordinates}
-                                    radius= {1200}
-                                    fillColor= "rgba(66, 135, 245, 0.2)"
-                                    strokeColor= "rgba(66, 135, 245, 0.7)"
+                                    center = {route.params.item.coordinates}
+                                    radius = {1200}
+                                    fillColor = "rgba(66, 135, 245, 0.2)"
+                                    strokeColor = "rgba(66, 135, 245, 0.7)"
                                     strokeWidth= {1}
                                 />
                             </MapView>
@@ -442,7 +442,7 @@ export default function PostDetails({route, navigation}) {
             {/*    </View>*/}
 
             {/*    <View style = {{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}
-            {/*        <Pressable onPress= {() => navigation.navigate("Check Out", {title: route.params.PostTitle, price:route.params.Price, currency: route.params.Currency})}>*/}
+            {/*        <Pressable onPress = {() => navigation.navigate("Check Out", {title: route.params.PostTitle, price:route.params.Price, currency: route.params.Currency})}>*/}
             {/*            <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Buy out</Text>*/}
             {/*        </Pressable>*/}
             {/*    </View>*/}

@@ -10,7 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function TermsOfService({route ,navigation}) {
     const [TermsOfService, setTermsOfService] = useState("")
-    const getTerms =async () => {
+    const getTerms = async () => {
         const Query = firestore.collection('Legal Docs').doc("Terms of Service");
         await Query.get().then((doc) => {
             setTermsOfService(doc.data().Data)
@@ -24,7 +24,7 @@ export default function TermsOfService({route ,navigation}) {
     return (
         <View style = {{flex:1}}>
             <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:20, marginTop:20}}>
-                <Pressable onPress= {() =>navigation.goBack()}>
+                <Pressable onPress = {() =>navigation.goBack()}>
                     <Ionicons name ='arrow-back-outline' size = {35}/>
                 </Pressable>
             </View>
@@ -49,7 +49,7 @@ export default function TermsOfService({route ,navigation}) {
                             </Pressable>
 
 
-                            <Pressable onPress= {() => {navigation.navigate("Main Container", {username:route.params.username})}}>
+                            <Pressable onPress = {() => {navigation.navigate("Main Container", {username:route.params.username})}}>
                                 <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'green', borderRadius:5, margin:10}}>
                                     <Text style = {{color:'white', fontWeight:'bold',margin:5}}>Accept</Text>
                                 </View>
@@ -62,10 +62,7 @@ export default function TermsOfService({route ,navigation}) {
                     )
                 }
 
-
             </View>
-
-
         </View>
     )
 }

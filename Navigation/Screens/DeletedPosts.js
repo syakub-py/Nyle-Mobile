@@ -119,28 +119,28 @@ export default function DeletedPosts({route, navigation}) {
     return (
         <View style = {{flex:1}}>
             <SwipeListView
-                data= {deletedPostList}
+                data = {deletedPostList}
                 rightOpenValue = {-140}
                 ListHeaderComponent= {
                 <View style = {{marginTop:10}}>
 
                     <View style = {{flexDirection:'row'}}>
                         <View style = {{ height:50, width:50, margin:10, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:"10%"}}>
-                            <Pressable onPress= {() =>navigation.goBack()}>
+                            <Pressable onPress = {() =>navigation.goBack()}>
                                 <Ionicons name ='arrow-back-outline' size = {35}/>
                             </Pressable>
                         </View>
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress= {() => {deleteAllPosts()}}>
+                    <Pressable onPress = {() => {deleteAllPosts()}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
                     </Pressable>
                 </View>
                 }
-                  refreshControl= {
+                  refreshControl = {
                       <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
                   }
                   renderItem = {({item}) => (
@@ -154,19 +154,19 @@ export default function DeletedPosts({route, navigation}) {
                         bottom: 0,
                         width: 60,
                         alignItems: 'center'}}>
-                        <TouchableOpacity onPress= {() =>deletePost(item)} style = {{marginRight:20}}>
-                            <Ionicons size = {30} name ='trash-outline' color= {"red"}/>
+                        <TouchableOpacity onPress = {() =>deletePost(item)} style = {{marginRight:20}}>
+                            <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress= {() => {restoreItem(item)}}>
-                            <Ionicons size = {30} name ='arrow-redo-outline' color= {"lightblue"}/>
+                        <TouchableOpacity onPress = {() => {restoreItem(item)}}>
+                            <Ionicons size = {30} name ='arrow-redo-outline' color = {"lightblue"}/>
                         </TouchableOpacity>
 
 
                     </View>
                 )
                 }
-                  keyExtractor= {item => item.id}/>
+                  keyExtractor = {item => item.id}/>
         </View>
     )
 

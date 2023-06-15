@@ -3,7 +3,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {Pressable, View} from "react-native";
 import React from "react";
 
-
 /*
     @route.params = {index: index to start, pictures: array of urls to show}
 */
@@ -21,9 +20,9 @@ export default function ViewImages({ route, navigation }) {
 
     return (
         <ImageViewer
-            imageUrls= {getImages(pictures)}
+            imageUrls = {getImages(pictures)}
             enableSwipeDown= {true}
-            renderHeader= {() => (
+            renderHeader = {() => (
                 <View
                     style = {{
                         position: 'absolute',
@@ -39,14 +38,14 @@ export default function ViewImages({ route, navigation }) {
                         justifyContent: 'center',
                     }}
                 >
-                    <Pressable onPress= {handlePressClose}>
+                    <Pressable onPress = {handlePressClose}>
                         <Ionicons name = "close-outline" size = {30} />
                     </Pressable>
                 </View>
             )}
-            onSwipeDown= {handlePressClose}
-            index= {index}
-            backgroundColor= "transparent"
+            onSwipeDown = {handlePressClose}
+            index = {index}
+            backgroundColor = "transparent"
         />
     );
 }

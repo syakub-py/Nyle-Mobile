@@ -51,7 +51,7 @@ export default function ViewProfile({route}) {
                 ListHeaderComponent= {
                     <View>
                         <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:20, marginTop:20}}>
-                            <Pressable onPress= {() =>navigation.goBack()}>
+                            <Pressable onPress = {() =>navigation.goBack()}>
                                 <Ionicons name ='arrow-back-outline' size = {35}/>
                             </Pressable>
                         </View>
@@ -64,9 +64,9 @@ export default function ViewProfile({route}) {
                         </View>
 
                         <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <Pressable onPress= {() => {navigation.navigate("Reviews", {username: route.params.postedByUsername, currentUser: route.params.currentUsername})}}>
+                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: route.params.postedByUsername, currentUser: route.params.currentUsername})}}>
                                 <View style = {{flexDirection:'column', alignItems:'center'}}>
-                                    <Ionicons size = {20} name = {'star'} color= {'#ebd61e'}/>
+                                    <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>
                                     <Text style = {{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
                                 </View>
                             </Pressable>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, FlatList, Pressable, Text} from 'react-native';
 import WalletCard from "./Components/WalletCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,14 +15,14 @@ export default function ConnectedWallets({navigation}) {
         <View>
             <View style = {{zIndex:1}}>
                 <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                    <Pressable onPress= {() =>navigation.goBack()}>
+                    <Pressable onPress = {() =>navigation.goBack()}>
                         <Ionicons name ='chevron-back-outline' size = {30}/>
                     </Pressable>
                 </View>
             </View>
 
             <FlatList
-            data= {wallets}
+            data = {wallets}
             renderItem= {(CurrentWallet) =>(
                 <WalletCard wallet= {CurrentWallet}/>
             )}

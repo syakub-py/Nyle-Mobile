@@ -5,9 +5,7 @@ import "firebase/auth";
 import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 export default function Login({navigation}) {
-
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -58,7 +56,7 @@ export default function Login({navigation}) {
                     </View>
                 </Pressable>
 
-                <Pressable onPress= {handleGoogleLogin}>
+                <Pressable onPress = {handleGoogleLogin}>
                     <View style = {styles.socialButton}>
                         <Ionicons name ='logo-google' size = {20} style = {{height:20, width:20, marginRight:5}}/>
                         <Text style = {{fontSize:15, fontWeight:'500'}}>Google</Text>
@@ -70,13 +68,13 @@ export default function Login({navigation}) {
                 <Text style = {[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}></Text>
                 <View style = {{borderRadius:6, height:50, justifyContent:'center'}}>
                     <Ionicons name ='person-outline' size = {20} style = {{ position: 'absolute',}}/>
-                    <TextInput placeholder='Username' onChangeText= {text => setUsername(text)} style = {{marginLeft:25}}/>
+                    <TextInput placeholder ='Username' onChangeText= {text => setUsername(text)} style = {{marginLeft:25}}/>
                 </View>
                 <View >
                     <Ionicons name ='ellipse' size = {20} style = {{ position: 'absolute',}}/>
-                    <TextInput placeholder='Password' onChangeText= {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
+                    <TextInput placeholder ='Password' onChangeText= {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
                 </View>
-                <Pressable onPress= {() => navigation.navigate("Reset Password")}>
+                <Pressable onPress = {() => navigation.navigate("Reset Password")}>
                     <Text style = {[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
 
                 </Pressable>
@@ -88,7 +86,7 @@ export default function Login({navigation}) {
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                 </Pressable>
 
-                <TouchableOpacity onPress= {() => navigation.navigate("Sign Up")}>
+                <TouchableOpacity onPress = {() => navigation.navigate("Sign Up")}>
                     <Text style = {[styles.text, {fontSize:14, color:"lightgray", textAlign:"center", marginTop:24}]}>Dont have an account? <Text style = {[styles.text, styles.link]}>Register now</Text></Text>
                 </TouchableOpacity>
 

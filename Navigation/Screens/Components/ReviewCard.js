@@ -72,7 +72,7 @@ export default function ReviewCard({data, currentUser}) {
                         <View style = {{ flexDirection: "row", marginLeft:5}}>
                             {
                                 Array.from({ length: data.stars }, (_, index) => (
-                                    <Ionicons key= {index} size = {17} name = {"star"} color= {"#ebd61e"} />
+                                    <Ionicons key= {index} size = {17} name = {"star"} color = {"#ebd61e"} />
                                 ))
                             }
                         </View>
@@ -87,12 +87,12 @@ export default function ReviewCard({data, currentUser}) {
                     (open) ? (
                         <View style = {{flexDirection:'row', justifyContent:'center'}}>
                             <View style = {{ width:300}}>
-                                <TextInput multiline placeholder= {"Write a reply"} onChangeText= {(text) =>setReply(text)}/>
+                                <TextInput multiline placeholder = {"Write a reply"} onChangeText= {(text) =>setReply(text)}/>
                             </View>
 
-                            <Pressable onPress= {handleSendReply}>
+                            <Pressable onPress = {handleSendReply}>
                                 <View style = {{backgroundColor:'black', justifyContent:'center', borderRadius:30}}>
-                                    <Ionicons name = {"send"} size = {15} color= {"white"} style = {{margin:7}}/>
+                                    <Ionicons name = {"send"} size = {15} color = {"white"} style = {{margin:7}}/>
                                 </View>
                             </Pressable>
 
@@ -100,7 +100,7 @@ export default function ReviewCard({data, currentUser}) {
                     ):(
 
                         (data.Reviewe === currentUser) ? (
-                            <Pressable onPress= {() =>setOpen(!open)}>
+                            <Pressable onPress = {() =>setOpen(!open)}>
                                 <View style = {{position:"absolute", bottom:0, right:10}}>
                                     <Ionicons name = {"arrow-redo-outline"} size = {20}/>
                                 </View>
@@ -118,7 +118,7 @@ export default function ReviewCard({data, currentUser}) {
             {
                 (data.Reviewe === currentUser) ? (
                     <SwipeListView
-                        data= {existingReplies}
+                        data = {existingReplies}
                         rightOpenValue = {-60}
 
                         renderItem= {({item, index}) =>(
@@ -141,8 +141,8 @@ export default function ReviewCard({data, currentUser}) {
                                 }}
                                 key= {index}
                             >
-                                <TouchableOpacity onPress= {() => handleDeleteReply(index)}>
-                                    <Ionicons size = {25} name ='trash-outline' color= {'red'} />
+                                <TouchableOpacity onPress = {() => handleDeleteReply(index)}>
+                                    <Ionicons size = {25} name ='trash-outline' color = {'red'} />
                                 </TouchableOpacity>
                             </View>
                         )}

@@ -195,7 +195,7 @@ export default function Home({navigation, route}) {
   return (
       <View style = {{flex:1, backgroundColor:'white'}}>
 
-        <Pressable onPress= {() =>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
+        <Pressable onPress = {() =>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
          style = {{
           position: 'absolute',
           bottom: 90,
@@ -239,20 +239,20 @@ export default function Home({navigation, route}) {
                 <View style = {{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
                   <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20}}/>
 
-                  <Pressable onPress= {SelectProfilePic}>
+                  <Pressable onPress = {SelectProfilePic}>
                     <View style = {{marginTop:20, marginRight:20}}>
                       <Image resizeMode ='cover' source = {{uri: route.params.profilePicture}} style = {{height:50, width:50, borderRadius:100, elevation:2}}/>
                       <View style = {{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name = {'add-outline'} color= {'white'} size = {17}/>
+                        <Ionicons name = {'add-outline'} color = {'white'} size = {17}/>
                       </View>
                     </View>
                   </Pressable>
 
               </View>
-              <ScrollView horizontal showsHorizontalScrollIndicator= {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   categories.map((category, index) => (
-                      <Pressable key= {index} onPress= {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                      <Pressable key= {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                         <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {category}
                         </Text>
@@ -272,13 +272,13 @@ export default function Home({navigation, route}) {
                     elevation:2
                   }}>
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-                <TextInput placeholder='Search Nyle...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor= {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator= {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   postFilters.map((filters, index) => (
-                      <Pressable key= {index} onPress= {() => handlePostFilterPress(index)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                      <Pressable key= {index} onPress = {() => handlePostFilterPress(index)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                         <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {filters}
                         </Text>
@@ -290,16 +290,16 @@ export default function Home({navigation, route}) {
             </View>
           }
 
-          data= {filteredData}
-          refreshControl= {
+          data = {filteredData}
+          refreshControl = {
             <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
           }
           renderItem = {({item}) => (
-            <Pressable onPress= {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
               <PostCard data = {item} username = {route.params.username}/>
             </Pressable>
             )}
-            keyExtractor= {item => item.id}
+            keyExtractor = {item => item.id}
           />
         </View>
       </View>

@@ -37,10 +37,10 @@ export default function MapPostCard({data, username}) {
 
             <ImageBackground source = {{uri:data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
                 <View style = {{position:'absolute', right:10,top:10, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
-                    <Pressable onPress= {() =>handleLike(data.title, username)}>
+                    <Pressable onPress = {() =>handleLike(data.title, username)}>
                         {
                             (data.likes.includes(data.PostedBy)) ? (
-                                <Ionicons name ='heart' size = {20} color= {'#e6121d'}/>
+                                <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
                             ):(
                                 <Ionicons name ='heart-outline' size = {20}/>
                             )
@@ -53,7 +53,7 @@ export default function MapPostCard({data, username}) {
                     <Text style = {{ fontSize:14, fontWeight:"500" }}>{data.title}</Text>
                     <View style = {{flexDirection:"row", alignItems:'center', marginTop:10}}>
                         <View style = {{flexDirection:"row", marginRight:10}}>
-                            <Ionicons name = {'star'} style = {{marginRight:3}} color= {"#ebd61e"} size = {13}/>
+                            <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
                             <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
                         </View>
 
@@ -62,16 +62,16 @@ export default function MapPostCard({data, username}) {
                                 <View style = {{flexDirection:'row'}}>
 
                                     <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'bed'} color= {'black'} size = {13}/>
+                                        <Ionicons name = {'bed'} color = {'black'} size = {13}/>
                                         <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.bedrooms}</Text>
                                     </View>
 
                                     <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'water'} color= {'black'} size = {13}/>
+                                        <Ionicons name = {'water'} color = {'black'} size = {13}/>
                                         <Text style = {{fontSize:12, color:'black', marginRight:10}}>{data.bathrooms}</Text>
                                     </View>
                                     <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'expand'} color= {'black'} size = {13}/>
+                                        <Ionicons name = {'expand'} color = {'black'} size = {13}/>
                                         <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.SQFT}</Text>
                                     </View>
                                 </View>

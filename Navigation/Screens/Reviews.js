@@ -8,7 +8,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-
 export default function Reviews({route, navigation}) {
     const [ReviewList, setReviewList] = useState([])
     const getReviews = async () => {
@@ -36,11 +35,11 @@ export default function Reviews({route, navigation}) {
     return (
         <SafeAreaView style = {{flex:1, backgroundColor:'whitesmoke'}}>
 
-            <FlatList data= {ReviewList}
+            <FlatList data = {ReviewList}
                       ListHeaderComponent = {
                           <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                               <View style = {{ position: 'absolute', top: 20, left: 0, zIndex: 1 }}>
-                                  <Pressable onPress= {() => navigation.goBack()} style = {{ padding: 10 }}>
+                                  <Pressable onPress = {() => navigation.goBack()} style = {{ padding: 10 }}>
                                       <Ionicons name ='arrow-back-outline' size = {30} />
                                   </Pressable>
                               </View>
@@ -52,7 +51,7 @@ export default function Reviews({route, navigation}) {
                           </View>
                       }
                       renderItem= {({item}) =>(
-                          <ReviewCard data = {item} currentUser= {route.params.currentUser}/>
+                          <ReviewCard data = {item} currentUser = {route.params.currentUser}/>
                       )}/>
 
 
@@ -71,8 +70,8 @@ export default function Reviews({route, navigation}) {
                             justifyContent: 'center',
                             alignItems: 'center',
                             elevation: 6,
-                        }} onPress= {() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
-                            <Ionicons name = "pencil" size = {24} color= "white" />
+                        }} onPress = {() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
+                            <Ionicons name = "pencil" size = {24} color = "white" />
                         </Pressable>
 
                     </View>

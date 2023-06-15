@@ -16,7 +16,7 @@ const SectionTitle = ({title}) => {
       <Text style = {{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
     </View>
   )
-    }
+}
 
 const Setting = ({title, nameOfIcon,type, onPress}) => {
   if (type == "button") {
@@ -34,7 +34,6 @@ const Setting = ({title, nameOfIcon,type, onPress}) => {
     )
   }
 }
-
 
 export default function Profile({navigation, route}) {
   const [userList, setUserList] = useState([]);
@@ -166,9 +165,9 @@ export default function Profile({navigation, route}) {
   return (
       <View style = {{backgroundColor:'white'}}>
             <SwipeListView
-              data= {userList}
+              data = {userList}
               rightOpenValue = {-170}
-              refreshControl= {
+              refreshControl = {
                 <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
               }
               ListFooterComponent= {
@@ -238,7 +237,7 @@ export default function Profile({navigation, route}) {
                 }
 
               renderItem= {({item}) => (
-                <Pressable onPress= {() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
+                <Pressable onPress = {() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
                   <PostCard data = {item}/>
                 </Pressable>
                 )}
@@ -251,16 +250,16 @@ export default function Profile({navigation, route}) {
                   bottom: 0,
                   width: 100,
                   alignItems: 'center'}}>
-                    <TouchableOpacity onPress= {() =>moveToDelete(item)} style = {{marginRight:20}}>
-                      <Ionicons size = {30} name ='trash-outline' color= {"red"}/>
+                    <TouchableOpacity onPress = {() =>moveToDelete(item)} style = {{marginRight:20}}>
+                      <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress= {() =>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
-                      <Ionicons size = {30} name ='create-outline' color= {"black"}/>
+                    <TouchableOpacity onPress = {() =>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
+                      <Ionicons size = {30} name ='create-outline' color = {"black"}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress= {() =>markAsSold(item)}>
-                      <Ionicons name = {'checkmark-circle-outline'} color= {"green"} size = {30} style = {{marginLeft:20}}/>
+                    <TouchableOpacity onPress = {() =>markAsSold(item)}>
+                      <Ionicons name = {'checkmark-circle-outline'} color = {"green"} size = {30} style = {{marginLeft:20}}/>
                     </TouchableOpacity>
 
                   </View>
@@ -291,7 +290,7 @@ export default function Profile({navigation, route}) {
 
 //   <View style = {{marginTop:20}}>
 //   <Text style = {{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
-//   <ScrollView horizontal showsHorizontalScrollIndicator= {false}>
+//   <ScrollView horizontal showsHorizontalScrollIndicator = {false}>
 //     {
 //       transactions.map((item, index) =>(
 //         <View style = {{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key= {index}>

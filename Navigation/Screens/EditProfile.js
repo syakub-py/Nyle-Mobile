@@ -63,7 +63,7 @@ export default function EditProfile({navigation}) {
                     justifyContent: 'center',
                 }}
             >
-                <Pressable onPress= {() => {navigation.goBack()}}>
+                <Pressable onPress = {() => {navigation.goBack()}}>
                     <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
@@ -75,7 +75,7 @@ export default function EditProfile({navigation}) {
                     marginBottom: 12,
                     paddingHorizontal: 8,
                 }}
-                placeholder= "Username"
+                placeholder = "Username"
                 value = {username}
                 onChangeText= {text => setUsername(text)}
             />
@@ -87,7 +87,7 @@ export default function EditProfile({navigation}) {
                     marginBottom: 12,
                     alignItems: 'center',
                 }}
-                onPress= {() => updateUsername(username)}>
+                onPress = {() => updateUsername(username)}>
                 <Text style = {{ color: 'white' }}>Update Username</Text>
             </Pressable>
 
@@ -99,7 +99,7 @@ export default function EditProfile({navigation}) {
                     marginBottom: 12,
                     paddingHorizontal: 8,
                 }}
-                placeholder= "Password"
+                placeholder = "Password"
                 secureTextEntry
                 value = {password}
                 onChangeText= {text => setPassword(text)}
@@ -111,7 +111,7 @@ export default function EditProfile({navigation}) {
                     borderRadius: 5,
                     alignItems: 'center',
                 }}
-                onPress= {() => updatePassword(password)}
+                onPress = {() => updatePassword(password)}
             >
                 <Text style = {{ color: 'white' }}>Update Password</Text>
             </Pressable>

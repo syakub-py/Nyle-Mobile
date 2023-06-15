@@ -50,7 +50,7 @@ export default function EditPost({navigation, route}) {
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style = {{zIndex:1}}>
                     <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress= {() =>navigation.goBack()}>
+                        <Pressable onPress = {() =>navigation.goBack()}>
                             <Ionicons name ='chevron-back-outline' size = {30}/>
                         </Pressable>
                     </View>
@@ -73,10 +73,10 @@ export default function EditPost({navigation, route}) {
                     </View>
 
 
-                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator= {false} onScroll= {change}>
+                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) =>(
-                                    <Pressable onPress= {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
+                                    <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
                                         <View style = {{width, height, position: 'relative'}} >
                                             <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                         </View>
@@ -87,11 +87,11 @@ export default function EditPost({navigation, route}) {
                     </ScrollView>
                 </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator= {false} style = {{alignSelf:'center'}}  ref= {scrollViewRef}>
+                <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{alignSelf:'center'}}  ref= {scrollViewRef}>
                     <View style = {{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k) =>(
-                                <Pressable key= {k} onPress= {() => {console.log(k+1)}}>
+                                <Pressable key= {k} onPress = {() => {console.log(k+1)}}>
                                     <Image source = {{uri:i}} style = {k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key= {k}/>
                                 </Pressable>
                             ))
@@ -103,13 +103,13 @@ export default function EditPost({navigation, route}) {
 
                 <Text style = {{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Location</Text>
                 <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
-                    <MapView style = {{height:"100%", width:"100%"}} initialCamera= {{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
+                    <MapView style = {{height:"100%", width:"100%"}} initialCamera = {{center: route.params.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                         <Marker coordinate = {route.params.coordinates}/>
                         <Circle
-                            center= {route.params.coordinates}
-                            radius= {1200}
-                            fillColor= "rgba(255, 0, 0, 0.2)"
-                            strokeColor= "rgba(255, 0, 0, 0.7)"
+                            center = {route.params.coordinates}
+                            radius = {1200}
+                            fillColor = "rgba(255, 0, 0, 0.2)"
+                            strokeColor = "rgba(255, 0, 0, 0.7)"
                             strokeWidth= {1}
                         />
                     </MapView>

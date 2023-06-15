@@ -19,12 +19,12 @@ import WriteReview from "./Screens/WriteReview";
 import Map from "./Screens/Map";
 import TermsOfService from "./Screens/TermsOfService";
 import HomeMapView from "./Screens/HomeMapView";
-// screenOptions= {{headerShown:false}}
+// screenOptions = {{headerShown:false}}
 
 const Stack = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initaialRouteName = "Login" screenOptions= {{headerShown:false}}>
+    <Stack.Navigator initaialRouteName = "Login" screenOptions = {{headerShown:false}}>
       <Stack.Screen name = "Login" component= {Login}/>
       <Stack.Screen name = "Main Container" component= {MainContainer}/>
       <Stack.Screen name = "Sign Up" component = {SignUp}/>

@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
 import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
-
 
 export default function SignUp({navigation}) {
     const [username, setUsername] = useState('')
@@ -24,6 +23,7 @@ export default function SignUp({navigation}) {
             });
         }).catch((error) => alert(error.message))
     }
+    
     const SelectImages = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -66,19 +66,19 @@ export default function SignUp({navigation}) {
         <View style = {styles.container}>
 
             <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                <Pressable onPress= {() =>navigation.goBack()}>
+                <Pressable onPress = {() =>navigation.goBack()}>
                     <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
 
             <View style = {{alignItems:'center', justifyContent:'center'}}>
-                <Pressable onPress= {SelectImages}>
+                <Pressable onPress = {SelectImages}>
                     {
                     (profilePic != '') ? (
                         <View style = {{margin:60, alignItems:'center'}}>
-                            <Pressable style = {{position:'absolute', left:5, top:10, zIndex:1}} onPress= {removeProfilePhoto}>
+                            <Pressable style = {{position:'absolute', left:5, top:10, zIndex:1}} onPress = {removeProfilePhoto}>
                                 <View style = {{backgroundColor:'red', height:30, width:30, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
-                                    <Ionicons name ='remove-outline' color= {'white'} size = {20} style = {{}}/>
+                                    <Ionicons name ='remove-outline' color = {'white'} size = {20} style = {{}}/>
                                 </View>
                             </Pressable>
  
@@ -96,10 +96,10 @@ export default function SignUp({navigation}) {
                 </Pressable>
             </View>
 
-            <TextInput placeholder='Username' style = {styles.textInput} onChangeText= {(text) => setUsername(text)} />
-            <TextInput placeholder='Password' style = {styles.textInput} onChangeText= {(text) => setPassword(text)} secureTextEntry/>
+            <TextInput placeholder ='Username' style = {styles.textInput} onChangeText= {(text) => setUsername(text)} />
+            <TextInput placeholder ='Password' style = {styles.textInput} onChangeText= {(text) => setPassword(text)} secureTextEntry/>
 
-            <Pressable style = {styles.submitContainer} onPress= {handleSignUp}>
+            <Pressable style = {styles.submitContainer} onPress = {handleSignUp}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
             </Pressable>
         </View>
