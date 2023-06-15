@@ -12,21 +12,48 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-const [state, setState] = useState({active:0})
-const [more, setMore] = useState(false)
-const [isOpen, setIsOpen] = useState(false);
-const [views, setViews] = useState(0)
-const [currentOffset, setCurrentOffset] = useState(0);
-const scrollViewRef = useRef(null);
-const [rating, setRating] = useState(0)
-const [numOfReviews, setNumOfReviews] = useState(0)
-const [realEstateData, setRealEstateData] = useState([])
+const handleAddChat = (route) => {
+    if (route.params.username !== route.params.item.PostedBy) {
+        firestore
+            .collection('Chats')
+            .add({
+                owners: [
+                    {
+                        profilePic: route.params.CurrentUserProfilePic,
+                        username: route.params.username,
+                    },
+                    {
+                        profilePic: route.params.item.profilePic,
+                        username: route.params.item.PostedBy,
+                    },
+                ],
+            })
+            .then((ref) => {
+               const owners =   [
+                    {
+                        profilePic: route.params.CurrentUserProfilePic,
+                        username: route.params.username,
+                    },
+                    {
+                        profilePic: route.params.item.profilePic,
+                        username: route.params.item.PostedBy,
+                    },
+                ]
 
-const toggleDropdown = () => {
+                const username = owners[1].username
+                navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, route.params.username)})
+            })
+            .catch((error) => {
+                Alert.alert('Error adding document: ', error);
+            });
+    }
+};
+
+const toggleDropdown = (isOpen, setIsOpen) => {
     setIsOpen(!isOpen);
 };
 
-const handleViewCounter = () => {
+const handleViewCounter = (setViews) => {
     const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
     PostRef.get()
         .then((doc) => {
@@ -41,7 +68,6 @@ const handleViewCounter = () => {
         });
 };
 
-
 const findUser = (userArray, username) => {
     for (let index = 0; index < userArray.length; index++) {
         if (userArray[index].username !== username) return index
@@ -49,83 +75,30 @@ const findUser = (userArray, username) => {
     return "";
 }
 
-const getRealEstateData = async (address) => {
+const getRealEstateData = async (address, setRealEstateData) => {
     try {
         const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
-        return await response.json();
+        setRealEstateData(response.json())
     } catch (error) {
         console.log("server offline");
-        return []
-    }
-};
-
-const change = ({ nativeEvent }) => {
-    const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-    const newOffset = nativeEvent.contentOffset.x;
-    setCurrentOffset(newOffset);
-    setState({ active: slide });
-    if (slide <= images.length-4) {
-        scrollViewRef.current.scrollTo({
-            x: 0,
-            animated: true,
-        });
-    }
-
-    if (slide >= 6) {
-        setCurrentOffset(currentOffset + 10);
-        scrollViewRef.current.scrollTo({
-            x: currentOffset,
-            animated: true,
-        });
     }
 };
 
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const likes = route.params.item.likes
-
-
-    const handleAddChat = () => {
-        if (route.params.username !== route.params.item.PostedBy) {
-            firestore
-                .collection('Chats')
-                .add({
-                    owners: [
-                        {
-                            profilePic: route.params.CurrentUserProfilePic,
-                            username: route.params.username,
-                        },
-                        {
-                            profilePic: route.params.item.profilePic,
-                            username: route.params.item.PostedBy,
-                        },
-                    ],
-                })
-                .then((ref) => {
-                   const owners =   [
-                        {
-                            profilePic: route.params.CurrentUserProfilePic,
-                            username: route.params.username,
-                        },
-                        {
-                            profilePic: route.params.item.profilePic,
-                            username: route.params.item.PostedBy,
-                        },
-                    ]
-
-                    const username = owners[1].username
-                    navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, route.params.username)})
-                })
-                .catch((error) => {
-                    Alert.alert('Error adding document: ', error);
-                });
-        }
-    };
-
-
+    const [state, setState] = useState({active:0})
+    const [more, setMore] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
+    const [views, setViews] = useState(0)
+    const [currentOffset, setCurrentOffset] = useState(0);
+    const scrollViewRef = useRef(null);
+    const [rating, setRating] = useState(0)
+    const [numOfReviews, setNumOfReviews] = useState(0)
+    const [realEstateData, setRealEstateData] = useState([])
 
     useEffect(() => {
-        handleViewCounter();
+        handleViewCounter(setViews);
         generateRating(route.params.item.PostedBy).then((result) => {
             setRating(result.rating)
             setNumOfReviews(result.numOfReviews)
@@ -133,11 +106,30 @@ export default function PostDetails({route, navigation}) {
 
         if (route.params.item.category === "Homes") {
             //"79-33 213 street"
-            getRealEstateData(route.params.item.title).then((result) => {
-                setRealEstateData(result)
-            })
+            getRealEstateData(route.params.item.title, setRealEstateData)
         }
     }, [])
+
+    const change = ({ nativeEvent }) => {
+        const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+        const newOffset = nativeEvent.contentOffset.x;
+        setCurrentOffset(newOffset);
+        setState({ active: slide });
+        if (slide <= images.length-4) {
+            scrollViewRef.current.scrollTo({
+                x: 0,
+                animated: true,
+            });
+        }
+    
+        if (slide >= 6) {
+            setCurrentOffset(currentOffset + 10);
+            scrollViewRef.current.scrollTo({
+                x: currentOffset,
+                animated: true,
+            });
+        }
+    };
 
     return (
         <SafeAreaView style = {{flex:1}}>
@@ -158,7 +150,7 @@ export default function PostDetails({route, navigation}) {
                     <Modal
                         visible = {isOpen}
                         animationType = "slide"
-                        onRequestClose = {toggleDropdown}
+                        onRequestClose = {toggleDropdown(isOpen, setIsOpen)}
                         transparent = {true}
                     >
                         <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
@@ -338,7 +330,7 @@ export default function PostDetails({route, navigation}) {
                                 </View>
                             </View>
 
-                            <Pressable onPress = {handleAddChat}>
+                            <Pressable onPress = {handleAddChat(route)}>
                                 <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                                     <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                                 </View>

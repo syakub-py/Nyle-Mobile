@@ -3,11 +3,6 @@ import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
-
-const [username, setUsername] = useState('');
-const [password, setPassword] = useState('');
-
 const updateUsername = async (newUsername) => {
     try {
         // Get the current user
@@ -47,11 +42,11 @@ const updatePassword = async (newPassword) => {
 };
 
 export default function EditProfile({navigation}) {
-
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     return (
         <View style = {{ flex: 1, padding: 16 , justifyContent:'center'}}>
-
             <View
                 style = {{
                     position: 'absolute',

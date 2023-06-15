@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, Pressable, RefreshControl, TouchableOpacity,Text, View} from 'react-native';
+import {Alert, Pressable, RefreshControl, TouchableOpacity, Text, View} from 'react-native';
 import PostCard from './Components/PostCard.js';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,31 +9,28 @@ import {SwipeListView} from 'react-native-swipe-list-view';
     @route.params = {username:current username}
 * */
 
-const [refreshing, setRefreshing] = useState(false);
-const [deletedPostList, setDeletedPostList] = useState([]);
-
-const getPosts = async (username) => {
-    const results = [];
+const getPosts = async (username, setDeletedPostList) => {
+    let results = [];
     const MyPostsQuery =  firestore.collection('DeletedPosts').where("PostedBy", "==", username)
-    await MyPostsQuery.get().then(postSnapshot => {
-        postSnapshot.forEach(doc => {
-            results.push(doc.data())
-        });
-    })
-    return results;
+    try {
+        await MyPostsQuery.get().then(postSnapshot => {
+            postSnapshot.forEach(doc => {
+                results.push(doc.data())
+            });
+        })
+        setDeletedPostList(results);
+    } catch(error) {
+        Alert.alert('Error Getting Posts: ', error)
+    }
 }
 
-const onRefresh = () => {
+const onRefresh = (username, setRefreshing, setDeletedPostList) => {
     setRefreshing(true);
-    getPosts().then((result) => {
-        setDeletedPostList(result);
-    }).catch((error) => {
-        Alert.alert('Error Getting Posts: ', error)
-    })
+    getPosts(username, setDeletedPostList)
     setTimeout(() => setRefreshing(false), 1000);
 };
 
-const deletePost = (item) => {
+const deletePost = (username, item, setRefreshing, setDeletedPostList) => {
     firestore
         .collection("DeletedPosts")
         .doc(item.title)
@@ -60,14 +57,14 @@ const deletePost = (item) => {
                     });
             });
             Alert.alert("Posted deleted!");
-            onRefresh();
+            onRefresh(username, setRefreshing, setDeletedPostList);
         })
         .catch((error) => {
             console.log("Error deleting document: " + JSON.stringify(error));
         });
 };
 
-const restoreItem = async (item) => {
+const restoreItem = async (username, item, setRefreshing, setDeletedPostList) => {
     try {
         // Get the source document
         const sourceDocRef = firestore.collection("DeletedPosts").doc(item.title);
@@ -87,27 +84,25 @@ const restoreItem = async (item) => {
             await sourceDocRef.delete();
 
             // Perform the necessary actions after restoration (e.g., refresh UI)
-            onRefresh();
+            onRefresh(username, setRefreshing, setDeletedPostList);
         }
     } catch (error) {
         console.error('Error restoring document:', error);
     }
 };
 
-const deleteAllPosts = () => {
+const deleteAllPosts = (username, deletedPostList, setDeletedPostList) => {
     deletedPostList.forEach((doc , index) => {
-        deletePost(doc)
+        deletePost(username, doc, setRefreshing, setDeletedPostList)
     })
 }
 
 export default function DeletedPosts({route, navigation}) {
+    const [refreshing, setRefreshing] = useState(false);
+    const [deletedPostList, setDeletedPostList] = useState([]);
 
     useEffect(() => {
-        getPosts(route.params.username).then((result) => {
-            setDeletedPostList(result);
-        }).catch((error) => {
-            Alert.alert('Error Getting Posts: ', error)
-        })
+        getPosts(route.params.username, setDeletedPostList)
     }, [])
 
     return (
@@ -127,7 +122,7 @@ export default function DeletedPosts({route, navigation}) {
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress = {() => {deleteAllPosts()}}>
+                    <Pressable onPress = {() => {deleteAllPosts(route.params.username, deletedPostList, setDeletedPostList)}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
@@ -135,7 +130,7 @@ export default function DeletedPosts({route, navigation}) {
                 </View>
                 }
                   refreshControl = {
-                      <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
+                      <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh(route.params.username, setRefreshing, setDeletedPostList)} />
                   }
                   renderItem = {({item}) => (
                       <PostCard data = {item} username = {route.params.username}/>
@@ -148,22 +143,17 @@ export default function DeletedPosts({route, navigation}) {
                         bottom: 0,
                         width: 60,
                         alignItems: 'center'}}>
-                        <TouchableOpacity onPress = {() =>deletePost(item)} style = {{marginRight:20}}>
+                        <TouchableOpacity onPress = {() => deletePost(route.params.username, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
                             <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress = {() => {restoreItem(item)}}>
+                        <TouchableOpacity onPress = {() => {restoreItem(item, setRefreshing, setDeletedPostList)}}>
                             <Ionicons size = {30} name ='arrow-redo-outline' color = {"lightblue"}/>
                         </TouchableOpacity>
 
-
                     </View>
-                )
-                }
+                )}
                   keyExtractor = {item => item.id}/>
         </View>
     )
-
-
-
 }

@@ -10,25 +10,18 @@ import {generateRating} from "./GlobalFunctions";
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
 */
 
-
-const navigation = useNavigation();
-const [UsersPosts, setUserPosts] = useState([])
-const [rating, setRating] = useState(0)
-
-const getPosts = async () => {
+const getPosts = async (username) => {
     const results = [];
-    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
+    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", username)
     await MyPostsQuery.get().then(postSnapshot => {
         postSnapshot.forEach(doc => {
             results.push(doc.data())
         });
     })
-    return results;
+    setUserPosts(results)
 }
 
-
-
-const getSoldItems = () => {
+const getSoldItems = (UsersPosts) => {
     let counter = 0
     for (let i = 0; i < UsersPosts.length; i++) {
         if (UsersPosts[i].sold === 'true') counter++
@@ -37,15 +30,15 @@ const getSoldItems = () => {
 }
 
 export default function ViewProfile({route}) {
+    const navigation = useNavigation();
+    const [UsersPosts, setUserPosts] = useState([])
+    const [rating, setRating] = useState(0)
 
     useEffect(() => {
-        getPosts().then((result) => {
-            setUserPosts(result)
-        })
+        getPosts(route.params.postedByUsername, setUserPosts)
         generateRating(route.params.postedByUsername).then((result) => {
             setRating(result.rating)
         })
-
     }, [])
 
     return (
@@ -84,7 +77,7 @@ export default function ViewProfile({route}) {
                             <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
 
                             <View style = {{flexDirection:'column', alignItems:'center'}}>
-                                <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems()}</Text>
+                                <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(UsersPosts)}</Text>
                                 <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
                             </View>
                         </View>

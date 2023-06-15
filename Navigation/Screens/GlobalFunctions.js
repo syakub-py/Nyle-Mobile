@@ -15,7 +15,7 @@ const generateRating = async (username) => {
 }
 
 const getPosts = async () => {
-    let results =[];
+    let results = [];
     const postCollection = collection(firestoreLite, "AllPosts");
     const postSnapshot = await getDocs(postCollection);
     // Iterate through each document and push the data to the results array

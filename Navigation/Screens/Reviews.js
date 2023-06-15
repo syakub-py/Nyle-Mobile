@@ -8,10 +8,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-const [ReviewList, setReviewList] = useState([])
 const getReviews = async (username) => {
     let results = []
-    const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==",username)
+    const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", username)
     await MyReviewsQuery.get().then(postSnapshot => {
         postSnapshot.forEach(doc => {
             results.push({id: doc.id, ...doc.data()});
@@ -26,10 +25,10 @@ const getReviews = async (username) => {
 }
 
 export default function Reviews({route, navigation}) {
-
+    const [ReviewList, setReviewList] = useState([])
 
     useEffect(() => {
-        getReviews( route.params.username).then((result) => {
+        getReviews(route.params.username).then((result) => {
             setReviewList(result)
         })
     }, [])

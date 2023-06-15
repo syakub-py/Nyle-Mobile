@@ -3,8 +3,7 @@ import {View, Text, StyleSheet, Pressable, TextInput, Image} from 'react-native'
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const [username, setUsername] = useState('')
-const handleResetPassword = () => {
+const handleResetPassword = (username) => {
     auth.sendPasswordResetEmail(username)
         .then(() => {
             alert('Password reset email sent successfully!');
@@ -15,6 +14,8 @@ const handleResetPassword = () => {
 }
 
 export default function ResetPassword({navigation}) {
+    const [username, setUsername] = useState('')
+
     return (
         <View style = {styles.container}>
             <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>
@@ -30,7 +31,7 @@ export default function ResetPassword({navigation}) {
                     <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
-            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username} onChangeText = {(text) => setUsername(text)} />
+            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username(username)} onChangeText = {(text) => setUsername(text)} />
             <Pressable style = {styles.submitContainer} onPress = {handleResetPassword}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Reset</Text>
             </Pressable>

@@ -8,17 +8,18 @@ import {
 import React from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+const getTerms = async (setTermsOfService) => {
+    const Query = firestore.collection('Legal Docs').doc("Terms of Service");
+    await Query.get().then((doc) => {
+        setTermsOfService(doc.data().Data)
+    })
+}
+
 export default function TermsOfService({route ,navigation}) {
-    const [TermsOfService, setTermsOfService] = useState("")
-    const getTerms = async () => {
-        const Query = firestore.collection('Legal Docs').doc("Terms of Service");
-        await Query.get().then((doc) => {
-            setTermsOfService(doc.data().Data)
-        })
-    }
+    const [termsOfService, setTermsOfService] = useState("")
 
     useEffect(() => {
-        getTerms();
+        getTerms(setTermsOfService);
     })
 
     return (
@@ -34,13 +35,12 @@ export default function TermsOfService({route ,navigation}) {
                 <View style = {{margin:10, height:550}}>
                     <ScrollView>
                         <Text style = {{color:'black'}}>
-                            {TermsOfService}
+                            {termsOfService}
                         </Text>
                     </ScrollView>
                 </View>
 
-                {
-                    (route.params.showButtons) ? (
+                {(route.params.showButtons) ? (
                         <View style = {{flexDirection:'row', alignSelf:'center'}}>
                             <Pressable>
                                 <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'red', borderRadius:5, margin:10}}>

@@ -1,4 +1,4 @@
-import { Text, View, Pressable,Dimensions, ScrollView } from 'react-native'
+import { Text, View, Pressable, Dimensions, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
@@ -8,24 +8,14 @@ import CryptoDataService from '../../Services/CryptoDataService';
 
 const { width } = Dimensions.get('window')
 
-const [marketData, setMarketData] = useState([])
-const [value, setValue] = useState(null);
-const [isFocus, setIsFocus] = useState(false);
-
-const getMarketData = async () => {
+const getMarketData = async (setMarketData) => {
     try {
         const response = await CryptoDataService.getMarketData();
-        return (response.data);
+        setMarketData(response.data)
     } catch (error) {
         console.log(error.message);
     }
 }
-
-useEffect(() => {
-    getMarketData().then((response) => {
-        setMarketData(response)
-    })
-}, [])
 
 const data = [
     { label: 'Account used: 4563 (Coinbase)', value: '1' },
@@ -39,8 +29,14 @@ const data = [
 ];
 
 export default function CheckOut({route, navigation}) {
-
+    const [marketData, setMarketData] = useState([])
+    const [value, setValue] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
     
+    useEffect(() => {
+        getMarketData(setMarketData)
+    }, [])
+
     return (
       <View style = {{backgroundColor:'white', flex:1}}>
         <ScrollView>

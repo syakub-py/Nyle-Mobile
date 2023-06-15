@@ -5,11 +5,7 @@ import "firebase/auth";
 import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
-const [username, setUsername] = useState('')
-const [password, setPassword] = useState('')
-
-const handleEmailAndPasswordLogin = () => {
+const handleEmailAndPasswordLogin = (username, password) => {
     auth.signInWithEmailAndPassword(username, password)
         .then(userCredentials => {
             const user = userCredentials.user;
@@ -29,7 +25,9 @@ const handleGoogleLogin = async () => {
 }
 
 export default function Login({navigation}) {
-
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
             if (user) navigation.navigate("Main Container", {username: user.email})
@@ -80,7 +78,7 @@ export default function Login({navigation}) {
 
                 <Pressable
                     style = {styles.submitContainer}
-                    onPress = {handleEmailAndPasswordLogin}
+                    onPress = {handleEmailAndPasswordLogin(username, password)}
                 >
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                 </Pressable>

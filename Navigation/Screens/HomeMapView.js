@@ -6,22 +6,14 @@ import {getPosts, getCityState} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 
-
-const [masterData, setMasterData] = useState([]);
-const [filteredData, setFilterData] = useState([]);
-
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-const [categorySearch, setCategorySearch] = useState([]);
-const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-const [city, setCity] = useState("")
-const [state, setState] = useState("")
 
-const handleCategoryPress = (index) => {
+const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch) => {
     setSelectedCategoryIndex(index);
-    categoryFilter(categories[index])
+    categoryFilter(categories[index], masterData, setFilterData, setCategorySearch)
 };
 
-const categoryFilter = (text) => {
+const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
     if (text && text !== 'All') {
         const newData = masterData.filter((item) => {
             const itemData = item.category ? item.category : ''
@@ -36,6 +28,12 @@ const categoryFilter = (text) => {
 }
 
 export default function HomeMapView({navigation, route}) {
+    const [masterData, setMasterData] = useState([]);
+    const [filteredData, setFilterData] = useState([]);
+    const [categorySearch, setCategorySearch] = useState([]);
+    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+    const [city, setCity] = useState("")
+    const [state, setState] = useState("")
 
     useEffect(() => {
         getPosts().then((result) => {
@@ -51,8 +49,6 @@ export default function HomeMapView({navigation, route}) {
         })
 
     }, [])
-
-
 
     return (
         <View style = {{ flex: 1 }}>
@@ -115,9 +111,8 @@ export default function HomeMapView({navigation, route}) {
             </View>
             <View style = {{zIndex:1, position:'absolute', top:140}}>
                 <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10, backgroundColor:'transparent'}}>
-                    {
-                        categories.map((category, index) => (
-                            <Pressable key = {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                    {categories.map((category, index) => (
+                            <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                                 <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight:'400'}}>
                                     {category}
                                 </Text>

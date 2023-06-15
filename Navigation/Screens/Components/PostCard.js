@@ -24,7 +24,7 @@ const updateCurrencyPrice = async (data) => {
             if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.price).toFixed(2).toString()});
             else {
                 if (price !== 0) {
-                    postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
+                    postRef.set({ USD:(price * data.price).toFixed(2).toString() }, { merge: true });
                 }
             }
         }

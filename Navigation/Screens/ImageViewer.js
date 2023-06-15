@@ -11,7 +11,6 @@ const getImages = (array) => {
     return array.map((image) => ({ url: image }));
 };
 
-
 export default function ViewImages({ route, navigation }) {
     const { pictures, index } = route.params;
 
