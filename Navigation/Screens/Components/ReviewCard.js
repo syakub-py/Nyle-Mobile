@@ -11,6 +11,37 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
 import { SwipeListView } from 'react-native-swipe-list-view';
 
+const SendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
+    const docRef = firestore.collection("Reviews").doc(data.id);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+        setExistingReplies(doc.data().Replies || []);
+
+        const newReply = {
+            username: currentUser,
+            message: reply,
+            datePosted: new Date()
+        };
+
+        setExistingReplies([...existingReplies, newReply])
+        const updatedReplies = [...existingReplies, newReply]
+        await docRef.update({ Replies: updatedReplies });
+    }
+};
+
+const DeleteReply = async (data, existingReplies, setExistingReplies, index) => {
+    const docRef = firestore.collection("Reviews").doc(data.id);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+        const updatedReplies = existingReplies.filter((_, i) => i !== index);
+        setExistingReplies(updatedReplies);
+
+        await docRef.update({ Replies: updatedReplies });
+    }
+}
+
 /*
     @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
     @param currentUser = string (current username)
@@ -21,41 +52,12 @@ export default function ReviewCard({data, currentUser}) {
     const [reply, setReply] = useState("")
     const [existingReplies, setExistingReplies] = useState(data.Replies)
 
-    const SendReply = async () => {
-        const docRef = firestore.collection("Reviews").doc(data.id);
-        const doc = await docRef.get();
-
-        if (doc.exists) {
-            setExistingReplies(doc.data().Replies || []);
-
-            const newReply = {
-                username: currentUser,
-                message: reply,
-                datePosted: new Date()
-            };
-
-            setExistingReplies([...existingReplies, newReply])
-            const updatedReplies = [...existingReplies, newReply]
-            await docRef.update({ Replies: updatedReplies });
-        }
-    };
-
     const handleSendReply = () => {
-        SendReply().then(() => {
-        })
+        SendReply(data, currentUser, reply, existingReplies, setExistingReplies)
     }
 
-    const handleDeleteReply = async (index) => {
-
-        const docRef = firestore.collection("Reviews").doc(data.id);
-        const doc = await docRef.get();
-
-        if (doc.exists) {
-            const updatedReplies = existingReplies.filter((_, i) => i !== index);
-            setExistingReplies(updatedReplies);
-
-            await docRef.update({ Replies: updatedReplies });
-        }
+    const handleDeleteReply = (index) => {
+        DeleteReply(data, existingReplies, setExistingReplies, index)
     }
 
     return (
