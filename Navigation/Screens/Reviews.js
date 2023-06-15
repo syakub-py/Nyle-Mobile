@@ -13,7 +13,7 @@ export default function Reviews({route, navigation}) {
     const [ReviewList, setReviewList] = useState([])
     const getReviews = async () => {
         let results = []
-        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", route.params.username)
+        const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "== ", route.params.username)
         await MyReviewsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push({id: doc.id, ...doc.data()});
@@ -57,7 +57,7 @@ export default function Reviews({route, navigation}) {
 
 
             {
-                (route.params.currentUser!==route.params.username)?(
+                (route.params.currentUser!==route.params.username) ? (
                     <View style = {{
                         position: 'absolute',
                         bottom:16,
@@ -72,7 +72,7 @@ export default function Reviews({route, navigation}) {
                             alignItems: 'center',
                             elevation: 6,
                         }} onPress= {() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
-                            <Ionicons name ="pencil" size = {24} color="white" />
+                            <Ionicons name = "pencil" size = {24} color= "white" />
                         </Pressable>
 
                     </View>
@@ -81,8 +81,6 @@ export default function Reviews({route, navigation}) {
                 )
             }
 
-
         </SafeAreaView>
     )
-
 }

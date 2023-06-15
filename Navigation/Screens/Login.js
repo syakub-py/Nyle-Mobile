@@ -35,9 +35,7 @@ export default function Login({navigation}) {
 
     useEffect(() => {
         const unsubcribe = auth.onAuthStateChanged(user => {
-            if (user) {
-                navigation.navigate("Main Container", {username: user.email})
-            }
+            if (user) navigation.navigate("Main Container", {username: user.email})
         })
         return unsubcribe;
     }, []);

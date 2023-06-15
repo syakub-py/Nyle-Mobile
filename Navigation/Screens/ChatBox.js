@@ -1,5 +1,5 @@
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
     View,
     Text,
@@ -89,7 +89,7 @@ export default function ChatBox({route, navigation}) {
     }
   }
 
-    const onSend = React.useCallback(async (message) => {
+    const onSend = useCallback(async (message) => {
         const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
         const title = uuidv4();
 
@@ -148,7 +148,7 @@ export default function ChatBox({route, navigation}) {
 
     const upload = async (array) => {
         const UrlDownloads = [];
-        if (array.length> 0) {
+        if (array.length > 0) {
             try {
                 setAnimating(true)
                 console.log("uploading chat image...")
@@ -169,26 +169,21 @@ export default function ChatBox({route, navigation}) {
                 console.error(error);
                 return [];
             }
-        } else {
-            return [];
-        }
+        } else return [];
+        
   };
 
     const change = ({nativeEvent}) => {
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
-        if (slide !== state.active) {
-            setState({active: slide})
-        }
+        if (slide !== state.active) setState({active: slide})
     }
 
     const markAsRead =async () => {
-        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
+        const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "== ", false);
         await unreadMessagesRef.get().then((docs) => {
             docs.forEach((doc) => {
                 const currentMessageData = doc.data()
-                if (currentMessageData.user.name !== route.params.username) {
-                    doc.ref.update({received: true})
-                }
+                if (currentMessageData.user.name !== route.params.username) doc.ref.update({received: true})
             })
         })
     }
@@ -212,10 +207,10 @@ export default function ChatBox({route, navigation}) {
               imageUrls.map((value, index) => (
                 <View key= {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
                     {
-                        (animating)?(
+                        (animating) ? (
                             <View>
                                 <View style = {{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
-                                    <ActivityIndicator size ="large" color="black" />
+                                    <ActivityIndicator size = "large" color= "black" />
                                 </View>
                                 <Image
                                     source = {{ uri: value }}
@@ -262,7 +257,6 @@ export default function ChatBox({route, navigation}) {
   };
 
     useEffect(() => {
-
         clearMessages().then(() => {
             console.log("clearing old messages...")
         })
@@ -289,14 +283,14 @@ export default function ChatBox({route, navigation}) {
       </View>
 
       <GiftedChat
-        messages= {messages}
-        onSend= {messages => onSend(messages)}
+        messages = {messages}
+        onSend = {messages => onSend(messages)}
         alwaysShowSend
         scrollToBottom
-        user= {{_id:route.params.userId}}
+        user = {{_id:route.params.userId}}
         renderBubble = {renderBubble}
         renderActions= {renderActions}
-        renderInputToolbar= {renderInputToolbar}
+        renderInputToolbar = {renderInputToolbar}
         renderMessageImage = {(props) => {
             if (props.currentMessage.image.length > 0) {
                 return (
@@ -314,10 +308,10 @@ export default function ChatBox({route, navigation}) {
                                                     height: 200,
                                                     borderRadius:15
                                                 }}
-                                                resizeMode ="cover"
+                                                resizeMode = "cover"
                                             />
                                         );
-                                    })}
+                                })}
                             </ScrollView>
                             <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
                                 {

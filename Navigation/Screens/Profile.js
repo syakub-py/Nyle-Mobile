@@ -6,7 +6,6 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 
-
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
 */
@@ -43,7 +42,7 @@ export default function Profile({navigation, route}) {
 
   const getPosts = async () =>  {
     const results = [];
-    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.username)
+    const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "== ", route.params.username)
     await MyPostsQuery.get().then(postSnapshot => {
       postSnapshot.forEach(doc => {
             results.push(doc.data())
@@ -181,7 +180,7 @@ export default function Profile({navigation, route}) {
                 <View>
                   <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20, marginTop:20}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
-                        <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode ="cover"/>
+                        <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
                         <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username.slice(0, 15) + "..."}</Text>
                   </View>
 

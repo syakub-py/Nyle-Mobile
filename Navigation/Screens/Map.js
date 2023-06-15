@@ -23,8 +23,8 @@ export default function Map({route, navigation}) {
                 <Circle
                     center= {route.params.coordinates}
                     radius= {1200}
-                    fillColor="rgba(66, 135, 245, 0.2)"
-                    strokeColor="rgba(66, 135, 245, 0.7)"
+                    fillColor= "rgba(66, 135, 245, 0.2)"
+                    strokeColor= "rgba(66, 135, 245, 0.7)"
                     strokeWidth= {1}
                 />
             </MapView>

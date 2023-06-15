@@ -40,7 +40,7 @@ export default function TermsOfService({route ,navigation}) {
                 </View>
 
                 {
-                    (route.params.showButtons)?(
+                    (route.params.showButtons) ? (
                         <View style = {{flexDirection:'row', alignSelf:'center'}}>
                             <Pressable>
                                 <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'red', borderRadius:5, margin:10}}>

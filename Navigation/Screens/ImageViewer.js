@@ -40,13 +40,13 @@ export default function ViewImages({ route, navigation }) {
                     }}
                 >
                     <Pressable onPress= {handlePressClose}>
-                        <Ionicons name ="close-outline" size = {30} />
+                        <Ionicons name = "close-outline" size = {30} />
                     </Pressable>
                 </View>
             )}
             onSwipeDown= {handlePressClose}
             index= {index}
-            backgroundColor="transparent"
+            backgroundColor= "transparent"
         />
     );
 }

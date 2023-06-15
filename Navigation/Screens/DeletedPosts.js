@@ -5,17 +5,17 @@ import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {SwipeListView} from 'react-native-swipe-list-view';
 
-
 /*
     @route.params = {username:current username}
 * */
+
 export default function DeletedPosts({route, navigation}) {
     const [refreshing, setRefreshing] = useState(false);
     const [deletedPostList, setDeletedPostList] = useState([]);
 
     const getPosts = async () => {
         const results = [];
-        const MyPostsQuery =  firestore.collection('DeletedPosts').where("PostedBy", "==", route.params.username)
+        const MyPostsQuery =  firestore.collection('DeletedPosts').where("PostedBy", "== ", route.params.username)
         await MyPostsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push(doc.data())
@@ -23,6 +23,7 @@ export default function DeletedPosts({route, navigation}) {
         })
         return results;
     }
+    
     const onRefresh = () => {
         setRefreshing(true);
         getPosts().then((result) => {
@@ -94,9 +95,7 @@ export default function DeletedPosts({route, navigation}) {
                 onRefresh();
 
                 console.log('Document restored successfully!');
-            } else {
-                console.log('Source document does not exist.' + item.title);
-            }
+            } else console.log('Source document does not exist.' + item.title);
         } catch (error) {
             console.error('Error restoring document:', error);
         }
@@ -108,7 +107,6 @@ export default function DeletedPosts({route, navigation}) {
             console.log("Deleted all posts!");
         })
     }
-
 
     useEffect(() => {
         getPosts().then((result) => {

@@ -55,9 +55,8 @@ export default function Chat({navigation, route}) {
                         received
                     };
 
-                    if (latestMessageData.user.name === route.params.username) {
-                        chatData.latestMessage = "You: " + latestMessage;
-                    }
+                    if (latestMessageData.user.name === route.params.username) chatData.latestMessage = "You: " + latestMessage;
+
                     results.push(chatData);
                 } else {
                     results.push({
@@ -73,8 +72,6 @@ export default function Chat({navigation, route}) {
 
         return results;
     };
-
-
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -96,7 +93,6 @@ export default function Chat({navigation, route}) {
         })
     }, [])
 
-
     const searchFilter = (text) => {
         if (text) {
             const newData = masterData.filter((item) => {
@@ -114,18 +110,14 @@ export default function Chat({navigation, route}) {
 
     const findUser = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username!==route.params.username) {
-                return index
-            }
+            if (userArray[index].username!==route.params.username) return index
         }
         return "";
     }
 
     const findProfilePic = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username ===route.params.username) {
-                return index
-            }
+            if (userArray[index].username ===route.params.username) return index   
         }
         return "";
     }
@@ -187,7 +179,7 @@ export default function Chat({navigation, route}) {
                             marginBottom:10,
                             elevation:2
                         }}>
-                            <Ionicons name ="search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
+                            <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
                             <TextInput placeholder='Search Chats...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor= {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
                         </View>
                         <Text style = {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
@@ -220,7 +212,7 @@ export default function Chat({navigation, route}) {
 
                                 <View style = {{flexDirection:'column'}}>
                                     {
-                                        (username.length > 10)?(
+                                        (username.length > 10) ? (
                                             <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
                                         ):(
                                             <Text style = {{fontSize:18, fontWeight:'500'}}>{username}</Text>
@@ -228,15 +220,15 @@ export default function Chat({navigation, route}) {
                                     }
 
                                     {
-                                        (item.latestMessage.length > 10)?(
-                                            <Text style = {(item.received)?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
+                                        (item.latestMessage.length > 10) ? (
+                                            <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
                                         ):(
-                                            <Text style = {(item.received)?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
+                                            <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
                                         )
                                     }
                                 </View>
                                 {
-                                    (item.image)?(
+                                    (item.image) ? (
                                         <View style = {{justifyContent:'center'}}>
                                             <Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
                                         </View>
@@ -249,7 +241,7 @@ export default function Chat({navigation, route}) {
                     )
                 }}
             />
-            <StatusBar style ="auto"/>
+            <StatusBar style = "auto"/>
         </SafeAreaView>
     );
 }

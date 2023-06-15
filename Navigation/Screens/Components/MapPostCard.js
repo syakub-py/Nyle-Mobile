@@ -8,7 +8,6 @@ import {
 import {generateRating, handleLike} from "../GlobalFunctions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
 export default function MapPostCard({data, username}) {
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
@@ -40,7 +39,7 @@ export default function MapPostCard({data, username}) {
                 <View style = {{position:'absolute', right:10,top:10, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
                     <Pressable onPress= {() =>handleLike(data.title, username)}>
                         {
-                            (data.likes.includes(data.PostedBy))?(
+                            (data.likes.includes(data.PostedBy)) ? (
                                 <Ionicons name ='heart' size = {20} color= {'#e6121d'}/>
                             ):(
                                 <Ionicons name ='heart-outline' size = {20}/>
@@ -59,7 +58,7 @@ export default function MapPostCard({data, username}) {
                         </View>
 
                         {
-                            (data.category === "Homes")?(
+                            (data.category === "Homes") ? (
                                 <View style = {{flexDirection:'row'}}>
 
                                     <View style = {{flexDirection:"row", alignContent:'center'}}>

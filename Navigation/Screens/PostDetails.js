@@ -1,6 +1,6 @@
 import {Alert, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating, handleLike} from "./GlobalFunctions";
@@ -12,7 +12,6 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const [state, setState] = useState({active:0})
@@ -21,7 +20,7 @@ export default function PostDetails({route, navigation}) {
     const [views, setViews] = useState(0)
     const [currentOffset, setCurrentOffset] = useState(0);
     const likes = route.params.item.likes
-    const scrollViewRef = React.useRef(null);
+    const scrollViewRef = useRef(null);
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
     const [realEstateData, setRealEstateData] = useState([])
@@ -55,7 +54,6 @@ export default function PostDetails({route, navigation}) {
             return []
         }
     };
-
 
     const handleAddChat = () => {
         if (route.params.username !== route.params.item.PostedBy) {
@@ -119,9 +117,7 @@ export default function PostDetails({route, navigation}) {
 
     const findUser = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username!==route.params.username) {
-                return index
-            }
+            if (userArray[index].username!==route.params.username) return index
         }
         return "";
     }
@@ -160,7 +156,7 @@ export default function PostDetails({route, navigation}) {
 
                     <Modal
                         visible = {isOpen}
-                        animationType ="slide"
+                        animationType = "slide"
                         onRequestClose = {toggleDropdown}
                         transparent= {true}
                     >
@@ -175,7 +171,7 @@ export default function PostDetails({route, navigation}) {
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress= {() =>handleLike(route.params.item.title, route.params.username)}>
                             {
-                                (likes.includes(route.params.username))?(
+                                (likes.includes(route.params.username)) ? (
                                     <Ionicons name ='heart' size = {30} color= {'#e6121d'}/>
 
                                 ):(
@@ -189,11 +185,9 @@ export default function PostDetails({route, navigation}) {
 
                 <View>
 
-
                     <View style = {{ maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
                         <Text style = {{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
                     </View>
-
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator= {false} onScroll= {change}>
                         {
@@ -263,7 +257,7 @@ export default function PostDetails({route, navigation}) {
                         <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
                     </View>
                     {
-                        (route.params.item.category === "Homes")?(
+                        (route.params.item.category === "Homes") ? (
                             <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
                                 <View style = {{flexDirection:"row", alignContent:'center'}}>
                                     <Ionicons name = {'bed'} color= {'black'} size = {20}/>
@@ -321,7 +315,7 @@ export default function PostDetails({route, navigation}) {
 
 
                 {
-                    (route.params.item.PostedBy !== route.params.username)?(
+                    (route.params.item.PostedBy !== route.params.username) ? (
                         <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
                             <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
                                 <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
@@ -335,7 +329,7 @@ export default function PostDetails({route, navigation}) {
                                             backgroundColor: 'transparent',
                                             marginTop: 2
                                         }}>
-                                            <Ionicons name ="star" style = {{ marginRight: 3 }} color="#ebd61e" size = {13} />
+                                            <Ionicons name = "star" style = {{ marginRight: 3 }} color= "#ebd61e" size = {13} />
                                             <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
                                             <Text style = {{ fontSize: 10, color:'lightgrey', marginLeft:3}}>({numOfReviews} reviews)</Text>
                                         </View>
@@ -345,7 +339,7 @@ export default function PostDetails({route, navigation}) {
 
                             <Pressable onPress= {handleAddChat}>
                                 <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                                    <Ionicons name ="chatbox-ellipses-outline" color= {'white'} size = {30} style = {{margin:15}}/>
+                                    <Ionicons name = "chatbox-ellipses-outline" color= {'white'} size = {30} style = {{margin:15}}/>
                                 </View>
                             </Pressable>
                         </View>
@@ -380,8 +374,8 @@ export default function PostDetails({route, navigation}) {
                                 <Circle
                                     center= {route.params.item.coordinates}
                                     radius= {1200}
-                                    fillColor="rgba(66, 135, 245, 0.2)"
-                                    strokeColor="rgba(66, 135, 245, 0.7)"
+                                    fillColor= "rgba(66, 135, 245, 0.2)"
+                                    strokeColor= "rgba(66, 135, 245, 0.7)"
                                     strokeWidth= {1}
                                 />
                             </MapView>
@@ -390,7 +384,7 @@ export default function PostDetails({route, navigation}) {
 
 
                 {
-                    (route.params.item.category !== "Homes" && route.params.item.category !== "Auto" )?(
+                    (route.params.item.category !== "Homes" && route.params.item.category !== "Auto" ) ? (
                         <View>
                             <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
                         </View>
@@ -398,8 +392,6 @@ export default function PostDetails({route, navigation}) {
                         <View></View>
                     )
                 }
-
-
 
 
                 {
@@ -437,8 +429,6 @@ export default function PostDetails({route, navigation}) {
                         </View>
                     )
                 }
-
-
 
                 <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 

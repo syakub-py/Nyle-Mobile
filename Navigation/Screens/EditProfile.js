@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -75,7 +75,7 @@ export default function EditProfile({navigation}) {
                     marginBottom: 12,
                     paddingHorizontal: 8,
                 }}
-                placeholder="Username"
+                placeholder= "Username"
                 value = {username}
                 onChangeText= {text => setUsername(text)}
             />
@@ -99,7 +99,7 @@ export default function EditProfile({navigation}) {
                     marginBottom: 12,
                     paddingHorizontal: 8,
                 }}
-                placeholder="Password"
+                placeholder= "Password"
                 secureTextEntry
                 value = {password}
                 onChangeText= {text => setPassword(text)}

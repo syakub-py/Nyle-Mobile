@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
     View,
     Text,
@@ -63,7 +63,7 @@ export default function AddPost({route}) {
     //urls for the phone
     const [imageUrls, setImageUrls] = useState([]);
     const [currency, setCurrency] = useState({label:'', value:''});
-    const [isFocus, setIsFocus] = useState(false);    
+    const [isFocus, setIsFocus] = useState(false);
 
 
     const SelectImages = async () => {
@@ -83,7 +83,6 @@ export default function AddPost({route}) {
             setImageUrls(currentImageUrls);
         }
     };
-          
 
     const upload = async (array) => {
         const UrlDownloads= [];
@@ -110,7 +109,6 @@ export default function AddPost({route}) {
         }
       };
     
-
     const onRefresh = () => {
         setRefreshing(true);
         setTimeout(() => setRefreshing(false), 1000);
@@ -143,9 +141,7 @@ export default function AddPost({route}) {
     }
 
     const addPosts = async (collectionPath) => {
-        if (!collectionPath) {
-            throw new Error('Error: collection name cannot be empty');
-        }
+        if (!collectionPath) throw new Error('Error: collection name cannot be empty');
 
         const UrlList= await upload(imageUrls)
         if (category === "Auto") {
@@ -274,7 +270,7 @@ export default function AddPost({route}) {
                 </ScrollView>
 
                 {
-                    (imageUrls.length === 0)? (
+                    (imageUrls.length === 0) ? (
                         <Pressable onPress= {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
                             <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
                                 <Ionicons name ='images-outline' size = {80} color= {'lightgray'}/>
@@ -321,10 +317,10 @@ export default function AddPost({route}) {
                     }}
                     data= {categories}
                     search
-                    labelField="Label"
-                    valueField="Value"
+                    labelField= "Label"
+                    valueField= "Value"
                     placeholder= {'Select item'}
-                    searchPlaceholder="Search..."
+                    searchPlaceholder= "Search..."
                     value = {category}
                     onFocus= {() => setIsFocus(true)}
                     onBlur= {() => setIsFocus(false)}
@@ -362,10 +358,10 @@ export default function AddPost({route}) {
                             }}
                             data= {currencies}
                             search
-                            labelField="label"
-                            valueField="value"
+                            labelField= "label"
+                            valueField= "value"
                             placeholder= {'Select a currency'}
-                            searchPlaceholder="Search..."
+                            searchPlaceholder= "Search..."
                             value = {currency}
                             onFocus= {() => setIsFocus(true)}
                             onBlur= {() => setIsFocus(false)}
@@ -388,7 +384,7 @@ export default function AddPost({route}) {
                 </View>
 
                 {
-                    (category !== "Homes" && category !== "Auto")?(
+                    (category !== "Homes" && category !== "Auto") ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
                             <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setDetails(text)}/>
@@ -399,7 +395,7 @@ export default function AddPost({route}) {
                     )
                 }
                 {
-                    (category === "Homes")?(
+                    (category === "Homes") ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bedrooms</Text>
                             <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setBedrooms(text)}/>
@@ -417,7 +413,7 @@ export default function AddPost({route}) {
                 }
 
                 {
-                    (category === "Auto" )?(
+                    (category === "Auto" ) ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Make</Text>
                             <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setMake(text)}/>
@@ -443,9 +439,9 @@ export default function AddPost({route}) {
                 </View>
 
                 {
-                    (animating)?(
+                    (animating) ? (
                         <View>
-                            <ActivityIndicator size ="large" color="black" animating= {animating} />
+                            <ActivityIndicator size = "large" color= "black" animating= {animating} />
                         </View>
                     ):(
                         <View/>
@@ -496,4 +492,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
       },
-  });
+});

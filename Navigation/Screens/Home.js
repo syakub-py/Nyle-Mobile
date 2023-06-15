@@ -189,11 +189,8 @@ export default function Home({navigation, route}) {
         });
         setFilterData(newData);
       }
-    } else {
-      setFilterData(masterData);
-    }
+    } else setFilterData(masterData);
   };
-
 
   return (
       <View style = {{flex:1, backgroundColor:'white'}}>
@@ -222,7 +219,7 @@ export default function Home({navigation, route}) {
         }}>
           <View style = {{flexDirection: 'row'}}>
             <Ionicons
-                name ="map"
+                name = "map"
                 size = {15}
                 style = {{ marginRight: 5 }}
             />
@@ -274,7 +271,7 @@ export default function Home({navigation, route}) {
                     margin:10,
                     elevation:2
                   }}>
-                <Ionicons name ="search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
+                <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
                 <TextInput placeholder='Search Nyle...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor= {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 

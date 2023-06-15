@@ -6,12 +6,10 @@ import {
     ScrollView,
     TextInput, TouchableOpacity,
 } from 'react-native';
-import React from "react";
+import React, {useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
 import { SwipeListView } from 'react-native-swipe-list-view';
-
-
 
 /*
     @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
@@ -50,8 +48,6 @@ export default function ReviewCard({data, currentUser}) {
 
     const handleDeleteReply = async (index) => {
 
-
-
         const docRef = firestore.collection("Reviews").doc(data.id);
         const doc = await docRef.get();
 
@@ -88,7 +84,7 @@ export default function ReviewCard({data, currentUser}) {
                 </View>
 
                 {
-                    (open)?(
+                    (open) ? (
                         <View style = {{flexDirection:'row', justifyContent:'center'}}>
                             <View style = {{ width:300}}>
                                 <TextInput multiline placeholder= {"Write a reply"} onChangeText= {(text) =>setReply(text)}/>
@@ -103,7 +99,7 @@ export default function ReviewCard({data, currentUser}) {
                         </View>
                     ):(
 
-                        (data.Reviewe === currentUser)?(
+                        (data.Reviewe === currentUser) ? (
                             <Pressable onPress= {() =>setOpen(!open)}>
                                 <View style = {{position:"absolute", bottom:0, right:10}}>
                                     <Ionicons name = {"arrow-redo-outline"} size = {20}/>
@@ -120,7 +116,7 @@ export default function ReviewCard({data, currentUser}) {
             </View>
 
             {
-                (data.Reviewe === currentUser)?(
+                (data.Reviewe === currentUser) ? (
                     <SwipeListView
                         data= {existingReplies}
                         rightOpenValue = {-60}
@@ -166,8 +162,6 @@ export default function ReviewCard({data, currentUser}) {
                     </ScrollView>
                 )
             }
-
-
         </View>
     )
 }

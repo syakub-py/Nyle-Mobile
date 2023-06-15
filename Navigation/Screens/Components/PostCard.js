@@ -5,6 +5,7 @@ import React, {useState, useEffect} from 'react';
 import {firestore} from "./Firebase";
 import axios from "axios";
 import {handleLike} from "../GlobalFunctions";
+
 export default function PostCard({data, username}) {
     const navigation = useNavigation();
     const [price, setPrice] = useState(0)
@@ -15,9 +16,7 @@ export default function PostCard({data, username}) {
             try {
                 const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page =20&page =1&sparkline =true&price_change_percentage =7d");
                 const filteredData = response.data.filter((item) => item.image === data.currency)
-                if (filteredData.length > 0) {
-                    setPrice(filteredData[0].current_price)
-                }
+                if (filteredData.length > 0) setPrice(filteredData[0].current_price)
             } catch (error) {
                 console.log(error.message);
             }
@@ -26,14 +25,11 @@ export default function PostCard({data, username}) {
             postRef.get().then((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
-                    if (data.hasOwnProperty('USD') && price !== 0) {
-                        postRef.update({ USD:(price*data.price).toFixed(2).toString()});
-                    } else {
-
+                    if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price*data.price).toFixed(2).toString()});
+                    else {
                         if (price !== 0) {
                             postRef.set({ USD:(price*data.price).toFixed(2).toString() }, { merge: true });
                         }
-
                     }
                 }
             });
@@ -51,7 +47,7 @@ export default function PostCard({data, username}) {
                      <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
                             <Pressable onPress= {() =>handleLike(data.title, username)}>
                                 {
-                                    (data.likes.includes(data.PostedBy))?(
+                                    (data.likes.includes(data.PostedBy)) ? (
                                         <Ionicons name ='heart' size = {25} color= {'#e6121d'}/>
                                     ):(
                                         <Ionicons name ='heart-outline' size = {25}/>
@@ -63,7 +59,7 @@ export default function PostCard({data, username}) {
 
                     <View style = {{flexDirection:'row'}}>
                         {
-                            (username !== data.PostedBy)?(
+                            (username !== data.PostedBy) ? (
                                 <Pressable onPress= {() => navigation.navigate("view profile", {ProfileImage: data.profilePic, postedByUsername:data.PostedBy, currentUsername:username})}>
                                     <Image style = {{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source = {{uri:data.profilePic, elevation:2}}/>
                                 </Pressable>
@@ -97,7 +93,7 @@ export default function PostCard({data, username}) {
                     </ScrollView>
                     <View style = {{position: 'absolute', top:280, left:10}}>
                         {
-                            (data.sold === "true")?(
+                            (data.sold === "true") ? (
                                 <View style = {{flexDirection:"row", alignItems:"center"}}>
                                     <View style = {{backgroundColor:"red", height:10, width:10, borderRadius:10}}></View>
                                     <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Sold</Text>
@@ -116,4 +112,3 @@ export default function PostCard({data, username}) {
         </View>
     )
 }
-

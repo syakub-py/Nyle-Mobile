@@ -6,10 +6,10 @@ import {firestore} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {generateRating} from "./GlobalFunctions";
 
-
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
 */
+
 export default function ViewProfile({route}) {
     const navigation = useNavigation();
     const [UsersPosts, setUserPosts] = useState([])
@@ -17,7 +17,7 @@ export default function ViewProfile({route}) {
 
     const getPosts = async () => {
         const results = [];
-        const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", route.params.postedByUsername)
+        const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "== ", route.params.postedByUsername)
         await MyPostsQuery.get().then(postSnapshot => {
             postSnapshot.forEach(doc => {
                 results.push(doc.data())
@@ -37,11 +37,9 @@ export default function ViewProfile({route}) {
     }, [])
 
     const getSoldItems = () => {
-        let counter =0
+        let counter = 0
         for (let i = 0; i < UsersPosts.length; i++) {
-            if (UsersPosts[i].sold === 'true') {
-                counter++
-            }
+            if (UsersPosts[i].sold === 'true') counter++
         }
         return counter
     }

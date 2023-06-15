@@ -65,10 +65,10 @@ export default function CheckOut({route, navigation}) {
                     data= {data}
                     search
                     maxHeight= {300}
-                    labelField="label"
-                    valueField="value"
+                    labelField= "label"
+                    valueField= "value"
                     placeholder= {!isFocus ? 'Select a wallet' : '...'}
-                    searchPlaceholder="Search..."
+                    searchPlaceholder= "Search..."
                     value = {value}
                     onFocus= {() => setIsFocus(true)}
                     onBlur= {() => setIsFocus(false)}
@@ -111,10 +111,10 @@ export default function CheckOut({route, navigation}) {
                     data= {marketData}
                     search
                     maxHeight= {300}
-                    labelField="name"
-                    valueField="image"
+                    labelField= "name"
+                    valueField= "image"
                     placeholder= {!isFocus ? 'Select item' : '...'}
-                    searchPlaceholder="Search..."
+                    searchPlaceholder= "Search..."
                     value = {value}
                     onFocus= {() => setIsFocus(true)}
                     onBlur= {() => setIsFocus(false)}
@@ -133,10 +133,10 @@ export default function CheckOut({route, navigation}) {
             <RNSwipeVerify 
                 width= {width - 100}
                 buttonSize = {60}
-                borderColor="#fff"
+                borderColor= "#fff"
                 borderRadius= {30}
-                buttonColor="black"
-                backgroundColor="#ececec"
+                buttonColor= "black"
+                backgroundColor= "#ececec"
                 textColor = 'black'
                 okButton= {{ visible: false, duration: 400 }}
                 onVerified= {() => {

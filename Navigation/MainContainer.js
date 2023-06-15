@@ -16,7 +16,6 @@ const AddPost = 'Add Post';
 const Chat = 'Chat';
 const Profile = 'Profile';
 
-
 const Tab = createBottomTabNavigator();
 export default function MainContainer({route}) {
   const profilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";

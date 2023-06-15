@@ -91,7 +91,7 @@ export default function HomeMapView({navigation, route}) {
                     top: 80,
                     width: '95%',
                 }}>
-                    <Ionicons name ="search-outline" style = {{ paddingLeft: 20 }} size = {25} color='gray' />
+                    <Ionicons name = "search-outline" style = {{ paddingLeft: 20 }} size = {25} color='gray' />
                     <TextInput
                         placeholder='Search Nyle...'
                         placeholderTextColor='gray'
@@ -133,8 +133,8 @@ export default function HomeMapView({navigation, route}) {
                         <Circle
                             center= {item.coordinates}
                             radius= {1200}
-                            fillColor="rgba(66, 135, 245, 0.2)"
-                            strokeColor="rgba(66, 135, 245, 0.7)"
+                            fillColor= "rgba(66, 135, 245, 0.2)"
+                            strokeColor= "rgba(66, 135, 245, 0.7)"
                             strokeWidth= {1}
                         />
                     </View>

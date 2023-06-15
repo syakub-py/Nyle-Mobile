@@ -5,12 +5,10 @@ export const requestNotificationPermission = async () => {
     const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    if (enabled) {
-        const token = await messaging().getToken();
-        console.log('FCM Token:', token);
-    }
+    if (enabled) await messaging().getToken()
 };
 
+//This isn't being used:
 export const handleIncomingNotification = () => {
     messaging().onMessage(async (remoteMessage) => {
         console.log('Received a new notification', remoteMessage);

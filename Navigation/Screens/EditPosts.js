@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image, Dimensions, ScrollView, Pressable, TextInput} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {firestore} from './Components/Firebase'
 import MapView, {Circle, Marker} from 'react-native-maps';
 
@@ -15,19 +15,16 @@ export default function EditPost({navigation, route}) {
     const [price, setPrice] = useState(route.params.Price)
     const [details, setDetails] = useState(route.params.Details)
     const [description, setDescription] = useState(route.params.Description)
-    const scrollViewRef = React.useRef(null);
+    const scrollViewRef = useRef(null);
 
     const change = ({nativeEvent}) => {
         const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
-        if (slide !== state.active) {
-            setState({active: slide})
-        }
+        if (slide !== state.active) setState({active: slide})
     }
     
     // const saveChanges = (collectionPath, oldTitle, newTitle, price, description, details) => {
-    //     if (!collectionPath) {
-    //         throw new Error('Error: collection name cannot be empty');
-    //     }
+    //     if (!collectionPath) throw new Error('Error: collection name cannot be empty');
+    //     
     //     return firestore.collection(collectionPath).doc(oldTitle).set({
     //         id:faker.random.number({min:1, max:100}),
     //         title: newTitle,
@@ -111,8 +108,8 @@ export default function EditPost({navigation, route}) {
                         <Circle
                             center= {route.params.coordinates}
                             radius= {1200}
-                            fillColor="rgba(255, 0, 0, 0.2)"
-                            strokeColor="rgba(255, 0, 0, 0.7)"
+                            fillColor= "rgba(255, 0, 0, 0.2)"
+                            strokeColor= "rgba(255, 0, 0, 0.7)"
                             strokeWidth= {1}
                         />
                     </MapView>
