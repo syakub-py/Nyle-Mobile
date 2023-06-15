@@ -48,7 +48,7 @@ export default function ViewProfile({route}) {
         <SafeAreaView>
             <View>
                 <FlatList
-                ListHeaderComponent= {
+                ListHeaderComponent = {
                     <View>
                         <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:20, marginTop:20}}>
                             <Pressable onPress = {() =>navigation.goBack()}>

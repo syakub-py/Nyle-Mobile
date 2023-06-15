@@ -21,7 +21,7 @@ export default function ViewImages({ route, navigation }) {
     return (
         <ImageViewer
             imageUrls = {getImages(pictures)}
-            enableSwipeDown= {true}
+            enableSwipeDown = {true}
             renderHeader = {() => (
                 <View
                     style = {{

@@ -77,7 +77,7 @@ export default function Market({navigation, route}) {
     <FlatList
       data = {articles}
       keyExtractor = {(item) => item.url}
-      ListHeaderComponent= {
+      ListHeaderComponent = {
         <View>
           <Image
             source = {require('../Screens/Components/icon.png')}
@@ -98,7 +98,7 @@ export default function Market({navigation, route}) {
                         paddingTop: 3,
                         alignItems: 'center',
                       }}
-                      key= {index}
+                      key = {index}
                   >
                     <Avatar source = {{ uri: item.image }} size = {50} rounded />
                     <Text style = {{ fontSize: 17, fontWeight: 'bold', marginVertical: 7 }}>
@@ -130,7 +130,7 @@ export default function Market({navigation, route}) {
           </View>
         </View>
       }
-      renderItem= {({ item }) => (
+      renderItem = {({ item }) => (
           <View style = {{ marginBottom: 16 }}>
             <Image source = {{ uri: item.urlToImage }} style = {{ height: 200, width: width-30, margin:15, borderRadius:20 }} />
             <Text style = {{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, marginLeft:15 }}>{item.title}</Text>
@@ -138,7 +138,7 @@ export default function Market({navigation, route}) {
           </View>
 
       )}
-      ListFooterComponent= {
+      ListFooterComponent = {
         <View style = {{height:80}}>
         </View>
       }

@@ -32,7 +32,7 @@ export default function Categories({navigation, route}) {
       <View style = {{marginTop:50}}>
         <ScrollView>
           <View style = {{flexDirection:'row', height:80, shadowColor:'black', shadowOpacity:0.2}}>
-            <TextInput placeholder ='Search...' onChangeText= {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:100, paddingHorizontal:15,elevation:2}}/>
+            <TextInput placeholder ='Search...' onChangeText = {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:100, paddingHorizontal:15,elevation:2}}/>
           </View>
           <FlatList
           data = {filteredData}

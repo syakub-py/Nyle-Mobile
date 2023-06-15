@@ -36,10 +36,10 @@ export default function WriteReview({route, navigation}) {
                 </Pressable>
             </View>
             <View style = {{ paddingTop: 70, paddingHorizontal: 10, margin: 10 }}>
-                <TextInput style = {{ height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 }} placeholder = "Title" onChangeText= {(text) => setTitle(text)} />
+                <TextInput style = {{ height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 }} placeholder = "Title" onChangeText = {(text) => setTitle(text)} />
                 <View style = {{ flexDirection: 'row', marginTop: 10, marginBottom: 10 }}>
                     {Array.from({ length: 5 }, (_, index) => (
-                        <Pressable key= {index} onPress = {() => setStars(index)}>
+                        <Pressable key = {index} onPress = {() => setStars(index)}>
                             <Ionicons
                                 name = {index <= Stars ? 'star' : 'star-outline'}
                                 style = {{ fontSize: 20, marginRight: 5, color: index <= Stars ? '#ebd61e' : 'black' }}
@@ -47,7 +47,7 @@ export default function WriteReview({route, navigation}) {
                         </Pressable>
                     ))}
                 </View>
-                <TextInput style = {{ height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top' }} placeholder = "Review Message" onChangeText= {(text) => setReviewMessage(text)} multiline />
+                <TextInput style = {{ height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top' }} placeholder = "Review Message" onChangeText = {(text) => setReviewMessage(text)} multiline />
                 <Pressable style = {{ width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10 }} onPress = {() => PostReview()}>
                     <Text style = {{ color: 'white', fontSize: 16 }}>Post Review</Text>
                 </Pressable>

@@ -114,7 +114,7 @@ export default function DeletedPosts({route, navigation}) {
             <SwipeListView
                 data = {deletedPostList}
                 rightOpenValue = {-140}
-                ListHeaderComponent= {
+                ListHeaderComponent = {
                 <View style = {{marginTop:10}}>
 
                     <View style = {{flexDirection:'row'}}>
@@ -134,7 +134,7 @@ export default function DeletedPosts({route, navigation}) {
                 </View>
                 }
                   refreshControl = {
-                      <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
+                      <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
                   }
                   renderItem = {({item}) => (
                       <PostCard data = {item} username = {route.params.username}/>

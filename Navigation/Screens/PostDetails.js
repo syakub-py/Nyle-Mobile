@@ -116,7 +116,7 @@ export default function PostDetails({route, navigation}) {
 
     const findUser = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username!==route.params.username) return index
+            if (userArray[index].username !== route.params.username) return index
         }
         return "";
     }
@@ -157,7 +157,7 @@ export default function PostDetails({route, navigation}) {
                         visible = {isOpen}
                         animationType = "slide"
                         onRequestClose = {toggleDropdown}
-                        transparent= {true}
+                        transparent = {true}
                     >
                         <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                             <View style = {{ width: 300, height: 300, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius:20}}>
@@ -191,7 +191,7 @@ export default function PostDetails({route, navigation}) {
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) =>(
-                                <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
+                                <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key = {key}>
                                     <View style = {{width, height, position: 'relative'}} >
                                         <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                     </View>
@@ -201,12 +201,12 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref= {scrollViewRef}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 images.map((i, k) =>(
-                                    <Pressable key= {k} onPress = {() => {console.log(k+1)}}>
-                                        <Image source = {{uri:i}} style = {k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key= {k}/>
+                                    <Pressable key = {k} onPress = {() => {console.log(k+1)}}>
+                                        <Image source = {{uri:i}} style = {k == state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
                                     </Pressable>
                                 ))
                             }
@@ -375,7 +375,7 @@ export default function PostDetails({route, navigation}) {
                                     radius = {1200}
                                     fillColor = "rgba(66, 135, 245, 0.2)"
                                     strokeColor = "rgba(66, 135, 245, 0.7)"
-                                    strokeWidth= {1}
+                                    strokeWidth = {1}
                                 />
                             </MapView>
                         </View>
@@ -413,7 +413,7 @@ export default function PostDetails({route, navigation}) {
                                 <ScrollView>
                                     {
                                         realEstateData.map((record, index) => (
-                                            <View key= {index} style = {{ flexDirection: "row", margin: 5 }}>
+                                            <View key = {index} style = {{ flexDirection: "row", margin: 5 }}>
                                                 <Text>{record.NAME}</Text>
                                             </View>
                                         ))

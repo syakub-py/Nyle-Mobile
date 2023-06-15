@@ -141,7 +141,7 @@ export default function AddPost({route}) {
     const addPosts = async (collectionPath) => {
         if (!collectionPath) throw new Error('Error: collection name cannot be empty');
 
-        const UrlList= await upload(imageUrls)
+        const UrlList = await upload(imageUrls)
         if (category === "Auto") {
             return firestore.collection(collectionPath).doc(title).set({
                 id:randomNumber,
@@ -231,12 +231,12 @@ export default function AddPost({route}) {
 
     return (
         <SafeAreaView style = {{backgroundColor:'white'}}>
-            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>} >
+            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {onRefresh}/>} >
 
                 <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false}>
                 {
                     imageUrls.map((item, index) =>(
-                        <View key= {index}>
+                        <View key = {index}>
                             <Image source = {{uri:item}} style = {{height:height, width:width}}/>
                         </View>
                     ) )
@@ -247,7 +247,7 @@ export default function AddPost({route}) {
                     <View style = {{flexDirection:'row', alignItems:'center'}}>
                         {
                             imageUrls.map((i, k) =>(
-                                <Pressable key= {k}>
+                                <Pressable key = {k}>
                                     <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(k)}}>
                                         <View style = {styles.shadowBox}>
                                             <View style = {styles.circle}>
@@ -310,8 +310,8 @@ export default function AddPost({route}) {
                     }}
                     data = {categories}
                     search
-                    labelField= "Label"
-                    valueField= "Value"
+                    labelField = "Label"
+                    valueField = "Value"
                     placeholder = {'Select item'}
                     searchPlaceholder = "Search..."
                     value = {category}
@@ -351,21 +351,21 @@ export default function AddPost({route}) {
                             }}
                             data = {currencies}
                             search
-                            labelField= "label"
-                            valueField= "value"
+                            labelField = "label"
+                            valueField = "value"
                             placeholder = {'Select a currency'}
                             searchPlaceholder = "Search..."
                             value = {currency}
                             onFocus = {() => setIsFocus(true)}
                             onBlur = {() => setIsFocus(false)}
-                            renderItem= {renderCurrencyItem}
+                            renderItem = {renderCurrencyItem}
                             onChange = {(item) => {
                                 setCurrency(item);
                                 setIsFocus(false);
                             }}
                         />
 
-                        <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText= {(text) =>setPrice(text)}/>
+                        <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText = {(text) =>setPrice(text)}/>
                     </View>
                 </View>
 
@@ -380,7 +380,7 @@ export default function AddPost({route}) {
                     (category !== "Homes" && category !== "Auto") ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
-                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setDetails(text)}/>
+                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setDetails(text)}/>
                         </View>
                     ):(
                         <View>
@@ -391,13 +391,13 @@ export default function AddPost({route}) {
                     (category === "Homes") ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bedrooms</Text>
-                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setBedrooms(text)}/>
+                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setBedrooms(text)}/>
 
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bathrooms</Text>
-                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setBathrooms(text)}/>
+                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setBathrooms(text)}/>
 
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Square footage</Text>
-                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setSQFT(text)}/>
+                            <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setSQFT(text)}/>
                         </View>
                     ):(
                         <View>
@@ -409,16 +409,16 @@ export default function AddPost({route}) {
                     (category === "Auto" ) ? (
                         <View>
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Make</Text>
-                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setMake(text)}/>
+                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setMake(text)}/>
 
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Model</Text>
-                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setModel(text)}/>
+                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setModel(text)}/>
 
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Mileage</Text>
-                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setMileage(text)}/>
+                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setMileage(text)}/>
 
                             <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>VIN</Text>
-                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText= {(text) =>setVIN(text)}/>
+                            <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setVIN(text)}/>
                         </View>
                     ):(
                         <View>
@@ -428,13 +428,13 @@ export default function AddPost({route}) {
 
                 <View>
                     <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10,}}>Description</Text>
-                    <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue = {description} onChangeText= {(text) =>setDescription(text)}/>
+                    <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue = {description} onChangeText = {(text) =>setDescription(text)}/>
                 </View>
 
                 {
                     (animating) ? (
                         <View>
-                            <ActivityIndicator size = "large" color = "black" animating= {animating} />
+                            <ActivityIndicator size = "large" color = "black" animating = {animating} />
                         </View>
                     ):(
                         <View/>

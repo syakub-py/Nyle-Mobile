@@ -65,11 +65,11 @@ export default function Login({navigation}) {
                 <Text style = {[styles.text, {color:'black', fontSize:15, textAlign:'center', marginVertical:20}]}></Text>
                 <View style = {{borderRadius:6, height:50, justifyContent:'center'}}>
                     <Ionicons name ='person-outline' size = {20} style = {{ position: 'absolute',}}/>
-                    <TextInput placeholder ='Username' onChangeText= {text => setUsername(text)} style = {{marginLeft:25}}/>
+                    <TextInput placeholder ='Username' onChangeText = {text => setUsername(text)} style = {{marginLeft:25}}/>
                 </View>
                 <View >
                     <Ionicons name ='ellipse' size = {20} style = {{ position: 'absolute',}}/>
-                    <TextInput placeholder ='Password' onChangeText= {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
+                    <TextInput placeholder ='Password' onChangeText = {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
                 </View>
                 <Pressable onPress = {() => navigation.navigate("Reset Password")}>
                     <Text style = {[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>

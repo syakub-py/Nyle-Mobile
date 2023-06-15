@@ -50,13 +50,13 @@ export default function Reviews({route, navigation}) {
                               </View>
                           </View>
                       }
-                      renderItem= {({item}) =>(
+                      renderItem = {({item}) =>(
                           <ReviewCard data = {item} currentUser = {route.params.currentUser}/>
                       )}/>
 
 
             {
-                (route.params.currentUser!==route.params.username) ? (
+                (route.params.currentUser !== route.params.username) ? (
                     <View style = {{
                         position: 'absolute',
                         bottom:16,

@@ -72,7 +72,7 @@ export default function ReviewCard({data, currentUser}) {
                         <View style = {{ flexDirection: "row", marginLeft:5}}>
                             {
                                 Array.from({ length: data.stars }, (_, index) => (
-                                    <Ionicons key= {index} size = {17} name = {"star"} color = {"#ebd61e"} />
+                                    <Ionicons key = {index} size = {17} name = {"star"} color = {"#ebd61e"} />
                                 ))
                             }
                         </View>
@@ -87,7 +87,7 @@ export default function ReviewCard({data, currentUser}) {
                     (open) ? (
                         <View style = {{flexDirection:'row', justifyContent:'center'}}>
                             <View style = {{ width:300}}>
-                                <TextInput multiline placeholder = {"Write a reply"} onChangeText= {(text) =>setReply(text)}/>
+                                <TextInput multiline placeholder = {"Write a reply"} onChangeText = {(text) =>setReply(text)}/>
                             </View>
 
                             <Pressable onPress = {handleSendReply}>
@@ -121,14 +121,14 @@ export default function ReviewCard({data, currentUser}) {
                         data = {existingReplies}
                         rightOpenValue = {-60}
 
-                        renderItem= {({item, index}) =>(
-                            <View key= {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
+                        renderItem = {({item, index}) =>(
+                            <View key = {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
                                 <Text style = {{fontWeight:'bold'}}>{item.username} (You)</Text>
                                 <Text>{item.message}</Text>
                             </View>
                             )
                         }
-                        renderHiddenItem= {({ item, index }) => (
+                        renderHiddenItem = {({ item, index }) => (
                             <View
                                 style = {{
                                     position: 'absolute',
@@ -139,7 +139,7 @@ export default function ReviewCard({data, currentUser}) {
                                     justifyContent: 'center',
                                     alignItems: 'center'
                                 }}
-                                key= {index}
+                                key = {index}
                             >
                                 <TouchableOpacity onPress = {() => handleDeleteReply(index)}>
                                     <Ionicons size = {25} name ='trash-outline' color = {'red'} />
@@ -153,7 +153,7 @@ export default function ReviewCard({data, currentUser}) {
                     <ScrollView>
                         {
                             existingReplies.map((reply, index) =>(
-                                <View key= {index} style = {{marginLeft:30, marginTop:5}}>
+                                <View key = {index} style = {{marginLeft:30, marginTop:5}}>
                                     <Text style = {{fontWeight:'bold'}}>{reply.username} </Text>
                                     <Text>{reply.message}</Text>
                                 </View>

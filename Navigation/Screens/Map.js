@@ -23,7 +23,7 @@ export default function Map({route, navigation}) {
                     radius = {1200}
                     fillColor = "rgba(66, 135, 245, 0.2)"
                     strokeColor = "rgba(66, 135, 245, 0.7)"
-                    strokeWidth= {1}
+                    strokeWidth = {1}
                 />
             </MapView>
         </View>

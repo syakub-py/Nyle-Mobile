@@ -77,7 +77,7 @@ export default function EditProfile({navigation}) {
                 }}
                 placeholder = "Username"
                 value = {username}
-                onChangeText= {text => setUsername(text)}
+                onChangeText = {text => setUsername(text)}
             />
             <Pressable
                 style = {{
@@ -102,7 +102,7 @@ export default function EditProfile({navigation}) {
                 placeholder = "Password"
                 secureTextEntry
                 value = {password}
-                onChangeText= {text => setPassword(text)}
+                onChangeText = {text => setPassword(text)}
             />
             <Pressable
                 style = {{

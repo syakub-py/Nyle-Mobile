@@ -23,10 +23,10 @@ export default function ConnectedWallets({navigation}) {
 
             <FlatList
             data = {wallets}
-            renderItem= {(CurrentWallet) =>(
-                <WalletCard wallet= {CurrentWallet}/>
+            renderItem = {(CurrentWallet) =>(
+                <WalletCard wallet = {CurrentWallet}/>
             )}
-            ListFooterComponent= {
+            ListFooterComponent = {
                 <View>
                     <Pressable>
                         <View style = {{backgroundColor:'black', height:50, width:"100%"}}>

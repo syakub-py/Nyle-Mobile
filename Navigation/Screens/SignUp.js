@@ -94,8 +94,8 @@ export default function SignUp({navigation}) {
                 </Pressable>
             </View>
 
-            <TextInput placeholder ='Username' style = {styles.textInput} onChangeText= {(text) => setUsername(text)} />
-            <TextInput placeholder ='Password' style = {styles.textInput} onChangeText= {(text) => setPassword(text)} secureTextEntry/>
+            <TextInput placeholder ='Username' style = {styles.textInput} onChangeText = {(text) => setUsername(text)} />
+            <TextInput placeholder ='Password' style = {styles.textInput} onChangeText = {(text) => setPassword(text)} secureTextEntry/>
 
             <Pressable style = {styles.submitContainer} onPress = {handleSignUp}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>

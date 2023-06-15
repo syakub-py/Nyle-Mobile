@@ -113,7 +113,7 @@ export default function HomeMapView({navigation, route}) {
                 <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10, backgroundColor:'transparent'}}>
                     {
                         categories.map((category, index) => (
-                            <Pressable key= {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                            <Pressable key = {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                                 <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight:'400'}}>
                                     {category}
                                 </Text>
@@ -126,7 +126,7 @@ export default function HomeMapView({navigation, route}) {
 
             <MapView style = {{ height: "100%", width: "100%" }} initialCamera = {{center: {latitude:40.849113,longitude:-101.325992}, pitch: 0,heading:0,zoom: 1, altitude:0}}>
                 {filteredData.map((item, index) => (
-                    <View key= {index}>
+                    <View key = {index}>
                         <Marker coordinate = {item.coordinates}>
                             <CustomMapMarker firstImage = {item.pic[0]} />
                         </Marker>
@@ -136,7 +136,7 @@ export default function HomeMapView({navigation, route}) {
                             radius = {1200}
                             fillColor = "rgba(66, 135, 245, 0.2)"
                             strokeColor = "rgba(66, 135, 245, 0.7)"
-                            strokeWidth= {1}
+                            strokeWidth = {1}
                         />
                     </View>
                 ))}
@@ -148,7 +148,7 @@ export default function HomeMapView({navigation, route}) {
                     style = {{ backgroundColor: 'transparent' }}>
                     {
                         filteredData.map((item, index) => (
-                            <Pressable key= {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+                            <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
                                 <View  style = {{alignSelf:'center'}}>
                                     <MapPostCard data = {item} username = {route.params.username} />
                                 </View>

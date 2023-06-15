@@ -83,8 +83,8 @@ export default function PostCard({data, username}) {
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 data.pic.map((i, k) =>(
-                                    <Pressable key= {k} onPress = {() => {setIndex(k)}}>
-                                        <Image source = {{uri:i}} style = {k===index?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key= {k}/>
+                                    <Pressable key = {k} onPress = {() => {setIndex(k)}}>
+                                        <Image source = {{uri:i}} style = {k === index?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
                                     </Pressable>
                                 ))
                             }

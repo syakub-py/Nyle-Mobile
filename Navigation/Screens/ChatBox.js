@@ -73,7 +73,7 @@ export default function ChatBox({route, navigation}) {
   };
 
   const SelectImages = async () => {
-      let result= await ImagePicker.launchImageLibraryAsync({
+      let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: [4, 3],
       quality: 1,
@@ -176,7 +176,7 @@ export default function ChatBox({route, navigation}) {
         if (slide !== state.active) setState({active: slide})
     }
 
-    const markAsRead =async () => {
+    const markAsRead = async () => {
         const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "== ", false);
         await unreadMessagesRef.get().then((docs) => {
             docs.forEach((doc) => {
@@ -199,11 +199,11 @@ export default function ChatBox({route, navigation}) {
             right: 0,
             height: 75,
           }}
-          refreshControl = {<RefreshControl refreshing = {refresh} onRefresh= {onRefresh}/>}>
+          refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {onRefresh}/>}>
           {
             (!_.isEmpty(imageUrls)) ? (
               imageUrls.map((value, index) => (
-                <View key= {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
+                <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
                     {
                         (animating) ? (
                             <View>
@@ -289,12 +289,12 @@ export default function ChatBox({route, navigation}) {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                         <Pressable onPress = {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
-                            <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false} pagingEnabled= {true} onScroll = {change} style = {{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
+                            <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false} pagingEnabled = {true} onScroll = {change} style = {{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                                 {
                                     props.currentMessage.image.map((image, index) => {
                                         return (
                                             <Image
-                                                key= {index}
+                                                key = {index}
                                                 source = {{uri: image}}
                                                 style = {{
                                                     width: 200,
@@ -309,7 +309,7 @@ export default function ChatBox({route, navigation}) {
                             <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
                                 {
                                     props.currentMessage.image.map((i, k) =>(
-                                        <Text style = {k==state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key= {k}>⬤</Text>
+                                        <Text style = {k == state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key = {k}>⬤</Text>
                                     ))
                                 }
                             </View>

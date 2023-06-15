@@ -225,12 +225,12 @@ export default function Home({navigation, route}) {
 
         <View style = {{zIndex:0}}>
           <FlatList
-          ListFooterComponent= {
+          ListFooterComponent = {
             <View style = {{height:80}}>
 
             </View>
           }
-          ListHeaderComponent= {
+          ListHeaderComponent = {
             <View>
                 <View style = {{flexDirection:'row', justifyContent:'space-between', paddingTop:20,alignItems:'center'}}>
                   <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20}}/>
@@ -248,7 +248,7 @@ export default function Home({navigation, route}) {
               <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   categories.map((category, index) => (
-                      <Pressable key= {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                      <Pressable key = {index} onPress = {() => handleCategoryPress(index)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                         <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {category}
                         </Text>
@@ -268,13 +268,13 @@ export default function Home({navigation, route}) {
                     elevation:2
                   }}>
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
               <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
                 {
                   postFilters.map((filters, index) => (
-                      <Pressable key= {index} onPress = {() => handlePostFilterPress(index)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                      <Pressable key = {index} onPress = {() => handlePostFilterPress(index)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                         <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
                           {filters}
                         </Text>
@@ -288,7 +288,7 @@ export default function Home({navigation, route}) {
 
           data = {filteredData}
           refreshControl = {
-            <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
           }
           renderItem = {({item}) => (
             <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>

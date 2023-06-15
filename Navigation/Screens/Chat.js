@@ -110,20 +110,20 @@ export default function Chat({navigation, route}) {
 
     const findUser = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username!==route.params.username) return index
+            if (userArray[index].username !== route.params.username) return index
         }
         return "";
     }
 
     const findProfilePic = (userArray) => {
         for (let index = 0; index < userArray.length; index++) {
-            if (userArray[index].username ===route.params.username) return index   
+            if (userArray[index].username === route.params.username) return index   
         }
         return "";
     }
 
     // Delete a folder and all its contents
-    const deleteChat= (chat) => {
+    const deleteChat = (chat) => {
         firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
             docs.forEach((doc) => {
                 if (!_.isEmpty(doc.data().image)) {
@@ -146,14 +146,14 @@ export default function Chat({navigation, route}) {
         <SafeAreaView style = {styles.container}>
             <SwipeListView
                 data = {filteredData}
-                ListFooterComponent= {
+                ListFooterComponent = {
                     <View style = {{height:80}}>
 
                     </View>
                 }
                 rightOpenValue = {-50}
                 refreshControl = {
-                    <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
+                    <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
                 }
                 key = {randomNumber}
                 contentContainerStyle = {{
@@ -177,7 +177,7 @@ export default function Chat({navigation, route}) {
                             elevation:2
                         }}>
                             <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
-                            <TextInput placeholder ='Search Chats...' value = {search} onChangeText= {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
+                            <TextInput placeholder ='Search Chats...' value = {search} onChangeText = {(text) => searchFilter(text)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, borderRadius:20, paddingHorizontal:5,}}/>
                         </View>
                         <Text style = {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
                     </View>
@@ -189,7 +189,7 @@ export default function Chat({navigation, route}) {
                         bottom: 0,
                         width: 75,
                         justifyContent: 'center',
-                        alignItems: 'center'}} key= {i}>
+                        alignItems: 'center'}} key = {i}>
                         <TouchableOpacity onPress = {() => {deleteChat(item)}}>
                             <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
@@ -198,7 +198,7 @@ export default function Chat({navigation, route}) {
                 renderItem = {({item, index}) => {
                     const username = item.data.owners[findUser(item.data.owners)].username
                     return (
-                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key= {index}>
+                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners)].profilePic, userId:findUser(item.data.owners)})}} key = {index}>
                             <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                                 <View>
                                     <Image

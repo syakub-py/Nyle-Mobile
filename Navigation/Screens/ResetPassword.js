@@ -30,7 +30,7 @@ export default function ResetPassword({navigation}) {
                     <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
             </View>
-            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username} onChangeText= {(text) => setUsername(text)} />
+            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username} onChangeText = {(text) => setUsername(text)} />
             <Pressable style = {styles.submitContainer} onPress = {handleResetPassword}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Reset</Text>
             </Pressable>

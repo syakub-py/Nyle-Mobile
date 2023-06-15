@@ -9,7 +9,7 @@ const height = width*0.7;
 
 export default function EditPost({navigation, route}) {
     const images = route.params.images
-    const collectionPath= route.params.collectionPath
+    const collectionPath = route.params.collectionPath
     const [state, setState] = useState({active:0})
     const [title, setTitle] = useState(route.params.PostTitle)
     const [price, setPrice] = useState(route.params.Price)
@@ -58,7 +58,7 @@ export default function EditPost({navigation, route}) {
 
                 <View>
                     <View style = {{zIndex: 1, bottom: 50, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center'}}>
-                        <TextInput style = {{color:'white',fontSize:30,fontWeight:'bold'}} defaultValue = {route.params.PostTitle} onChangeText= {(text) => {setTitle(text)}}/>
+                        <TextInput style = {{color:'white',fontSize:30,fontWeight:'bold'}} defaultValue = {route.params.PostTitle} onChangeText = {(text) => {setTitle(text)}}/>
                     </View>
 
                     <View style = {{ height: 20, maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
@@ -67,7 +67,7 @@ export default function EditPost({navigation, route}) {
 
                     <View style = {{zIndex: 1, bottom: 15, left: 20, position: 'absolute', backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row"}}>
                         <Image style = {{height:25, width:25, marginRight:10, borderRadius:20}} resizeMode = {'cover'} source = {{uri:route.params.Currency}}/>
-                        <TextInput style = {{color:'white',fontSize:25,fontWeight:'bold'}} defaultValue = {route.params.Price} onChangeText= {(text) => {setPrice(text)}}/>
+                        <TextInput style = {{color:'white',fontSize:25,fontWeight:'bold'}} defaultValue = {route.params.Price} onChangeText = {(text) => {setPrice(text)}}/>
                         <Text style = {{fontSize:15, fontWeight:'bold', color:'white'}}>(${route.params.USD})</Text>
                     </View>
 
@@ -75,7 +75,7 @@ export default function EditPost({navigation, route}) {
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) =>(
-                                    <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key= {key}>
+                                    <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key = {key}>
                                         <View style = {{width, height, position: 'relative'}} >
                                             <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                         </View>
@@ -86,12 +86,12 @@ export default function EditPost({navigation, route}) {
                     </ScrollView>
                 </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{alignSelf:'center'}}  ref= {scrollViewRef}>
+                <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{alignSelf:'center'}}  ref = {scrollViewRef}>
                     <View style = {{flexDirection:'row', alignItems:'center'}}>
                         {
                             images.map((i, k) =>(
-                                <Pressable key= {k} onPress = {() => {console.log(k+1)}}>
-                                    <Image source = {{uri:i}} style = {k==state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key= {k}/>
+                                <Pressable key = {k} onPress = {() => {console.log(k+1)}}>
+                                    <Image source = {{uri:i}} style = {k == state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
                                 </Pressable>
                             ))
                         }
@@ -109,19 +109,19 @@ export default function EditPost({navigation, route}) {
                             radius = {1200}
                             fillColor = "rgba(255, 0, 0, 0.2)"
                             strokeColor = "rgba(255, 0, 0, 0.7)"
-                            strokeWidth= {1}
+                            strokeWidth = {1}
                         />
                     </MapView>
                 </View>
 
                 <View style = {{marginBottom:20}}>
                     <Text style = {{fontSize:35, fontWeight:'bold', color:'black', margin:20}}>Details</Text>
-                    <TextInput style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} defaultValue = {route.params.Details} onChangeText= {(text) =>setDetails(text)}/>
+                    <TextInput style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} defaultValue = {route.params.Details} onChangeText = {(text) =>setDetails(text)}/>
                 </View>
 
                 <View style = {{marginBottom:20}}>
                     <Text style = {{fontSize:35, fontWeight:'bold', color:'black',margin:20}}>Description</Text>
-                    <TextInput style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} defaultValue = {route.params.Description} onChangeText= {(text) =>setDescription(text)}/>
+                    <TextInput style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}} defaultValue = {route.params.Description} onChangeText = {(text) =>setDescription(text)}/>
                 </View>
 
                 <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.DatePosted}</Text>

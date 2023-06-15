@@ -158,14 +158,14 @@ export default function Profile({navigation, route}) {
               data = {userList}
               rightOpenValue = {-170}
               refreshControl = {
-                <RefreshControl refreshing= {refreshing} onRefresh= {onRefresh} />
+                <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh} />
               }
-              ListFooterComponent= {
+              ListFooterComponent = {
                 <View style = {{height:80}}>
 
                 </View>
               }
-              ListHeaderComponent= {
+              ListHeaderComponent = {
                 <View>
                   <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20, marginTop:20}}/>
                   <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
@@ -189,7 +189,7 @@ export default function Profile({navigation, route}) {
                       title = "Edit Profile"
                       type = "button"
                       onPress = {() => navigation.navigate("Edit Profile")}
-                      nameOfIcon='person-outline'
+                      nameOfIcon ='person-outline'
                     />
 
                     <Setting
@@ -226,7 +226,7 @@ export default function Profile({navigation, route}) {
                 </View>
                 }
 
-              renderItem= {({item}) => (
+              renderItem = {({item}) => (
                 <Pressable onPress = {() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
                   <PostCard data = {item}/>
                 </Pressable>
@@ -283,7 +283,7 @@ export default function Profile({navigation, route}) {
 //   <ScrollView horizontal showsHorizontalScrollIndicator = {false}>
 //     {
 //       transactions.map((item, index) =>(
-//         <View style = {{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key= {index}>
+//         <View style = {{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key = {index}>
 //           <ImageBackground source = {{uri:item.pic}}  imageStyle = {{height:150, width:"100%",borderRadius:20}} resizeMode = {'cover'}>
 //             <View style = {{flexDirection:'row', paddingHorizontal:5, paddingTop:3}}>
 //               <Avatar source = {{uri: item.profilePic}} rounded/>

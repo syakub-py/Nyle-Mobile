@@ -61,9 +61,9 @@ export default function CheckOut({route, navigation}) {
                     iconStyle = {{width: 20, height: 20,}}
                     data = {data}
                     search
-                    maxHeight= {300}
-                    labelField= "label"
-                    valueField= "value"
+                    maxHeight = {300}
+                    labelField = "label"
+                    valueField = "value"
                     placeholder = {!isFocus ? 'Select a wallet' : '...'}
                     searchPlaceholder = "Search..."
                     value = {value}
@@ -73,7 +73,7 @@ export default function CheckOut({route, navigation}) {
                         setValue(item.name);
                         setIsFocus(false);
                     }}
-                    // renderLeftIcon= {(item) => (
+                    // renderLeftIcon = {(item) => (
                     //     <Avatar source = {{uri: item.image}} size = {30} rounded/>
                     // )}
                 />
@@ -83,7 +83,7 @@ export default function CheckOut({route, navigation}) {
                     <Text style = {{ margin:10, fontSize:14, fontWeight:'bold' }}>Wallet balances</Text>
                   {
                     marketData.map((item, index) =>(
-                        <View style = {{height:50, width:'100%', margin:10, flexDirection:'row', alignItems:'center' }} key= {index}>
+                        <View style = {{height:50, width:'100%', margin:10, flexDirection:'row', alignItems:'center' }} key = {index}>
                             <View style = {{paddingHorizontal:5, paddingTop:3, alignItems:'center', flexDirection:'row'}}>
                                 <Avatar source = {{uri: item.image}} size = {30} rounded/>
                                 <Text style = {{fontSize:17, fontWeight: 'bold', margin:7}}>{item.symbol.toUpperCase()}</Text>
@@ -107,15 +107,15 @@ export default function CheckOut({route, navigation}) {
                     iconStyle = {{width: 20, height: 20,}}
                     data = {marketData}
                     search
-                    maxHeight= {300}
-                    labelField= "name"
-                    valueField= "image"
+                    maxHeight = {300}
+                    labelField = "name"
+                    valueField = "image"
                     placeholder = {!isFocus ? 'Select item' : '...'}
                     searchPlaceholder = "Search..."
                     value = {value}
                     onFocus = {() => setIsFocus(true)}
                     onBlur = {() => setIsFocus(false)}
-                    // renderLeftIcon= {({ image }) => {
+                    // renderLeftIcon = {({ image }) => {
                     //     return (
                     //     <Image source = {{ uri: image }} style = {{ width: 30, height: 30 }} />
                     //   )}}
@@ -128,18 +128,18 @@ export default function CheckOut({route, navigation}) {
             </View>
 
             <RNSwipeVerify 
-                width= {width - 100}
+                width = {width - 100}
                 buttonSize = {60}
                 borderColor = "#fff"
                 borderRadius = {30}
                 buttonColor = "black"
                 backgroundColor = "#ececec"
                 textColor = 'black'
-                okButton= {{ visible: false, duration: 400 }}
-                onVerified= {() => {
+                okButton = {{ visible: false, duration: 400 }}
+                onVerified = {() => {
                     console.log("swiped")
                 }}
-                icon= {<Ionicons name ='chevron-forward-outline' size = {30} color = {'white'}/>}>
+                icon = {<Ionicons name ='chevron-forward-outline' size = {30} color = {'white'}/>}>
             <Text>Swipe to Confirm</Text>
           </RNSwipeVerify>
 
