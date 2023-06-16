@@ -33,12 +33,12 @@ const clearMessages = async (messagesRef) => {
     });
 }
 
-const markAsRead = async () => {
-    const unreadMessagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages").where("received", "==", false);
+const markAsRead = async (params) => {
+    const unreadMessagesRef = firestore.collection('Chats/'+ params.conversationID + "/messages").where("received", "==", false);
     await unreadMessagesRef.get().then((docs) => {
         docs.forEach((doc) => {
             const currentMessageData = doc.data()
-            if (currentMessageData.user.name !== route.params.username) doc.ref.update({received: true})
+            if (currentMessageData.user.name !== params.username) doc.ref.update({received: true})
         })
     })
 }
@@ -64,7 +64,7 @@ export default function ChatBox({route, navigation}) {
 
   const renderActions = () => (
       <View style = {{justifyContent:'center', alignItems:'center', margin:7}}>
-        <Pressable onPress = {SelectImages}>
+        <Pressable onPress = {()=>SelectImages()}>
           <Ionicons name ='images' size = {25}/>
         </Pressable>
       </View>    
@@ -256,7 +256,7 @@ export default function ChatBox({route, navigation}) {
 
     useEffect(() => {
         clearMessages(messagesRef)
-        markAsRead()
+        markAsRead(route.params)
     }, [])
 
   return (  

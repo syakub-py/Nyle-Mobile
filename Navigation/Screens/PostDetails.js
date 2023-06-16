@@ -12,36 +12,36 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-const handleAddChat = (route) => {
-    if (route.params.username !== route.params.item.PostedBy) {
+const handleAddChat = (params) => {
+    if (params.username !== params.item.PostedBy) {
         firestore
             .collection('Chats')
             .add({
                 owners: [
                     {
-                        profilePic: route.params.CurrentUserProfilePic,
-                        username: route.params.username,
+                        profilePic: params.CurrentUserProfilePic,
+                        username: params.username,
                     },
                     {
-                        profilePic: route.params.item.profilePic,
-                        username: route.params.item.PostedBy,
+                        profilePic: params.item.profilePic,
+                        username: params.item.PostedBy,
                     },
                 ],
             })
             .then((ref) => {
                const owners =   [
                     {
-                        profilePic: route.params.CurrentUserProfilePic,
-                        username: route.params.username,
+                        profilePic: params.CurrentUserProfilePic,
+                        username: params.username,
                     },
                     {
-                        profilePic: route.params.item.profilePic,
-                        username: route.params.item.PostedBy,
+                        profilePic: params.item.profilePic,
+                        username: params.item.PostedBy,
                     },
                 ]
 
                 const username = owners[1].username
-                navigation.navigate("chat box", {username: route.params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, route.params.username)})
+                navigation.navigate("chat box", {username: params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, params.username)})
             })
             .catch((error) => {
                 Alert.alert('Error adding document: ', error);
@@ -53,8 +53,8 @@ const toggleDropdown = (isOpen, setIsOpen) => {
     setIsOpen(!isOpen);
 };
 
-const handleViewCounter = (setViews) => {
-    const PostRef = firestore.collection('AllPosts').doc(route.params.item.title);
+const handleViewCounter = (setViews, item) => {
+    const PostRef = firestore.collection('AllPosts').doc(item.title);
     PostRef.get()
         .then((doc) => {
             const currentViews = doc.data().views;
@@ -98,7 +98,7 @@ export default function PostDetails({route, navigation}) {
     const [realEstateData, setRealEstateData] = useState([])
 
     useEffect(() => {
-        handleViewCounter(setViews);
+        handleViewCounter(setViews, route.params.item);
         generateRating(route.params.item.PostedBy).then((result) => {
             setRating(result.rating)
             setNumOfReviews(result.numOfReviews)
@@ -150,7 +150,7 @@ export default function PostDetails({route, navigation}) {
                     <Modal
                         visible = {isOpen}
                         animationType = "slide"
-                        onRequestClose = {toggleDropdown(isOpen, setIsOpen)}
+                        onRequestClose = {()=> toggleDropdown(isOpen, setIsOpen)}
                         transparent = {true}
                     >
                         <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
@@ -330,7 +330,7 @@ export default function PostDetails({route, navigation}) {
                                 </View>
                             </View>
 
-                            <Pressable onPress = {handleAddChat(route)}>
+                            <Pressable onPress = {()=>handleAddChat(route.params)}>
                                 <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                                     <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                                 </View>

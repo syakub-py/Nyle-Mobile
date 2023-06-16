@@ -119,11 +119,9 @@ export default function Profile({navigation, route}) {
 
   useEffect(() => {
     getPosts(route.params.username, setUserList)
-  }, [])
-
-  useEffect(() => {
     clearDeleted(setRefreshing, route.params.username, setUserList)
   }, [])
+
 
   const SectionTitle = ({title}) => {
     return (
@@ -153,7 +151,7 @@ export default function Profile({navigation, route}) {
           data = {userList}
           rightOpenValue = {-170}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh(setRefreshing, route.params.username, setUserList)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, route.params.username, setUserList)} />
           }
           ListFooterComponent = {
             <View style = {{height:80}}>
@@ -190,7 +188,7 @@ export default function Profile({navigation, route}) {
                 <Setting
                   title = "Log Out"
                   type = "button"
-                  onPress = {handleSignOut(navigation)}
+                  onPress = {()=>handleSignOut(navigation)}
                   nameOfIcon = 'log-out-outline'
                 />
 

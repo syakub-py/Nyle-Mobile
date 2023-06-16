@@ -74,14 +74,14 @@ const deleteChat = (chat) => {
     })
 }
 
-const getChats = async (route) => {
+const getChats = async (params) => {
     const results = [];
     const MyChatQuery = firestore.collection('Chats');
     const ChatSnapshot = await MyChatQuery.get();
     const chatDocs = ChatSnapshot.docs;
 
     for (const doc of chatDocs) {
-        if (doc.data().owners.some(item => item.username === route.params.username)) {
+        if (doc.data().owners.some(item => item.username === params.username)) {
             const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
                 .orderBy('createdAt', 'desc')
                 .limit(1);
@@ -103,7 +103,7 @@ const getChats = async (route) => {
                     received
                 };
 
-                if (latestMessageData.user.name === route.params.username) chatData.latestMessage = "You: " + latestMessage;
+                if (latestMessageData.user.name === params.username) chatData.latestMessage = "You: " + latestMessage;
 
                 results.push(chatData);
             } else {
@@ -131,7 +131,7 @@ export default function Chat({navigation, route}) {
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        getChats(route).then((result) => {
+        getChats(route.params).then((result) => {
             setFilterData(result);
             setMasterData(result);
         }).catch((error) => {
@@ -156,7 +156,7 @@ export default function Chat({navigation, route}) {
                 }
                 rightOpenValue = {-50}
                 refreshControl = {
-                    <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route)} />
+                    <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route)} />
                 }
                 key = {randomNumber}
                 contentContainerStyle = {{

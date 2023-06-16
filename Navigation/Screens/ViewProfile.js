@@ -10,7 +10,7 @@ import {generateRating} from "./GlobalFunctions";
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
 */
 
-const getPosts = async (username) => {
+const getPosts = async (username, setUserPosts) => {
     const results = [];
     const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", username)
     await MyPostsQuery.get().then(postSnapshot => {

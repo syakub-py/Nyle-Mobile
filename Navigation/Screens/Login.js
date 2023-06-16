@@ -78,7 +78,7 @@ export default function Login({navigation}) {
 
                 <Pressable
                     style = {styles.submitContainer}
-                    onPress = {handleEmailAndPasswordLogin(username, password)}
+                    onPress = {()=> handleEmailAndPasswordLogin(username, password)}
                 >
                     <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Login</Text>
                 </Pressable>

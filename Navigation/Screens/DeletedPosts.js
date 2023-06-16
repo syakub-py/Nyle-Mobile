@@ -130,7 +130,7 @@ export default function DeletedPosts({route, navigation}) {
                 </View>
                 }
                   refreshControl = {
-                      <RefreshControl refreshing = {refreshing} onRefresh = {onRefresh(route.params.username, setRefreshing, setDeletedPostList)} />
+                      <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(route.params.username, setRefreshing, setDeletedPostList)} />
                   }
                   renderItem = {({item}) => (
                       <PostCard data = {item} username = {route.params.username}/>
