@@ -61,7 +61,7 @@ export default function ReviewCard({data, currentUser}) {
     }
 
     const renderIsRevieweCurrentUser = () => {
-        if (data.Reviewe !== currentUser) return <View></View>
+        if (data.Reviewe !== currentUser) return <View/>
         return (
             <Pressable onPress = {() =>setOpen(!open)}>
                 <View style = {{position:"absolute", bottom:0, right:10}}>

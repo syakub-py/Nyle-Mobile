@@ -99,10 +99,7 @@ export default function PostDetails({route, navigation}) {
 
     useEffect(() => {
         handleViewCounter(setViews, route.params.item);
-        generateRating(route.params.item.PostedBy).then((result) => {
-            setRating(result.rating)
-            setNumOfReviews(result.numOfReviews)
-        })
+        generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
 
         if (route.params.item.category === "Homes") {
             //"79-33 213 street"
@@ -245,8 +242,7 @@ export default function PostDetails({route, navigation}) {
     }
 
     const renderHomesAndAuto = () => {
-        if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View></View>
-
+        if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View/>
         return (
             <View>
                 <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
@@ -267,7 +263,7 @@ export default function PostDetails({route, navigation}) {
     }
 
     const renderHomesSection = () => {
-        if (!(route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
+        if (!(route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View/>
         return (
             <View>
                 <View style = {{ marginLeft: 25 }}>

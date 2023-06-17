@@ -13,10 +13,7 @@ export default function MapPostCard({data, username}) {
     const [numOfReviews, setNumOfReviews] = useState(0)
 
     useEffect(() => {
-        generateRating(data.PostedBy).then((result) => {
-            setRating(result.rating)
-            setNumOfReviews(result.numOfReviews)
-        })
+        generateRating(data.PostedBy, setRating, setNumOfReviews)
     }, [])
 
     const renderDataPostedBy = () => {
@@ -25,7 +22,7 @@ export default function MapPostCard({data, username}) {
     }
 
     const isCategoryHomes = () => {
-        if (data.category !== "Homes") return <View></View>
+        if (data.category !== "Homes") return <View/>
         return (
             <View style = {{flexDirection:'row'}}>
                 <View style = {{flexDirection:"row", alignContent:'center'}}>
