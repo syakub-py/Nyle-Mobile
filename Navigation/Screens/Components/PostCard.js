@@ -91,7 +91,7 @@ export default function PostCard({data, username}) {
                     </View>
 
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ position: 'absolute', top:215, width:"100%"}} >
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ position: 'absolute', top:225, width:"100%"}} >
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {data.pic.map((i, k) =>(
                                     <Pressable key = {k} onPress = {() => {setIndex(k)}}>
@@ -101,9 +101,9 @@ export default function PostCard({data, username}) {
                             }
                         </View>
                     </ScrollView>
-                    <View style = {{position: 'absolute', top:280, left:10}}>
-                        {renderIsDataSold()}
-                    </View>
+                    {/*<View style = {{position: 'absolute', top:280, left:10}}>*/}
+                    {/*    {renderIsDataSold()}*/}
+                    {/*</View>*/}
 
                 </ImageBackground>
             </View>

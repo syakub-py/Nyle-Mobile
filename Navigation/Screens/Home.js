@@ -63,7 +63,7 @@ const SelectProfilePic = async (username) => {
       const url = await storageRef.getDownloadURL();
 
       // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
-      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', usernamee);
+      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', username);
 
       // Update the URL for the profile image in the Firestore document
       profilePicRef.get().then((querySnapshot) => {
