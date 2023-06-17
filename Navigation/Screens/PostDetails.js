@@ -244,7 +244,7 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const renderHomesAndAuto = () => {
+    const IsItemHomeOrAuto = () => {
         if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View></View>
         return (
             <View>
@@ -253,7 +253,7 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const isRealEstateData = () => {
+    const isItemHome = () => {
         if(realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") {
             return (
                 <View style = {{ marginLeft: 30 }}>
@@ -317,7 +317,7 @@ export default function PostDetails({route, navigation}) {
                     </Modal>
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
+                        <Pressable onPress = {() => handleLike(route.params.item.title, route.params.username)}>
                             {renderDoesLikesIncludes()}
                         </Pressable>
                     </View>
@@ -343,7 +343,7 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 25, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 images.map((i, k) =>(
@@ -423,9 +423,9 @@ export default function PostDetails({route, navigation}) {
                     </Pressable>
 
 
-                {renderHomesAndAuto()}
+                {IsItemHomeOrAuto()}
 
-                {isRealEstateData()}
+                {isItemHome()}
 
                 {renderHomesSection()}
 
