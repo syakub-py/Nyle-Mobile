@@ -12,7 +12,7 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-const handleAddChat = (params) => {
+const handleAddChat = (params, navigation) => {
     if (params.username !== params.item.PostedBy) {
         firestore
             .collection('Chats')
@@ -99,11 +99,7 @@ export default function PostDetails({route, navigation}) {
 
     useEffect(() => {
         handleViewCounter(setViews, route.params.item);
-        generateRating(route.params.item.PostedBy).then((result) => {
-            setRating(result.rating)
-            setNumOfReviews(result.numOfReviews)
-        })
-
+        generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
         if (route.params.item.category === "Homes") {
             //"79-33 213 street"
             getRealEstateData(route.params.item.title, setRealEstateData)
@@ -218,7 +214,7 @@ export default function PostDetails({route, navigation}) {
                         </View>
                     </View>
 
-                    <Pressable onPress = {()=>handleAddChat(route.params)}>
+                    <Pressable onPress = {()=>handleAddChat(route.params, navigation)}>
                         <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                             <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                         </View>
@@ -344,7 +340,7 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 25, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 images.map((i, k) =>(
