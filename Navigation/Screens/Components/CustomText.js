@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextInput, View } from "react-native-elements";
+import { Text, TextInput, View } from "react-native";
 
 export const CustomText = ({text}) => {
     return (
