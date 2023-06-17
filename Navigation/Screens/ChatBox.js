@@ -222,7 +222,7 @@ export default function ChatBox({route, navigation}) {
     }
 
     const isRenderImageUrls = () => {
-        if (_.isEmpty(imageUrls)) return <View></View>
+        if (_.isEmpty(imageUrls)) return <View/>
 
         return (
             imageUrls.map((value, index) => (
@@ -295,7 +295,7 @@ export default function ChatBox({route, navigation}) {
         renderActions = {renderActions}
         renderInputToolbar = {renderInputToolbar}
         renderMessageImage = {(props) => {
-            if (_.isEmpty(props.currentMessage.image)) return <View></View>
+            if (_.isEmpty(props.currentMessage.image)) return <View/>
             else {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>

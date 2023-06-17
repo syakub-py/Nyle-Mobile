@@ -23,7 +23,7 @@ export default function TermsOfService({route ,navigation}) {
     })
 
     const renderShowButtons = () => {
-        if (!route.params.showButtons) return <View></View>
+        if (!route.params.showButtons) return <View/>
         return (
             <View style = {{flexDirection:'row', alignSelf:'center'}}>
                 <Pressable>

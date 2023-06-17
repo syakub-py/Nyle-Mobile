@@ -137,7 +137,7 @@ export default function Profile({ navigation, route }) {
   }
   
   const Setting = ({title, nameOfIcon,type, onPress}) => {
-    if (type !== "button") return <View></View>
+    if (type !== "button") return <View/>
     else {
       return (
         <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center', width:'100%', marginLeft:20}} onPress = {onPress}>
