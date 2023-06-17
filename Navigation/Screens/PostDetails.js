@@ -12,7 +12,7 @@ const height = width * 1;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-const handleAddChat = (params, navigation) => {
+const handleAddChat = (params) => {
     if (params.username !== params.item.PostedBy) {
         firestore
             .collection('Chats')
@@ -218,7 +218,7 @@ export default function PostDetails({route, navigation}) {
                         </View>
                     </View>
 
-                    <Pressable onPress = {()=>handleAddChat(route.params, navigation)}>
+                    <Pressable onPress = {()=>handleAddChat(route.params)}>
                         <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                             <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                         </View>
@@ -244,8 +244,9 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const IsItemHomeOrAuto = () => {
+    const renderHomesAndAuto = () => {
         if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View></View>
+
         return (
             <View>
                 <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
@@ -253,7 +254,7 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const isItemHome = () => {
+    const isRealEstateData = () => {
         if(realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") {
             return (
                 <View style = {{ marginLeft: 30 }}>
@@ -317,7 +318,7 @@ export default function PostDetails({route, navigation}) {
                     </Modal>
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress = {() => handleLike(route.params.item.title, route.params.username)}>
+                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
                             {renderDoesLikesIncludes()}
                         </Pressable>
                     </View>
@@ -343,7 +344,7 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 25, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 20, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
                         <View style = {{flexDirection:'row', alignItems:'center'}}>
                             {
                                 images.map((i, k) =>(
@@ -423,9 +424,9 @@ export default function PostDetails({route, navigation}) {
                     </Pressable>
 
 
-                {IsItemHomeOrAuto()}
+                {renderHomesAndAuto()}
 
-                {isItemHome()}
+                {isRealEstateData()}
 
                 {renderHomesSection()}
 
