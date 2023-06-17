@@ -44,6 +44,11 @@ export default function EditPost({navigation, route}) {
     //     });
     // }
 
+    const isStateActiveCSS = (state, k) => {
+        if (k == state.active) return {height:60, width:60, margin:7, borderRadius:10}
+        return {height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}
+      }
+
     return (
         <SafeAreaView style = {{flex:1}}>
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
@@ -91,7 +96,7 @@ export default function EditPost({navigation, route}) {
                         {
                             images.map((i, k) =>(
                                 <Pressable key = {k} onPress = {() => {console.log(k+1)}}>
-                                    <Image source = {{uri:i}} style = {k == state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
+                                    <Image source = {{uri:i}} style = {isStateActiveCSS(state, k)} key = {k}/>
                                 </Pressable>
                             ))
                         }

@@ -60,6 +60,86 @@ export default function ReviewCard({data, currentUser}) {
         DeleteReply(data, existingReplies, setExistingReplies, index)
     }
 
+    const renderIsRevieweCurrentUser = () => {
+        if (data.Reviewe !== currentUser) return <View></View>
+        return (
+            <Pressable onPress = {() =>setOpen(!open)}>
+                <View style = {{position:"absolute", bottom:0, right:10}}>
+                    <Ionicons name = {"arrow-redo-outline"} size = {20}/>
+                </View>
+            </Pressable>
+        )
+    }
+
+    const renderIsOpen = () => {
+        if (open) {
+            return (
+                <View style = {{flexDirection:'row', justifyContent:'center'}}>
+                    <View style = {{ width:300}}>
+                        <TextInput multiline placeholder = {"Write a reply"} onChangeText = {(text) =>setReply(text)}/>
+                    </View>
+
+                    <Pressable onPress = {handleSendReply}>
+                        <View style = {{backgroundColor:'black', justifyContent:'center', borderRadius:30}}>
+                            <Ionicons name = {"send"} size = {15} color = {"white"} style = {{margin:7}}/>
+                        </View>
+                    </Pressable>
+
+                </View>
+            )
+        }
+        return renderIsRevieweCurrentUser()
+    }
+
+    const renderIsRevieweCurrentUser2 = () => {
+        if (data.Reviewe !== currentUser){
+            return (
+                <ScrollView>
+                {
+                    existingReplies.map((reply, index) =>(
+                        <View key = {index} style = {{marginLeft:30, marginTop:5}}>
+                            <Text style = {{fontWeight:'bold'}}>{reply.username} </Text>
+                            <Text>{reply.message}</Text>
+                        </View>
+                    ))
+                }
+            </ScrollView>
+            )
+        }
+        return (
+            <SwipeListView
+                data = {existingReplies}
+                rightOpenValue = {-60}
+
+                renderItem = {({item, index}) =>(
+                    <View key = {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
+                        <Text style = {{fontWeight:'bold'}}>{item.username} (You)</Text>
+                        <Text>{item.message}</Text>
+                    </View>
+                    )
+                }
+                renderHiddenItem = {({ item, index }) => (
+                    <View
+                        style = {{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            width: 75,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        key = {index}
+                    >
+                        <TouchableOpacity onPress = {() => handleDeleteReply(index)}>
+                            <Ionicons size = {25} name ='trash-outline' color = {'red'} />
+                        </TouchableOpacity>
+                    </View>
+                )}
+            />
+        )
+    }
+
     return (
         <View style = {{ marginBottom: 10, margin: 10, backgroundColor:"whitesmoke"}}>
 
@@ -83,85 +163,11 @@ export default function ReviewCard({data, currentUser}) {
                     <Text style = {{marginTop:5}}>{data.ReviewMessage}</Text>
                 </View>
 
-                {
-                    (open) ? (
-                        <View style = {{flexDirection:'row', justifyContent:'center'}}>
-                            <View style = {{ width:300}}>
-                                <TextInput multiline placeholder = {"Write a reply"} onChangeText = {(text) =>setReply(text)}/>
-                            </View>
-
-                            <Pressable onPress = {handleSendReply}>
-                                <View style = {{backgroundColor:'black', justifyContent:'center', borderRadius:30}}>
-                                    <Ionicons name = {"send"} size = {15} color = {"white"} style = {{margin:7}}/>
-                                </View>
-                            </Pressable>
-
-                        </View>
-                    ):(
-
-                        (data.Reviewe === currentUser) ? (
-                            <Pressable onPress = {() =>setOpen(!open)}>
-                                <View style = {{position:"absolute", bottom:0, right:10}}>
-                                    <Ionicons name = {"arrow-redo-outline"} size = {20}/>
-                                </View>
-                            </Pressable>
-                        ):(
-                            <View>
-                            </View>
-                        )
-
-                    )
-                }
+                {renderIsOpen()}
 
             </View>
 
-            {
-                (data.Reviewe === currentUser) ? (
-                    <SwipeListView
-                        data = {existingReplies}
-                        rightOpenValue = {-60}
-
-                        renderItem = {({item, index}) =>(
-                            <View key = {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
-                                <Text style = {{fontWeight:'bold'}}>{item.username} (You)</Text>
-                                <Text>{item.message}</Text>
-                            </View>
-                            )
-                        }
-                        renderHiddenItem = {({ item, index }) => (
-                            <View
-                                style = {{
-                                    position: 'absolute',
-                                    top: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    width: 75,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                                key = {index}
-                            >
-                                <TouchableOpacity onPress = {() => handleDeleteReply(index)}>
-                                    <Ionicons size = {25} name ='trash-outline' color = {'red'} />
-                                </TouchableOpacity>
-                            </View>
-                        )}
-
-                    />
-
-                ):(
-                    <ScrollView>
-                        {
-                            existingReplies.map((reply, index) =>(
-                                <View key = {index} style = {{marginLeft:30, marginTop:5}}>
-                                    <Text style = {{fontWeight:'bold'}}>{reply.username} </Text>
-                                    <Text>{reply.message}</Text>
-                                </View>
-                            ))
-                        }
-                    </ScrollView>
-                )
-            }
+            {renderIsRevieweCurrentUser2()}
         </View>
     )
 }

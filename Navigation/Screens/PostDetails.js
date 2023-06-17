@@ -129,7 +129,163 @@ export default function PostDetails({route, navigation}) {
                 animated: true,
             });
         }
-    };
+    }
+
+    const renderDoesLikesIncludes = () => {
+        if (likes.includes(route.params.username)) return <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
+        return <Ionicons name ='heart-outline' size = {30}/>
+    }
+
+    const renderIsCategoryHomes = () => {
+        if (route.params.item.category === "Homes") {
+            return (
+                <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
+                    <View style = {{flexDirection:"row", alignContent:'center'}}>
+                        <Ionicons name = {'bed'} color = {'black'} size = {20}/>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
+                    </View>
+
+                    <View style = {{flexDirection:"row", alignContent:'center'}}>
+                        <Ionicons name = {'water'} color = {'black'} size = {20}/>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
+                    </View>
+                    <View style = {{flexDirection:"row", alignContent:'center'}}>
+                        <Ionicons name = {'expand'} color = {'black'} size = {20}/>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
+                    </View>
+
+                </View>
+            )
+        }
+    }
+
+    const renderIsCategoryAuto = () => {
+        if (route.params.item.category === "Auto") {
+            return (
+                <View style = {{flexDirection:"column"}}>
+                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
+
+                        <View style = {{flexDirection:"row", alignContent:'center'}}>
+                            <Ionicons name = {'car-outline'} color = {'black'} size = {20}/>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.mileage}</Text>
+                        </View>
+
+                        <View style = {{flexDirection:"row", alignContent:'center'}}>
+                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.Vin}</Text>
+                        </View>
+
+                    </View>
+                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
+
+                        <View style = {{flexDirection:"row", alignContent:'center'}}>
+                            <Ionicons name = {'hammer-outline'} color = {'black'} size = {20}/>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.make}</Text>
+                        </View>
+
+                        <View style = {{flexDirection:"row", alignContent:'center'}}>
+                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.model}</Text>
+                        </View>
+
+                    </View>
+                </View>
+            )
+        }
+    }
+
+    const isPostedBySameAsUsername = () => {
+        if (route.params.item.PostedBy !== route.params.username) {
+            return (
+                <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
+                    <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
+                        <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                        <View style = {{margin:10,alignSelf:'center'}}>
+                            <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
+                            <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
+                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
+                                <View style = {{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    backgroundColor: 'transparent',
+                                    marginTop: 2
+                                }}>
+                                    <Ionicons name = "star" style = {{ marginRight: 3 }} color = "#ebd61e" size = {13} />
+                                    <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
+                                    <Text style = {{ fontSize: 10, color:'lightgrey', marginLeft:3}}>({numOfReviews} reviews)</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    </View>
+
+                    <Pressable onPress = {()=>handleAddChat(route.params)}>
+                        <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
+                            <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
+                        </View>
+                    </Pressable>
+                </View>  
+            )
+        }
+
+        return (
+            <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
+                <View style = {{justifyContent:'center', flexDirection:'row', margin:10}}>
+                    <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                    <View style = {{margin:10,alignSelf:'center'}}>
+                        <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy} (You)</Text>
+                        <Text style = {{fontWeight:'bold', color:'lightgrey'}}> Owner </Text>
+                        <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
+                            <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
+                            <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
+    const renderHomesAndAuto = () => {
+        if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View></View>
+
+        return (
+            <View>
+                <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
+            </View>
+        )
+    }
+
+    const isRealEstateData = () => {
+        if(realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") {
+            return (
+                <View style = {{ marginLeft: 30 }}>
+                    <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
+                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
+                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 10 }}>Nothing to show here</Text>
+                </View> 
+            )
+        }
+    }
+
+    const renderHomesSection = () => {
+        if (!(route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
+        return (
+            <View>
+                <View style = {{ marginLeft: 25 }}>
+                    <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
+                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
+                    <ScrollView>
+                        {
+                            realEstateData.map((record, index) => (
+                                <View key = {index} style = {{ flexDirection: "row", margin: 5 }}>
+                                    <Text>{record.NAME}</Text>
+                                </View>
+                            ))
+                        }
+                    </ScrollView>
+                </View>
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style = {{flex:1}}>
@@ -163,14 +319,7 @@ export default function PostDetails({route, navigation}) {
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
-                            {
-                                (likes.includes(route.params.username)) ? (
-                                    <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
-
-                                ):(
-                                    <Ionicons name ='heart-outline' size = {30}/>
-                                )
-                            }
+                            {renderDoesLikesIncludes()}
                         </Pressable>
                     </View>
 
@@ -184,7 +333,7 @@ export default function PostDetails({route, navigation}) {
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
-                            images.map((image, key) =>(
+                            images.map((image, key) => (
                                 <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key = {key}>
                                     <View style = {{width, height, position: 'relative'}} >
                                         <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
@@ -238,7 +387,6 @@ export default function PostDetails({route, navigation}) {
 
                 </View>
 
-
                 <View style = {{marginLeft:10, marginTop:10}}>
                     <View style = {{ backgroundColor:'transparent'}}>
                         <Text style = {{color:'black',fontSize:23,fontWeight:'bold'}}>{route.params.item.title}</Text>
@@ -249,111 +397,11 @@ export default function PostDetails({route, navigation}) {
                         <Text style = {{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{route.params.item.price}</Text>
                         <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
                     </View>
-                    {
-                        (route.params.item.category === "Homes") ? (
-                            <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
-                                <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'bed'} color = {'black'} size = {20}/>
-                                    <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
-                                </View>
-
-                                <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'water'} color = {'black'} size = {20}/>
-                                    <Text style = {{fontSize:15, color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
-                                </View>
-                                <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                    <Ionicons name = {'expand'} color = {'black'} size = {20}/>
-                                    <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
-                                </View>
-
-                            </View>
-                        ):null
-                    }
-
-                    {
-                        (route.params.item.category === "Auto") ? (
-                                <View style = {{flexDirection:"column"}}>
-                                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
-
-                                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'car-outline'} color = {'black'} size = {20}/>
-                                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.mileage}</Text>
-                                        </View>
-
-                                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.Vin}</Text>
-                                        </View>
-
-                                    </View>
-                                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
-
-                                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'hammer-outline'} color = {'black'} size = {20}/>
-                                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.make}</Text>
-                                        </View>
-
-                                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.model}</Text>
-                                        </View>
-
-                                    </View>
-                                </View>
-
-                        ) : null
-                    }
-
+                    {renderIsCategoryHomes()}
+                    {renderIsCategoryAuto()}
                 </View>
+                {isPostedBySameAsUsername()}
 
-
-                {
-                    (route.params.item.PostedBy !== route.params.username) ? (
-                        <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
-                            <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
-                                <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
-                                <View style = {{margin:10,alignSelf:'center'}}>
-                                    <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
-                                    <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <Pressable onPress = {() => {navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
-                                        <View style = {{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            backgroundColor: 'transparent',
-                                            marginTop: 2
-                                        }}>
-                                            <Ionicons name = "star" style = {{ marginRight: 3 }} color = "#ebd61e" size = {13} />
-                                            <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
-                                            <Text style = {{ fontSize: 10, color:'lightgrey', marginLeft:3}}>({numOfReviews} reviews)</Text>
-                                        </View>
-                                    </Pressable>
-                                </View>
-                            </View>
-
-                            <Pressable onPress = {()=>handleAddChat(route.params)}>
-                                <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                                    <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
-                                </View>
-                            </Pressable>
-                        </View>
-                    ):(
-                        <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
-
-                            <View style = {{justifyContent:'center', flexDirection:'row', margin:10}}>
-                                <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
-                                <View style = {{margin:10,alignSelf:'center'}}>
-                                    <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy} (You)</Text>
-                                    <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                                    <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
-                                        <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
-                                        <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
-                                    </View>
-                                </View>
-                            </View>
-
-                        </View>
-                    )
-                }
                 <View style = {{marginBottom:20}}>
                     <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
                 </View>
@@ -376,52 +424,11 @@ export default function PostDetails({route, navigation}) {
                     </Pressable>
 
 
-                {
-                    (route.params.item.category !== "Homes" && route.params.item.category !== "Auto" ) ? (
-                        <View>
-                            <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
-                        </View>
-                    ):(
-                        <View></View>
-                    )
-                }
+                {renderHomesAndAuto()}
 
+                {isRealEstateData()}
 
-                {
-                    (realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") ? (
-                        <View style = {{ marginLeft: 30 }}>
-                            <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
-                            <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                            <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 10 }}>Nothing to show here</Text>
-                        </View>
-                    ) : null
-                }
-
-                {
-                    (route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData) ? (
-                        <View>
-
-                            <View style = {{ marginLeft: 25 }}>
-                                <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
-                                <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                                <ScrollView>
-                                    {
-                                        realEstateData.map((record, index) => (
-                                            <View key = {index} style = {{ flexDirection: "row", margin: 5 }}>
-                                                <Text>{record.NAME}</Text>
-                                            </View>
-                                        ))
-                                    }
-                                </ScrollView>
-                            </View>
-                        </View>
-
-                    ) : (
-                        <View>
-
-                        </View>
-                    )
-                }
+                {renderHomesSection()}
 
                 <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 

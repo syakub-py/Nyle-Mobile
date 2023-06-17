@@ -19,6 +19,31 @@ export default function MapPostCard({data, username}) {
         })
     }, [])
 
+    const renderDataPostedBy = () => {
+        if (data.likes.includes(data.PostedBy)) return <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
+        return <Ionicons name ='heart-outline' size = {20}/>
+    }
+
+    const isCategoryHomes = () => {
+        if (data.category !== "Homes") return <View></View>
+        return (
+            <View style = {{flexDirection:'row'}}>
+                <View style = {{flexDirection:"row", alignContent:'center'}}>
+                    <Ionicons name = {'bed'} color = {'black'} size = {13}/>
+                    <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.bedrooms}</Text>
+                </View>
+                <View style = {{flexDirection:"row", alignContent:'center'}}>
+                    <Ionicons name = {'water'} color = {'black'} size = {13}/>
+                    <Text style = {{fontSize:12, color:'black', marginRight:10}}>{data.bathrooms}</Text>
+                </View>
+                <View style = {{flexDirection:"row", alignContent:'center'}}>
+                    <Ionicons name = {'expand'} color = {'black'} size = {13}/>
+                    <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.SQFT}</Text>
+                </View>
+            </View>
+        )
+    }
+
     return (
         <View style = {{
             flex:1,
@@ -33,18 +58,13 @@ export default function MapPostCard({data, username}) {
             },
             shadowOpacity: 1,
             shadowRadius: 4,
-            elevation: 4 }}>
+            elevation: 4 }}
+        >
 
-            <ImageBackground source = {{uri:data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
+            <ImageBackground source = {{uri: data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
                 <View style = {{position:'absolute', right:10,top:10, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
                     <Pressable onPress = {() =>handleLike(data.title, username)}>
-                        {
-                            (data.likes.includes(data.PostedBy)) ? (
-                                <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
-                            ):(
-                                <Ionicons name ='heart-outline' size = {20}/>
-                            )
-                        }
+                        {renderDataPostedBy()}
                     </Pressable>
                 </View>
 
@@ -57,29 +77,7 @@ export default function MapPostCard({data, username}) {
                             <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
                         </View>
 
-                        {
-                            (data.category === "Homes") ? (
-                                <View style = {{flexDirection:'row'}}>
-
-                                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'bed'} color = {'black'} size = {13}/>
-                                        <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.bedrooms}</Text>
-                                    </View>
-
-                                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'water'} color = {'black'} size = {13}/>
-                                        <Text style = {{fontSize:12, color:'black', marginRight:10}}>{data.bathrooms}</Text>
-                                    </View>
-                                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                                        <Ionicons name = {'expand'} color = {'black'} size = {13}/>
-                                        <Text style = {{fontSize:12, color:'black', marginRight:10, marginLeft:5}}>{data.SQFT}</Text>
-                                    </View>
-                                </View>
-                            ):(
-                                <View>
-                                </View>
-                            )
-                        }
+                        {isCategoryHomes()}
                     </View>
                     <Text style = {{fontSize:10, color:'lightgrey', marginLeft:3}}>{numOfReviews} reviews</Text>
 

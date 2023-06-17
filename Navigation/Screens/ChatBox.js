@@ -186,6 +186,54 @@ export default function ChatBox({route, navigation}) {
         if (slide !== state.active) setState({active: slide})
     }
 
+    useEffect(() => {
+        clearMessages(messagesRef)
+        markAsRead(route.params)
+    }, [])
+
+    const renderIsAnimating = () => {
+        if (animating) {
+            return (
+                <View>
+                    <View style = {{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
+                        <ActivityIndicator size = "large" color = "black" />
+                    </View>
+                    <Image
+                        source = {{ uri: value }}
+                        style = {{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
+                    />
+                </View>
+            )
+        } else {
+            return (
+                <View>
+                    <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index)}>
+                        <View style = {{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
+                            <Ionicons name ='remove-outline'  color = {'white'} size = {15} style = {{elevation:1}}/>
+                        </View>
+                    </Pressable>
+                    <Image
+                        source = {{ uri: value }}
+                        style = {{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
+                    />
+                </View>
+            )
+        }
+    }
+
+    const isRenderImageUrls = () => {
+        if (_.isEmpty(imageUrls)) return <View></View>
+
+        return (
+            imageUrls.map((value, index) => (
+                <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
+                    {renderIsAnimating()}
+                </View>
+            ))
+        )
+
+    }
+
   const renderInputToolbar = (props) => {
     return (
       <View style = {{flex:1}}>
@@ -200,44 +248,7 @@ export default function ChatBox({route, navigation}) {
             height: 75,
           }}
           refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {onRefresh}/>}>
-          {
-            (!_.isEmpty(imageUrls)) ? (
-              imageUrls.map((value, index) => (
-                <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
-                    {
-                        (animating) ? (
-                            <View>
-                                <View style = {{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
-                                    <ActivityIndicator size = "large" color = "black" />
-                                </View>
-                                <Image
-                                    source = {{ uri: value }}
-                                    style = {{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
-                                />
-                            </View>
-                        ):(
-                            <View>
-                                <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index)}>
-                                    <View style = {{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
-                                        <Ionicons name ='remove-outline'  color = {'white'} size = {15} style = {{elevation:1}}/>
-                                    </View>
-                                </Pressable>
-                                <Image
-                                    source = {{ uri: value }}
-                                    style = {{ width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
-                                />
-                            </View>
-                        )
-                    }
-
-                </View>
-              ))
-            ) : (
-              <View>
-
-              </View>
-            )
-          }
+            {isRenderImageUrls()}
         </ScrollView>
         <View style = {{ flex: 1 }}>
           <InputToolbar
@@ -254,10 +265,10 @@ export default function ChatBox({route, navigation}) {
     );
   };
 
-    useEffect(() => {
-        clearMessages(messagesRef)
-        markAsRead(route.params)
-    }, [])
+  const isStateActiveCSS = (state, k) => {
+    if (k == state.active) return {color:'white', margin:4, fontSize:10}
+    return {color:'#a8a5a5', margin:4, fontSize:7}
+  }
 
   return (  
     <SafeAreaView style = {{flex:1}}>
@@ -303,13 +314,13 @@ export default function ChatBox({route, navigation}) {
                                                 }}
                                                 resizeMode = "cover"
                                             />
-                                        );
+                                        )
                                 })}
                             </ScrollView>
                             <View style = {{flexDirection:'row', position:'absolute', bottom:0, alignSelf:'center', alignItems:'center'}}>
                                 {
-                                    props.currentMessage.image.map((i, k) =>(
-                                        <Text style = {k == state.active?{color:'white', margin:4, fontSize:10}:{color:'#a8a5a5', margin:4, fontSize:7}} key = {k}>⬤</Text>
+                                    props.currentMessage.image.map((i, k) => (
+                                        <Text style = {isStateActiveCSS(state, k)} key = {k}>⬤</Text>
                                     ))
                                 }
                             </View>

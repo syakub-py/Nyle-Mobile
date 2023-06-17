@@ -60,10 +60,33 @@ export default function SignUp({navigation}) {
     const [profilePic, setProfilePic] = useState('')
     const [refreshing, setRefreshing] = useState(false);
 
+    const renderProfilePicSection = () => {
+        if (profilePic == '') {
+            return (
+                <View style = {{margin:75, alignItems:'center'}}>
+                    <Text style = {{fontWeight:'bold'}}>Upload a Profile Picture</Text>
+                    <Image source = {{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style = {{height:150, width:150, borderRadius:100}}/>
+                </View>
+            )
+        }
+        return (
+            <View style = {{margin:60, alignItems:'center'}}>
+                <Pressable style = {{position:'absolute', left:5, top:10, zIndex:1}} onPress = {removeProfilePhoto(setRefreshing, setProfilePic)}>
+                    <View style = {{backgroundColor:'red', height:30, width:30, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
+                        <Ionicons name ='remove-outline' color = {'white'} size = {20} style = {{}}/>
+                    </View>
+                </Pressable>
+
+                <Image source = {{uri:profilePic}} style = {{height:150, width:150, borderRadius:100}}/>
+                <Text style = {{margin:10, fontWeight:'bold'}}>{username}</Text>
+            </View>
+        )
+    }
+
     return (
         <View style = {styles.container}>
 
-            <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
+            <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2 ,backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress = {() =>navigation.goBack()}>
                     <Ionicons name ='chevron-back-outline' size = {30}/>
                 </Pressable>
@@ -71,24 +94,7 @@ export default function SignUp({navigation}) {
 
             <View style = {{alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress = {SelectImages(setProfilePic)}>
-                    {(profilePic != '') ? (
-                        <View style = {{margin:60, alignItems:'center'}}>
-                            <Pressable style = {{position:'absolute', left:5, top:10, zIndex:1}} onPress = {removeProfilePhoto(setRefreshing, setProfilePic)}>
-                                <View style = {{backgroundColor:'red', height:30, width:30, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
-                                    <Ionicons name ='remove-outline' color = {'white'} size = {20} style = {{}}/>
-                                </View>
-                            </Pressable>
- 
-                            <Image source = {{uri:profilePic}} style = {{height:150, width:150, borderRadius:100}}/>
-                            <Text style = {{margin:10, fontWeight:'bold'}}>{username}</Text>
-                        </View>
-                    ):
-                    (
-                        <View style = {{margin:75, alignItems:'center'}}>
-                            <Text style = {{fontWeight:'bold'}}>Upload a Profile Picture</Text>
-                            <Image source = {{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style = {{height:150, width:150, borderRadius:100}}/>
-                        </View>
-                    )}
+                    {renderProfilePicSection()}
                 </Pressable>
             </View>
 

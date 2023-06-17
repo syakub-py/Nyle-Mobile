@@ -22,6 +22,24 @@ export default function TermsOfService({route ,navigation}) {
         getTerms(setTermsOfService);
     })
 
+    const renderShowButtons = () => {
+        if (!route.params.showButtons) return <View></View>
+        return (
+            <View style = {{flexDirection:'row', alignSelf:'center'}}>
+                <Pressable>
+                    <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'red', borderRadius:5, margin:10}}>
+                        <Text style = {{color:'white', fontWeight:'bold', margin: 5}}>Decline</Text>
+                    </View>
+                </Pressable>
+                <Pressable onPress = {() => {navigation.navigate("Main Container", {username:route.params.username})}}>
+                    <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'green', borderRadius:5, margin:10}}>
+                        <Text style = {{color:'white', fontWeight:'bold',margin:5}}>Accept</Text>
+                    </View>
+                </Pressable>
+            </View>
+        )  
+    }
+
     return (
         <View style = {{flex:1}}>
             <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:20, marginTop:20}}>
@@ -40,27 +58,7 @@ export default function TermsOfService({route ,navigation}) {
                     </ScrollView>
                 </View>
 
-                {(route.params.showButtons) ? (
-                        <View style = {{flexDirection:'row', alignSelf:'center'}}>
-                            <Pressable>
-                                <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'red', borderRadius:5, margin:10}}>
-                                    <Text style = {{color:'white', fontWeight:'bold',margin:5}}>Decline</Text>
-                                </View>
-                            </Pressable>
-
-
-                            <Pressable onPress = {() => {navigation.navigate("Main Container", {username:route.params.username})}}>
-                                <View style = {{width:"40%", alignItems:'center', justifyContent:'center', backgroundColor:'green', borderRadius:5, margin:10}}>
-                                    <Text style = {{color:'white', fontWeight:'bold',margin:5}}>Accept</Text>
-                                </View>
-                            </Pressable>
-
-                        </View>
-                    ):(
-                        <View>
-                        </View>
-                    )
-                }
+                {renderShowButtons()}
 
             </View>
         </View>

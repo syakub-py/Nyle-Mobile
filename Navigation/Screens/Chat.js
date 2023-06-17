@@ -145,6 +145,29 @@ export default function Chat({navigation, route}) {
 
     const randomNumber = Math.floor(Math.random() * 100);
 
+    const isUserNameLengthGreaterThanTen = (username) => {
+        if (username.length > 10) return <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
+
+        return <Text style = {{fontSize:18, fontWeight:'500'}}>{username}</Text>
+    }
+
+    const isItemLatestMessageLengthGreaterThanTen = (item) => {
+        if (item.latestMessage.length > 10) return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
+
+        return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
+    }
+
+    const isItemImage = (item) => {
+        if (item.image) {
+            return (
+                <View style = {{justifyContent:'center'}}>
+                    <Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
+                </View>
+            )
+        }
+        return <View/>
+    }
+
     return (
         <SafeAreaView style = {styles.container}>
             <SwipeListView
@@ -211,31 +234,10 @@ export default function Chat({navigation, route}) {
                                 </View>
 
                                 <View style = {{flexDirection:'column'}}>
-                                    {
-                                        (username.length > 10) ? (
-                                            <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
-                                        ):(
-                                            <Text style = {{fontSize:18, fontWeight:'500'}}>{username}</Text>
-                                        )
-                                    }
-
-                                    {
-                                        (item.latestMessage.length > 10) ? (
-                                            <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage.slice(0, 10) + " ..."}</Text>
-                                        ):(
-                                            <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
-                                        )
-                                    }
+                                    {isUserNameLengthGreaterThanTen(username)}
+                                    {isItemLatestMessageLengthGreaterThanTen(item)}
                                 </View>
-                                {
-                                    (item.image) ? (
-                                        <View style = {{justifyContent:'center'}}>
-                                            <Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
-                                        </View>
-                                    ):(
-                                        <View/>
-                                    )
-                                }
+                                {isItemImage(item)}
                             </View>
                         </Pressable>
                     )

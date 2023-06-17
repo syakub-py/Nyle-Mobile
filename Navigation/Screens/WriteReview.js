@@ -41,8 +41,8 @@ export default function WriteReview({route, navigation}) {
                     {Array.from({ length: 5 }, (_, index) => (
                         <Pressable key = {index} onPress = {() => setStars(index)}>
                             <Ionicons
-                                name = {index <= Stars ? 'star' : 'star-outline'}
-                                style = {{ fontSize: 20, marginRight: 5, color: index <= Stars ? '#ebd61e' : 'black' }}
+                                name = {index <= stars ? 'star' : 'star-outline'}
+                                style = {{ fontSize: 20, marginRight: 5, color: index <= stars ? '#ebd61e' : 'black' }}
                             />
                         </Pressable>
                     ))}
