@@ -16,14 +16,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 
-const onRefresh = (setRefreshing, getChats, setFilterData, setMasterData, route) => {
+const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, route) => {
     setRefreshing(true);
-    getChats(route.params).then((result) => {
-        setFilterData(result);
-        setMasterData(result);
-    }).catch((error) => {
-        console.log(error)
-    })
+    await getChats(route.params, setFilterData, setMasterData)
     setTimeout(() => setRefreshing(false), 300);
 };
 
@@ -57,67 +52,71 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 }
 
 // Delete a folder and all its contents
-const deleteChat = (chat, setRefreshing, setFilterData, setMasterData, route) => {
-    firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
-        docs.forEach((doc) => {
-            if (!_.isEmpty(doc.data().image)) {
-                doc.data().image.forEach((picture) => {
-                    let imageRef = getstorage.refFromURL(picture)
-                    imageRef.delete()
-                })
-            }
-        })
-
-        firestore.collection('Chats').doc(chat.id).delete().then(() => {
-            onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
-        })
-    })
-}
-
-const getChats = async (params) => {
-    const results = [];
-    const MyChatQuery = firestore.collection('Chats');
-    const ChatSnapshot = await MyChatQuery.get();
-    const chatDocs = ChatSnapshot.docs;
-
-    for (const doc of chatDocs) {
-        if (doc.data().owners.some(item => item.username === params.username)) {
-            const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-                .orderBy('createdAt', 'desc')
-                .limit(1);
-
-            const latestMessageSnapshot = await latestMessageQuery.get();
-            const latestMessageDocs = latestMessageSnapshot.docs;
-
-            if (!_.isEmpty(latestMessageDocs)) {
-                const latestMessageData = latestMessageDocs[0].data();
-                const latestMessage = latestMessageData.text;
-                const received = latestMessageData.received;
-                const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
-
-                const chatData = {
-                    data: doc.data(),
-                    id: doc.id,
-                    latestMessage,
-                    image,
-                    received
-                };
-
-                if (latestMessageData.user.name === params.username) chatData.latestMessage = "You: " + latestMessage;
-
-                results.push(chatData);
-            } else {
-                results.push({
-                    data: doc.data(),
-                    id: doc.id,
-                    latestMessage: "",
-                    image: "",
-                    received: true
-                });
+const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, route) => {
+    const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection("messages").get();
+    
+    for (let doc of docSnapshots.docs) {
+        if (!_.isEmpty(doc.data().image)) {
+            for (let picture of doc.data().image) {
+                let imageRef = getstorage.refFromURL(picture)
+                await imageRef.delete()
             }
         }
     }
-    return results;
+
+    await firestore.collection('Chats').doc(chat.id).delete();
+    await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
+}
+
+
+const getChats = async (params, setFilterData, setMasterData) => {
+    let results = [];
+    try {
+        const MyChatQuery = firestore.collection('Chats');
+        const ChatSnapshot = await MyChatQuery.get();
+        const chatDocs = ChatSnapshot.docs;
+        for (const doc of chatDocs) {
+            if (doc.data().owners.some(item => item.username === params.username)) {
+                const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+                    .orderBy('createdAt', 'desc')
+                    .limit(1);
+    
+                const latestMessageSnapshot = await latestMessageQuery.get();
+                const latestMessageDocs = latestMessageSnapshot.docs;
+    
+                if (!_.isEmpty(latestMessageDocs)) {
+                    const latestMessageData = latestMessageDocs[0].data();
+                    const latestMessage = latestMessageData.text;
+                    const received = latestMessageData.received;
+                    const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
+    
+                    const chatData = {
+                        data: doc.data(),
+                        id: doc.id,
+                        latestMessage,
+                        image,
+                        received
+                    };
+    
+                    if (latestMessageData.user.name === params.username) chatData.latestMessage = "You: " + latestMessage;
+    
+                    results.push(chatData);
+                } else {
+                    results.push({
+                        data: doc.data(),
+                        id: doc.id,
+                        latestMessage: "",
+                        image: "",
+                        received: true
+                    });
+                }
+            }
+        }
+        setFilterData(results);
+        setMasterData(results);
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 /*
@@ -131,14 +130,12 @@ export default function Chat({navigation, route}) {
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        getChats(route.params).then((result) => {
-            setFilterData(result);
-            setMasterData(result);
-        }).catch((error) => {
-            console.log(error)
-        })
-    }, [])
-
+        const fetchData = async () => {
+            await getChats(route.params, setFilterData, setMasterData);
+        };
+        fetchData();
+    }, []);
+    
     const handleSearchFilter = (text) => {
         searchFilter(text, masterData, setFilterData, setSearch)
     }
@@ -173,13 +170,16 @@ export default function Chat({navigation, route}) {
             <SwipeListView
                 data = {filteredData}
                 ListFooterComponent = {
-                    <View style = {{height:80}}>
-
-                    </View>
+                    <View style = {{height:80}}/>
                 }
                 rightOpenValue = {-50}
                 refreshControl = {
-                    <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route)} />
+                    <RefreshControl 
+                        refreshing={refreshing} 
+                        onRefresh={async () => {
+                            await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
+                        }} 
+                    />
                 }
                 key = {randomNumber}
                 contentContainerStyle = {{
@@ -216,7 +216,7 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key = {i}>
-                        <TouchableOpacity onPress = {() => {deleteChat(item, setRefreshing, setFilterData, setMasterData, route)}}>
+                        <TouchableOpacity onPress = {() => {deleteChat(item)}}>
                             <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
                     </View>

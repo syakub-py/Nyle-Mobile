@@ -1,7 +1,8 @@
 import {firestore, firestoreLite} from "./Components/Firebase";
 import {collection, getDocs} from "firebase/firestore/lite";
+import { Alert } from "react-native";
 
-const generateRating = async (username) => {
+export const generateRating = async (username, setRating, setNumOfReviews) => {
     let sum = 0;
     let counter = 0
     const MyReviewsQuery =  firestore.collection('Reviews').where("Reviewe", "==", username)
@@ -11,28 +12,36 @@ const generateRating = async (username) => {
             counter++;
         });
     })
-    return {rating:sum/counter, numOfReviews:counter}
+    const rating = sum/counter
+    const numOfReviews = counter
+    setRating(rating)
+    setNumOfReviews(numOfReviews)
 }
 
-const getPosts = async () => {
+export const getPosts = async (setMasterData, setFilterData) => {
     let results = [];
-    const postCollection = collection(firestoreLite, "AllPosts");
-    const postSnapshot = await getDocs(postCollection);
-    // Iterate through each document and push the data to the results array
-    postSnapshot.forEach(doc => {
-        results.push(doc.data())
-    });
-
-    // Sort the results by date in descending order
-    if (results) {
-        results = results.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
+    try {
+        const postCollection = collection(firestoreLite, "AllPosts");
+        const postSnapshot = await getDocs(postCollection);
+        // Iterate through each document and push the data to the results array
+        postSnapshot.forEach(doc => {
+            results.push(doc.data())
         });
+    
+        // Sort the results by date in descending order
+        if (results) {
+            results = results.sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+        }
+        setMasterData(results)
+        setFilterData(results)
+    } catch(error) {
+        Alert.alert(error)
     }
-    return results;
 }
 
-const handleLike = async (doc, username) => {
+export const handleLike = async (doc, username) => {
     const PostRef = firestore.collection('AllPosts').doc(doc);
     PostRef.get()
         .then((doc) => {
@@ -79,10 +88,12 @@ const generatePriceHomes = async (bedrooms, bathrooms) => {
     return price/counter
 }
 
-const getCityState = async (lat, lng) => {
+export const getCityState = async (lat, lng, setState, setCity) => {
     try {
         const response = await fetch(`http://192.168.255.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);
-        return await response.json();
+        const JSONresponse = await response.json();
+        setState(JSONresponse.state)
+        setCity(JSONresponse.city)
     } catch (error) {
         console.log("server offline");
         return {city:"", state:""}
@@ -90,7 +101,7 @@ const getCityState = async (lat, lng) => {
 };
 
 
-const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
+export const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
     if (text && text !== 'All') {
         const newData = masterData.filter((item) => {
             const itemData = item.category ? item.category : ''
@@ -107,5 +118,3 @@ const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
 // const generatePriceAuto = () => {
 //
 // }
-
-export {generateRating, getPosts, handleLike, getCityState, categoryFilter}

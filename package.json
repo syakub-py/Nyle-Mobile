@@ -65,7 +65,8 @@
     "react-native-swipe-verify": "^0.1.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3"
+    "@babel/core": "^7.19.3",
+    "@types/faker": "^6.6.9"
   },
   "private": true
 }

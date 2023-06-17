@@ -5,7 +5,6 @@ import {
     StyleSheet,
     RefreshControl,
     ScrollView,
-    TextInput,
     Image,
     Pressable,
     Dimensions,
@@ -18,8 +17,9 @@ import {firestore, getstorage} from './Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Dropdown } from 'react-native-element-dropdown';
 import _ from "lodash"
+import DropdownInput from './Components/AddPostDropdown';
+import { CustomTextInput, CustomTextWithInput } from './Components/CustomText';
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -136,86 +136,59 @@ export default function AddPost({route}) {
         onRefresh();
     }
 
+    const createDocument = ({uniqueFields}) => ({
+        id: randomNumber,
+        title: title,
+        price: price,
+        PostedBy: route.params.username,
+        currency: currency.value,
+        description: description,
+        pic: UrlList,
+        profilePic: route.params.profilePicture,
+        coordinates: coordinates,
+        views: 0,
+        likes: [],
+        sold: "false",
+        category: category,
+        date: new Date().toLocaleString(),
+        ...uniqueFields
+    })
+
     const addPosts = async (collectionPath) => {
         if (!collectionPath) throw new Error('Error: collection name cannot be empty');
 
-        const UrlList = await upload(imageUrls)
+        await upload(imageUrls)
+        let uniqueFields = {};
+
         if (category === "Auto") {
-            return firestore.collection(collectionPath).doc(title).set({
-                id:randomNumber,
-                title: title,
-                price: price,
-                PostedBy: route.params.username,
-                currency: currency.value,
-                Vin:VIN,
-                mileage:mileage,
-                make:make,
-                model:model,
-                description: description,
-                pic: UrlList,
-                profilePic: route.params.profilePicture,
-                coordinates: coordinates,
-                views: 0,
-                likes: [],
-                sold: "false",
-                category:category,
-                date: new Date().toLocaleString(),
-            }).then(ref => {
-                    clear();
-                }).catch(error => {
-                    console.log('Error adding document: ', error);
-                });
+            uniqueFields = {
+                Vin: VIN,
+                mileage: mileage,
+                make: make,
+                model: model
+            }
+        } else if (category === "Homes") {
+            uniqueFields = {
+                bedrooms: bedrooms,
+                bathrooms: bathrooms,
+                SQFT: SQFT
+            }
+        } else {
+            uniqueFields = {
+                details: details
+            }
         }
 
-        else if (category === "Homes") {
-            return firestore.collection(collectionPath).doc(title).set({
-                id:randomNumber,
-                title: title,
-                price: price,
-                PostedBy: route.params.username,
-                currency: currency.value,
-                bedrooms:bedrooms,
-                bathrooms: bathrooms,
-                SQFT:SQFT,
-                description: description,
-                pic: UrlList,
-                profilePic: route.params.profilePicture,
-                coordinates: coordinates,
-                views: 0,
-                likes: [],
-                sold: "false",
-                category:category,
-                date: new Date().toLocaleString(),
-            }).then(ref => {
+        const document = createDocument({uniqueFields});
+
+        return firestore.collection(collectionPath).doc(title).set(document)
+            .then(ref => {
                 Alert.alert("Post added")
                 clear();
-            }).catch(error => {
+            })
+            .catch(error => {
                 console.log('Error adding document: ', error);
             });
-        } else {
-            return firestore.collection(collectionPath).doc(title).set({
-                id:randomNumber,
-                title: title,
-                price: price,
-                PostedBy: route.params.username,
-                currency: currency.value,
-                details:details,
-                description: description,
-                pic: UrlList,
-                profilePic: route.params.profilePicture,
-                coordinates: coordinates,
-                views: 0,
-                likes: [],
-                sold: "false",
-                category:category,
-                date: new Date().toLocaleString(),
-            }).then(ref => {
-                Alert.alert("Post added")
-                clear();
-            }).catch(error => {
-                console.log('Error adding document: ', error);
-            });
-        }
     }
 
     const renderCurrencyItem = (item) => {
@@ -248,49 +221,41 @@ export default function AddPost({route}) {
     }
 
     const renderDetailsText = () => {
-        if ((category === "Homes" || category === "Auto"))  return  <View></View>
+        if ((category === "Homes" || category === "Auto"))  return  <View/>
 
         return (
-            <View>
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Details</Text>
-                <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:200,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setDetails(text)}/>
+            <View> 
+                <CustomTextWithInput 
+                    text="Details" 
+                    onChangeText={(text) => setDetails(text)} 
+                    multiline
+                    height={200}
+                />
             </View>
         )
     }
 
     const renderHomesSection = () => {
-        if (category !== "Homes") return <View></View>
+        if (category !== "Homes") return <View/>
 
         return (
             <View>
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bedrooms</Text>
-                <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setBedrooms(text)}/>
-
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Bathrooms</Text>
-                <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setBathrooms(text)}/>
-
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Square footage</Text>
-                <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setSQFT(text)}/>
+                <CustomTextWithInput text="Bedrooms" onChangeText={(text) => setBedrooms(text)} multiline />
+                <CustomTextWithInput text="Bathrooms" onChangeText={(text) => setBathrooms(text)} multiline />
+                <CustomTextWithInput text="Square footage" onChangeText={(text) => setSQFT(text)} multiline />
             </View>
         )
     }
 
     const renderAutoSection = () => {
-        if (category !== "Auto") return <View></View>
+        if (category !== "Auto") return <View/>
 
         return (
             <View>
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Make</Text>
-                <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setMake(text)}/>
-
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Model</Text>
-                <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setModel(text)}/>
-
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Mileage</Text>
-                <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setMileage(text)}/>
-
-                <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>VIN</Text>
-                <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15,}} onChangeText = {(text) =>setVIN(text)}/>
+                <CustomTextWithInput text="Make" onChangeText={(text) => setMake(text)} />
+                <CustomTextWithInput text="Model" onChangeText={(text) => setModel(text)} />
+                <CustomTextWithInput text="Mileage" onChangeText={(text) => setMileage(text)} />
+                <CustomTextWithInput text="VIN" onChangeText={(text) => setVIN(text)} />
             </View>
         )
     }
@@ -340,98 +305,58 @@ export default function AddPost({route}) {
                 {isImageUrls()}
 
                 <View>
-                    <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Title</Text>
-                    <TextInput style = {styles.textinput} onChangeText = {(text) => {setTitle(text)}} value = {title}/>
+                    <CustomTextWithInput 
+                        text="Title" 
+                        onChangeText={(text) => setTitle(text)} 
+                        value={title}
+                    />
                 </View>
 
                 <View>
                     <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Category</Text>
 
-                <Dropdown
-                    style = {{
-                        height: 50,
-                        borderRadius: 10,
-                        paddingHorizontal: 16,
-                        backgroundColor: 'whitesmoke',
-                        marginLeft:35, marginRight:35
-                    }}
-                    placeholderStyle = {{}}
-                    selectedTextStyle = {{}}
-                    inputSearchStyle = {{
-                        borderBottomWidth: 0,
-                        backgroundColor: '#f2f2f2',
-                        borderRadius: 20,
-                        paddingHorizontal: 12,
-                        marginHorizontal: 16,
-                        marginBottom: 8,
-                    }}
-                    iconStyle = {{
-                        width: 20,
-                        height: 20,
-                        marginRight: 8,
-                    }}
-                    data = {categories}
-                    search
-                    labelField = "Label"
-                    valueField = "Value"
-                    placeholder = {'Select item'}
-                    searchPlaceholder = "Search..."
-                    value = {category}
-                    onFocus = {() => setIsFocus(true)}
-                    onBlur = {() => setIsFocus(false)}
-                    onChange = {(item) => {
-                        setCategory(item.Value);
-                        setIsFocus(false);
-                    }}
-                />
+                    <DropdownInput
+                        data={categories}
+                        labelField = "Label"
+                        valueField = "Value"
+                        placeholder = "Select item"
+                        onChange = {(item) => {
+                            setCategory(item.Value);
+                            setIsFocus(false);
+                        }}
+                        value = {category}
+                        customStyle = {{
+                            marginLeft:35, 
+                            marginRight:35
+                        }}
+                    />
+
                 </View>
                 <View >
                     <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
                     <View style = {{flexDirection:'row', marginLeft:30}}>
-                        <Dropdown
-                            style = {{
-                                height: 50,
-                                width: width / 3,
-                                borderRadius: 10,
-                                paddingHorizontal: 16,
-                                backgroundColor: 'whitesmoke',
-                            }}
-                            placeholderStyle = {{}}
-                            selectedTextStyle = {{}}
-                            inputSearchStyle = {{
-                                borderBottomWidth: 0,
-                                backgroundColor: '#f2f2f2',
-                                borderRadius: 20,
-                                paddingHorizontal: 12,
-                                marginHorizontal: 16,
-                                marginBottom: 8,
-                            }}
-                            iconStyle = {{
-                                width: 20,
-                                height: 20,
-                                marginRight: 8,
-                            }}
-                            data = {currencies}
-                            search
-                            labelField = "label"
-                            valueField = "value"
-                            placeholder = {'Select a currency'}
-                            searchPlaceholder = "Search..."
-                            value = {currency}
-                            onFocus = {() => setIsFocus(true)}
-                            onBlur = {() => setIsFocus(false)}
-                            renderItem = {renderCurrencyItem}
-                            onChange = {(item) => {
-                                setCurrency(item);
-                                setIsFocus(false);
-                            }}
-                        />
+                    <DropdownInput
+                        data={currencies}
+                        labelField = "label"
+                        valueField = "value"
+                        placeholder = "Select a currency"
+                        onChange={(item) => {
+                            setCurrency(item);
+                            setIsFocus(false);
+                        }}
+                        value = {currency}
+                        renderItem = {renderCurrencyItem}
+                        customStyle = {{
+                            width: Dimensions.get('window').width / 3
+                        }}
+                    />
+                    
+                    <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
 
-                        <TextInput style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35,fontSize:15,fontWeight:'600',height:50,borderRadius:10,paddingHorizontal:15, width:width/2.5}} onChangeText = {(text) =>setPrice(text)}/>
                     </View>
                 </View>
 
-                <Text style = {{fontSize:25, fontWeight:'bold', color:'black', margin:10}}>Location</Text>
+                <CustomText text="Location" />
                 <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden'}}>
                     <MapView style = {{height:"100%", width:"100%"}} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
                         <Marker coordinate = {coordinates}/>
@@ -444,8 +369,13 @@ export default function AddPost({route}) {
                 {renderAutoSection()}
 
                 <View>
-                    <Text  style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10,}}>Description</Text>
-                    <TextInput multiline style = {{backgroundColor:'whitesmoke', color:'gray', marginLeft:35, marginRight:35, fontSize:15, fontWeight:'600', height:200,borderRadius:10,paddingHorizontal:15,}} defaultValue = {description} onChangeText = {(text) =>setDescription(text)}/>
+                    <CustomTextWithInput 
+                        text="Description" 
+                        onChangeText={(text) => setDescription(text)} 
+                        multiline={true} 
+                        height={200} 
+                        value={description} 
+                    />
                 </View>
 
                 {isAnimating()}
