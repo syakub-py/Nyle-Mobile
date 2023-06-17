@@ -15,7 +15,6 @@ const handleResetPassword = (username) => {
 
 export default function ResetPassword({navigation}) {
     const [username, setUsername] = useState('')
-
     return (
         <View style = {styles.container}>
             <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>

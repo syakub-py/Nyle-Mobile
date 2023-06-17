@@ -18,7 +18,7 @@ import _ from "lodash"
 
 const onRefresh = (setRefreshing, getChats, setFilterData, setMasterData, route) => {
     setRefreshing(true);
-    getChats(route).then((result) => {
+    getChats(route.params).then((result) => {
         setFilterData(result);
         setMasterData(result);
     }).catch((error) => {
@@ -57,7 +57,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 }
 
 // Delete a folder and all its contents
-const deleteChat = (chat) => {
+const deleteChat = (chat, setRefreshing, setFilterData, setMasterData, route) => {
     firestore.collection('Chats').doc(chat.id).collection("messages").get().then((docs) => {
         docs.forEach((doc) => {
             if (!_.isEmpty(doc.data().image)) {
@@ -216,7 +216,7 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key = {i}>
-                        <TouchableOpacity onPress = {() => {deleteChat(item)}}>
+                        <TouchableOpacity onPress = {() => {deleteChat(item, setRefreshing, setFilterData, setMasterData, route)}}>
                             <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
                     </View>

@@ -191,7 +191,7 @@ export default function ChatBox({route, navigation}) {
         markAsRead(route.params)
     }, [])
 
-    const renderIsAnimating = () => {
+    const renderIsAnimating = (value) => {
         if (animating) {
             return (
                 <View>
@@ -227,7 +227,7 @@ export default function ChatBox({route, navigation}) {
         return (
             imageUrls.map((value, index) => (
                 <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
-                    {renderIsAnimating()}
+                    {renderIsAnimating(value)}
                 </View>
             ))
         )

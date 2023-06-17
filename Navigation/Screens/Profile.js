@@ -10,24 +10,23 @@ import firebase from "firebase/compat/app";
   @route.params = {profilePicture: url of the profile, username: current username}
 */
 
-const getPosts = async (username, setUserList) =>  {
+const getPosts = async (username, setUserList) => {
   let results = [];
-  const MyPostsQuery =  firestore.collection('AllPosts').where("PostedBy", "==", username)
+  const MyPostsQuery = firestore.collection('AllPosts').where("PostedBy", "==", username);
   try {
-    await MyPostsQuery.get().then(postSnapshot => {
-      postSnapshot.forEach(doc => {
-        results.push(doc.data())
-      });
-    })
-    setUserList(results)
-  } catch(error) {
-    Alert.alert('Error Getting Posts: ', error)
+    const postSnapshot = await MyPostsQuery.get();
+    postSnapshot.forEach(doc => {
+      results.push(doc.data());
+    });
+    setUserList(results);
+  } catch (error) {
+    Alert.alert('Error Getting Posts:', error);
   }
-}
+};
 
-const onRefresh = (setRefreshing, username, setUserList) => {
+const onRefresh = async (setRefreshing, username, setUserList) => {
   setRefreshing(true);
-  getPosts(username, setUserList)
+  await getPosts(username, setUserList);
   setTimeout(() => setRefreshing(false), 1000);
 };
 
@@ -37,59 +36,60 @@ const handleSignOut = async (navigation) => {
   } catch (error) {
     console.error(error);
   }
-  return navigation.navigate("Login")
-}
+  return navigation.navigate("Login");
+};
 
 const deletePost = (item, collectionName, setRefreshing, username, setUserList) => {
   firestore
-    .collection(collectionName)
-    .doc(item.title)
-    .delete()
-    .then(() => {
-      //delete each image
-      item.pic.forEach((picture, index) => {
-        const picRef = getstorage.refFromURL(picture);
-        picRef
-            .delete()
-            .then(() => {
-            })
-            .catch((error) => {
-              console.log("Error deleting picture:", error);
-            });
+      .collection(collectionName)
+      .doc(item.title)
+      .delete()
+      .then(() => {
+        // delete each image
+        item.pic.forEach((picture, index) => {
+          const picRef = getstorage.refFromURL(picture);
+          picRef
+              .delete()
+              .then(() => {
+              })
+              .catch((error) => {
+                console.log("Error deleting picture:", error);
+              });
+        });
+        Alert.alert("Posted deleted!");
+        onRefresh(setRefreshing, username, setUserList);
+      })
+      .catch((error) => {
+        console.log("Error deleting document: " + JSON.stringify(error));
       });
-      Alert.alert("Posted deleted!");
-      onRefresh(setRefreshing, username, setUserList);
-    })
-    .catch((error) => {
-      console.log("Error deleting document: " + JSON.stringify(error));
-    });
 };
 
 const clearDeleted = async (setRefreshing, username, setUserList) => {
   const sourceDocRef = firestore.collection("DeletedPosts");
-
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
   const query = sourceDocRef.where('date', '<', thirtyDaysAgo);
-
-  return query.get().then((snapshot) => {
+  try {
+    const snapshot = await query.get();
     const batch = firestore.batch();
-
     snapshot.forEach((doc) => {
       deletePost(doc.data(), "DeletedPosts", setRefreshing, username, setUserList);
     });
-
-    return batch.commit();
-  });
-}
+    await batch.commit();
+  } catch (error) {
+    console.error('Error clearing deleted posts:', error);
+  }
+};
 
 const markAsSold = (item, setRefreshing, username, setUserList) => {
-  firestore.collection("AllPosts").doc(item.title).update({sold:"true"}).then(() => {
-    onRefresh(setRefreshing, username, setUserList);
-  }).catch((error) => {
-    console.log(error)
-  })
-}
+  firestore.collection("AllPosts").doc(item.title).update({ sold: "true" })
+      .then(() => {
+        onRefresh(setRefreshing, username, setUserList);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+};
 
 const moveToDelete = async (item, setRefreshing, username, setUserList) => {
   try {
@@ -106,16 +106,21 @@ const moveToDelete = async (item, setRefreshing, username, setUserList) => {
     // Create a new document in the destination collection with the source document data
     await destinationCollectionRef.set(sourceData);
 
-    await sourceDocRef.delete()
+    await sourceDocRef.delete();
     onRefresh(setRefreshing, username, setUserList);
   } catch (error) {
     console.error('Error moving document:', error);
   }
-}
+};
 
-export default function Profile({navigation, route}) {
+export default function Profile({ navigation, route }) {
   const [userList, setUserList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    getPosts(route.params.username, setUserList);
+    clearDeleted(setRefreshing, route.params.username, setUserList);
+  }, []);
 
   useEffect(() => {
     getPosts(route.params.username, setUserList)
@@ -218,7 +223,7 @@ export default function Profile({navigation, route}) {
             }
 
           renderItem = {({item}) => (
-            <Pressable onPress = {() => navigation.navigate("post details", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, coordinates:item.coordinates, USD:item.USD, Likes:item.likes, category:item.category, CurrentUserProfilePic:route.params.profilePicture})}>
+            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
               <PostCard data = {item}/>
             </Pressable>
             )}
@@ -231,7 +236,7 @@ export default function Profile({navigation, route}) {
               bottom: 0,
               width: 100,
               alignItems: 'center'}}>
-                <TouchableOpacity onPress = {() =>moveToDelete(item)} style = {{marginRight:20}}>
+                <TouchableOpacity onPress = {() =>moveToDelete(item, setRefreshing, route.params.username, setUserList)} style = {{marginRight:20}}>
                   <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                 </TouchableOpacity>
 

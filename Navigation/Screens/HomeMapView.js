@@ -2,7 +2,7 @@ import {Alert, Pressable, ScrollView, Text, TextInput, View} from 'react-native'
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {getPosts, getCityState} from "./GlobalFunctions";
+import {getPosts, getCityState, categoryFilter} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 
@@ -12,20 +12,6 @@ const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFil
     setSelectedCategoryIndex(index);
     categoryFilter(categories[index], masterData, setFilterData, setCategorySearch)
 };
-
-const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
-    if (text && text !== 'All') {
-        const newData = masterData.filter((item) => {
-            const itemData = item.category ? item.category : ''
-            return itemData.indexOf(text)>-1;
-        });
-        setFilterData(newData);
-        setCategorySearch(text);
-    } else {
-        setFilterData(masterData);
-        setCategorySearch(text);
-    }
-}
 
 export default function HomeMapView({navigation, route}) {
     const [masterData, setMasterData] = useState([]);

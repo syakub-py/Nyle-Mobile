@@ -15,7 +15,7 @@ import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from './Components/Firebase'
 import * as ImagePicker from "expo-image-picker";
-import {getPosts} from "./GlobalFunctions";
+import {getPosts, categoryFilter} from "./GlobalFunctions";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -117,20 +117,6 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
   } else {
     setFilterData(masterData);
     setSearch(text);
-  }
-}
-
-const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
-  if (text && text !== 'All') {
-    const newData = masterData.filter((item) => {
-      const itemData = item.category ? item.category : ''
-      return itemData.indexOf(text)>-1;
-    });
-    setFilterData(newData);
-    setCategorySearch(text);
-  } else {
-    setFilterData(masterData);
-    setCategorySearch(text);
   }
 }
 

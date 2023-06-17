@@ -143,14 +143,13 @@ export default function DeletedPosts({route, navigation}) {
                         bottom: 0,
                         width: 60,
                         alignItems: 'center'}}>
-                        <TouchableOpacity onPress = {() => deletePost(route.params.username, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
+                        <TouchableOpacity onPress = {() => deletePost(route.params.username,item, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
                             <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress = {() => {restoreItem(item, setRefreshing, setDeletedPostList)}}>
+                        <TouchableOpacity onPress = {()=> restoreItem(route.params.username,item, setRefreshing, setDeletedPostList)}>
                             <Ionicons size = {30} name ='arrow-redo-outline' color = {"lightblue"}/>
                         </TouchableOpacity>
-
                     </View>
                 )}
                   keyExtractor = {item => item.id}/>

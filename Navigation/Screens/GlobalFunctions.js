@@ -89,8 +89,23 @@ const getCityState = async (lat, lng) => {
     }
 };
 
+
+const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
+    if (text && text !== 'All') {
+        const newData = masterData.filter((item) => {
+            const itemData = item.category ? item.category : ''
+            return itemData.indexOf(text)>-1;
+        });
+        setFilterData(newData);
+        setCategorySearch(text);
+    } else {
+        setFilterData(masterData);
+        setCategorySearch(text);
+    }
+}
+
 // const generatePriceAuto = () => {
 //
 // }
 
-export {generateRating, getPosts, handleLike, getCityState}
+export {generateRating, getPosts, handleLike, getCityState, categoryFilter}
