@@ -16,22 +16,22 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 
-const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, route) => {
+const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);
-    await getChats(route.params, setFilterData, setMasterData)
+    await getChats(params, setFilterData, setMasterData)
     setTimeout(() => setRefreshing(false), 300);
 };
 
-const findUser = (userArray, route) => {
+const findUser = (userArray, params) => {
     for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== route.params.username) return index
+        if (userArray[index].username !== params.username) return index
     }
     return "";
 }
 
-const findProfilePic = (userArray, route) => {
+const findProfilePic = (userArray, params) => {
     for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username === route.params.username) return index   
+        if (userArray[index].username === params.username) return index
     }
     return "";
 }
@@ -52,7 +52,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 }
 
 // Delete a folder and all its contents
-const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, route) => {
+const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, params) => {
     const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection("messages").get();
     
     for (let doc of docSnapshots.docs) {
@@ -65,7 +65,7 @@ const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, rou
     }
 
     await firestore.collection('Chats').doc(chat.id).delete();
-    await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
+    await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, params);
 }
 
 
@@ -177,7 +177,7 @@ export default function Chat({navigation, route}) {
                     <RefreshControl 
                         refreshing={refreshing} 
                         onRefresh={async () => {
-                            await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route);
+                            await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route.params);
                         }} 
                     />
                 }
@@ -216,19 +216,19 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key = {i}>
-                        <TouchableOpacity onPress = {() => {deleteChat(item)}}>
+                        <TouchableOpacity onPress = {() => {deleteChat(item, setRefreshing, setFilterData, setMasterData, route.params)}}>
                             <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
                     </View>
                 )}
                 renderItem = {({item, index}) => {
-                    const username = item.data.owners[findUser(item.data.owners, route)].username
+                    const username = item.data.owners[findUser(item.data.owners, route.params)].username
                     return (
-                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners, route)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, route)].profilePic, userId:findUser(item.data.owners, route)})}} key = {index}>
+                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners, route.params)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, route.params)].profilePic, userId:findUser(item.data.owners, route.params)})}} key = {index}>
                             <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                                 <View>
                                     <Image
-                                        source = {{uri: item.data.owners[findUser(item.data.owners, route)].profilePic}}
+                                        source = {{uri: item.data.owners[findUser(item.data.owners, route.params)].profilePic}}
                                         style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
                                     />
                                 </View>
