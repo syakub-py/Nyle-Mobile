@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -30,13 +29,7 @@ const onRefresh = (setRefreshing, setFilterData, setMasterData) => {
   // Set the refreshing state to true
   setRefreshing(true);
   // Retrieve posts from the database and update the state variables
-  getPosts().then((result) => {
-    const masterPostList = result
-    setFilterData(masterPostList);
-    setMasterData(masterPostList);
-  }).catch((error) => {
-    Alert.alert(error)
-  })
+  getPosts(setFilterData, setMasterData)
   // Wait for 0.3 seconds before setting the refreshing state to false
   setTimeout(() => setRefreshing(false), 300);
 };
@@ -172,12 +165,7 @@ export default function Home({navigation, route}) {
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
 
   useEffect(() => {
-    getPosts().then((result) => {
-      setFilterData(result);
-      setMasterData(result);
-    }).catch((error) => {
-      Alert.alert(error)
-    })
+    getPosts(setFilterData, setMasterData)
   }, [])
 
   return (

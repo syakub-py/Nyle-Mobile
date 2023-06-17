@@ -33,12 +33,11 @@ export default function ViewProfile({route}) {
     const navigation = useNavigation();
     const [UsersPosts, setUserPosts] = useState([])
     const [rating, setRating] = useState(0)
+    const [numOfReviews, setNumOfReviews] = useState(0)
 
     useEffect(() => {
         getPosts(route.params.postedByUsername, setUserPosts)
-        generateRating(route.params.postedByUsername).then((result) => {
-            setRating(result.rating)
-        })
+        generateRating(route.params.postedByUsername, setRating, setNumOfReviews)
     }, [])
 
     return (

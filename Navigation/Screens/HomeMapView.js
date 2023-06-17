@@ -1,4 +1,4 @@
-import {Alert, Pressable, ScrollView, Text, TextInput, View} from 'react-native';
+import {Pressable, ScrollView, Text, TextInput, View} from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -36,17 +36,9 @@ export default function HomeMapView({navigation, route}) {
     const [state, setState] = useState("")
 
     useEffect(() => {
-        getPosts().then((result) => {
-            setMasterData(result);
-            setFilterData(result)
-        }).catch((error) => {
-            Alert.alert(error)
-        })
+        getPosts(setMasterData, setFilterData)
 
-        getCityState(40.735081, -73.759658).then((result) => {
-            setState(result.state)
-            setCity(result.city)
-        })
+        getCityState(40.735081, -73.759658, setState, setCity)
 
     }, [])
 
