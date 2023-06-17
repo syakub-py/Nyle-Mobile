@@ -19,38 +19,29 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 
-const getLatestMessage = async (doc, username, setReceived) => {
-  const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-    .orderBy('createdAt', 'desc')
-    .limit(1);
-
-  latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
-    if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== username) {
-      const latestMessage = latestMessageSnapshot.docs[0].data();
-      setReceived(latestMessage.received)
-    }
-  })
-};
-
 export default function MainContainer({route}) {
-  const [received, setReceived] = useState(false)
+  const [received, setReceived] = useState(true)
   const profilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
-  useEffect(() => {
-    const fetchChats = async () => {
-      const MyChatQuery = firestore.collection('Chats');
+  const MyChatQuery = firestore.collection('Chats');
 
-      MyChatQuery.get().then(async (ChatSnapshot) => {
-        for (const doc of ChatSnapshot.docs) {
-          if(doc.data().owners.some(owner => owner.username === route.params.username)) {
-            await getLatestMessage(doc, route.params.username, setReceived);
-          }
+  MyChatQuery.get().then(async (ChatSnapshot) => {
+    for (const doc of ChatSnapshot.docs) {
+      for (let i = 0; i < doc.data().owners.length; i++) {
+        if (doc.data().owners[i].username === route.params.username) {
+          const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+              .orderBy('createdAt', 'desc')
+              .limit(1);
+          latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
+            if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
+              const latestMessage = latestMessageSnapshot.docs[0].data();
+              setReceived(latestMessage.received)
+            }
+          })
         }
-      });
-    };
-    
-    fetchChats();
-  }, [route.params.username]);
+      }
+    }
+  });
 
   return (
     <Tab.Navigator initialRouteName = {home}

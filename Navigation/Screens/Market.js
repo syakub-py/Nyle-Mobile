@@ -75,8 +75,8 @@ export default function Market({navigation, route}) {
 
   }, [])
 
-  const renderPriceChangePercentgeColor = (item) => {
-    if(item.price_change_percentage_24h) return <Ionicons name ='arrow-down-outline' style = {{ color: 'red' }} size = {20} />
+  const renderPriceChangePercentageColor = (item) => {
+    if(item.price_change_percentage_24h<0) return <Ionicons name ='arrow-down-outline' style = {{ color: 'red' }} size = {20} />
     return <Ionicons name ='arrow-up-outline' style = {{ color: 'lightgreen' }} size = {20} />
   }
 
@@ -115,10 +115,10 @@ export default function Market({navigation, route}) {
                       ${item.current_price}
                     </Text>
                     <View style = {{ flexDirection: 'row', marginVertical: 7 }}>
-                      {renderPriceChangePercentgeColor(item)}
+                      {renderPriceChangePercentageColor(item)}
                       <Text
                           style = {
-                            item.price_change_percentage_24h > 0
+                            (item.price_change_percentage_24h > 0)
                               ? { color: 'lightgreen', marginLeft: 5 }
                               : { color: 'red', marginLeft: 5 }
                           }
