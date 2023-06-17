@@ -143,7 +143,7 @@ export default function AddPost({route}) {
         PostedBy: route.params.username,
         currency: currency.value,
         description: description,
-        pic: UrlList,
+        pic: imageUrls,
         profilePic: route.params.profilePicture,
         coordinates: coordinates,
         views: 0,

@@ -91,7 +91,7 @@ const restoreItem = async (username, item, setRefreshing, setDeletedPostList) =>
     }
 };
 
-const deleteAllPosts = (username, deletedPostList, setDeletedPostList) => {
+const deleteAllPosts = (username, deletedPostList, setDeletedPostList, setRefreshing) => {
     deletedPostList.forEach((doc , index) => {
         deletePost(username, doc, setRefreshing, setDeletedPostList)
     })
@@ -122,7 +122,7 @@ export default function DeletedPosts({route, navigation}) {
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress = {() => {deleteAllPosts(route.params.username, deletedPostList, setDeletedPostList)}}>
+                    <Pressable onPress = {() => {deleteAllPosts(route.params.username, deletedPostList, setDeletedPostList, setRefreshing())}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>

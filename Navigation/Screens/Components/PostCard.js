@@ -53,20 +53,20 @@ export default function PostCard({data, username}) {
         )
     }
 
-    const renderIsDataSold = () => {
-        if (data.sold === "true") {
-            <View style = {{flexDirection:"row", alignItems:"center"}}>
-                <View style = {{backgroundColor:"red", height:10, width:10, borderRadius:10}}></View>
-                <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Sold</Text>
-            </View>
-        }
-        return (
-            <View style = {{flexDirection:"row", alignItems:"center"}}>
-                <View style = {{backgroundColor:"lightgreen", height:10, width:10, borderRadius:10}}></View>
-                <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Available</Text>
-            </View>
-        )
-    }
+    // const renderIsDataSold = () => {
+    //     if (data.sold === "true") {
+    //         <View style = {{flexDirection:"row", alignItems:"center"}}>
+    //             <View style = {{backgroundColor:"red", height:10, width:10, borderRadius:10}}></View>
+    //             <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Sold</Text>
+    //         </View>
+    //     }
+    //     return (
+    //         <View style = {{flexDirection:"row", alignItems:"center"}}>
+    //             <View style = {{backgroundColor:"lightgreen", height:10, width:10, borderRadius:10}}></View>
+    //             <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Available</Text>
+    //         </View>
+    //     )
+    // }
 
     return (
         <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius:10, elevation:3}}>
