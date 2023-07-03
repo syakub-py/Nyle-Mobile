@@ -5,6 +5,7 @@ import PostCard from './Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
+import * as ImagePicker from "expo-image-picker";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -113,6 +114,59 @@ const moveToDelete = async (item, setRefreshing, username, setUserList) => {
   }
 };
 
+const SelectProfilePic = async (username) => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    aspect: [4, 3],
+    quality: 1,
+  });
+  if (!result.canceled) {
+    try {
+      // Fetch the image and create a blob
+      const response = await fetch(result.assets[0]);
+      const blob = await response.blob();
+
+      // Get a reference to the storage location for the profile image
+      const storageRef = getstorage.ref(`ProfilePictures/${username}`);
+
+      // Upload the new image to Firebase Storage
+      await storageRef.put(blob);
+
+      // Get the download URL for the uploaded image
+      const url = await storageRef.getDownloadURL();
+
+      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
+      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', username);
+
+      // Update the URL for the profile image in the Firestore document
+      profilePicRef.get().then((querySnapshot) => {
+        if (querySnapshot.empty) {
+          // Create the document if it doesn't exist
+          firestore.collection('ProfilePictures').add({ FileName: username, url })
+              .then(() => {
+              })
+              .catch((error) => {
+                console.error('Error creating profile picture:', error);
+              });
+        } else {
+          querySnapshot.forEach((doc) => {
+            doc.ref.update({ url })
+                .then(() => {
+                })
+                .catch((error) => {
+                  console.error('Error updating profile picture:', error);
+                });
+          });
+        }
+      }).catch((error) => {
+        console.error('Error getting document:', error);
+      });
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+    }
+  }
+};
+
 export default function Profile({ navigation, route }) {
   const [userList, setUserList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -121,11 +175,6 @@ export default function Profile({ navigation, route }) {
     getPosts(route.params.username, setUserList);
     clearDeleted(setRefreshing, route.params.username, setUserList);
   }, []);
-
-  useEffect(() => {
-    getPosts(route.params.username, setUserList)
-    clearDeleted(setRefreshing, route.params.username, setUserList)
-  }, [])
 
 
   const SectionTitle = ({title}) => {
@@ -165,9 +214,14 @@ export default function Profile({ navigation, route }) {
           }
           ListHeaderComponent = {
             <View>
-              <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20, marginTop:20}}/>
-              <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10}}>
-                    <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
+              <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10, marginTop:35}}>
+                    <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
+                      <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
+                      <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
+                        <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
+                      </View>
+                    </Pressable>
+
                     <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username.slice(0, 15) + "..."}</Text>
               </View>
 
@@ -264,7 +318,7 @@ export default function Profile({ navigation, route }) {
     image:{
       width: 100,
       height: 100,
-      borderRadius: 100,
+      borderRadius: 20,
       overflow: 'hidden',
       paddingBottom: 50,
       margin:20

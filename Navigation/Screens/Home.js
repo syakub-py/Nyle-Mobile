@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore, getstorage} from './Components/Firebase'
-import * as ImagePicker from "expo-image-picker";
 import {getPosts, categoryFilter} from "./GlobalFunctions";
 
 /*
@@ -34,58 +32,6 @@ const onRefresh = (setRefreshing, setFilterData, setMasterData) => {
   setTimeout(() => setRefreshing(false), 300);
 };
 
-const SelectProfilePic = async (username) => {
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    aspect: [4, 3],
-    quality: 1,
-  });
-  if (!result.canceled) {
-    try {
-      // Fetch the image and create a blob
-      const response = await fetch(result.assets[0]);
-      const blob = await response.blob();
-
-      // Get a reference to the storage location for the profile image
-      const storageRef = getstorage.ref(`ProfilePictures/${username}`);
-
-      // Upload the new image to Firebase Storage
-      await storageRef.put(blob);
-
-      // Get the download URL for the uploaded image
-      const url = await storageRef.getDownloadURL();
-
-      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
-      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', username);
-
-      // Update the URL for the profile image in the Firestore document
-      profilePicRef.get().then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          // Create the document if it doesn't exist
-          firestore.collection('ProfilePictures').add({ FileName: username, url })
-              .then(() => {
-              })
-              .catch((error) => {
-                console.error('Error creating profile picture:', error);
-              });
-        } else {
-          querySnapshot.forEach((doc) => {
-            doc.ref.update({ url })
-                .then(() => {
-                })
-                .catch((error) => {
-                  console.error('Error updating profile picture:', error);
-                });
-          });
-        }
-      }).catch((error) => {
-        console.error('Error getting document:', error);
-      });
-    } catch (error) {
-      console.error('Error uploading profile image:', error);
-    }
-  }
-};
 
 const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch) => {
   setSelectedCategoryIndex(index);
@@ -196,25 +142,26 @@ export default function Home({navigation, route}) {
           </View>
         }
         ListHeaderComponent = {
-          <View>
-              <View style = {{flexDirection:'row', justifyContent:'space-between', paddingTop:20, alignItems:'center'}}>
-                <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75, marginLeft:20}}/>
+          <View style={{flex:1}}>
+            <View style={{marginTop: 35, marginRight: 15, flexDirection:'row', justifyContent:'space-between',}}>
 
-                <Pressable onPress = {()=>SelectProfilePic(route.params.username)}>
-                  <View style = {{marginTop:20, marginRight:20}}>
-                    <Image resizeMode ='cover' source = {{uri: route.params.profilePicture}} style = {{height:50, width:50, borderRadius:100, elevation:2}}/>
-                    <View style = {{backgroundColor:'black', height:20, width:20, borderRadius:10, zIndex:1, position: 'absolute',  bottom: 2, justifyContent:'center', alignItems:'center'}}>
-                      <Ionicons name = {'add-outline'} color = {'white'} size = {17}/>
-                    </View>
-                  </View>
-                </Pressable>
+              <View style={{marginLeft:15}}>
+                <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
+                <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
+              </View>
 
+              <Image
+                  resizeMode="cover"
+                  source={{uri: route.params.profilePicture}}
+                  style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
+              />
             </View>
+            
             <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
               {
                 categories.map((category, index) => (
-                    <Pressable key = {index} 
-                      onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)} 
+                    <Pressable key = {index}
+                      onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)}
                       style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}
                     >
                       <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>

@@ -54,7 +54,6 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 // Delete a folder and all its contents
 const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, params) => {
     const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection("messages").get();
-    
     for (let doc of docSnapshots.docs) {
         if (!_.isEmpty(doc.data().image)) {
             for (let picture of doc.data().image) {
@@ -80,16 +79,16 @@ const getChats = async (params, setFilterData, setMasterData) => {
                 const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
                     .orderBy('createdAt', 'desc')
                     .limit(1);
-    
+
                 const latestMessageSnapshot = await latestMessageQuery.get();
                 const latestMessageDocs = latestMessageSnapshot.docs;
-    
+
                 if (!_.isEmpty(latestMessageDocs)) {
                     const latestMessageData = latestMessageDocs[0].data();
                     const latestMessage = latestMessageData.text;
                     const received = latestMessageData.received;
                     const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : "";
-    
+
                     const chatData = {
                         data: doc.data(),
                         id: doc.id,
@@ -97,9 +96,9 @@ const getChats = async (params, setFilterData, setMasterData) => {
                         image,
                         received
                     };
-    
+
                     if (latestMessageData.user.name === params.username) chatData.latestMessage = "You: " + latestMessage;
-    
+
                     results.push(chatData);
                 } else {
                     results.push({
@@ -135,7 +134,7 @@ export default function Chat({navigation, route}) {
         };
         fetchData();
     }, []);
-    
+
     const handleSearchFilter = (text) => {
         searchFilter(text, masterData, setFilterData, setSearch)
     }
@@ -174,11 +173,11 @@ export default function Chat({navigation, route}) {
                 }
                 rightOpenValue = {-50}
                 refreshControl = {
-                    <RefreshControl 
-                        refreshing={refreshing} 
+                    <RefreshControl
+                        refreshing={refreshing}
                         onRefresh={async () => {
                             await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, route.params);
-                        }} 
+                        }}
                     />
                 }
                 key = {randomNumber}
@@ -187,10 +186,6 @@ export default function Chat({navigation, route}) {
                 }}
                 ListHeaderComponent = {
                     <View>
-
-                        <View style = {{flexDirection:'row'}}>
-                            <Image source = {require('../Screens/Components/icon.png')} style = {{height:75, width:75}}/>
-                        </View>
                         <View style = {{
                             flex: 1,
                             flexDirection: 'row',
@@ -200,6 +195,7 @@ export default function Chat({navigation, route}) {
                             height:50,
                             borderRadius:15,
                             marginBottom:10,
+                            marginTop:35,
                             elevation:2
                         }}>
                             <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>

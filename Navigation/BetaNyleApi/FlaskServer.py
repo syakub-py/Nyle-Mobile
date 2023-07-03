@@ -64,7 +64,7 @@ def GetOwner():
 def GetDocInfo():
     DocumentId = request.args.get("DocumentId").upper().strip()
 
-    cursor.execute("SELECT  * FROM NylePublicRecords.acris_real_property_master where DOCUMENT_ID = '"+DocumentId+"';")
+    cursor.execute("SELECT * FROM NylePublicRecords.acris_real_property_master where DOCUMENT_ID = '"+DocumentId+"';")
 
     rows = cursor.fetchall()
     data = pd.DataFrame(rows, columns=['DOCUMENT ID', "RECORD TYPE", "CRFN", "BOROUGH","DOC_TYPE", "DOC_DATE", "DOC_AMOUNT", "RECORDED_FILED", "MODIFIED_DATE", "REEL_YEAR", "REEL_NBR", "REEL_PAGE", "PCT_TRANSFERRED", "GOOD_THROUGH_DATE"])

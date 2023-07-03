@@ -85,11 +85,7 @@ export default function Market({navigation, route}) {
       data = {articles}
       keyExtractor = {(item) => item.url}
       ListHeaderComponent = {
-        <View>
-          <Image
-            source = {require('../Screens/Components/icon.png')}
-            style = {{ height: 75, width: 75, marginLeft: 20, marginTop: 20 }}
-          />
+        <View style={{marginTop:35}}>
           <View>
             <Text style = {{ fontSize: 24, fontWeight: 'bold' }}>Coin Prices</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator = {false}>
