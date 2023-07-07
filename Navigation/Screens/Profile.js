@@ -6,7 +6,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
-import {getSoldItems, generateRating, getProfilePicture} from "./GlobalFunctions";
+import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture} from "./GlobalFunctions";
 import _ from "lodash";
 
 /*
@@ -123,49 +123,7 @@ const SelectProfilePic = async (username) => {
     quality: 1,
   });
   if (!result.canceled) {
-    try {
-      // Fetch the image and create a blob
-      const response = await fetch(result.assets[0]);
-      const blob = await response.blob();
-
-      // Get a reference to the storage location for the profile image
-      const storageRef = getstorage.ref(`ProfilePictures/${username}`);
-
-      // Upload the new image to Firebase Storage
-      await storageRef.put(blob);
-
-      // Get the download URL for the uploaded image
-      const url = await storageRef.getDownloadURL();
-
-      // Find the document in the ProfilePictures collection that corresponds to the current user's profile image
-      const profilePicRef = firestore.collection('ProfilePictures').where('FileName', '==', username);
-
-      // Update the URL for the profile image in the Firestore document
-      profilePicRef.get().then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          // Create the document if it doesn't exist
-          firestore.collection('ProfilePictures').add({ FileName: username, url })
-              .then(() => {
-              })
-              .catch((error) => {
-                console.error('Error creating profile picture:', error);
-              });
-        } else {
-          querySnapshot.forEach((doc) => {
-            doc.ref.update({ url })
-                .then(() => {
-                })
-                .catch((error) => {
-                  console.error('Error updating profile picture:', error);
-                });
-          });
-        }
-      }).catch((error) => {
-        console.error('Error getting document:', error);
-      });
-    } catch (error) {
-      console.error('Error uploading profile image:', error);
-    }
+      await AddProfilePicture(username, result.assets[0].uri)
   }
 };
 

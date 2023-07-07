@@ -1,4 +1,4 @@
-import {firestore, firestoreLite} from "./Components/Firebase";
+import {firestore, firestoreLite, getstorage} from "./Components/Firebase";
 import {collection, getDocs} from "firebase/firestore/lite";
 import {Alert, Image, View} from "react-native";
 import React from "react";
@@ -133,22 +133,27 @@ export const getProfilePicture = async (username) => {
             return profilePicture;
         } else {
             console.log('User document not found');
-            return null;
+            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         }
     } catch (error) {
         console.log('Error retrieving profile picture:', error);
-        return null;
+        return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     }
 };
 
-
-export const AddProfilePicture = async (userId, profilePictureUrl) => {
+export const AddProfilePicture = async (username, profilePictureUrl) => {
     try {
+        const response = await fetch(profilePictureUrl);
+        const blob = await response.blob();
+        const storageRef = getstorage.ref().child(`ProfilePictures/${username}`);
+        await storageRef.put(blob);
+        const url = await storageRef.getDownloadURL();
+
         const profilePicturesRef = firestore.collection('ProfilePictures');
 
         // Create a new document in the collection with the user ID as the document ID
-        await profilePicturesRef.doc(userId).set({
-            profilePicture: profilePictureUrl
+        await profilePicturesRef.doc(username).set({
+            url: url
         });
 
         console.log('Profile picture added successfully');
