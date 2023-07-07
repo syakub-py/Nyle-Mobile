@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {getPosts, categoryFilter} from "./GlobalFunctions";
+import {getPosts, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -95,14 +95,20 @@ export default function Home({navigation, route}) {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
+  const [profilePic, setProfilePic] = useState(null)
 
-  useEffect(() => {
+  useEffect( () => {
     getPosts(setFilterData, setMasterData)
+    getProfilePicture(route.params.username).then((result)=>{
+      setProfilePic(result)
+    })
   }, [])
+
+
 
   return (
     <View style = {{flex:1, backgroundColor:'white'}}>
-      <Pressable onPress = {() =>navigation.navigate("Home Map View", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username})}
+      <Pressable onPress = {() =>navigation.navigate("Home Map View", {CurrentUserProfilePic:profilePic, username:route.params.username})}
         style = {{
         position: 'absolute',
         bottom: 90,
@@ -149,10 +155,9 @@ export default function Home({navigation, route}) {
                 <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
                 <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
               </View>
-
               <Image
                   resizeMode="cover"
-                  source={{uri: route.params.profilePicture}}
+                  source={{uri: profilePic}}
                   style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
               />
             </View>
@@ -206,7 +211,7 @@ export default function Home({navigation, route}) {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData)} />
         }
         renderItem = {({item}) => (
-          <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+          <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
             <PostCard data = {item} username = {route.params.username}/>
           </Pressable>
           )}

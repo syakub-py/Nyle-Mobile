@@ -5,7 +5,7 @@ import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 
-const handleSignUp = (username, password, profilePic) => {
+const handleSignUp = (username, password, profilePic, navigation) => {
     auth
         .createUserWithEmailAndPassword(username, password)
         .then(() => {
@@ -57,7 +57,7 @@ const addUsernameToMap = async (profilePic, username) => {
 export default function SignUp({navigation}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [profilePic, setProfilePic] = useState('')
+    const [profilePic, setProfilePic] = useState(null)
     const [refreshing, setRefreshing] = useState(false);
 
     const renderProfilePicSection = () => {
@@ -65,7 +65,7 @@ export default function SignUp({navigation}) {
             return (
                 <View style = {{margin:75, alignItems:'center'}}>
                     <Text style = {{fontWeight:'bold'}}>Upload a Profile Picture</Text>
-                    <Image source = {{uri:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}} style = {{height:150, width:150, borderRadius:100}}/>
+                    <Image source = {{uri:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"}} style = {{height:150, width:150, borderRadius:100}}/>
                 </View>
             )
         }
@@ -101,7 +101,7 @@ export default function SignUp({navigation}) {
             <TextInput placeholder ='Username' style = {styles.textInput} onChangeText = {(text) => setUsername(text)} />
             <TextInput placeholder ='Password' style = {styles.textInput} onChangeText = {(text) => setPassword(text)} secureTextEntry/>
 
-            <Pressable style = {styles.submitContainer} onPress = {handleSignUp(username, password, profilePic)}>
+            <Pressable style = {styles.submitContainer} onPress = {handleSignUp(username, password, profilePic, navigation)}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>
             </Pressable>
         </View>

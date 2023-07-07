@@ -6,7 +6,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
-import {getSoldItems, generateRating} from "./GlobalFunctions";
+import {getSoldItems, generateRating, getProfilePicture} from "./GlobalFunctions";
 import _ from "lodash";
 
 /*
@@ -174,11 +174,16 @@ export default function Profile({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
+  const [profilePic, setProfilePic] = useState(null)
+
 
   useEffect(() => {
     getPosts(route.params.username, setUserList);
     clearDeleted(setRefreshing, route.params.username, setUserList);
     generateRating(route.params.username, setRating, setNumOfReviews)
+    getProfilePicture(route.params.username).then((result)=>{
+      setProfilePic(result)
+    })
   }, []);
 
 
@@ -222,7 +227,7 @@ export default function Profile({ navigation, route }) {
               <View>
                 <View style = {{alignItems:'center', paddingTop:10}}>
                   <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
-                    <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
+                    <Image source = {{uri:profilePic}} style = {styles.image} resizeMode = "cover"/>
                     <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
                       <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
                     </View>
@@ -296,7 +301,7 @@ export default function Profile({ navigation, route }) {
             }
 
           renderItem = {({item}) => (
-            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
               <PostCard data = {item}/>
             </Pressable>
             )}

@@ -145,7 +145,7 @@ export default function ReviewCard({data, currentUser}) {
 
             <View>
                 <View style = {{ flexDirection: "row"}}>
-                    <Image style = {{ height: 50, width: 50, borderRadius: 50 }} source = {{ uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" }} />
+                    <Image style = {{ height: 50, width: 50, borderRadius: 50 }} source = {{ uri: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" }} />
                     <View style = {{ flexDirection: "column" }}>
                         <Text style = {{marginLeft:5}}>{data.Reviewer}</Text>
                         <Text style = {{marginLeft:5, fontWeight:'bold'}}>{data.Title}</Text>

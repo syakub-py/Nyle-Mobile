@@ -3,13 +3,14 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
 import {Image, View} from "react-native";
-
+import {getProfilePicture} from "./Screens/GlobalFunctions";
 //Screens
 import home from './Screens/Home'
 import market from './Screens/Market'
 import chat from './Screens/Chat'
 import profile from './Screens/Profile'
 import addPost from './Screens/AddPost';
+import _ from "lodash";
 
 const Home = 'Home';
 const Market = 'Market';
@@ -21,7 +22,14 @@ const Tab = createBottomTabNavigator();
 
 export default function MainContainer({route}) {
   const [received, setReceived] = useState(true)
-  const profilePic = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  const [profilePic, setProfilePic] = useState(null)
+
+  useEffect(()=>{
+    getProfilePicture(route.params.username).then((result)=>{
+      setProfilePic(result)
+    })
+  },[])
+
 
   const MyChatQuery = firestore.collection('Chats');
 
@@ -91,7 +99,7 @@ export default function MainContainer({route}) {
               </View>
             )
           }
-        } else if (rn === Profile) {
+        } else if (rn === Profile && !_.isEmpty(profilePic)) {
           return <Image source = {{uri: profilePic}} style = {focused?{height:37, width:37, borderRadius:20, borderWidth:2}:{height:32, width:32, borderRadius:20}}/>
         } else if (rn === AddPost) {
           iconName = focused ? 'add-circle' : 'add-circle-outline';
@@ -101,11 +109,11 @@ export default function MainContainer({route}) {
 
     })}>
 
-        <Tab.Screen name = {Home} component = {home} initialParams = {{ username:route.params.username, profilePicture:profilePic}}/>
+        <Tab.Screen name = {Home} component = {home} initialParams = {{ username:route.params.username}}/>
         <Tab.Screen name = {Market} component = {market}/>
-        <Tab.Screen name = {AddPost} component = {addPost} initialParams = {{ username: route.params.username , profilePicture:profilePic}}/>
-        <Tab.Screen name = {Chat} component = {chat} initialParams = {{ username: route.params.username }}/>
-        <Tab.Screen name = {Profile} component = {profile} initialParams = {{ username: route.params.username, profilePicture:profilePic}}/>
+        <Tab.Screen name = {AddPost} component = {addPost} initialParams = {{ username: route.params.username }}/>
+        <Tab.Screen name = {Chat} component = {chat} initialParams = {{ username: route.params.username}}/>
+        <Tab.Screen name = {Profile} component = {profile} initialParams = {{ username: route.params.username}}/>
 
     </Tab.Navigator>
   );

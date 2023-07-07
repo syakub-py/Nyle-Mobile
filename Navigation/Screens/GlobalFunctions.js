@@ -1,6 +1,7 @@
 import {firestore, firestoreLite} from "./Components/Firebase";
 import {collection, getDocs} from "firebase/firestore/lite";
-import { Alert } from "react-native";
+import {Alert, Image, View} from "react-native";
+import React from "react";
 
 export const generateRating = async (username, setRating, setNumOfReviews) => {
     let sum = 0;
@@ -123,6 +124,35 @@ export const getSoldItems = (UsersPosts) => {
     return counter
 }
 
-// const generatePriceAuto = () => {
-//
-// }
+export const getProfilePicture = async (username) => {
+    try {
+        const userRef = firestore.collection('ProfilePictures').doc(username);
+        const doc = await userRef.get();
+        if (doc.exists) {
+            const profilePicture = doc.data().url;
+            return profilePicture;
+        } else {
+            console.log('User document not found');
+            return null;
+        }
+    } catch (error) {
+        console.log('Error retrieving profile picture:', error);
+        return null;
+    }
+};
+
+
+export const AddProfilePicture = async (userId, profilePictureUrl) => {
+    try {
+        const profilePicturesRef = firestore.collection('ProfilePictures');
+
+        // Create a new document in the collection with the user ID as the document ID
+        await profilePicturesRef.doc(userId).set({
+            profilePicture: profilePictureUrl
+        });
+
+        console.log('Profile picture added successfully');
+    } catch (error) {
+        console.log('Error adding profile picture:', error);
+    }
+};

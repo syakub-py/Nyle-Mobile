@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -20,6 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
 import {CustomText, CustomTextInput, CustomTextWithInput} from './Components/CustomText';
+import {getProfilePicture} from "./GlobalFunctions";
 
 const {width} = Dimensions.get("window");
 const height = width * 1;
@@ -113,6 +114,14 @@ export default function AddPost({route}) {
     const [currency, setCurrency] = useState({label:'', value:''});
 
 
+    const [profilePic, setProfilePic] = useState(null)
+
+    useEffect(()=>{
+        getProfilePicture(route.params.username).then((result)=>{
+            setProfilePic(result)
+        })
+    },[])
+
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
@@ -147,7 +156,7 @@ export default function AddPost({route}) {
         currency: currency.value,
         description: description,
         pic: firebaseImageUrls,
-        profilePic: route.params.profilePicture,
+        profilePic: profilePic,
         coordinates: coordinates,
         views: 0,
         likes: [],

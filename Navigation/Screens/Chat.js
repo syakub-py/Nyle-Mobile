@@ -15,6 +15,7 @@ import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
+import {getProfilePicture} from "./GlobalFunctions";
 
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);
@@ -127,11 +128,15 @@ export default function Chat({navigation, route}) {
     const [masterData, setMasterData] = useState([]);
     const [search, setSearch] = useState([])
     const [refreshing, setRefreshing] = useState(false);
+    const [profilePic, setProfilePic] = useState(null)
 
     useEffect(() => {
         const fetchData = async () => {
             await getChats(route.params, setFilterData, setMasterData);
         };
+        getProfilePicture(route.params.username).then((result)=>{
+            setProfilePic(result)
+        })
         fetchData();
     }, []);
 
@@ -185,7 +190,20 @@ export default function Chat({navigation, route}) {
                     padding: 20,
                 }}
                 ListHeaderComponent = {
-                    <View>
+                    <View style={{flex:1}}>
+                        <View style={{marginTop:20, marginBottom:10, flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+
+                            <View >
+                                <Text style={{fontSize:27, fontWeight:'bold'}}>Chats</Text>
+                            </View>
+
+                            <Image
+                                resizeMode="cover"
+                                source={{uri: profilePic}}
+                                style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
+                            />
+                        </View>
+
                         <View style = {{
                             flex: 1,
                             flexDirection: 'row',
@@ -195,7 +213,6 @@ export default function Chat({navigation, route}) {
                             height:50,
                             borderRadius:15,
                             marginBottom:10,
-                            marginTop:35,
                             elevation:2
                         }}>
                             <Ionicons name = "search-outline" style = {{paddingLeft: 25}} size = {25} color = {'gray'}/>
