@@ -46,10 +46,15 @@ export default function MapPostCard({data, username}) {
                     </Pressable>
                 </View>
 
-                <View style = {{ flex: 1 , flexDirection:"row", position:"absolute", bottom:10, backgroundColor:"white", alignSelf:'center', borderRadius:10, padding:5, width:180}}>
-
-                    <Text style = {{ fontSize:14, fontWeight:"500", alignSelf:'center', marginRight:15}}>{data.title}</Text>
-
+                <View style = {{flexDirection:"row", backgroundColor:"white", alignSelf:'center', justifyContent:"space-between", position:'absolute', bottom:10, borderRadius:10, padding:5, width:180}}>
+                    <View>
+                        <Text style = {{ fontSize:14, fontWeight:"500", alignSelf:'center'}}>{data.title}</Text>
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                            <Ionicons name = "star" style = {{ marginRight: 2 }} color = "#ebd61e" size = {13} />
+                            <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                            <Text style={{fontSize: 10, color:'grey', marginLeft:3}}>({numOfReviews} reviews)</Text>
+                        </View>
+                    </View>
 
                     <View style={{height:40, width:40, backgroundColor:'black', borderRadius:20, justifyContent:'center', alignItems:'center'}}>
                         <Ionicons name={"chevron-forward-outline"} size={25} color={"white"}/>

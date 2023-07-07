@@ -209,7 +209,7 @@ export default function PostDetails({route, navigation}) {
                                 }}>
                                     <Ionicons name = "star" style = {{ marginRight: 3 }} color = "#ebd61e" size = {13} />
                                     <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
-                                    <Text style = {{ fontSize: 10, color:'lightgrey', marginLeft:3}}>({numOfReviews} reviews)</Text>
+                                    <Text style = {{ fontSize: 10, color:'grey', marginLeft:3}}>({numOfReviews} reviews)</Text>
                                 </View>
                             </Pressable>
                         </View>

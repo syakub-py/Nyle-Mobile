@@ -8,7 +8,8 @@ import {
   ScrollView,
   Text,
   TextInput,
-  View
+  View,
+  Vibration
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -28,6 +29,8 @@ const onRefresh = (setRefreshing, setFilterData, setMasterData) => {
   setRefreshing(true);
   // Retrieve posts from the database and update the state variables
   getPosts(setFilterData, setMasterData)
+  Vibration.vibrate(100);
+
   // Wait for 0.3 seconds before setting the refreshing state to false
   setTimeout(() => setRefreshing(false), 300);
 };

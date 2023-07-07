@@ -10,6 +10,7 @@ import {
     Pressable,
     TextInput,
     TouchableOpacity,
+    Vibration,
 } from 'react-native';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,6 +21,7 @@ import {getProfilePicture} from "./GlobalFunctions";
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);
     await getChats(params, setFilterData, setMasterData)
+    Vibration.vibrate(100);
     setTimeout(() => setRefreshing(false), 300);
 };
 

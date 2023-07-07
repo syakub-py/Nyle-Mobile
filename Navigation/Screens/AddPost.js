@@ -10,7 +10,7 @@ import {
     Dimensions,
     Alert,
     SafeAreaView,
-    ActivityIndicator
+    ActivityIndicator, Vibration
 } from 'react-native';
 import faker from 'faker';
 import {firestore, getstorage} from './Components/Firebase';
@@ -82,6 +82,7 @@ const SelectImages = async (imageUrls, setImageUrls) => {
 
 const onRefresh = (setRefreshing) => {
     setRefreshing(true);
+    Vibration.vibrate(100)
     setTimeout(() => setRefreshing(false), 1000);
 };
 

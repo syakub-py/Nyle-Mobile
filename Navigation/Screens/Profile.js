@@ -1,5 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, Image, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Vibration,
+  View
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from './Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
@@ -30,6 +40,8 @@ const getPosts = async (username, setUserList) => {
 const onRefresh = async (setRefreshing, username, setUserList) => {
   setRefreshing(true);
   await getPosts(username, setUserList);
+  Vibration.vibrate(100);
+
   setTimeout(() => setRefreshing(false), 1000);
 };
 
