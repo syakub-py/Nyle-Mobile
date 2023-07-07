@@ -21,7 +21,6 @@ import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
 import {CustomText, CustomTextInput, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
-
 const {width} = Dimensions.get("window");
 const height = width * 1;
 

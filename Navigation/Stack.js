@@ -18,6 +18,7 @@ import WriteReview from "./Screens/WriteReview";
 import Map from "./Screens/Map";
 import TermsOfService from "./Screens/TermsOfService";
 import HomeMapView from "./Screens/HomeMapView";
+import PhotoCollage from "./Screens/PhotoCollage";
 // screenOptions = {{headerShown:false}}
 
 const Stack = () => {
@@ -42,6 +43,8 @@ const Stack = () => {
       <Stack.Screen name = "Map" component = {Map} />
       <Stack.Screen name = "Terms of Service" component = {TermsOfService} />
       <Stack.Screen name = "Home Map View" component = {HomeMapView} />
+      <Stack.Screen name = "Photo Collage" component = {PhotoCollage} />
+
     </Stack.Navigator>
   );
 }

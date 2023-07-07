@@ -345,7 +345,7 @@ export default function PostDetails({route, navigation}) {
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) => (
-                                <Pressable onPress = {() => {navigation.navigate("Image Viewer", {pictures:images, index: key})}} key = {key}>
+                                <Pressable onPress = {() => {navigation.navigate("Photo Collage", {pictures:images, index: key})}} key = {key}>
                                     <View style = {{width, height, position: 'relative'}} >
                                         <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                     </View>
