@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dropdown} from "react-native-element-dropdown"
 
-export default function DropdownInput ({data, labelField, valueField, placeholder, onChange, value, renderItem, customStyle}) {
+export default function DropdownInput ({data, labelField, valueField, placeholder, onChange, value, renderItem, customStyle, setIsFocus}) {
         return (
             <Dropdown
                 style = {{

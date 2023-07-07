@@ -15,7 +15,7 @@ export const CustomTextInput = ({onChangeText, multiline = false, height = 50, v
         <TextInput 
             multiline = {multiline}
             value = {value}
-            style = {{backgroundColor: 'whitesmoke', color: 'gray', marginLeft: 35, marginRight: 35, fontSize: 15, fontWeight: '600', height: height, borderRadius: 10, paddingHorizontal: 15, width: width}}
+            style = {{backgroundColor: 'whitesmoke', marginLeft: 35, marginRight: 35, fontSize: 15,height: height, borderRadius: 10, paddingHorizontal: 15, width: width}}
             onChangeText = {onChangeText}
         />
     );

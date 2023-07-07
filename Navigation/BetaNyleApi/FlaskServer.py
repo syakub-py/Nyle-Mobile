@@ -16,7 +16,7 @@ config = {
     'connect_timeout': 60000
 }
 
-geolocator = Nominatim(user_agent= "FlaskServer")
+geolocator = Nominatim(user_agent="FlaskServer")
 
 
 #ThisIsMysql101!

@@ -44,7 +44,7 @@ export default function PostCard({data, username}) {
         return <Ionicons name ='heart-outline' size = {25}/>
     }
 
-    const renderIsUsernameSameAsDatePostedBy = () => {
+    const renderIsUsernameSameAsPostedBy = () => {
         if (username === data.PostedBy) return <Image style = {{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source = {{uri:data.profilePic, elevation:2}}/>
         return (
             <Pressable onPress = {() => navigation.navigate("view profile", {ProfileImage: data.profilePic, postedByUsername:data.PostedBy, currentUsername:username})}>
@@ -79,7 +79,7 @@ export default function PostCard({data, username}) {
                         </View>
 
                     <View style = {{flexDirection:'row'}}>
-                        {renderIsUsernameSameAsDatePostedBy()}
+                        {renderIsUsernameSameAsPostedBy()}
                         <View>
                             <Text style = {{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                             <View style = {{flexDirection:'row', alignItems:'center'}}>

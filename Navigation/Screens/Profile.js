@@ -6,6 +6,8 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from './Components/Firebase'
 import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
+import {getSoldItems, generateRating} from "./GlobalFunctions";
+import _ from "lodash";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -170,10 +172,13 @@ const SelectProfilePic = async (username) => {
 export default function Profile({ navigation, route }) {
   const [userList, setUserList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [numOfReviews, setNumOfReviews] = useState(0);
 
   useEffect(() => {
     getPosts(route.params.username, setUserList);
     clearDeleted(setRefreshing, route.params.username, setUserList);
+    generateRating(route.params.username, setRating, setNumOfReviews)
   }, []);
 
 
@@ -214,22 +219,43 @@ export default function Profile({ navigation, route }) {
           }
           ListHeaderComponent = {
             <View>
-              <View style = {{alignSelf:"flex-start", flexDirection:'row',  width:'100%', borderBottomLeftRadius:10, borderBottomRightRadius:10, marginTop:35}}>
-                    <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
-                      <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
-                      <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
-                      </View>
-                    </Pressable>
+              <View>
+                <View style = {{alignItems:'center', paddingTop:10}}>
+                  <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
+                    <Image source = {{uri:route.params.profilePicture}} style = {styles.image} resizeMode = "cover"/>
+                    <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
+                      <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
+                    </View>
+                  </Pressable>
+                </View>
 
-                    <Text style = {{color:'black',alignSelf:"center",fontSize:20, fontWeight:'bold'}}>{route.params.username.slice(0, 15) + "..."}</Text>
+                <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
+                  <Pressable onPress = {() => {navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}}>
+                    <View style = {{flexDirection:'column', alignItems:'center'}}>
+                      <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>
+                      <Text style = {{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
+                    </View>
+                  </Pressable>
+                  <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
+
+                  <View style = {{flexDirection:'column', alignItems:'center'}}>
+                    <Text style = {{fontSize:20, fontWeight:'500'}}>{_.size(userList)}</Text>
+                    <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
+                  </View>
+
+                  <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
+
+                  <View style = {{flexDirection:'column', alignItems:'center'}}>
+                    <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(userList)}</Text>
+                    <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
+                  </View>
+                </View>
+
               </View>
 
                 <SectionTitle
-                title = 'Account Settings'
+                title = 'Settings'
                 />
-
-
                 <Setting
                   title = "Wallet(s)"
                   type = "button"
@@ -238,7 +264,7 @@ export default function Profile({ navigation, route }) {
                 />
 
                 <Setting
-                  title = "Edit Profile"
+                  title = "Security and Privacy"
                   type = "button"
                   onPress = {() => navigation.navigate("Edit Profile")}
                   nameOfIcon ='person-outline'
@@ -259,20 +285,13 @@ export default function Profile({ navigation, route }) {
               />
 
               <Setting
-                  title = "Your Reviews"
-                  type = "button"
-                  onPress = {() =>navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}
-                  nameOfIcon = 'star-outline'
-              />
-
-              <Setting
                   title = "Terms of Service"
                   type = "button"
                   onPress = {() => {navigation.navigate("Terms of Service", {showButtons:false})}}
                   nameOfIcon = 'alert-circle-outline'
               />
               
-              <SectionTitle title = {'Your Posts'}/>
+              <SectionTitle title = {'Posts'}/>
             </View>
             }
 

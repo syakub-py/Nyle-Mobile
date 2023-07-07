@@ -38,6 +38,53 @@ const currencies = [
     { label: 'Solana', value: "https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422" },
 ]
 
+const upload = async (PhoneImagesArray, title, setAnimating) => {
+    const UrlDownloads = [];
+    setAnimating(true)
+    try {
+        for (const element of PhoneImagesArray) {
+            const filename = element.split("/").pop();
+            const response = await fetch(element);
+            const blob = await response.blob();
+            const storageRef = getstorage.ref().child(`images/${title}/${filename}`);
+            await storageRef.put(blob);
+            const url = await storageRef.getDownloadURL();
+            UrlDownloads.push(url);
+        }
+        setAnimating(false)
+
+        return UrlDownloads;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
+
+const SelectImages = async (imageUrls, setImageUrls) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [4, 3],
+        quality: 1,
+        allowsMultipleSelection: true
+    });
+
+    if (!result.canceled) {
+        const currentImageUrls = [...imageUrls];
+        const fileJson = result.assets;
+        fileJson.forEach((element) => {
+            currentImageUrls.push(element.uri)
+        })
+        setImageUrls(currentImageUrls);
+    }
+};
+
+const onRefresh = (setRefreshing) => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1000);
+};
+
+
 export default function AddPost({route}) {
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
@@ -57,58 +104,14 @@ export default function AddPost({route}) {
     const [SQFT, setSQFT] = useState("");
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
+    const [isFocus, setIsFocus] = useState(false);
 
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
     const [imageUrls, setImageUrls] = useState([]);
     const [currency, setCurrency] = useState({label:'', value:''});
-    const [isFocus, setIsFocus] = useState(false);
 
-    const SelectImages = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          aspect: [4, 3],
-          quality: 1,
-          allowsMultipleSelection: true
-        });
-      
-        if (!result.canceled) {
-            const currentImageUrls = [...imageUrls];
-            const fileJson = result.assets;
-            fileJson.forEach((element) => {
-                currentImageUrls.push(element.uri)
-            })
-            setImageUrls(currentImageUrls);
-        }
-    };
-
-    const upload = async (array) => {
-        const UrlDownloads = [];
-        setAnimating(true)
-        try {
-          for (const element of array) {
-            const filename = element.split("/").pop();
-            const response = await fetch(element);
-            const blob = await response.blob();
-            const storageRef = getstorage.ref().child(`images/${title}/${filename}`);
-            await storageRef.put(blob);
-            const url = await storageRef.getDownloadURL();
-            UrlDownloads.push(url);
-          }
-          setAnimating(false)
-
-          return UrlDownloads;
-        } catch (error) {
-          console.error(error);
-          return [];
-        }
-      };
-    
-    const onRefresh = () => {
-        setRefreshing(true);
-        setTimeout(() => setRefreshing(false), 1000);
-    };
 
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
@@ -126,24 +129,24 @@ export default function AddPost({route}) {
         setImageUrls([]);
         setBathrooms("")
         setBedrooms("")
-        onRefresh();
+        onRefresh(setRefreshing);
     }
 
     const deleteImages = (index) => {
         const newArray = imageUrls
         newArray.splice(index, 1)
         setImageUrls(newArray)
-        onRefresh();
+        onRefresh(setRefreshing);
     }
 
-    const createDocument = ({uniqueFields}) => ({
+    const createDocument = ({uniqueFields}, firebaseImageUrls) => ({
         id: randomNumber,
         title: title,
         price: price,
         PostedBy: route.params.username,
         currency: currency.value,
         description: description,
-        pic: imageUrls,
+        pic: firebaseImageUrls,
         profilePic: route.params.profilePicture,
         coordinates: coordinates,
         views: 0,
@@ -157,7 +160,7 @@ export default function AddPost({route}) {
     const addPosts = async (collectionPath) => {
         if (!collectionPath) throw new Error('Error: collection name cannot be empty');
 
-        await upload(imageUrls)
+        const firebaseImageUrls = await upload(imageUrls,title,setAnimating)
         let uniqueFields = {};
 
         if (category === "Auto") {
@@ -179,7 +182,7 @@ export default function AddPost({route}) {
             }
         }
 
-        const document = createDocument({uniqueFields});
+        const document = createDocument({uniqueFields}, firebaseImageUrls);
 
         return firestore.collection(collectionPath).doc(title).set(document)
             .then(ref => {
@@ -203,7 +206,7 @@ export default function AddPost({route}) {
     const isImageUrls = () => {
         if (_.isEmpty(imageUrls)) {
             return (
-                <Pressable onPress = {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
+                <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
                     <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
                         <Ionicons name ='images-outline' size = {80} color = {'lightgray'}/>
                     </View>
@@ -212,8 +215,8 @@ export default function AddPost({route}) {
         }
         
         return (
-            <Pressable onPress = {SelectImages} style = {{justifyContent:'center', alignItems:'center'}}>
-                <View style = {{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center'}}>
+            <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
+                <View style = {{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center', marginTop:20}}>
                     <Ionicons name ='add-outline' size = {40} color = {'white'}/>
                 </View>
             </Pressable> 
@@ -271,36 +274,38 @@ export default function AddPost({route}) {
 
     return (
         <SafeAreaView style = {{backgroundColor:'white'}}>
-            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {onRefresh}/>} >
-
-                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false}>
-                {
-                    imageUrls.map((item, index) =>(
-                        <View key = {index}>
-                            <Image source = {{uri:item}} style = {{height:height, width:width}}/>
-                        </View>
-                    ) )
-                }
-                </ScrollView>
-
-                <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{alignSelf:'center'}}>
-                    <View style = {{flexDirection:'row', alignItems:'center'}}>
+            <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {()=>onRefresh(setRefreshing)}/>} >
+                <View>
+                    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false}>
                         {
-                            imageUrls.map((i, k) =>(
-                                <Pressable key = {k}>
-                                    <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(k)}}>
-                                        <View style = {styles.shadowBox}>
-                                            <View style = {styles.circle}>
-                                                <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation:1}}/>
-                                            </View>
-                                        </View>
-                                    </Pressable>
-                                    <Image source = {{uri:i}} style = {{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}}/>
-                                </Pressable>
-                            ))
+                            imageUrls.map((item, index) =>(
+                                <View key = {index}>
+                                    <Image source = {{uri:item}} style = {{height:height, width:width}}/>
+                                </View>
+                            ) )
                         }
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 15, paddingHorizontal:5, position: 'absolute', width:width}}>
+                        <View style = {{flexDirection:'row', alignItems:'center'}}>
+                            {
+                                imageUrls.map((i, k) =>(
+                                    <Pressable key = {k}>
+                                        <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(k)}}>
+                                            <View style = {styles.shadowBox}>
+                                                <View style = {styles.circle}>
+                                                    <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation:1}}/>
+                                                </View>
+                                            </View>
+                                        </Pressable>
+                                        <Image source = {{uri:i}} style = {{height:50, width:50, margin:10, borderRadius:10, alignContent:'center'}}/>
+                                    </Pressable>
+                                ))
+                            }
+                        </View>
+                    </ScrollView>
+                </View>
+
 
                 {isImageUrls()}
 
@@ -314,7 +319,6 @@ export default function AddPost({route}) {
 
                 <View>
                     <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Category</Text>
-
                     <DropdownInput
                         data={categories}
                         labelField = "Label"
@@ -322,13 +326,13 @@ export default function AddPost({route}) {
                         placeholder = "Select item"
                         onChange = {(item) => {
                             setCategory(item.Value);
-                            setIsFocus(false);
                         }}
                         value = {category}
                         customStyle = {{
                             marginLeft:35, 
                             marginRight:35
                         }}
+                        setIsFocus={()=>setIsFocus(false)}
                     />
 
                 </View>
@@ -342,13 +346,13 @@ export default function AddPost({route}) {
                         placeholder = "Select a currency"
                         onChange={(item) => {
                             setCurrency(item);
-                            setIsFocus(false);
                         }}
                         value = {currency}
                         renderItem = {renderCurrencyItem}
                         customStyle = {{
                             width: Dimensions.get('window').width / 3
                         }}
+                        setIsFocus={()=>setIsFocus(false)}
                     />
                     
                     <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>

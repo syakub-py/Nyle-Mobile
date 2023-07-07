@@ -4,7 +4,7 @@ import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
 import {firestore} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {generateRating} from "./GlobalFunctions";
+import {generateRating, getSoldItems} from "./GlobalFunctions";
 
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
@@ -21,13 +21,7 @@ const getPosts = async (username, setUserPosts) => {
     setUserPosts(results)
 }
 
-const getSoldItems = (UsersPosts) => {
-    let counter = 0
-    for (let i = 0; i < UsersPosts.length; i++) {
-        if (UsersPosts[i].sold === 'true') counter++
-    }
-    return counter
-}
+
 
 export default function ViewProfile({route}) {
     const navigation = useNavigation();

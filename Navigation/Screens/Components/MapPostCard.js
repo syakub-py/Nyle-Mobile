@@ -21,19 +21,6 @@ export default function MapPostCard({data, username}) {
         return <Ionicons name ='heart-outline' size = {20}/>
     }
 
-    const isCategoryHomes = () => {
-        if (data.category !== "Homes") return <View/>
-        if (data.likes.includes(data.PostedBy)) {
-            return (
-                <Ionicons name='heart' size={20} color={'#e6121d'}/>
-            )
-        }else{
-            return (
-                <Ionicons name="heart-outline" size={17}  style={{ color: 'black' }}/>
-            )
-        }
-
-    }
 
     return (
         <View style = {{
@@ -62,6 +49,7 @@ export default function MapPostCard({data, username}) {
                 <View style = {{ flex: 1 , flexDirection:"row", position:"absolute", bottom:10, backgroundColor:"white", alignSelf:'center', borderRadius:10, padding:5, width:180}}>
 
                     <Text style = {{ fontSize:14, fontWeight:"500", alignSelf:'center', marginRight:15}}>{data.title}</Text>
+
 
                     <View style={{height:40, width:40, backgroundColor:'black', borderRadius:20, justifyContent:'center', alignItems:'center'}}>
                         <Ionicons name={"chevron-forward-outline"} size={25} color={"white"}/>

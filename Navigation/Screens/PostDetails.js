@@ -5,6 +5,7 @@ import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating, handleLike} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
+import _ from "lodash";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -283,6 +284,20 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
+    const renderDescription = () =>{
+        if (!_.isEmpty(route.params.item.description)){
+            return(
+                <View style = {{marginBottom:20}}>
+                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{(more &&  !_.isEmpty( route.params.item.description)) ?  route.params.item.description :  route.params.item.description.slice(0, 500) + " ..."}</Text>
+                </View>
+            )
+        }else{
+            return (
+                <View/>
+            )
+        }
+    }
+
     return (
         <SafeAreaView style = {{flex:1}}>
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
@@ -398,11 +413,9 @@ export default function PostDetails({route, navigation}) {
                 </View>
                 {isPostedBySameAsUsername()}
 
-                <View style = {{marginBottom:20}}>
-                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{more ? route.params.item.description : route.params.item.description.slice(0, 500) + " ..."}</Text>
-                </View>
+                {renderDescription()}
 
-                    <Pressable onPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
+                    <Pressable onLongPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
                             <MapView style = {{height:"100%", width:"100%"}} initialCamera = {{center: route.params.item.coordinates, pitch: 0,heading:0,zoom: 12, altitude:0}} >
                                 <Marker coordinate = {route.params.item.coordinates}>

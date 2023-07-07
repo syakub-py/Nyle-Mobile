@@ -122,6 +122,7 @@ export default function HomeMapView({navigation, route}) {
             <View style = {{ position: 'absolute', bottom: 10, width: '100%' }}>
                 <ScrollView
                     horizontal
+                    showsHorizontalScrollIndicator = {false}
                     style = {{ backgroundColor: 'transparent' }}>
                     {
                         filteredData.map((item, index) => (

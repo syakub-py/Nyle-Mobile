@@ -115,6 +115,14 @@ export const categoryFilter = (text, masterData, setFilterData, setCategorySearc
     }
 }
 
+export const getSoldItems = (UsersPosts) => {
+    let counter = 0
+    for (let i = 0; i < UsersPosts.length; i++) {
+        if (UsersPosts[i].sold === 'true') counter++
+    }
+    return counter
+}
+
 // const generatePriceAuto = () => {
 //
 // }
