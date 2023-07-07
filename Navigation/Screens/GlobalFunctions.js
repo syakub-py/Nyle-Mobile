@@ -156,6 +156,22 @@ export const AddProfilePicture = async (username, profilePictureUrl) => {
             url: url
         });
 
+        const PostsRef = firestore.collection('AllPosts');
+
+        const querySnapshot = await PostsRef.where('profilePic', '==', username).get();
+
+        if (querySnapshot.empty) {
+            const batch = firestore.batch();
+            querySnapshot.forEach((doc) => {
+                const docRef = PostsRef.doc(doc.id);
+                batch.update(docRef, { profilePic: url });
+            });
+
+            // Commit the batch update
+            await batch.commit();
+            console.log('Profile picture field updated successfully');
+        }
+
         console.log('Profile picture added successfully');
     } catch (error) {
         console.log('Error adding profile picture:', error);
