@@ -6,10 +6,11 @@ import {
     ScrollView,
     TextInput, TouchableOpacity,
 } from 'react-native';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
 import { SwipeListView } from 'react-native-swipe-list-view';
+import {getProfilePicture} from "../GlobalFunctions";
 
 const SendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
     const docRef = firestore.collection("Reviews").doc(data.id);
@@ -42,6 +43,8 @@ const DeleteReply = async (data, existingReplies, setExistingReplies, index) => 
     }
 }
 
+
+
 /*
     @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
     @param currentUser = string (current username)
@@ -51,7 +54,13 @@ export default function ReviewCard({data, currentUser}) {
     const [open, setOpen] = useState(false);
     const [reply, setReply] = useState("")
     const [existingReplies, setExistingReplies] = useState(data.Replies)
+    const [profilePic, setProfilePic] = useState(null)
 
+    useEffect(()=>{
+        getProfilePicture(data.Reviewer).then((result)=>{
+            setProfilePic(result)
+        })
+    },[])
     const handleSendReply = () => {
         SendReply(data, currentUser, reply, existingReplies, setExistingReplies)
     }
@@ -145,7 +154,7 @@ export default function ReviewCard({data, currentUser}) {
 
             <View>
                 <View style = {{ flexDirection: "row"}}>
-                    <Image style = {{ height: 50, width: 50, borderRadius: 50 }} source = {{ uri: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" }} />
+                    <Image style = {{ height: 50, width: 50, borderRadius: 50 }} source = {{ uri: profilePic }} />
                     <View style = {{ flexDirection: "column" }}>
                         <Text style = {{marginLeft:5}}>{data.Reviewer}</Text>
                         <Text style = {{marginLeft:5, fontWeight:'bold'}}>{data.Title}</Text>
