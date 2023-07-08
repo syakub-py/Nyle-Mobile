@@ -43,6 +43,13 @@ const markAsRead = async (params) => {
     })
 }
 
+const deleteImages = (index, imageUrls,setImageUrls, onRefresh) => {
+    const newArray = imageUrls
+    newArray.splice(index, 1)
+    setImageUrls(newArray)
+    onRefresh();
+}
+
 /*
     @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
  */
@@ -70,13 +77,8 @@ export default function ChatBox({route, navigation}) {
       </View>    
   );
   
-  const deleteImages = (index) => {
-    const newArray = imageUrls
-    newArray.splice(index, 1)
-    setImageUrls(newArray)
-    onRefresh();
-  }
-  
+
+
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), 1);
@@ -191,7 +193,7 @@ export default function ChatBox({route, navigation}) {
         markAsRead(route.params)
     }, [])
 
-    const renderIsAnimating = (value) => {
+    const renderIsAnimating = (value, index) => {
         if (animating) {
             return (
                 <View>
@@ -207,7 +209,7 @@ export default function ChatBox({route, navigation}) {
         } else {
             return (
                 <View>
-                    <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index)}>
+                    <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index, imageUrls,setImageUrls, onRefresh)}>
                         <View style = {{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
                             <Ionicons name ='remove-outline'  color = {'white'} size = {15} style = {{elevation:1}}/>
                         </View>
@@ -227,7 +229,7 @@ export default function ChatBox({route, navigation}) {
         return (
             imageUrls.map((value, index) => (
                 <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
-                    {renderIsAnimating(value)}
+                    {renderIsAnimating(value, index)}
                 </View>
             ))
         )
@@ -299,7 +301,7 @@ export default function ChatBox({route, navigation}) {
             else {
                 return (
                     <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
-                        <Pressable onPress = {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
+                        <Pressable onLongPress= {() =>navigation.navigate("Image Viewer", {pictures:props.currentMessage.image})}>
                             <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false} pagingEnabled = {true} onScroll = {change} style = {{ width: 200,  height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
                                 {
                                     props.currentMessage.image.map((image, index) => {

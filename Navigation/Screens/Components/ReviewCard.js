@@ -63,6 +63,7 @@ export default function ReviewCard({data, currentUser}) {
     },[])
     const handleSendReply = () => {
         SendReply(data, currentUser, reply, existingReplies, setExistingReplies)
+        setOpen(!open)
     }
 
     const handleDeleteReply = (index) => {
