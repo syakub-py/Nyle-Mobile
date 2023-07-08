@@ -1,6 +1,6 @@
 import {firestore, firestoreLite, getstorage} from "./Components/Firebase";
 import {collection, getDocs} from "firebase/firestore/lite";
-import {Alert, Image, View} from "react-native";
+import {Alert, Vibration} from "react-native";
 import React from "react";
 
 export const generateRating = async (username, setRating, setNumOfReviews) => {
@@ -71,6 +71,7 @@ export const handleLike = async (doc, username) => {
         .catch((error) => {
             console.error('Error getting document:', error);
         });
+    Vibration.vibrate(100)
 };
 
 const generatePriceHomes = async (bedrooms, bathrooms) => {
@@ -132,11 +133,9 @@ export const getProfilePicture = async (username) => {
             const profilePicture = doc.data().url;
             return profilePicture;
         } else {
-            console.log('User document not found');
             return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         }
     } catch (error) {
-        console.log('Error retrieving profile picture:', error);
         return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     }
 };
