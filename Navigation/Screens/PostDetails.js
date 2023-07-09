@@ -1,4 +1,15 @@
-import {Alert, Dimensions, Image, Modal, Pressable, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+    Alert,
+    Dimensions,
+    Image,
+    Modal,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
@@ -6,6 +17,7 @@ import {firestore} from './Components/Firebase'
 import {generateRating, handleLike} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import _ from "lodash";
+import MenuButton from "./Components/MenuButtons";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -315,18 +327,25 @@ export default function PostDetails({route, navigation}) {
                     </View>
 
                     <Modal
-                        visible = {isOpen}
-                        animationType = "slide"
-                        onRequestClose = {()=> toggleDropdown(isOpen, setIsOpen)}
-                        transparent = {true}
+                        visible={isOpen}
+                        animationType="slide"
+                        onRequestClose={() => toggleDropdown(isOpen, setIsOpen)}
+                        transparent={true}
                     >
-                        <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                            <View style = {{ width: 300, height: 300, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius:20}}>
-                                <Text style = {{ fontSize: 18, paddingVertical: 10 }}>Report this Post</Text>
-                                <Text style = {{ fontSize: 18, paddingVertical: 10 }}>Share this Post</Text>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)', }}>
+                            <View style={{ width: 280, height: 250, backgroundColor: '#fff', borderRadius: 20, flexDirection:'column', justifyContent: 'space-between' }}>
+                                <View style={{flexDirection:"row"}}>
+                                    <MenuButton title={'Share'} onPress={() => {}} iconName={'share-social-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center',margin:10}} />
+                                    <MenuButton title={'Report'} onPress={() => {}} iconName={'alert-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center', margin:10}} />
+                                </View>
+                                <View style={{flexDirection:"row"}}>
+                                    <MenuButton title={'Share'} onPress={() => {}} iconName={'share-social-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center',margin:10}} />
+                                    <MenuButton title={'Report'} onPress={() => {}} iconName={'alert-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center', margin:10}} />
+                                </View>
                             </View>
                         </View>
                     </Modal>
+
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
