@@ -1,8 +1,8 @@
-import {Pressable, ScrollView, Text, TextInput, View} from 'react-native';
+import {Image, Pressable, ScrollView, Text, TextInput, View} from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {getPosts, getCityState, categoryFilter} from "./GlobalFunctions";
+import {getPosts, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 
@@ -20,11 +20,15 @@ export default function HomeMapView({navigation, route}) {
     const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
+    const [profilePic, setProfilePic] = useState(null)
 
     useEffect(() => {
         getPosts(setMasterData, setFilterData)
 
         getCityState(40.735081, -73.759658, setState, setCity)
+        getProfilePicture(route.params.username).then((result)=>{
+            setProfilePic(result)
+        })
 
     }, [])
 
@@ -43,8 +47,8 @@ export default function HomeMapView({navigation, route}) {
                         <Text style = {{fontSize:18, fontWeight:'bold'}}>{city}, {state}</Text>
                 </View>
 
-                <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13,  alignItems:'center', justifyContent:'center'}}>
-                    <Ionicons name ='ellipsis-horizontal-outline' size = {30}/>
+                <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, backgroundColor:'transparent',   alignItems:'center', justifyContent:'center'}}>
+                    <Image source={{uri:profilePic}} style={{borderRadius:13, height:"100%", width:"100%"}}/>
                 </View>
             </View>
 
