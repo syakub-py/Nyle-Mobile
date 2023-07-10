@@ -120,7 +120,6 @@ export default function ReviewCard({data, currentUser}) {
             <SwipeListView
                 data = {existingReplies}
                 rightOpenValue = {-60}
-
                 renderItem = {({item, index}) =>(
                     <View key = {index} style = {{marginLeft:30, marginTop:5, backgroundColor:"whitesmoke"}}>
                         <Text style = {{fontWeight:'bold'}}>{item.username} (You)</Text>

@@ -25,9 +25,9 @@ const {width} = Dimensions.get("window");
 const height = width * 1;
 
 /**
- * 
+ *
  * @param {*} param0: {profilePicture: url of the profile, username: current username}
- * @returns 
+ * @returns
  */
 
 const currencies = [
@@ -125,7 +125,7 @@ export default function AddPost({route}) {
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
-    } 
+    }
 
     const clear = () => {
         setTitle('');
@@ -222,13 +222,13 @@ export default function AddPost({route}) {
                 </Pressable>
             )
         }
-        
+
         return (
             <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
                 <View style = {{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center', marginTop:20}}>
                     <Ionicons name ='add-outline' size = {40} color = {'white'}/>
                 </View>
-            </Pressable> 
+            </Pressable>
         )
     }
 
@@ -236,10 +236,10 @@ export default function AddPost({route}) {
         if ((category === "Homes" || category === "Auto"))  return  <View/>
 
         return (
-            <View> 
-                <CustomTextWithInput 
-                    text="Details" 
-                    onChangeText={(text) => setDetails(text)} 
+            <View>
+                <CustomTextWithInput
+                    text="Details"
+                    onChangeText={(text) => setDetails(text)}
                     multiline
                     height={200}
                 />
@@ -319,9 +319,9 @@ export default function AddPost({route}) {
                 {isImageUrls()}
 
                 <View>
-                    <CustomTextWithInput 
-                        text="Title" 
-                        onChangeText={(text) => setTitle(text)} 
+                    <CustomTextWithInput
+                        text="Title"
+                        onChangeText={(text) => setTitle(text)}
                         value={title}
                     />
                 </View>
@@ -338,7 +338,7 @@ export default function AddPost({route}) {
                         }}
                         value = {category}
                         customStyle = {{
-                            marginLeft:35, 
+                            marginLeft:35,
                             marginRight:35
                         }}
                         setIsFocus={()=>setIsFocus(false)}
@@ -348,23 +348,23 @@ export default function AddPost({route}) {
                 <View >
                     <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
                     <View style = {{flexDirection:'row', marginLeft:30}}>
-                    <DropdownInput
-                        data={currencies}
-                        labelField = "label"
-                        valueField = "value"
-                        placeholder = "Select a currency"
-                        onChange={(item) => {
-                            setCurrency(item);
-                        }}
-                        value = {currency}
-                        renderItem = {renderCurrencyItem}
-                        customStyle = {{
-                            width: Dimensions.get('window').width / 3
-                        }}
-                        setIsFocus={()=>setIsFocus(false)}
-                    />
-                    
-                    <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
+                        <DropdownInput
+                            data={currencies}
+                            labelField = "label"
+                            valueField = "value"
+                            placeholder = "Select a currency"
+                            onChange={(item) => {
+                                setCurrency(item);
+                            }}
+                            value = {currency}
+                            renderItem = {renderCurrencyItem}
+                            customStyle = {{
+                                width: Dimensions.get('window').width / 3
+                            }}
+                            setIsFocus={()=>setIsFocus(false)}
+                        />
+
+                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
 
                     </View>
                 </View>
@@ -382,12 +382,12 @@ export default function AddPost({route}) {
                 {renderAutoSection()}
 
                 <View>
-                    <CustomTextWithInput 
-                        text="Description" 
-                        onChangeText={(text) => setDescription(text)} 
-                        multiline={true} 
-                        height={200} 
-                        value={description} 
+                    <CustomTextWithInput
+                        text="Description"
+                        onChangeText={(text) => setDescription(text)}
+                        multiline={true}
+                        height={200}
+                        value={description}
                     />
                 </View>
 
@@ -420,20 +420,20 @@ const styles = StyleSheet.create({
         top: 10,
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
         zIndex:1
-      },
-      circle: {
+    },
+    circle: {
         backgroundColor: 'red',
         height: 20,
         width: 20,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
-      },
+    },
 });

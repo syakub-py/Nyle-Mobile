@@ -19,6 +19,7 @@ import Map from "./Screens/Map";
 import TermsOfService from "./Screens/TermsOfService";
 import HomeMapView from "./Screens/HomeMapView";
 import PhotoCollage from "./Screens/PhotoCollage";
+import Profile from "./Screens/Profile";
 // screenOptions = {{headerShown:false}}
 
 const Stack = () => {
@@ -44,6 +45,7 @@ const Stack = () => {
       <Stack.Screen name = "Terms of Service" component = {TermsOfService} />
       <Stack.Screen name = "Home Map View" component = {HomeMapView} />
       <Stack.Screen name = "Photo Collage" component = {PhotoCollage} />
+      <Stack.Screen name = "My Profile" component = {Profile} />
 
     </Stack.Navigator>
   );

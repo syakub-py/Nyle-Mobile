@@ -43,11 +43,9 @@ const markAsRead = async (params) => {
     })
 }
 
-const deleteImages = (index, imageUrls,setImageUrls, onRefresh) => {
-    const newArray = imageUrls
-    newArray.splice(index, 1)
+const deleteImages = (index, imageUrls,setImageUrls) => {
+    const newArray = imageUrls.filter((_, i) => i !== index);
     setImageUrls(newArray)
-    onRefresh();
 }
 
 /*
@@ -209,7 +207,7 @@ export default function ChatBox({route, navigation}) {
         } else {
             return (
                 <View>
-                    <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index, imageUrls,setImageUrls, onRefresh)}>
+                    <Pressable style = {{zIndex:1}} onPress = {() =>deleteImages(index, imageUrls,setImageUrls)}>
                         <View style = {{backgroundColor: 'red', height: 20, width: 20,borderRadius: 20, position: 'absolute', left: 3,top: 0, alignItems: 'center',justifyContent: 'center'}}>
                             <Ionicons name ='remove-outline'  color = {'white'} size = {15} style = {{elevation:1}}/>
                         </View>
@@ -228,7 +226,7 @@ export default function ChatBox({route, navigation}) {
 
         return (
             imageUrls.map((value, index) => (
-                <View key = {index} style = {{backgroundColor:'#F0F0F0', elevation:2}}>
+                <View key = {index} style = {{backgroundColor:'#F0F0F0'}}>
                     {renderIsAnimating(value, index)}
                 </View>
             ))

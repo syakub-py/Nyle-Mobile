@@ -5,19 +5,19 @@ import {
     Text,
     View
 } from 'react-native';
-import {generateRating, handleLike} from "../GlobalFunctions";
+import {generateRating, handleLike, isLiked} from "../GlobalFunctions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function MapPostCard({data, username}) {
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
-
+    const [Liked, setLiked] = useState(isLiked(data.likes, username))
     useEffect(() => {
         generateRating(data.PostedBy, setRating, setNumOfReviews)
     }, [])
 
-    const renderDataPostedBy = () => {
-        if (data.likes.includes(data.PostedBy)) return <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
+    const renderIsLiked = () => {
+        if (Liked) return <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
         return <Ionicons name ='heart-outline' size = {20}/>
     }
 
@@ -41,8 +41,8 @@ export default function MapPostCard({data, username}) {
 
             <ImageBackground source = {{uri: data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
                 <View style = {{position:'absolute', right:7,top:7, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
-                    <Pressable onPress = {() =>handleLike(data.title, username)}>
-                        {renderDataPostedBy()}
+                    <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
+                        {renderIsLiked()}
                     </Pressable>
                 </View>
 

@@ -158,11 +158,14 @@ export default function Home({navigation, route}) {
                 <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
                 <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
               </View>
-              <Image
-                  resizeMode="cover"
-                  source={{uri: profilePic}}
-                  style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
-              />
+              <Pressable onPress={()=>{navigation.navigate("My Profile", {username: route.params.username})}}>
+                <Image
+                    resizeMode="cover"
+                    source={{uri: profilePic}}
+                    style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
+                />
+              </Pressable>
+
             </View>
             
             <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>

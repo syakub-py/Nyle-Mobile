@@ -14,7 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import {generateRating, handleLike} from "./GlobalFunctions";
+import {generateRating, handleLike, isLiked} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import _ from "lodash";
 import MenuButton from "./Components/MenuButtons";
@@ -97,6 +97,7 @@ const getRealEstateData = async (address, setRealEstateData) => {
     }
 };
 
+
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const likes = route.params.item.likes
@@ -109,7 +110,7 @@ export default function PostDetails({route, navigation}) {
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
     const [realEstateData, setRealEstateData] = useState([])
-
+    const [Liked, setLiked] = useState(isLiked(likes, route.params.username))
     useEffect(() => {
         handleViewCounter(setViews, route.params.item);
         generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
@@ -140,8 +141,8 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const renderDoesLikesIncludes = () => {
-        if (likes.includes(route.params.username)) return <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
+    const renderIsLiked = () => {
+        if (Liked) return <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
         return <Ionicons name ='heart-outline' size = {30}/>
     }
 
@@ -348,8 +349,8 @@ export default function PostDetails({route, navigation}) {
 
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username)}>
-                            {renderDoesLikesIncludes()}
+                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username, Liked, setLiked)}>
+                            {renderIsLiked()}
                         </Pressable>
                     </View>
 
@@ -364,7 +365,7 @@ export default function PostDetails({route, navigation}) {
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
                         {
                             images.map((image, key) => (
-                                <Pressable onPress = {() => {navigation.navigate("Photo Collage", {pictures:images, index: key})}} key = {key}>
+                                <Pressable onPress = {() => {navigation.navigate("Photo Collage", {pictures:images, index: key, title:route.params.item.title})}} key = {key}>
                                     <View style = {{width, height, position: 'relative'}} >
                                         <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri:image}} key = {key}/>
                                     </View>

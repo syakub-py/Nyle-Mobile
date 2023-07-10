@@ -2,50 +2,26 @@ import {Image, ImageBackground, Pressable, ScrollView, Text, View, Vibration} fr
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import {firestore} from "./Firebase";
-import {handleLike} from "../GlobalFunctions";
-import _ from "lodash"
-import CryptoDataService from '../../../Services/CryptoDataService';
+import {handleLike, updateCurrencyPrice, isLiked} from "../GlobalFunctions";
 
-const updateCurrencyPrice = async (data) => {
-    let price = 0;
-    try {
-        const response = await CryptoDataService.getMarketData();
-        const filteredData = response.data.filter((item) => item.image === data.currency)
-        if (!_.isEmpty(filteredData)) price = (filteredData[0].current_price)
-    } catch (error) {
-        console.log(error.message);
-    }
-
-    const postRef = firestore.collection('AllPosts').doc(data.title);
-    postRef.get().then((doc) => {
-        if (doc.exists) {
-            const data = doc.data();
-            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.price).toFixed(2).toString()});
-            else {
-                if (price !== 0) {
-                    postRef.set({ USD:(price * data.price).toFixed(2).toString() }, { merge: true });
-                }
-            }
-        }
-    });
-}
 
 const handleIndexPress = (setIndex, index) =>{
     setIndex(index)
     Vibration.vibrate(100);
 }
 
+
 export default function PostCard({data, username}) {
     const navigation = useNavigation();
     const [index, setIndex] = useState(0)
+    const [Liked, setLiked] = useState(isLiked(data.likes, username))
 
     useEffect(() => {
         updateCurrencyPrice(data)
     }, [data.currency])
 
     const renderDoesDataIncludePostedBy = () => {
-        if (data.likes.includes(data.PostedBy)) return <Ionicons name ='heart' size = {25} color = {'#e6121d'}/>
+        if (Liked) return <Ionicons name ='heart' size = {25} color = {'#e6121d'}/>
         return <Ionicons name ='heart-outline' size = {25}/>
     }
 
@@ -79,7 +55,7 @@ export default function PostCard({data, username}) {
             <View style = {{width:"100%", height:300}}>
                 <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
                      <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-                            <Pressable onPress = {() =>handleLike(data.title, username)}>
+                            <Pressable onPress = {() =>handleLike(data.title, username, Liked,setLiked)}>
                                 {renderDoesDataIncludePostedBy()}
                             </Pressable>
                         </View>

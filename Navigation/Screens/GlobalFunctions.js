@@ -2,6 +2,54 @@ import {firestore, firestoreLite, getstorage} from "./Components/Firebase";
 import {collection, getDocs} from "firebase/firestore/lite";
 import {Alert, Vibration} from "react-native";
 import React from "react";
+import CryptoDataService from '../../Services/CryptoDataService';
+import _ from "lodash"
+
+export const updateCurrencyPrice = async (data) => {
+    let price = 0;
+    try {
+        const response = await CryptoDataService.getMarketData();
+        const filteredData = response.data.filter((item) => item.image === data.currency)
+        if (!_.isEmpty(filteredData)) price = (filteredData[0].current_price)
+    } catch (error) {
+        console.log(error.message);
+    }
+    const postRef = firestore.collection('AllPosts').doc(data.title);
+    postRef.get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.price).toFixed(2).toString()});
+            else {
+                if (price !== 0) {
+                    postRef.set({ USD:(price * data.price).toFixed(2).toString() }, { merge: true });
+                }
+            }
+        }
+    });
+}
+
+export const ConvertPrice = async (fromUrl, amountFrom, toUrl) =>{
+    let FromPrice = 0
+    let ToPrice = 0;
+    try {
+        const response = await CryptoDataService.getMarketData();
+        const filteredData = response.data.filter((item) => item.image === fromUrl)
+        if (!_.isEmpty(filteredData)) FromPrice = (filteredData[0].current_price) * amountFrom
+    } catch (error) {
+        console.log(error.message);
+    }
+
+    try {
+        const response = await CryptoDataService.getMarketData();
+        const filteredData = response.data.filter((item) => item.image === toUrl)
+        if (!_.isEmpty(filteredData)) ToPrice = (filteredData[0].current_price) * amountFrom
+    } catch (error) {
+        console.log(error.message);
+    }
+
+    return FromPrice/ToPrice;
+
+}
 
 export const generateRating = async (username, setRating, setNumOfReviews) => {
     let sum = 0;
@@ -42,7 +90,11 @@ export const getPosts = async (setMasterData, setFilterData) => {
     }
 }
 
-export const handleLike = async (doc, username) => {
+
+export const isLiked = (likes, username) =>{
+    return likes.includes(username);
+}
+export const handleLike = async (doc, username, Liked,setLiked) => {
     const PostRef = firestore.collection('AllPosts').doc(doc);
     PostRef.get()
         .then((doc) => {
@@ -71,6 +123,7 @@ export const handleLike = async (doc, username) => {
         .catch((error) => {
             console.error('Error getting document:', error);
         });
+    setLiked(!Liked)
     Vibration.vibrate(100)
 };
 
