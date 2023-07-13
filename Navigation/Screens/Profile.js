@@ -231,7 +231,15 @@ export default function Profile({ navigation, route }) {
               </View>
 
 
-                <Setting
+
+              <Setting
+                  title = "Calendar"
+                  type = "button"
+                  onPress = {() => navigation.navigate("My Calendar", {currentUsername:route.params.username})}
+                  nameOfIcon ='calendar-outline'
+              />
+
+              <Setting
                   title = "Wallet(s)"
                   type = "button"
                   onPress = {() => navigation.navigate("Connected Wallets")}

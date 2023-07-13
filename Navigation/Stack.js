@@ -20,7 +20,8 @@ import TermsOfService from "./Screens/TermsOfService";
 import HomeMapView from "./Screens/HomeMapView";
 import PhotoCollage from "./Screens/PhotoCollage";
 import Profile from "./Screens/Profile";
-// screenOptions = {{headerShown:false}}
+import TransactionCalendar from "./Screens/ArrangePickup";
+import UserCalendar from "./Screens/UserCalendar";
 
 const Stack = () => {
   const Stack = createNativeStackNavigator();
@@ -46,7 +47,8 @@ const Stack = () => {
       <Stack.Screen name = "Home Map View" component = {HomeMapView} />
       <Stack.Screen name = "Photo Collage" component = {PhotoCollage} />
       <Stack.Screen name = "My Profile" component = {Profile} />
-
+      <Stack.Screen name = "Transaction Calendar" component = {TransactionCalendar} />
+      <Stack.Screen name = "My Calendar" component = {UserCalendar} />
     </Stack.Navigator>
   );
 }

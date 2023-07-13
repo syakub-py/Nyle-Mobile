@@ -6,7 +6,6 @@ import {
     Pressable,
     Image,
     ScrollView,
-    RefreshControl,
     ActivityIndicator
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
