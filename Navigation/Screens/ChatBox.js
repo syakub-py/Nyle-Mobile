@@ -246,8 +246,7 @@ export default function ChatBox({route, navigation}) {
             left: 0,
             right: 0,
             height: 75,
-          }}
-          refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {onRefresh}/>}>
+          }}>
             {isRenderImageUrls()}
         </ScrollView>
         <View style = {{ flex: 1 }}>
