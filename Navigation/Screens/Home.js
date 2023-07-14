@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {getPosts, categoryFilter, getProfilePicture} from "./GlobalFunctions";
+import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -28,7 +28,7 @@ const onRefresh = (setRefreshing, setFilterData, setMasterData) => {
   // Set the refreshing state to true
   setRefreshing(true);
   // Retrieve posts from the database and update the state variables
-  getPosts(setFilterData, setMasterData)
+  readDatabase("AllPosts",setFilterData, setMasterData)
   Vibration.vibrate(100);
 
   // Wait for 0.3 seconds before setting the refreshing state to false
@@ -101,7 +101,7 @@ export default function Home({navigation, route}) {
   const [profilePic, setProfilePic] = useState(null)
 
   useEffect( () => {
-    getPosts(setFilterData, setMasterData)
+    readDatabase("AllPosts",setFilterData, setMasterData)
     getProfilePicture(route.params.username).then((result)=>{
       setProfilePic(result)
     })

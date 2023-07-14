@@ -1,6 +1,10 @@
-import React, {useState} from 'react';
-import {View, FlatList, Text, Image} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, FlatList, Text, Image, Alert, SwipeableListView} from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import {firestore} from "./Components/Firebase";
+import {SwipeListView} from "react-native-swipe-list-view";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 
 const generateRandomEvents = (numberOfEvents) => {
     const randomEvents = [];
@@ -11,7 +15,7 @@ const generateRandomEvents = (numberOfEvents) => {
             seller:"admin@admin.com",
             buyer:"syakubov101@gmail.com",
             item:"Dimondback Bike",
-            time: "9:00 AM"
+            time: new Date().toISOString().split('T')[1]
         };
 
         randomEvents.push(event);
@@ -26,28 +30,126 @@ const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
+const getCalendarEvents = async (username, setCalendarEvents) => {
+    let results = []
+    const MySellerEvents =  firestore.collection('CalendarEvents').where("seller", "==", username)
+    const MyBuyerEvents = firestore.collection('CalendarEvents').where("buyer", "==", username);
+    Promise.all([MySellerEvents.get(), MyBuyerEvents.get()])
+        .then((querySnapshots) => {
+            const sellerEvents = querySnapshots[0].docs;
+            const buyerEvents = querySnapshots[1].docs;
+
+            // Combine the results or perform any desired operations
+            const combinedResults = sellerEvents.concat(buyerEvents);
+            combinedResults.forEach((doc) => {
+                results.push(doc.data())
+            });
+            setCalendarEvents(results)
+        })
+        .catch((error) => {
+            // Handle any errors
+            console.error("Error getting events:", error);
+        });
+}
+
+const handleApprove = async (DocId, approved) => {
+    return firestore.collection("CalendarEvents").doc(DocId).set({approved:approved})
+        .then(ref => {
+            console.log("approved")
+        })
+        .catch(error => {
+            console.log('Error adding document: ', error);
+        });
+}
+
+
+function getRandomLightColor() {
+    // Generate random values for red, green, and blue components
+    const r = Math.floor(Math.random() * 128) + 128; // Range: 128-255
+    const g = Math.floor(Math.random() * 128) + 128; // Range: 128-255
+    const b = Math.floor(Math.random() * 128) + 128; // Range: 128-255
+
+    // Return the RGB color as a string
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 
 export default function UserCalendar({route}){
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);
+    const [calendarEvents, setCalendarEvents] = useState([])
 
-    const filteredEvents = randomEventsArray.filter((event) => {
-        return event.date === selectedDate;
+    useEffect(()=>{
+        getCalendarEvents(route.params.currentUsername, setCalendarEvents)
+    },[])
+
+    const filteredEvents = calendarEvents.filter((event) => {
+
+        const timestampMilliseconds = event.startTime.seconds * 1000;
+
+        const dateObject = new Date(timestampMilliseconds);
+        const dateString = dateObject.toISOString().split('T')[0];
+
+        return dateString === selectedDate;
     });
 
     const BuyerOrSellerCard = (item) =>{
-
         if (item.seller === route.params.currentUsername) {
+
+            const startTime = item.startTime.seconds * 1000;
+
+            const startTimeDateObject = new Date(startTime).toISOString().split('T')[1];
+
+            const endTime = item.endTime.seconds * 1000;
+
+            const endTimeDateObject = new Date(endTime).toISOString().split('T')[1];
+
             return(
-                <View style={{ flexDirection: 'row', alignItems: 'center', margin: 5, borderRadius:10}}>
-                    <Image
-                        source={{ uri: "https://firebasestorage.googleapis.com/v0/b/nyle-bd594.appspot.com/o/ProfilePictures%2Fadmin%40admin.com?alt=media&token=8a725439-c62b-48c5-b585-a9c493a38d44" }}
-                        style={{ height: 50, width: 50, borderRadius: 10 }}
-                    />
-                    <View style={{ marginLeft: 10 }}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.item}</Text>
-                        <Text style={{ fontSize: 14 }}>{item.time}</Text>
+                <View style={{ flexDirection: 'column', margin: 5, borderRadius: 15, backgroundColor: 'white', padding: 10, justifyContent: 'center' }}>
+
+                    <View style={{ height: 80, position: 'absolute', left: 10, backgroundColor: getRandomLightColor(), width: 3, borderRadius: 3 }} />
+
+                    <View style={{ flexDirection: "row", marginLeft: 10, marginRight: 10 }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ fontSize: 20, fontWeight: '500', marginBottom: 5 }}>{item.item}</Text>
+                        </View>
+
+                        <View style={{ position:"absolute", right:0}}>
+                            <Text style={{ fontSize: 14 }}>{startTimeDateObject}</Text>
+                            <Text style={{ fontSize: 14 }}>{endTimeDateObject}</Text>
+                        </View>
                     </View>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom:10, marginLeft:5}}>
+                        <Ionicons name="location" size={15} />
+                        <Text style={{ marginLeft: 3 }}>79-33 213th street</Text>
+                    </View>
+
+                    <View style={{ flexDirection: "row", position: "relative", zIndex: 1, height: 30, marginLeft: 10 }}>
+                        <Image
+                            source={{ uri: item.buyerProfilePic }}
+                            style={{
+                                height: 30,
+                                width: 30,
+                                borderRadius: 20,
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                            }}
+                        />
+                        <Image
+                            source={{ uri: item.sellerProfilePic }}
+                            style={{
+                                height: 30,
+                                width: 30,
+                                borderRadius: 20,
+                                position: "absolute",
+                                top: 0,
+                                left: 20,
+                            }}
+                        />
+                    </View>
+
                 </View>
             )
         }else{
@@ -60,7 +162,7 @@ export default function UserCalendar({route}){
     }
 
     return(
-        <FlatList
+        <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
             ListHeaderComponent={
@@ -68,9 +170,9 @@ export default function UserCalendar({route}){
                 <Calendar
                     markedDates={{ [selectedDate]: { selected: true, marked: true } }}
                     theme={{
-                        selectedDayBackgroundColor: 'blue',
-                        todayTextColor: 'blue',
-                        arrowColor: 'blue',
+                        selectedDayBackgroundColor: getRandomLightColor(),
+                        todayTextColor: getRandomLightColor(),
+                        arrowColor: getRandomLightColor(),
                     }}
                     onDayPress={(day) => handleDayPress(day, setSelectedDate)}
                 />

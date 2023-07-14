@@ -2,7 +2,7 @@ import {Image, Pressable, ScrollView, Text, TextInput, View} from 'react-native'
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {getPosts, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
+import {readDatabase, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 
@@ -23,7 +23,7 @@ export default function HomeMapView({navigation, route}) {
     const [profilePic, setProfilePic] = useState(null)
 
     useEffect(() => {
-        getPosts(setMasterData, setFilterData)
+        readDatabase("AllPosts",setMasterData, setFilterData)
 
         getCityState(40.735081, -73.759658, setState, setCity)
         getProfilePicture(route.params.username).then((result)=>{

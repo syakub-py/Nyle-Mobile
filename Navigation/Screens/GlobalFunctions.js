@@ -67,10 +67,10 @@ export const generateRating = async (username, setRating, setNumOfReviews) => {
     setNumOfReviews(numOfReviews)
 }
 
-export const getPosts = async (setMasterData, setFilterData) => {
+export const readDatabase = async (collectionName, setMasterData, setFilterData) => {
     let results = [];
     try {
-        const postCollection = collection(firestoreLite, "AllPosts");
+        const postCollection = collection(firestoreLite, collectionName);
         const postSnapshot = await getDocs(postCollection);
         // Iterate through each document and push the data to the results array
         postSnapshot.forEach(doc => {
