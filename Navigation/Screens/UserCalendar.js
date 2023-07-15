@@ -1,30 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Text, Image, Alert, SwipeableListView} from 'react-native';
+import {View, FlatList, Text, Image, Alert, SwipeableListView, TouchableOpacity, Pressable} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {firestore} from "./Components/Firebase";
 import {SwipeListView} from "react-native-swipe-list-view";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
-const generateRandomEvents = (numberOfEvents) => {
-    const randomEvents = [];
-
-    for (let i = 0; i < numberOfEvents; i++) {
-        const event = {
-            date: new Date().toISOString().split('T')[0],
-            seller:"admin@admin.com",
-            buyer:"syakubov101@gmail.com",
-            item:"Dimondback Bike",
-            time: new Date().toISOString().split('T')[1]
-        };
-
-        randomEvents.push(event);
-    }
-
-    return randomEvents;
-};
-
-const randomEventsArray = generateRandomEvents(10);
 
 const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
@@ -42,7 +22,8 @@ const getCalendarEvents = async (username, setCalendarEvents) => {
             // Combine the results or perform any desired operations
             const combinedResults = sellerEvents.concat(buyerEvents);
             combinedResults.forEach((doc) => {
-                results.push(doc.data())
+                const resultWithId = { id: doc.id, ...doc.data() };
+                results.push(resultWithId);
             });
             setCalendarEvents(results)
         })
@@ -52,8 +33,8 @@ const getCalendarEvents = async (username, setCalendarEvents) => {
         });
 }
 
-const handleApprove = async (DocId, approved) => {
-    return firestore.collection("CalendarEvents").doc(DocId).set({approved:approved})
+const handleApprove = async (DocId) => {
+    return firestore.collection("CalendarEvents").doc(DocId).set({approved:"approved"}, { merge: true })
         .then(ref => {
             console.log("approved")
         })
@@ -74,10 +55,57 @@ function getRandomLightColor() {
 }
 
 
-export default function UserCalendar({route}){
+export default function UserCalendar({navigation,route}){
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);
     const [calendarEvents, setCalendarEvents] = useState([])
+
+    const renderStatus = (item) =>{
+        if (item.status === "approved"){
+            return(
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{
+                        backgroundColor: 'lightgreen',
+                        width: 10,
+                        height: 10,
+                        borderRadius: 10,
+                        marginRight: 5
+                    }}/>
+                    <Text>Approved</Text>
+                </View>
+            )
+        }
+
+        else if (item.status === "denied"){
+            return(
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{
+                        backgroundColor: 'red',
+                        width: 10,
+                        height: 10,
+                        borderRadius: 10,
+                        marginRight: 5
+                    }}/>
+                    <Text>Denied</Text>
+                </View>
+            )
+        }
+
+        else if (item.status === "pending"){
+            return(
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{
+                        backgroundColor: 'yellow',
+                        width: 10,
+                        height: 10,
+                        borderRadius: 10,
+                        marginRight: 5
+                    }}/>
+                    <Text>Pending</Text>
+                </View>
+            )
+        }
+    }
 
     useEffect(()=>{
         getCalendarEvents(route.params.currentUsername, setCalendarEvents)
@@ -93,41 +121,54 @@ export default function UserCalendar({route}){
         return dateString === selectedDate;
     });
 
-    const BuyerOrSellerCard = (item) =>{
-        if (item.seller === route.params.currentUsername) {
+    const BuyerOrSellerCard = (item) => {
+        const startTime = item.startTime.seconds * 1000;
 
-            const startTime = item.startTime.seconds * 1000;
+        const startTimeDateObject = new Date(startTime).toISOString().split('T')[1];
 
-            const startTimeDateObject = new Date(startTime).toISOString().split('T')[1];
+        const endTime = item.endTime.seconds * 1000;
 
-            const endTime = item.endTime.seconds * 1000;
+        const endTimeDateObject = new Date(endTime).toISOString().split('T')[1];
+        if (item.seller === route.params.currentUsername || item.buyer === route.params.currentUsername) {
+            return (
+                <View style={{
+                    flexDirection: 'column',
+                    margin: 5,
+                    borderRadius: 15,
+                    backgroundColor: 'white',
+                    padding: 10,
+                    justifyContent: 'center'
+                }}>
 
-            const endTimeDateObject = new Date(endTime).toISOString().split('T')[1];
+                    <View style={{
+                        height: 80,
+                        position: 'absolute',
+                        left: 10,
+                        backgroundColor: getRandomLightColor(),
+                        width: 3,
+                        borderRadius: 3
+                    }}/>
 
-            return(
-                <View style={{ flexDirection: 'column', margin: 5, borderRadius: 15, backgroundColor: 'white', padding: 10, justifyContent: 'center' }}>
 
-                    <View style={{ height: 80, position: 'absolute', left: 10, backgroundColor: getRandomLightColor(), width: 3, borderRadius: 3 }} />
-
-                    <View style={{ flexDirection: "row", marginLeft: 10, marginRight: 10 }}>
-                        <View style={{ flex: 1 }}>
-                            <Text style={{ fontSize: 20, fontWeight: '500', marginBottom: 5 }}>{item.item}</Text>
+                    <View style={{flexDirection: "row", marginLeft: 10, marginRight: 10}}>
+                        <View style={{flex: 1}}>
+                            <Text style={{fontSize: 20, fontWeight: '500', marginBottom: 5}}>{item.item}</Text>
                         </View>
 
-                        <View style={{ position:"absolute", right:0}}>
-                            <Text style={{ fontSize: 14 }}>{startTimeDateObject}</Text>
-                            <Text style={{ fontSize: 14 }}>{endTimeDateObject}</Text>
+                        <View style={{position: "absolute", right: 0}}>
+                            <Text style={{fontSize: 14}}>{startTimeDateObject}</Text>
+                            <Text style={{fontSize: 14}}>{endTimeDateObject}</Text>
                         </View>
                     </View>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom:10, marginLeft:5}}>
-                        <Ionicons name="location" size={15} />
-                        <Text style={{ marginLeft: 3 }}>79-33 213th street</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10, marginLeft: 5}}>
+                        <Ionicons name="location" size={15}/>
+                        <Text style={{marginLeft: 3}}>79-33 213th street</Text>
                     </View>
 
-                    <View style={{ flexDirection: "row", position: "relative", zIndex: 1, height: 30, marginLeft: 10 }}>
+                    <View style={{flexDirection: "row", position: "relative", zIndex: 1, height: 30, marginLeft: 10}}>
                         <Image
-                            source={{ uri: item.buyerProfilePic }}
+                            source={{uri: item.buyerProfilePic}}
                             style={{
                                 height: 30,
                                 width: 30,
@@ -138,7 +179,7 @@ export default function UserCalendar({route}){
                             }}
                         />
                         <Image
-                            source={{ uri: item.sellerProfilePic }}
+                            source={{uri: item.sellerProfilePic}}
                             style={{
                                 height: 30,
                                 width: 30,
@@ -149,13 +190,9 @@ export default function UserCalendar({route}){
                             }}
                         />
                     </View>
-
-                </View>
-            )
-        }else{
-            return(
-                <View>
-                    <Text>{item.item}</Text>
+                    <View style={{flex: 1, position: 'absolute', bottom: 10, right: 10}}>
+                        {renderStatus(item)}
+                    </View>
                 </View>
             )
         }
@@ -165,8 +202,41 @@ export default function UserCalendar({route}){
         <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
+            rightOpenValue = {-60}
+            renderHiddenItem = {({item}) => (
+                    <View style = {{ position: 'absolute',
+                        flexDirection:'row',
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        width: 60,
+                        alignItems: 'center'
+                    }}>
+                        {
+                            (item.seller === route.params.currentUsername)?(
+                                <TouchableOpacity onPress = {() =>{handleApprove(item.id)}} style={{alignItems:'center'}}>
+                                    <Ionicons name = {'checkmark-outline'} color = {"green"} size = {30} />
+                                    <Text style={{color:"green"}}>Approve</Text>
+                                </TouchableOpacity>
+                            ):(
+                                <TouchableOpacity onPress = {() =>{}} style={{alignItems:'center'}}>
+                                    <Ionicons name = {'close-outline'} color = {"red"} size = {30} />
+                                    <Text style={{color:"red"}}>Cancel</Text>
+                                </TouchableOpacity>
+                            )
+                        }
+
+
+                    </View>
+                )
+            }
             ListHeaderComponent={
             <View>
+                <View style={{ zIndex: 2, position: 'absolute', top: 30, left: 17 }}>
+                    <Pressable onPress={() => navigation.goBack()}>
+                        <Ionicons name="chevron-back-outline" size={30} />
+                    </Pressable>
+                </View>
                 <Calendar
                     markedDates={{ [selectedDate]: { selected: true, marked: true } }}
                     theme={{
