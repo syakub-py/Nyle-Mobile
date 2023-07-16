@@ -23,46 +23,28 @@ export default function MapPostCard({data, username}) {
 
 
     return (
-        <View style = {{
-            flex:1,
-            height: 150,
-            width: 190,
-            margin: 10,
-            flexDirection: 'row',
-            shadowColor: 'rgba(0, 0, 0, 0.2)',
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 1,
-            shadowRadius: 4,
-            elevation: 4 }}
-        >
+        <ImageBackground source = {{uri: data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
+            <View style = {{position:'absolute', right:7,top:7, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
+                <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
+                    {renderIsLiked()}
+                </Pressable>
+            </View>
 
-            <ImageBackground source = {{uri: data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
-                <View style = {{position:'absolute', right:7,top:7, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
-                    <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
-                        {renderIsLiked()}
-                    </Pressable>
+            <View style = {{flexDirection:"row", backgroundColor:"white", alignSelf:'center', justifyContent:"space-between", position:'absolute', bottom:10, borderRadius:10, padding:5, width:215}}>
+                <View>
+                    <Text style = {{ fontSize:14, fontWeight:"500", alignSelf:'center'}}>{data.title}</Text>
+                    <View style={{flexDirection:'row', alignItems:'center'}}>
+                        <Ionicons name = "star" style = {{ marginRight: 2 }} color = "#ebd61e" size = {13} />
+                        <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
+                        <Text style={{fontSize: 10, color:'grey', marginLeft:3}}>({numOfReviews} reviews)</Text>
+                    </View>
                 </View>
 
-                <View style = {{flexDirection:"row", backgroundColor:"white", alignSelf:'center', justifyContent:"space-between", position:'absolute', bottom:10, borderRadius:10, padding:5, width:180}}>
-                    <View>
-                        <Text style = {{ fontSize:14, fontWeight:"500", alignSelf:'center'}}>{data.title}</Text>
-                        <View style={{flexDirection:'row', alignItems:'center'}}>
-                            <Ionicons name = "star" style = {{ marginRight: 2 }} color = "#ebd61e" size = {13} />
-                            <Text style={{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
-                            <Text style={{fontSize: 10, color:'grey', marginLeft:3}}>({numOfReviews} reviews)</Text>
-                        </View>
-                    </View>
-
-                    <View style={{height:40, width:40, backgroundColor:'black', borderRadius:20, justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name={"chevron-forward-outline"} size={25} color={"white"}/>
-                    </View>
-
+                <View style={{height:40, width:40, backgroundColor:'black', borderRadius:20, justifyContent:'center', alignItems:'center'}}>
+                    <Ionicons name={"chevron-forward-outline"} size={25} color={"white"}/>
                 </View>
-            </ImageBackground>
 
-        </View>
+            </View>
+        </ImageBackground>
     )
 }

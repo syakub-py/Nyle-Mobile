@@ -1,10 +1,11 @@
-import {Image, Pressable, ScrollView, Text, TextInput, View} from 'react-native';
+import {Dimensions, FlatList, Image, Pressable, ScrollView, Text, TextInput, View} from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {readDatabase, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
+const {width} = Dimensions.get("window");
 
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
 
@@ -21,6 +22,14 @@ export default function HomeMapView({navigation, route}) {
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
     const [profilePic, setProfilePic] = useState(null)
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const handleScroll = (event) => {
+        const contentOffset = event.nativeEvent.contentOffset;
+        const currentIndex = Math.floor(contentOffset.x / 245);
+
+        setCurrentIndex(currentIndex);
+    };
 
     useEffect(() => {
         readDatabase("AllPosts",setMasterData, setFilterData)
@@ -123,22 +132,43 @@ export default function HomeMapView({navigation, route}) {
                 ))}
             </MapView>
 
-            <View style = {{ position: 'absolute', bottom: 10, width: '100%' }}>
-                <ScrollView
+            <View style = {{ position: 'absolute', bottom: 10, width: '100%'}}>
+                <FlatList
+                    data={filteredData}
                     horizontal
-                    showsHorizontalScrollIndicator = {false}
-                    style = {{ backgroundColor: 'transparent' }}>
-                    {
-                        filteredData.map((item, index) => (
+                    pagingEnabled
+                    onScroll={handleScroll}
+                    snapToAlignment={"center"}
+                    renderItem={({item, index})=>{
+                        return(
                             <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
-                                <View  style = {{alignSelf:'center'}}>
+                                <View style={{
+                                    flex:1,
+                                    height: 170,
+                                    width: 230,
+                                    margin: 15,
+                                    flexDirection: 'row',
+                                    shadowColor: 'rgba(0, 0, 0, 0.2)',
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 1,
+                                    shadowRadius: 4,
+                                    elevation: 4,
+                                    transform: [
+                                        { scale: index === currentIndex ? 1.1 : 1 }
+                                    ],
+                                    marginLeft: index === 0 ? width/2-230/2 : 15,
+                                    marginRight: index === filteredData.length - 1 ? width/2 - 230/2  : 15,
+                                }}>
                                     <MapPostCard data = {item} username = {route.params.username} />
                                 </View>
                             </Pressable>
-                        ))
-                    }
-                </ScrollView>
+                        )
+                    }}/>
             </View>
+
         </View>
 
     )
