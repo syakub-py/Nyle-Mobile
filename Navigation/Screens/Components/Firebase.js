@@ -4,9 +4,9 @@ import 'firebase/compat/firestore'
 import {getFirestore} from 'firebase/firestore/lite'
 import "firebase/compat/analytics"
 import 'firebase/compat/storage'
-// import dotenv from "dotenv";
 import _ from "lodash"
-// dotenv.config()
+import "firebase/compat/analytics";
+
 
 let app;
 
@@ -21,8 +21,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-if (_.isEmpty(firebase.apps)) app = firebase.initializeApp(firebaseConfig);
-else app = firebase.app()
+if (_.isEmpty(firebase.apps)) {
+  app = firebase.initializeApp(firebaseConfig);
+} else app = firebase.app()
 
 const firestore = firebase.firestore()
 

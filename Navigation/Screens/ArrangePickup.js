@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {View, FlatList, Text, Image, ScrollView, Dimensions, Pressable} from 'react-native';
+import {View, FlatList, Text, Image, ScrollView, Dimensions, Pressable, Alert} from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import MapView, {Circle, Marker} from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import CustomMapMarker from "./Components/CustomMapMarker";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {firestore} from "./Components/Firebase";
 
 const {width} = Dimensions.get("window");
 
@@ -11,19 +12,29 @@ const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
-export default function TransactionCalendar({route, navigation}){
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0,});
-
-    const createDocument = () => ({
+const handleAddPickup = (route, coordinates, selectedDate) => {
+    return firestore.collection("CalendarEvents").doc(route.params.item.title).set({
         title: route.params.item.title,
         seller: route.params.item.PostedBy,
         sellerProfilePic: route.params.item.profilePic,
-        buyerProfilePic: buyerProfilePic,
+        buyer:route.params.currentUsername,
+        buyerProfilePic: route.params.currentProfilePic,
         coordinates: coordinates,
-        startTime: new Date().toLocaleString(),
-        endTime: new Date().toLocaleString(),
-    })
+        startTime: selectedDate,
+        endTime: selectedDate,
+        status:"pending",
+    }).then(() => {
+        console.log("added")
+        })
+        .catch(error => {
+            console.log('Error adding document: ', error);
+        });
+}
+
+
+export default function TransactionCalendar({route, navigation}){
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0});
 
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
@@ -58,13 +69,16 @@ export default function TransactionCalendar({route, navigation}){
                     <Text style={{fontSize:17, marginLeft:20, marginBottom:7}}>Where?</Text>
                     <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3 }}>
                         <MapView style={{ height: '100%', width: '100%' }} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
-                            <Marker coordinate = {coordinates}/>
+                            <Marker coordinate={coordinates}/>
                         </MapView>
                     </View>
 
-                    <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
-                        <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
-                    </View>
+                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate)}>
+                        <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
+                            <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
+                        </View>
+                    </Pressable>
+
                 </View>
             </ScrollView>
     );

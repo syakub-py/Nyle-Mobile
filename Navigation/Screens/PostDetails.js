@@ -315,7 +315,7 @@ export default function PostDetails({route, navigation}) {
     const renderArrangePickup = () => {
         if (route.params.item.PostedBy !== route.params.username){
             return(
-                <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:route.params.item ,currentUsername:route.params.username})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>
+                <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:route.params.item ,currentUsername:route.params.username, currentProfilePic:route.params.CurrentUserProfilePic})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>
                     <Ionicons name={"calendar-outline"} size={20} color={"white"}/>
                     <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Arrange a pickup</Text>
                 </Pressable>

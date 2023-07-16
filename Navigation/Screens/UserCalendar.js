@@ -33,10 +33,10 @@ const getCalendarEvents = async (username, setCalendarEvents) => {
         });
 }
 
-const handleApprove = async (DocId) => {
-    return firestore.collection("CalendarEvents").doc(DocId).set({approved:"approved"}, { merge: true })
+const handleApproveDenyPress = async (DocId, status) => {
+    return firestore.collection("CalendarEvents").doc(DocId).set({status:status}, { merge: true })
         .then(ref => {
-            console.log("approved")
+            console.log(status)
         })
         .catch(error => {
             console.log('Error adding document: ', error);
@@ -53,7 +53,6 @@ function getRandomLightColor() {
     // Return the RGB color as a string
     return `rgb(${r}, ${g}, ${b})`;
 }
-
 
 export default function UserCalendar({navigation,route}){
     const today = new Date().toISOString().split('T')[0];
@@ -112,23 +111,10 @@ export default function UserCalendar({navigation,route}){
     },[])
 
     const filteredEvents = calendarEvents.filter((event) => {
-
-        const timestampMilliseconds = event.startTime.seconds * 1000;
-
-        const dateObject = new Date(timestampMilliseconds);
-        const dateString = dateObject.toISOString().split('T')[0];
-
-        return dateString === selectedDate;
+        return event.startTime === selectedDate;
     });
 
     const BuyerOrSellerCard = (item) => {
-        const startTime = item.startTime.seconds * 1000;
-
-        const startTimeDateObject = new Date(startTime).toISOString().split('T')[1];
-
-        const endTime = item.endTime.seconds * 1000;
-
-        const endTimeDateObject = new Date(endTime).toISOString().split('T')[1];
         if (item.seller === route.params.currentUsername || item.buyer === route.params.currentUsername) {
             return (
                 <View style={{
@@ -152,12 +138,12 @@ export default function UserCalendar({navigation,route}){
 
                     <View style={{flexDirection: "row", marginLeft: 10, marginRight: 10}}>
                         <View style={{flex: 1}}>
-                            <Text style={{fontSize: 20, fontWeight: '500', marginBottom: 5}}>{item.item}</Text>
+                            <Text style={{fontSize: 20, fontWeight: '500', marginBottom: 5}}>{item.title}</Text>
                         </View>
 
                         <View style={{position: "absolute", right: 0}}>
-                            <Text style={{fontSize: 14}}>{startTimeDateObject}</Text>
-                            <Text style={{fontSize: 14}}>{endTimeDateObject}</Text>
+                            <Text style={{fontSize: 14}}>{item.startTime}</Text>
+                            <Text style={{fontSize: 14}}>{item.endTime}</Text>
                         </View>
                     </View>
 
@@ -202,22 +188,30 @@ export default function UserCalendar({navigation,route}){
         <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
-            rightOpenValue = {-60}
+            rightOpenValue = {-120}
             renderHiddenItem = {({item}) => (
                     <View style = {{ position: 'absolute',
                         flexDirection:'row',
                         top: 0,
                         right: 0,
                         bottom: 0,
-                        width: 60,
+                        width: 120,
                         alignItems: 'center'
                     }}>
                         {
                             (item.seller === route.params.currentUsername)?(
-                                <TouchableOpacity onPress = {() =>{handleApprove(item.id)}} style={{alignItems:'center'}}>
-                                    <Ionicons name = {'checkmark-outline'} color = {"green"} size = {30} />
-                                    <Text style={{color:"green"}}>Approve</Text>
-                                </TouchableOpacity>
+                                <View style={{flexDirection:'row'}}>
+                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id, "approved")}} style={{alignItems:'center', marginRight:15}}>
+                                        <Ionicons name = {'checkmark-outline'} color = {"green"} size = {30} />
+                                        <Text style={{color:"green"}}>Approve</Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id,"denied")}} style={{alignItems:'center'}}>
+                                        <Ionicons name = {'close-circle-outline'} color = {"red"} size = {30} />
+                                        <Text style={{color:"red"}}>Deny</Text>
+                                    </TouchableOpacity>
+                                </View>
+
                             ):(
                                 <TouchableOpacity onPress = {() =>{}} style={{alignItems:'center'}}>
                                     <Ionicons name = {'close-outline'} color = {"red"} size = {30} />
@@ -232,11 +226,13 @@ export default function UserCalendar({navigation,route}){
             }
             ListHeaderComponent={
             <View>
+
                 <View style={{ zIndex: 2, position: 'absolute', top: 30, left: 17 }}>
                     <Pressable onPress={() => navigation.goBack()}>
                         <Ionicons name="chevron-back-outline" size={30} />
                     </Pressable>
                 </View>
+
                 <Calendar
                     markedDates={{ [selectedDate]: { selected: true, marked: true } }}
                     theme={{
