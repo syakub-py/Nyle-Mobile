@@ -102,6 +102,7 @@ export default function Home({navigation, route}) {
   const [profilePic, setProfilePic] = useState(null)
   const [lastDocument, setLastDocument] = useState(null)
   const [loading, setLoading] = useState(false)
+
   useEffect( () => {
     readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
     getProfilePicture(route.params.username).then((result)=>{

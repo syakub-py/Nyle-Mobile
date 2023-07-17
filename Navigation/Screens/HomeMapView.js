@@ -1,4 +1,14 @@
-import {Dimensions, FlatList, Image, Pressable, ScrollView, Text, TextInput, View} from 'react-native';
+import {
+    ActivityIndicator,
+    Dimensions,
+    FlatList,
+    Image,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View
+} from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -25,6 +35,7 @@ export default function HomeMapView({navigation, route}) {
     const [profilePic, setProfilePic] = useState(null)
     const [currentIndex, setCurrentIndex] = useState(0);
     const [lastDocument, setLastDocument] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const handleScroll = (event) => {
         const contentOffset = event.nativeEvent.contentOffset;
@@ -43,6 +54,16 @@ export default function HomeMapView({navigation, route}) {
 
     }, [])
 
+    const renderFooter = () => {
+        if (!loading) {
+            return null;
+        }
+        return (
+            <View style = {{width:200}}>
+                <ActivityIndicator size="large" color="black" />
+            </View>
+        );
+    };
     return (
         <View style = {{ flex: 1 }}>
             <View style = {{zIndex:1}}>
@@ -141,7 +162,8 @@ export default function HomeMapView({navigation, route}) {
                     pagingEnabled
                     onScroll={handleScroll}
                     snapToAlignment={"center"}
-                    onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument)}}
+                    onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
+                    ListFooterComponent={renderFooter}
                     renderItem={({item, index})=>{
                         return(
                             <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
