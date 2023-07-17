@@ -6,6 +6,7 @@ import {readDatabase, getCityState, categoryFilter, getProfilePicture} from "./G
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
 const {width} = Dimensions.get("window");
+import {handleEndReached} from "./GlobalFunctions";
 
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
 
@@ -23,6 +24,7 @@ export default function HomeMapView({navigation, route}) {
     const [state, setState] = useState("")
     const [profilePic, setProfilePic] = useState(null)
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [lastDocument, setLastDocument] = useState(null)
 
     const handleScroll = (event) => {
         const contentOffset = event.nativeEvent.contentOffset;
@@ -32,7 +34,7 @@ export default function HomeMapView({navigation, route}) {
     };
 
     useEffect(() => {
-        readDatabase("AllPosts",setMasterData, setFilterData)
+        readDatabase("AllPosts",setMasterData, setFilterData, setLastDocument)
 
         getCityState(40.735081, -73.759658, setState, setCity)
         getProfilePicture(route.params.username).then((result)=>{
@@ -139,6 +141,7 @@ export default function HomeMapView({navigation, route}) {
                     pagingEnabled
                     onScroll={handleScroll}
                     snapToAlignment={"center"}
+                    onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument)}}
                     renderItem={({item, index})=>{
                         return(
                             <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>

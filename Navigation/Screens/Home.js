@@ -14,6 +14,7 @@ import {
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
+import {handleEndReached} from "./GlobalFunctions";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -24,11 +25,11 @@ const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "
 const {width} = Dimensions.get("window");
 
 // Function to refresh the data
-const onRefresh = (setRefreshing, setFilterData, setMasterData) => {
+const onRefresh = (setRefreshing,setFilterData, setMasterData, setLastDocument) => {
   // Set the refreshing state to true
   setRefreshing(true);
   // Retrieve posts from the database and update the state variables
-  readDatabase("AllPosts",setFilterData, setMasterData)
+  readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
   Vibration.vibrate(100);
 
   // Wait for 0.3 seconds before setting the refreshing state to false
@@ -99,9 +100,10 @@ export default function Home({navigation, route}) {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null)
+  const [lastDocument, setLastDocument] = useState(null)
 
   useEffect( () => {
-    readDatabase("AllPosts",setFilterData, setMasterData)
+    readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
     getProfilePicture(route.params.username).then((result)=>{
       setProfilePic(result)
     })
@@ -214,7 +216,7 @@ export default function Home({navigation, route}) {
 
         data = {filteredData}
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing,setFilterData, setMasterData, setLastDocument)} />
         }
         renderItem = {({item}) => (
           <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
@@ -222,6 +224,7 @@ export default function Home({navigation, route}) {
           </Pressable>
           )}
           keyExtractor = {item => item.id}
+        onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument)}}
         />
       </View>
     </View>

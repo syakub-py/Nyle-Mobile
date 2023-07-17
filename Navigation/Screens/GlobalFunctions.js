@@ -1,5 +1,4 @@
-import {firestore, firestoreLite, getstorage} from "./Components/Firebase";
-import {collection, getDocs} from "firebase/firestore/lite";
+import {firestore, getstorage} from "./Components/Firebase";
 import {Alert, Vibration} from "react-native";
 import React from "react";
 import CryptoDataService from '../../Services/CryptoDataService';
@@ -67,28 +66,68 @@ export const generateRating = async (username, setRating, setNumOfReviews) => {
     setNumOfReviews(numOfReviews)
 }
 
-export const readDatabase = async (collectionName, setMasterData, setFilterData) => {
-    let results = [];
+export const readDatabase = async (
+    collectionName,
+    setMasterData,
+    setFilterData,
+    setLastDocument
+) => {
     try {
-        const postCollection = collection(firestoreLite, collectionName);
-        const postSnapshot = await getDocs(postCollection);
-        // Iterate through each document and push the data to the results array
-        postSnapshot.forEach(doc => {
-            results.push(doc.data())
-        });
-    
+        const postRef = firestore.collection(collectionName);
+
+        // Fetch the initial two documents
+        const querySnapshot = await postRef.limit(2).get();
+
+        let results = querySnapshot.docs.map((doc) => doc.data());
+
         // Sort the results by date in descending order
-        if (results) {
-            results = results.sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
-            });
+        results = results.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        setMasterData(results);
+        setFilterData(results);
+
+        if (querySnapshot.docs.length > 0) {
+            const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+            setLastDocument(lastDocument);
         }
-        setMasterData(results)
-        setFilterData(results)
-    } catch(error) {
-        Alert.alert(error)
+    } catch (error) {
+        console.error(error);
+        // Handle the error appropriately, e.g., show an alert
     }
-}
+};
+
+export const handleEndReached = async (
+    currentData,
+    lastDocument,
+    setFilterData,
+    setMasterData,
+    setLastDocument) => {
+
+    const postRef = firestore.collection("AllPosts");
+
+    // Retrieve the next two elements using startAfter
+    let querySnapshot = null;
+    if (lastDocument) {
+        querySnapshot = await postRef
+            .startAfter(lastDocument)
+            .limit(2)
+            .get();
+    } else {
+        querySnapshot = await postRef.limit(2).get();
+    }
+
+    // Combine the initial set and the next two elements
+    let results = querySnapshot.docs.map((doc) => doc.data());
+    currentData = currentData.concat(results);
+    setFilterData(currentData);
+    setMasterData(currentData);
+
+    if (querySnapshot.docs.length > 0) {
+        const newLastDocument =
+            querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastDocument(newLastDocument);
+    }
+};
 
 
 export const isLiked = (likes, username) =>{

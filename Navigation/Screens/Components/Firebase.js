@@ -1,7 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import 'firebase/compat/firestore'
-import {getFirestore} from 'firebase/firestore/lite'
 import "firebase/compat/analytics"
 import 'firebase/compat/storage'
 import _ from "lodash"
@@ -27,10 +26,8 @@ if (_.isEmpty(firebase.apps)) {
 
 const firestore = firebase.firestore()
 
-const firestoreLite = getFirestore(app)
-
 const auth = firebase.auth()
 
 const getstorage = firebase.storage()
 
-export {auth, firestoreLite, firestore, getstorage};
+export {auth, firestore, getstorage};
