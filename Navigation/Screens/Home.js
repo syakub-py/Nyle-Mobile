@@ -9,7 +9,7 @@ import {
   Text,
   TextInput,
   View,
-  Vibration
+  Vibration, ActivityIndicator
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -101,7 +101,7 @@ export default function Home({navigation, route}) {
   const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null)
   const [lastDocument, setLastDocument] = useState(null)
-
+  const [loading, setLoading] = useState(false)
   useEffect( () => {
     readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
     getProfilePicture(route.params.username).then((result)=>{
@@ -109,6 +109,20 @@ export default function Home({navigation, route}) {
     })
   }, [])
 
+  const renderFooter = () => {
+    if (!loading) {
+      return (
+          <View style = {{height:80}}>
+          </View>
+      );
+    }
+
+    return (
+        <View style = {{height:200}}>
+          <ActivityIndicator size="large" color="black" />
+        </View>
+    );
+  };
 
 
   return (
@@ -147,11 +161,8 @@ export default function Home({navigation, route}) {
 
       <View style = {{zIndex:0}}>
         <FlatList
-        ListFooterComponent = {
-          <View style = {{height:80}}>
 
-          </View>
-        }
+        ListFooterComponent = {renderFooter}
         ListHeaderComponent = {
           <View style={{flex:1}}>
             <View style={{marginTop: 35, marginRight: 15, flexDirection:'row', justifyContent:'space-between',}}>
@@ -224,7 +235,7 @@ export default function Home({navigation, route}) {
           </Pressable>
           )}
           keyExtractor = {item => item.id}
-        onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument)}}
+        onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
         />
       </View>
     </View>

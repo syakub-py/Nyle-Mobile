@@ -101,10 +101,11 @@ export const handleEndReached = async (
     lastDocument,
     setFilterData,
     setMasterData,
-    setLastDocument) => {
+    setLastDocument,
+    setLoading) => {
 
+    setLoading(true)
     const postRef = firestore.collection("AllPosts");
-
     // Retrieve the next two elements using startAfter
     let querySnapshot = null;
     if (lastDocument) {
@@ -127,6 +128,7 @@ export const handleEndReached = async (
             querySnapshot.docs[querySnapshot.docs.length - 1];
         setLastDocument(newLastDocument);
     }
+    setLoading(false)
 };
 
 
