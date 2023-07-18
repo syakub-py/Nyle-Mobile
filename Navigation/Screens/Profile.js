@@ -195,9 +195,7 @@ export default function Profile({ navigation, route }) {
           ListHeaderComponent = {
             <View>
               <View>
-                <Text style={{marginTop:25, fontSize:27, fontWeight:'bold', marginLeft:20}}>Settings</Text>
-
-                <View style = {{alignItems:'center'}}>
+                <View style = {{alignItems:'center', marginTop:25}}>
                   <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
                     <Image source = {{uri:profilePic}} style = {styles.image} resizeMode = "cover"/>
                     <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>

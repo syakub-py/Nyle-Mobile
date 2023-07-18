@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, FlatList, Text, Image, ScrollView, Dimensions, Pressable, Alert} from 'react-native';
+import {View, FlatList, Text, Image, ScrollView, Dimensions, Pressable, Alert, TextInput} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
 import CustomMapMarker from "./Components/CustomMapMarker";
@@ -72,6 +72,15 @@ export default function TransactionCalendar({route, navigation}){
                         <MapView style={{ height: '100%', width: '100%' }} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
                             <Marker coordinate={coordinates}/>
                         </MapView>
+                    </View>
+
+                    <Text style={{fontSize:17, marginLeft:20, marginBottom:7}}>Message</Text>
+                    <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: '#ccc', backgroundColor: '#f7f7f7' }}>
+                        <TextInput
+                            multiline
+                            placeholder="(optional)"
+                            style={{ flex: 1, padding: 10 }}
+                        />
                     </View>
 
                     <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate)}>

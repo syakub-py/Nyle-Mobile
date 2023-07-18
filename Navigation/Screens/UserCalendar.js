@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, TouchableOpacity, Pressable} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Pressable, Dimensions, Modal, ScrollView} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {firestore} from "./Components/Firebase";
 import {SwipeListView} from "react-native-swipe-list-view";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import MapView, {Circle, Marker} from 'react-native-maps';
+import CustomMapMarker from "./Components/CustomMapMarker";
 
 
 const handleDayPress = (day, setSelectedDate) => {
@@ -58,7 +60,15 @@ export default function UserCalendar({navigation,route}){
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);
     const [calendarEvents, setCalendarEvents] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
+    const { height } = Dimensions.get('window');
+    const {width} = Dimensions.get("window");
 
+
+    useEffect(()=>{
+        getCalendarEvents(route.params.currentUsername, setCalendarEvents)
+
+    },[])
     const renderStatus = (item) =>{
         if (item.status === "approved"){
             return(
@@ -106,10 +116,6 @@ export default function UserCalendar({navigation,route}){
         }
     }
 
-    useEffect(()=>{
-        getCalendarEvents(route.params.currentUsername, setCalendarEvents)
-
-    },[])
 
     const filteredEvents = calendarEvents.filter((event) => {
         return event.startTime === selectedDate;
@@ -118,79 +124,195 @@ export default function UserCalendar({navigation,route}){
     const BuyerOrSellerCard = (item) => {
         if (item.seller === route.params.currentUsername || item.buyer === route.params.currentUsername) {
             return (
-                <View style={{
-                    flexDirection: 'column',
-                    margin: 5,
-                    borderRadius: 15,
-                    backgroundColor: 'white',
-                    padding: 10,
-                    justifyContent: 'center'
-                }}>
-
+                <Pressable onPress={() => setModalVisible(true)}>
+                    {renderDetailModal(item)}
                     <View style={{
-                        height: 80,
-                        position: 'absolute',
-                        left: 10,
-                        backgroundColor: getRandomLightColor(),
-                        width: 3,
-                        borderRadius: 3
-                    }}/>
+                        flexDirection: 'column',
+                        margin: 5,
+                        borderRadius: 15,
+                        backgroundColor: 'white',
+                        padding: 10,
+                        justifyContent: 'center'
+                    }}>
+
+                        <View style={{
+                            height: 80,
+                            position: 'absolute',
+                            left: 10,
+                            backgroundColor: getRandomLightColor(),
+                            width: 3,
+                            borderRadius: 3
+                        }}/>
 
 
-                    <View style={{flexDirection: "row", marginLeft: 10, marginRight: 10}}>
-                        <View style={{flex: 1}}>
-                            <Text style={{fontSize: 20, fontWeight: '500', marginBottom: 5}}>{item.title}</Text>
+                        <View style={{flexDirection: "row", marginLeft: 10, marginRight: 10}}>
+                            <View style={{flex: 1}}>
+                                <Text style={{fontSize: 20, fontWeight: '500', marginBottom: 5}}>{item.title}</Text>
+                            </View>
+
+                            <View style={{position: "absolute", right: 0}}>
+                                <Text style={{fontSize: 14}}>{item.startTime}</Text>
+                                <Text style={{fontSize: 14}}>{item.endTime}</Text>
+                            </View>
                         </View>
 
-                        <View style={{position: "absolute", right: 0}}>
-                            <Text style={{fontSize: 14}}>{item.startTime}</Text>
-                            <Text style={{fontSize: 14}}>{item.endTime}</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10, marginLeft: 5}}>
+                            <Ionicons name="location" size={15}/>
+                            <Text style={{marginLeft: 3}}>79-33 213th street</Text>
+                        </View>
+
+                        <View style={{flexDirection: "row", position: "relative", zIndex: 1, height: 30, marginLeft: 10}}>
+                            <Image
+                                source={{uri: item.buyerProfilePic}}
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                    borderRadius: 20,
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                }}
+                            />
+                            <Image
+                                source={{uri: item.sellerProfilePic}}
+                                style={{
+                                    height: 30,
+                                    width: 30,
+                                    borderRadius: 20,
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 20,
+                                }}
+                            />
+                        </View>
+                        <View style={{flex: 1, position: 'absolute', bottom: 10, right: 10}}>
+                            {renderStatus(item)}
                         </View>
                     </View>
+                </Pressable>
 
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10, marginLeft: 5}}>
-                        <Ionicons name="location" size={15}/>
-                        <Text style={{marginLeft: 3}}>79-33 213th street</Text>
-                    </View>
-
-                    <View style={{flexDirection: "row", position: "relative", zIndex: 1, height: 30, marginLeft: 10}}>
-                        <Image
-                            source={{uri: item.buyerProfilePic}}
-                            style={{
-                                height: 30,
-                                width: 30,
-                                borderRadius: 20,
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                            }}
-                        />
-                        <Image
-                            source={{uri: item.sellerProfilePic}}
-                            style={{
-                                height: 30,
-                                width: 30,
-                                borderRadius: 20,
-                                position: "absolute",
-                                top: 0,
-                                left: 20,
-                            }}
-                        />
-                    </View>
-                    <View style={{flex: 1, position: 'absolute', bottom: 10, right: 10}}>
-                        {renderStatus(item)}
-                    </View>
-                </View>
             )
         }
     }
 
+    const renderDetailModal = (item) =>{
+        if (modalVisible){
+            return(
+                <View style={{ flex: 1 }}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(false)}>
+                        <View style={{ flex: 1, justifyContent: 'flex-end'}}>
+                            <View
+                                style={{
+                                    backgroundColor: 'whitesmoke',
+                                    height: height / 2,
+                                    borderTopLeftRadius: 20,
+                                    borderTopRightRadius: 20,
+                                    elevation:2
+                                }}>
+
+                                <ScrollView style={{ flex: 1}}>
+                                    <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'lightgray', height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
+                                        <Ionicons name={'close-outline'} size={20}/>
+                                    </Pressable>
+
+                                    <View style={{padding: 20}}>
+
+                                        <Text style={{fontWeight:'bold', fontSize:20, marginTop:25}}>{item.title}</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                                            <Image
+                                                source={{ uri: item.buyerProfilePic }}
+                                                style={{
+                                                    height: 40,
+                                                    width: 40,
+                                                    borderRadius: 20,
+                                                }}
+                                            />
+                                            <View style={{ flexDirection: 'column', marginLeft: 7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>{item.buyer}</Text>
+                                                <Text style={{ color: 'lightgray' }}>Buyer</Text>
+                                            </View>
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom:10}}>
+                                            <Image
+                                                source={{ uri: item.sellerProfilePic }}
+                                                style={{
+                                                    height: 40,
+                                                    width: 40,
+                                                    borderRadius: 20,
+                                                }}
+                                            />
+                                            <View style={{ flexDirection: 'column', marginLeft: 7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>{item.seller}</Text>
+                                                <Text style={{ color: 'lightgray' }}>Seller</Text>
+                                            </View>
+                                        </View>
+                                        <Text>{item.message}</Text>
+
+                                        <View style={{ flexDirection: 'row', marginTop: 10,marginBottom: 10,}}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Ionicons name={"calendar-outline"} size={15} />
+                                                <View style={{ flexDirection: 'column', marginLeft: 5 }}>
+                                                    <Text style={{ color: 'lightgray', fontSize: 14 }}>Date</Text>
+                                                    <Text>{item.startTime}</Text>
+                                                </View>
+                                            </View>
+
+                                            <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+                                                <Ionicons name={"time-outline"} size={15} />
+                                                <View style={{ flexDirection: 'column', marginLeft: 5 }}>
+                                                    <Text style={{ color: 'lightgray', fontSize: 14 }}>Time</Text>
+                                                    <Text>{item.startTime}</Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+                                                <Ionicons name={"checkmark-outline"} size={15} />
+                                                <View style={{ flexDirection: 'column', marginLeft: 5 }}>
+                                                    <Text style={{ color: 'lightgray', fontSize: 14 }}>Status</Text>
+                                                    <Text>{item.status}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+
+
+
+
+                                        <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3 }}>
+                                            <MapView style={{ height: '100%', width: '100%' }} initialCamera={{ center: item.coordinates, pitch: 0, heading: 0, zoom: 15, altitude: 0 }} scrollEnabled={false}>
+                                                <Marker coordinate={item.coordinates} />
+                                                <Circle
+                                                    center={item.coordinates}
+                                                    radius={120}
+                                                    fillColor="rgba(66, 135, 245, 0.2)"
+                                                    strokeColor="rgba(66, 135, 245, 0.7)"
+                                                    strokeWidth={1}
+                                                />
+                                            </MapView>
+                                        </View>
+
+                                    </View>
+                                </ScrollView>
+                            </View>
+
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }else{
+            return null
+        }
+    }
     return(
         <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
             rightOpenValue = {-120}
             renderHiddenItem = {({item}) => (
+                <Pressable onPress={() => setModalVisible(true)}>
                     <View style = {{ position: 'absolute',
                         flexDirection:'row',
                         top: 0,
@@ -199,6 +321,7 @@ export default function UserCalendar({navigation,route}){
                         width: 120,
                         alignItems: 'center'
                     }}>
+
                         {
                             (item.seller === route.params.currentUsername)?(
                                 <View style={{flexDirection:'row'}}>
@@ -223,6 +346,7 @@ export default function UserCalendar({navigation,route}){
 
 
                     </View>
+                </Pressable>
                 )
             }
             ListHeaderComponent={
