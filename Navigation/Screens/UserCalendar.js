@@ -56,6 +56,19 @@ function getRandomLightColor() {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
+
+const handleDelete = async (docId, calendarEvents, setCalendarEvents) =>{
+    await firestore
+        .collection("CalendarEvents")
+        .doc(docId)
+        .delete()
+        .then(()=>{
+            alert("Pickup deleted")
+        })
+    calendarEvents = calendarEvents.filter((item)=>item.id !== docId)
+    setCalendarEvents(calendarEvents)
+}
+
 export default function UserCalendar({navigation,route}){
     const today = new Date().toISOString().split('T')[0];
     const [selectedDate, setSelectedDate] = useState(today);
@@ -217,14 +230,15 @@ export default function UserCalendar({navigation,route}){
                                     borderWidth:1
                                 }}>
 
-                                <ScrollView style={{ flex: 1}}>
-                                    <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'lightgray', height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
+                                <ScrollView style={{ flex: 1}} showsVerticalScrollIndicator={false}>
+                                    <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'white', borderColor:'lightgrey', borderWidth:1, height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
                                         <Ionicons name={'close-outline'} size={20}/>
                                     </Pressable>
 
                                     <View style={{padding: 20}}>
 
-                                        <Text style={{fontWeight:'bold', fontSize:20, marginTop:25}}>{item.title}</Text>
+                                        <Text style={{fontWeight:'bold', fontSize:25, marginTop:25, marginBottom: 10}}>{item.title}</Text>
+
                                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                                             <Image
                                                 source={{ uri: item.buyerProfilePic }}
@@ -306,8 +320,9 @@ export default function UserCalendar({navigation,route}){
         }
     }
 
-    return(
 
+
+    return(
         <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
@@ -322,27 +337,24 @@ export default function UserCalendar({navigation,route}){
                         top: 0,
                         right: 0,
                         bottom: 0,
-                        width: 120,
+                        width: 110,
                         alignItems: 'center'
                     }}>
                         {
                             (item.seller === route.params.currentUsername)?(
-                                <View style={{flexDirection:'row'}}>
-                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id, "approved")}} style={{alignItems:'center', marginRight:15}}>
+                                <View style={{flexDirection:'row', justifyContent:'center'}}>
+                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id, "approved")}} style={{alignItems:'center', justifyContent:'center', marginRight:15, borderWidth:1, borderColor:'lightgray', borderRadius:20, height:40, width:40}}>
                                         <Ionicons name = {'checkmark-outline'} color = {"green"} size = {30} />
-                                        <Text style={{color:"green"}}>Approve</Text>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id,"denied")}} style={{alignItems:'center'}}>
-                                        <Ionicons name = {'close-circle-outline'} color = {"red"} size = {30} />
-                                        <Text style={{color:"red"}}>Deny</Text>
+                                    <TouchableOpacity onPress = {() =>{handleApproveDenyPress(item.id,"denied")}} style={{alignItems:'center', justifyContent:'center', marginRight:15, borderWidth:1, borderColor:'lightgray', borderRadius:20, height:40, width:40}}>
+                                        <Ionicons name = {'close-outline'} color = {"red"} size = {30} />
                                     </TouchableOpacity>
                                 </View>
 
                             ):(
-                                <TouchableOpacity onPress = {() =>{}} style={{alignItems:'center'}}>
+                                <TouchableOpacity onPress = {() =>{handleDelete(item.id, calendarEvents, setCalendarEvents)}} style={{alignItems:'center', justifyContent:'center', marginRight:15, borderWidth:1, borderColor:'lightgray', borderRadius:20, height:40, width:40}}>
                                     <Ionicons name = {'close-outline'} color = {"red"} size = {30} />
-                                    <Text style={{color:"red"}}>Cancel</Text>
                                 </TouchableOpacity>
                             )
                         }
@@ -352,21 +364,24 @@ export default function UserCalendar({navigation,route}){
             ListHeaderComponent={
             <View>
 
-                <View style={{ zIndex: 2, position: 'absolute', top: 30, left: 17 }}>
+                <View style={{  position: 'absolute', top: 30, left: 17 }}>
                     <Pressable onPress={() => navigation.goBack()}>
                         <Ionicons name="chevron-back-outline" size={30} />
                     </Pressable>
                 </View>
 
-                <Calendar
-                    markedDates={{ [selectedDate]: { selected: true, marked: true } }}
-                    theme={{
-                        selectedDayBackgroundColor: getRandomLightColor(),
-                        todayTextColor: getRandomLightColor(),
-                        arrowColor: getRandomLightColor(),
-                    }}
-                    onDayPress={(day) => handleDayPress(day, setSelectedDate)}
-                />
+                <View style={{marginTop:55}}>
+                    <Calendar
+                        markedDates={{ [selectedDate]: { selected: true, marked: true } }}
+                        theme={{
+                            selectedDayBackgroundColor: getRandomLightColor(),
+                            todayTextColor: getRandomLightColor(),
+                            arrowColor: getRandomLightColor(),
+                        }}
+                        onDayPress={(day) => handleDayPress(day, setSelectedDate)}
+                    />
+                </View>
+
             </View>
             }
         />

@@ -348,7 +348,7 @@ export default function PostDetails({route, navigation}) {
                         onRequestClose={() => toggleDropdown(isOpen, setIsOpen)}
                         transparent={true}
                     >
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)', }}>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{ width: 280, height: 250, backgroundColor: '#fff', borderRadius: 20, flexDirection:'column', justifyContent: 'space-between' }}>
                                 <View style={{flexDirection:"row"}}>
                                     <MenuButton title={'Share'} onPress={() => {}} iconName={'share-social-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center',margin:10}} />

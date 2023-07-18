@@ -12,7 +12,7 @@ const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
-const handleAddPickup = (route, coordinates, selectedDate) => {
+const handleAddPickup = (route, coordinates, selectedDate, message) => {
     return firestore.collection("CalendarEvents").doc(route.params.item.title).set({
         title: route.params.item.title,
         seller: route.params.item.PostedBy,
@@ -23,7 +23,8 @@ const handleAddPickup = (route, coordinates, selectedDate) => {
         startTime: selectedDate,
         endTime: selectedDate,
         status:"pending",
-        seen:false
+        seen:false,
+        message:message
     }).then(() => {
         console.log("added")
         })
@@ -36,7 +37,7 @@ const handleAddPickup = (route, coordinates, selectedDate) => {
 export default function TransactionCalendar({route, navigation}){
     const [selectedDate, setSelectedDate] = useState(null);
     const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0});
-
+    const [message, setMessage] = useState("")
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
@@ -80,10 +81,13 @@ export default function TransactionCalendar({route, navigation}){
                             multiline
                             placeholder="(optional)"
                             style={{ flex: 1, padding: 10 }}
+                            onChangeText={(text)=>{
+                                setMessage(text)
+                            }}
                         />
                     </View>
 
-                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate)}>
+                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate, message)}>
                         <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
                             <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
                         </View>
