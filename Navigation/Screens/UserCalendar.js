@@ -116,7 +116,6 @@ export default function UserCalendar({navigation,route}){
         }
     }
 
-
     const filteredEvents = calendarEvents.filter((event) => {
         return event.startTime === selectedDate;
     });
@@ -132,7 +131,9 @@ export default function UserCalendar({navigation,route}){
                         borderRadius: 15,
                         backgroundColor: 'white',
                         padding: 10,
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        borderWidth:1,
+                        borderColor:'lightgrey'
                     }}>
 
                         <View style={{
@@ -207,11 +208,13 @@ export default function UserCalendar({navigation,route}){
                         <View style={{ flex: 1, justifyContent: 'flex-end'}}>
                             <View
                                 style={{
-                                    backgroundColor: 'whitesmoke',
-                                    height: height / 2,
+                                    backgroundColor: 'white',
+                                    height: height /1.80,
                                     borderTopLeftRadius: 20,
                                     borderTopRightRadius: 20,
-                                    elevation:2
+                                    elevation:2,
+                                    borderColor:'lightgray',
+                                    borderWidth:1
                                 }}>
 
                                 <ScrollView style={{ flex: 1}}>
@@ -277,10 +280,6 @@ export default function UserCalendar({navigation,route}){
                                                 </View>
                                             </View>
                                         </View>
-
-
-
-
                                         <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3 }}>
                                             <MapView style={{ height: '100%', width: '100%' }} initialCamera={{ center: item.coordinates, pitch: 0, heading: 0, zoom: 15, altitude: 0 }} scrollEnabled={false}>
                                                 <Marker coordinate={item.coordinates} />
@@ -306,13 +305,18 @@ export default function UserCalendar({navigation,route}){
             return null
         }
     }
+
     return(
+
         <SwipeListView
             data={filteredEvents}
             renderItem={({ item }) => BuyerOrSellerCard(item)}
+            contentContainerStyle={{
+                flex:1,
+                backgroundColor:"white"
+            }}
             rightOpenValue = {-120}
             renderHiddenItem = {({item}) => (
-                <Pressable onPress={() => setModalVisible(true)}>
                     <View style = {{ position: 'absolute',
                         flexDirection:'row',
                         top: 0,
@@ -321,7 +325,6 @@ export default function UserCalendar({navigation,route}){
                         width: 120,
                         alignItems: 'center'
                     }}>
-
                         {
                             (item.seller === route.params.currentUsername)?(
                                 <View style={{flexDirection:'row'}}>
@@ -343,10 +346,7 @@ export default function UserCalendar({navigation,route}){
                                 </TouchableOpacity>
                             )
                         }
-
-
                     </View>
-                </Pressable>
                 )
             }
             ListHeaderComponent={

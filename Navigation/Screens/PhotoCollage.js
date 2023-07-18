@@ -1,4 +1,4 @@
-import { Dimensions, Image, Pressable, ScrollView, View, Text} from "react-native";
+import {Dimensions, Image, Pressable, ScrollView, View, Text, SafeAreaView} from "react-native";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -6,7 +6,7 @@ export default function PhotoCollage({ route, navigation }){
     const pictures = route.params.pictures;
 
     return (
-        <View>
+        <SafeAreaView>
             <View style={{height:80, backgroundColor:"white"}}>
 
                 <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
@@ -49,8 +49,7 @@ export default function PhotoCollage({ route, navigation }){
                     })
                 }
             </ScrollView>
-
-        </View>
+        </SafeAreaView>
 
     );
 };
