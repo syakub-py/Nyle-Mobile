@@ -1,5 +1,4 @@
 import {
-    ActivityIndicator,
     Dimensions,
     FlatList,
     Image,
@@ -55,14 +54,7 @@ export default function HomeMapView({navigation, route}) {
     }, [])
 
     const renderFooter = () => {
-        if (!loading) {
             return null;
-        }
-        return (
-            <View style = {{width:200}}>
-                <ActivityIndicator size="large" color="black" />
-            </View>
-        );
     };
     return (
         <View style = {{ flex: 1 }}>

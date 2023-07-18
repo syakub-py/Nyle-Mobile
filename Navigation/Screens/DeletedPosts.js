@@ -127,6 +127,7 @@ export default function DeletedPosts({route, navigation}) {
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
                     </Pressable>
+
                 </View>
                 }
                   refreshControl = {

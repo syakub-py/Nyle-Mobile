@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Text, Image, Alert, SwipeableListView, TouchableOpacity, Pressable} from 'react-native';
+import {View, Text, Image, TouchableOpacity, Pressable} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import {firestore} from "./Components/Firebase";
 import {SwipeListView} from "react-native-swipe-list-view";
@@ -34,7 +34,7 @@ const getCalendarEvents = async (username, setCalendarEvents) => {
 }
 
 const handleApproveDenyPress = async (DocId, status) => {
-    return firestore.collection("CalendarEvents").doc(DocId).set({status:status}, { merge: true })
+    return firestore.collection("CalendarEvents").doc(DocId).set({status:status, seen:true}, { merge: true })
         .then(ref => {
             console.log(status)
         })
@@ -108,6 +108,7 @@ export default function UserCalendar({navigation,route}){
 
     useEffect(()=>{
         getCalendarEvents(route.params.currentUsername, setCalendarEvents)
+
     },[])
 
     const filteredEvents = calendarEvents.filter((event) => {
