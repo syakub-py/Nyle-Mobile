@@ -14,3 +14,24 @@ export const handleIncomingNotification = () => {
         // Handle the notification according to your app's logic
     });
 };
+export const PushNotification = (message) => {
+    messaging()
+        .getToken()
+        .then((token) => {
+            const notification = {
+                token: token,
+                notification: {
+                    title: 'New Message',
+                    body: message,
+                },
+            };
+
+            return messaging().sendMessage(notification);
+        })
+        .then(() => {
+            console.log('Notification sent successfully!');
+        })
+        .catch((error) => {
+            console.log('Error sending notification:', error);
+        });
+};

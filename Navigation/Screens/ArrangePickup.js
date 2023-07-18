@@ -23,6 +23,7 @@ const handleAddPickup = (route, coordinates, selectedDate) => {
         startTime: selectedDate,
         endTime: selectedDate,
         status:"pending",
+        seen:false
     }).then(() => {
         console.log("added")
         })

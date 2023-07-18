@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
-import {Image, View} from "react-native";
+import {Alert, Image, View} from "react-native";
 import {getProfilePicture} from "./Screens/GlobalFunctions";
 //Screens
 import home from './Screens/Home'
