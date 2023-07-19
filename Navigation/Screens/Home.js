@@ -162,69 +162,69 @@ export default function Home({navigation, route}) {
 
       <View style = {{zIndex:0}}>
         <FlatList
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent = {renderFooter}
+          ListHeaderComponent = {
+            <View style={{flex:1}}>
+              <View style={{marginTop: 35, marginRight: 15, flexDirection:'row', justifyContent:'space-between',}}>
 
-        ListFooterComponent = {renderFooter}
-        ListHeaderComponent = {
-          <View style={{flex:1}}>
-            <View style={{marginTop: 35, marginRight: 15, flexDirection:'row', justifyContent:'space-between',}}>
+                <View style={{marginLeft:15}}>
+                  <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
+                  <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
+                </View>
+                <Pressable onPress={()=>{navigation.navigate("My Profile", {username: route.params.username})}}>
+                  <Image
+                      resizeMode="cover"
+                      source={{uri: profilePic}}
+                      style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
+                  />
+                </Pressable>
 
-              <View style={{marginLeft:15}}>
-                <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
-                <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
               </View>
-              <Pressable onPress={()=>{navigation.navigate("My Profile", {username: route.params.username})}}>
-                <Image
-                    resizeMode="cover"
-                    source={{uri: profilePic}}
-                    style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
-                />
-              </Pressable>
+
+              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+                {
+                  categories.map((category, index) => (
+                      <Pressable key = {index}
+                        onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)}
+                        style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}
+                      >
+                        <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                          {category}
+                        </Text>
+                      </Pressable>
+                  ))
+                }
+              </ScrollView>
+              <View style = {{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    height:50,
+                    borderRadius:15,
+                    margin:10,
+                    elevation:2
+                  }}>
+                <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text, masterData, setFilterData, setSearch)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
+              </View>
+
+              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
+                {
+                  postFilters.map((filters, index) => (
+                      <Pressable key = {index} onPress = {() => handlePostFilterPress(index, setSelectedPostFilterIndex, masterData, setFilterData)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+                        <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
+                          {filters}
+                        </Text>
+                      </Pressable>
+                  ))
+                }
+              </ScrollView>
 
             </View>
-            
-            <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
-              {
-                categories.map((category, index) => (
-                    <Pressable key = {index}
-                      onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)}
-                      style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}
-                    >
-                      <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
-                        {category}
-                      </Text>
-                    </Pressable>
-                ))
-              }
-            </ScrollView>
-            <View style = {{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#fff',
-                  height:50,
-                  borderRadius:15,
-                  margin:10,
-                  elevation:2
-                }}>
-              <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-              <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text, masterData, setFilterData, setSearch)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
-            </View>
-
-            <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
-              {
-                postFilters.map((filters, index) => (
-                    <Pressable key = {index} onPress = {() => handlePostFilterPress(index, setSelectedPostFilterIndex, masterData, setFilterData)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                      <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
-                        {filters}
-                      </Text>
-                    </Pressable>
-                ))
-              }
-            </ScrollView>
-
-          </View>
-        }
+          }
 
         data = {filteredData}
         refreshControl = {
@@ -234,8 +234,8 @@ export default function Home({navigation, route}) {
           <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
             <PostCard data = {item} username = {route.params.username}/>
           </Pressable>
-          )}
-          keyExtractor = {item => item.id}
+        )}
+        keyExtractor = {item => item.id}
         onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
         />
       </View>

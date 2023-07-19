@@ -354,7 +354,7 @@ export default function UserCalendar({navigation,route}){
 
                             ):(
                                 <TouchableOpacity onPress = {() =>{handleDelete(item.id, calendarEvents, setCalendarEvents)}} style={{alignItems:'center', justifyContent:'center', marginRight:15, borderWidth:1, borderColor:'lightgray', borderRadius:20, height:40, width:40}}>
-                                    <Ionicons name = {'close-outline'} color = {"red"} size = {30} />
+                                    <Ionicons name = {'trash-outline'} color = {"red"} size = {25} />
                                 </TouchableOpacity>
                             )
                         }

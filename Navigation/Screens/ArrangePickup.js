@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import {View, FlatList, Text, Image, ScrollView, Dimensions, Pressable, Alert, TextInput} from 'react-native';
+import {View, Text, ScrollView, Dimensions, Pressable, TextInput} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
-import CustomMapMarker from "./Components/CustomMapMarker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Components/Firebase";
 
