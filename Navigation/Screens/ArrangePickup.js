@@ -12,7 +12,7 @@ const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
-const handleAddPickup = (route, coordinates, selectedDate, message) => {
+const handleAddPickup = (route, coordinates, selectedDate, message, navigation) => {
     return firestore.collection("CalendarEvents").doc(route.params.item.title).set({
         title: route.params.item.title,
         seller: route.params.item.PostedBy,
@@ -27,8 +27,8 @@ const handleAddPickup = (route, coordinates, selectedDate, message) => {
         message:message
     }).then(() => {
         console.log("added")
-        })
-        .catch(error => {
+        navigation.goBack()
+    }).catch(error => {
             console.log('Error adding document: ', error);
         });
 }
@@ -87,12 +87,11 @@ export default function TransactionCalendar({route, navigation}){
                         />
                     </View>
 
-                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate, message)}>
+                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate, message, navigation)}>
                         <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
                             <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
                         </View>
                     </Pressable>
-
                 </View>
             </ScrollView>
     );
