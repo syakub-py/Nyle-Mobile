@@ -9,7 +9,8 @@ import {
   Text,
   TextInput,
   View,
-  Vibration, ActivityIndicator
+  Vibration,
+  ActivityIndicator
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -65,30 +66,30 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 
 const postFilter = (text, masterData, setFilterData) => {
   if (text && text !== 'Latest Posts') {
-    if (text === 'Most Expensive') {
-      const newData = masterData.filter((item) => {
-        const itemData = item.category ? item.category : '';
-        return itemData.indexOf(text) > -1;
-      });
-      setFilterData(newData);
+    switch (text) {
+      case 'Most Expensive':
+        const newDataMostExpensive = masterData.slice().sort((a, b) => (b.price || 0) - (a.price || 0));
+        setFilterData(newDataMostExpensive);
+        break;
+      case 'Trending':
+        const newDataTrending = masterData.slice().sort((a, b) => (b.views || 0) - (a.views || 0));
+        setFilterData(newDataTrending);
+        break;
+      case 'Cheapest':
+        const newDataCheapest = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
+        setFilterData(newDataCheapest);
+        break;
+      case 'Top Rated Sellers':
+        const TopRatedMySellers = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
+        setFilterData(TopRatedMySellers);
+        break;
+      default:
+        setFilterData(masterData);
+        break;
     }
-    if (text === 'Trending') {
-      const newData = masterData.sort((a, b) => {
-        const viewsA = a.views ? a.views : 0;
-        const viewsB = b.views ? b.views : 0;
-        return viewsB - viewsA;
-      });
-      setFilterData(newData);
-    }
-    if (text === 'Cheapest') {
-      const newData = masterData.sort((a, b) => {
-        const priceA = a.price ? a.price : 0;
-        const priceB = b.price ? b.price : 0;
-        return priceA - priceB;
-      });
-      setFilterData(newData);
-    }
-  } else setFilterData(masterData);
+  } else {
+    setFilterData(masterData);
+  }
 };
 
 export default function Home({navigation, route}) {

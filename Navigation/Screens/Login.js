@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { auth } from './Components/Firebase';
-import "firebase/auth";
-import { signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth/cordova";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const handleEmailAndPasswordLogin = (username, password) => {
     auth.signInWithEmailAndPassword(username, password)
@@ -14,13 +13,24 @@ const handleEmailAndPasswordLogin = (username, password) => {
 }
 
 const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-        await signInWithRedirect(auth, provider);
-        const result = await getRedirectResult(auth);
-        GoogleAuthProvider.credentialFromResult(result);
+        const result = await signInWithPopup(auth, new GoogleAuthProvider());
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+
     } catch (error) {
-        console.log(error);
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorMessage)
     }
 }
 
