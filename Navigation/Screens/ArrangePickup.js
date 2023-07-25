@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView, Dimensions, Pressable, TextInput} from 'react-native';
+import {View, Text, ScrollView, Dimensions, Pressable, TextInput, Modal} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -37,62 +37,97 @@ export default function TransactionCalendar({route, navigation}){
     const [selectedDate, setSelectedDate] = useState(null);
     const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0});
     const [message, setMessage] = useState("")
+    const [modalVisible, setModalVisible] = useState(false);
+    const { height } = Dimensions.get('window');
+
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
+        setModalVisible(true)
+    }
+
+    const renderModal = () => {
+        if (modalVisible){
+            return(
+                <View style={{ flex: 1 }}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(false)}>
+                        <View style={{ flex: 1, justifyContent: 'flex-end'}}>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    height: height /1.80,
+                                    borderTopLeftRadius: 20,
+                                    borderTopRightRadius: 20,
+                                    elevation:2,
+                                    borderColor:'lightgray',
+                                    borderWidth:1
+                                }}>
+                                <ScrollView style={{ flex: 1}} showsVerticalScrollIndicator={false}>
+
+                                    <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'white', borderColor:'lightgrey', borderWidth:1, height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
+                                        <Ionicons name={'close-outline'} size={20}/>
+                                    </Pressable>
+
+                                    <View style={{marginTop:30, marginBottom:20}}>
+                                        <Calendar
+                                            markedDates={{ [selectedDate]: { selected: true, marked: true } }}
+                                            theme={{
+                                                selectedDayBackgroundColor: 'blue',
+                                                todayTextColor: 'blue',
+                                                arrowColor: 'blue',
+                                            }}
+                                            onDayPress={(day) => handleDayPress(day, setSelectedDate)}
+                                        />
+                                    </View>
+
+
+                                    <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: '#ccc', backgroundColor: '#f7f7f7' }}>
+                                        <TextInput
+                                            multiline
+                                            placeholder="Message (optional)"
+                                            style={{ flex: 1, padding: 10 }}
+                                            onChangeText={(text)=>{
+                                                setMessage(text)
+                                            }}
+                                        />
+                                    </View>
+
+                                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate, message, navigation)}>
+                                        <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
+                                            <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
+                                        </View>
+                                    </Pressable>
+                                </ScrollView>
+                            </View>
+                        </View>
+
+                    </Modal>
+                </View>
+            )
+        }
     }
 
     return (
-            <ScrollView style={{ zIndex: 1 }}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ position: 'absolute', top: 30, left: 17, alignSelf: 'center' }}>
-                        <Pressable onPress={() => navigation.goBack()}>
-                            <Ionicons name="chevron-back-outline" size={30} />
-                        </Pressable>
-                    </View>
-
-                    <Text style={{ fontSize: 20, marginTop: 30 }}>{route.params.item.title}</Text>
-                </View>
-
-                <View style={{ marginTop: 30 }}>
-                    <Text style={{fontSize:17, marginLeft:20, marginBottom:7}}>When?</Text>
-                    <View style={{ borderRadius: 10, overflow: 'hidden', margin: 10, width: width - 50, height: 300, alignSelf: 'center' }}>
-                        <Calendar
-                            markedDates={{ [selectedDate]: { selected: true, marked: true } }}
-                            theme={{
-                                selectedDayBackgroundColor: 'blue',
-                                todayTextColor: 'blue',
-                                arrowColor: 'blue',
-                            }}
-                            onDayPress={(day) => handleDayPress(day, setSelectedDate)}
-                        />
-                    </View>
-                    <Text style={{fontSize:17, marginLeft:20, marginBottom:7}}>Where?</Text>
-                    <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3 }}>
-                        <MapView style={{ height: '100%', width: '100%' }} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
-                            <Marker coordinate={coordinates}/>
-                        </MapView>
-                    </View>
-
-                    <Text style={{fontSize:17, marginLeft:20, marginBottom:7}}>Message</Text>
-                    <View style={{ width: width - 50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: '#ccc', backgroundColor: '#f7f7f7' }}>
-                        <TextInput
-                            multiline
-                            placeholder="(optional)"
-                            style={{ flex: 1, padding: 10 }}
-                            onChangeText={(text)=>{
-                                setMessage(text)
-                            }}
-                        />
-                    </View>
-
-                    <Pressable onPress={()=>handleAddPickup(route, coordinates, selectedDate, message, navigation)}>
-                        <View style={{backgroundColor:'black', justifyContent:'center', width:300, height:50, alignSelf:'center', borderRadius:10}}>
-                            <Text style={{color:'white', alignSelf:'center', fontWeight:'bold'}}>Finalize Pickup</Text>
-                        </View>
+        <View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 1}}>
+                <View style={{ position: 'absolute', top: 30, left: 17, alignSelf: 'center' }}>
+                    <Pressable onPress={() => navigation.goBack()}>
+                        <Ionicons name="chevron-back-outline" size={30} />
                     </Pressable>
                 </View>
-            </ScrollView>
+
+                <Text style={{fontSize: 20, marginTop: 30 }}>{route.params.item.title}</Text>
+            </View>
+            {renderModal()}
+            <MapView style={{ height: '100%', width: '100%' }} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
+                <Marker coordinate={coordinates}/>
+            </MapView>
+
+        </View>
     );
 }
 
