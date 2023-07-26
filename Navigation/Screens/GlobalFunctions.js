@@ -3,6 +3,7 @@ import {Vibration} from "react-native";
 import React from "react";
 import CryptoDataService from '../../Services/CryptoDataService';
 import _ from "lodash"
+
 export const updateCurrencyPrice = async (data) => {
     let price = 0;
     try {
@@ -46,7 +47,6 @@ export const ConvertPrice = async (fromUrl, amountFrom, toUrl) =>{
     }
 
     return FromPrice/ToPrice;
-
 }
 
 export const generateRating = async (username, setRating, setNumOfReviews) => {
@@ -91,7 +91,6 @@ export const readDatabase = async (
         }
     } catch (error) {
         console.error(error);
-        // Handle the error appropriately, e.g., show an alert
     }
 };
 
@@ -130,6 +129,14 @@ export const handleEndReached = async (
     setLoading(false)
 };
 
+
+export const updatedCurrencyList = (currencyList) =>{
+    if(_.size(currencyList)>1){
+        return currencyList.filter((item, index) => index !== 0)
+    }else{
+        return currencyList
+    }
+}
 
 export const isLiked = (likes, username) =>{
     return likes.includes(username);

@@ -16,6 +16,7 @@ import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import {handleEndReached} from "./GlobalFunctions";
+import _ from "lodash";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -237,7 +238,11 @@ export default function Home({navigation, route}) {
           </Pressable>
         )}
         keyExtractor = {item => item.id}
-        onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
+        onEndReached={()=>{
+          if (_.size(masterData)>2){
+            handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)
+          }
+        }}
         />
       </View>
     </View>

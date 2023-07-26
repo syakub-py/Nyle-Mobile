@@ -19,12 +19,14 @@ import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
+import { CheckBox } from 'react-native-elements';
 import {CustomText, CustomTextInput, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
 /**
+
  *
  * @param {*} param0: {profilePicture: url of the profile, username: current username}
  * @returns
@@ -106,14 +108,14 @@ export default function AddPost({route}) {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [isFocus, setIsFocus] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
     const [imageUrls, setImageUrls] = useState([]);
-    const [currency, setCurrency] = useState({label:'', value:''});
-
-
+    const [selectedCurrency, setSelectedCurrency] = useState({});
+    const [currencyList, setCurrencyList] = useState([])
     const [profilePic, setProfilePic] = useState(null)
 
     useEffect(()=>{
@@ -151,9 +153,8 @@ export default function AddPost({route}) {
     const createDocument = ({uniqueFields}, firebaseImageUrls) => ({
         id: randomNumber,
         title: title,
-        price: price,
         PostedBy: route.params.username,
-        currency: currency.value,
+        currency: currencyList,
         description: description,
         pic: firebaseImageUrls,
         profilePic: profilePic,
@@ -281,6 +282,94 @@ export default function AddPost({route}) {
         )
     }
 
+    const renderPrice = () =>{
+        if (checked){
+            return(
+                <View>
+                    <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black', margin: 10 }}>Price</Text>
+                    <View style={{ margin: 10 }}>
+                        <CheckBox
+                            title="Accept multiple currencies"
+                            checked={checked}
+                            onPress={() => setChecked(!checked)}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', marginLeft: 30 }}>
+                        <DropdownInput
+                            data={currencies}
+                            labelField="label"
+                            valueField="value"
+                            placeholder="Select a currency"
+                            onChange={(item) => {
+                                setSelectedCurrency({...item, price: price});
+                                const updatedCurrencyList = [...currencyList, selectedCurrency];
+                                setCurrencyList(updatedCurrencyList)
+                            }}
+                            value={selectedCurrency}
+                            renderItem={renderCurrencyItem}
+                            customStyle={{
+                                width: Dimensions.get('window').width / 3,
+                            }}
+                            setIsFocus={() => setIsFocus(false)}
+                        />
+                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width / 2.5} />
+                    </View>
+
+                    <View style={{zIndex:1, marginLeft:15,}}>
+                        <Text>Currencies Accepted: </Text>
+                        {
+                            currencyList.map((item, index) => (
+                                <View key={index} style={{flexDirection:'row', alignItems:'center',marginLeft:15,  marginBottom:5}}>
+                                    <Image source={{uri:item.value}} style={{height:30, width:30, borderRadius:20}}/>
+                                    <Text style={{marginLeft:5}}>{item.label}</Text>
+                                    <Text style={{marginLeft:5}}>{item.price}</Text>
+                                </View>
+                            ))
+                        }
+
+                    </View>
+
+                </View>
+            )
+        }else {
+            return (
+                <View>
+                    <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
+                    <View style={{margin:10}}>
+                        <CheckBox
+                            title="Accept muliple currencies"
+                            checked={checked}
+                            onPress={()=>setChecked(!checked)}
+                        />
+                    </View>
+                    <View style = {{flexDirection:'row', marginLeft:30}}>
+
+                        <DropdownInput
+                            data={currencies}
+                            labelField = "label"
+                            valueField = "value"
+                            placeholder = "Select a currency"
+                            onChange={(item) => {
+                                setSelectedCurrency({...item, price: price});
+                                console.log(selectedCurrency)
+                                setCurrencyList([selectedCurrency])
+
+                            }}
+                            value = {selectedCurrency}
+                            renderItem = {renderCurrencyItem}
+                            customStyle = {{
+                                width: Dimensions.get('window').width / 3
+                            }}
+                            setIsFocus={()=>setIsFocus(false)}
+                        />
+
+                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
+                    </View>
+                </View>
+            )
+        }
+    }
+
     return (
         <SafeAreaView style = {{backgroundColor:'white'}}>
             <ScrollView contentContainerStyle = {{paddingBottom:60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {()=>onRefresh(setRefreshing)}/>} >
@@ -345,28 +434,9 @@ export default function AddPost({route}) {
                     />
 
                 </View>
+
                 <View >
-                    <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
-                    <View style = {{flexDirection:'row', marginLeft:30}}>
-                        <DropdownInput
-                            data={currencies}
-                            labelField = "label"
-                            valueField = "value"
-                            placeholder = "Select a currency"
-                            onChange={(item) => {
-                                setCurrency(item);
-                            }}
-                            value = {currency}
-                            renderItem = {renderCurrencyItem}
-                            customStyle = {{
-                                width: Dimensions.get('window').width / 3
-                            }}
-                            setIsFocus={()=>setIsFocus(false)}
-                        />
-
-                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
-
-                    </View>
+                    {renderPrice()}
                 </View>
 
                 <CustomText text="Location" />
@@ -378,7 +448,6 @@ export default function AddPost({route}) {
 
                 {renderDetailsText()}
                 {renderHomesSection()}
-
                 {renderAutoSection()}
 
                 <View>

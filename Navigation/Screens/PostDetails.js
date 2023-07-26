@@ -1,6 +1,6 @@
 import {
     Alert,
-    Dimensions,
+    Dimensions, FlatList,
     Image,
     Modal,
     Pressable,
@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
-import {generateRating, handleLike, isLiked} from "./GlobalFunctions";
+import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import _ from "lodash";
 import MenuButton from "./Components/MenuButtons";
@@ -326,6 +326,8 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
+
+
     return (
         <SafeAreaView style = {{flex:1}}>
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
@@ -438,13 +440,25 @@ export default function PostDetails({route, navigation}) {
                         <Text style = {{color:'black',fontSize:23,fontWeight:'bold'}}>{route.params.item.title}</Text>
                     </View>
 
-                    <View style = {{ backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row", marginTop:5}}>
-                        <Image style = {{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode = {'cover'} source = {{uri:route.params.item.currency}}/>
-                        <Text style = {{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{route.params.item.price}</Text>
-                        <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
+                    <View style={{width:60}}>
+                        <FlatList horizontal
+                                  data={updatedCurrencyList(route.params.item.currency)}
+                                  snapToAlignment={"center"}
+                                  pagingEnabled
+                                  renderItem={({item})=>(
+                                      <View style = {{ width:60,backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row", marginTop:5}}>
+                                          <Image style = {{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode = {'cover'} source = {{uri:item.value}}/>
+                                          <Text style = {{fontSize:20, fontWeight:'bold', color:'black', marginRight:10}}>{item.price}</Text>
+                                      </View>
+                                  )}
+                        />
                     </View>
+
+                    <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
+
                     {renderIsCategoryHomes()}
                     {renderIsCategoryAuto()}
+
                 </View>
                 {isPostedBySameAsUsername()}
 

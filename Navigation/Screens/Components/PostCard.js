@@ -2,7 +2,7 @@ import {Image, ImageBackground, Pressable, ScrollView, Text, View, Vibration} fr
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import {handleLike, updateCurrencyPrice, isLiked} from "../GlobalFunctions";
+import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from "../GlobalFunctions";
 
 
 const handleIndexPress = (setIndex, index) =>{
@@ -15,10 +15,9 @@ export default function PostCard({data, username}) {
     const navigation = useNavigation();
     const [index, setIndex] = useState(0)
     const [Liked, setLiked] = useState(isLiked(data.likes, username))
-
     useEffect(() => {
         updateCurrencyPrice(data)
-    }, [data.currency])
+    }, [data.currency[0]])
 
     const renderDoesDataIncludePostedBy = () => {
         if (Liked) return <Ionicons name ='heart' size = {25} color = {'#e6121d'}/>
@@ -65,8 +64,8 @@ export default function PostCard({data, username}) {
                         <View>
                             <Text style = {{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                             <View style = {{flexDirection:'row', alignItems:'center'}}>
-                                <Image style = {{height:20, width:20, marginTop:4, borderRadius:20}} source = {{uri:data.currency}}/>
-                                <Text style = {{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{data.price} </Text>
+                                <Image style = {{height:20, width:20, marginTop:4, borderRadius:20}} source = {{uri:updatedCurrencyList(data.currency)[0].value}}/>
+                                <Text style = {{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{updatedCurrencyList(data.currency)[0].price} </Text>
                             </View>
                             <Text style = {{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number(data.USD).toLocaleString('en-US')}</Text>
                         </View>
