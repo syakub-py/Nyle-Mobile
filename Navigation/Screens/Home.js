@@ -239,7 +239,7 @@ export default function Home({navigation, route}) {
         )}
         keyExtractor = {item => item.id}
         onEndReached={()=>{
-          if (_.size(masterData)>2){
+          if (_.size(masterData)>1){
             handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)
           }
         }}

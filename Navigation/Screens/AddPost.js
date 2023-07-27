@@ -283,7 +283,11 @@ export default function AddPost({route}) {
     }
 
     const renderPrice = () =>{
+        useEffect(() => {
+            console.log("Selected currency updated:", selectedCurrency);
+        }, [selectedCurrency]);
         if (checked){
+
             return(
                 <View>
                     <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black', margin: 10 }}>Price</Text>
@@ -301,9 +305,17 @@ export default function AddPost({route}) {
                             valueField="value"
                             placeholder="Select a currency"
                             onChange={(item) => {
-                                setSelectedCurrency({...item, price: price});
-                                const updatedCurrencyList = [...currencyList, selectedCurrency];
-                                setCurrencyList(updatedCurrencyList)
+                                if (selectedCurrency !== null && selectedCurrency !== undefined && Object.keys(selectedCurrency).length !== 0) {
+                                    const updatedCurrencyList = [...currencyList, {...item, price: price}];
+                                    setCurrencyList(updatedCurrencyList);
+                                } else {
+                                    if (Object.keys(item).length !== 0) {
+                                        setSelectedCurrency({...item, price: price});
+                                    } else {
+                                        console.log("Selected currency is empty, not updating.");
+                                    }
+                                    console.log("Selected currency is empty, so not appending to the list.");
+                                }
                             }}
                             value={selectedCurrency}
                             renderItem={renderCurrencyItem}
@@ -316,17 +328,15 @@ export default function AddPost({route}) {
                     </View>
 
                     <View style={{zIndex:1, marginLeft:15,}}>
-                        <Text>Currencies Accepted: </Text>
+                        <Text style={{fontSize: 15, fontWeight: 'bold', color: 'black'}}>Currencies Accepted: </Text>
                         {
                             currencyList.map((item, index) => (
                                 <View key={index} style={{flexDirection:'row', alignItems:'center',marginLeft:15,  marginBottom:5}}>
                                     <Image source={{uri:item.value}} style={{height:30, width:30, borderRadius:20}}/>
                                     <Text style={{marginLeft:5}}>{item.label}</Text>
-                                    <Text style={{marginLeft:5}}>{item.price}</Text>
                                 </View>
                             ))
                         }
-
                     </View>
 
                 </View>
@@ -351,7 +361,6 @@ export default function AddPost({route}) {
                             placeholder = "Select a currency"
                             onChange={(item) => {
                                 setSelectedCurrency({...item, price: price});
-                                console.log(selectedCurrency)
                                 setCurrencyList([selectedCurrency])
 
                             }}
