@@ -445,6 +445,7 @@ export default function PostDetails({route, navigation}) {
                                   data={updatedCurrencyList(route.params.item.currency)}
                                   snapToAlignment={"center"}
                                   pagingEnabled
+                                  showsHorizontalScrollIndicator={false}
                                   renderItem={({item})=>(
                                       <View style = {{ width:60,backgroundColor:'transparent', borderRadius: 4, alignItems:'center', flexDirection:"row", marginTop:5}}>
                                           <Image style = {{height:20, width:20, marginRight:7, borderRadius:20}} resizeMode = {'cover'} source = {{uri:item.value}}/>

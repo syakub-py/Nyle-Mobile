@@ -132,7 +132,7 @@ export const handleEndReached = async (
 
 export const updatedCurrencyList = (currencyList) =>{
     if(_.size(currencyList)>1){
-        return currencyList.filter((item, index) => index !== 0)
+        return currencyList
     }else{
         return currencyList
     }

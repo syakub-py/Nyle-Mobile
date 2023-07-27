@@ -154,6 +154,7 @@ export default function HomeMapView({navigation, route}) {
                     pagingEnabled
                     onScroll={handleScroll}
                     snapToAlignment={"center"}
+                    showsHorizontalScrollIndicator={false}
                     onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
                     ListFooterComponent={renderFooter}
                     renderItem={({item, index})=>{
