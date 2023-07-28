@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Screens/Components/Firebase'
-import {Alert, Image, View} from "react-native";
+import { Image, View} from "react-native";
 import {getProfilePicture} from "./Screens/GlobalFunctions";
 //Screens
 import home from './Screens/Home'
@@ -34,23 +34,29 @@ export default function MainContainer({route}) {
 
   const MyChatQuery = firestore.collection('Chats');
 
-  MyChatQuery.get().then(async (ChatSnapshot) => {
-    for (const doc of ChatSnapshot.docs) {
-      for (let i = 0; i < doc.data().owners.length; i++) {
-        if (doc.data().owners[i].username === route.params.username) {
-          const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-              .orderBy('createdAt', 'desc')
-              .limit(1);
-          latestMessageQuery.onSnapshot((latestMessageSnapshot) => {
-            if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
-              const latestMessage = latestMessageSnapshot.docs[0].data();
-              setReceived(latestMessage.received)
-            }
-          })
-        }
+  MyChatQuery.get().then((ChatSnapshot) => {
+    const latestMessagePromises = [];
+
+    ChatSnapshot.docs.forEach((doc) => {
+      const owner = doc.data().owners.find((owner) => owner.username === route.params.username);
+      if (owner) {
+        const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
+            .orderBy('createdAt', 'desc')
+            .limit(1);
+        latestMessagePromises.push(latestMessageQuery.get());
       }
-    }
+    });
+
+    Promise.all(latestMessagePromises).then((results) => {
+      results.forEach((latestMessageSnapshot) => {
+        if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
+          const latestMessage = latestMessageSnapshot.docs[0].data();
+          setReceived(latestMessage.received);
+        }
+      });
+    });
   });
+
 
   const today = new Date().toISOString().split('T')[0];
   const MyEventsQuery = firestore.collection('CalendarEvents').where("seller","==", route.params.username).where("startTime","==", today);

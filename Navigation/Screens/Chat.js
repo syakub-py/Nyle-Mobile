@@ -55,7 +55,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 }
 
 // Delete a folder and all its contents
-const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, params) => {
+const deleteChat = async (chat, masterData, setMasterData) => {
     const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection("messages").get();
     for (let doc of docSnapshots.docs) {
         if (!_.isEmpty(doc.data().image)) {
@@ -65,9 +65,8 @@ const deleteChat = async (chat, setRefreshing, setFilterData, setMasterData, par
             }
         }
     }
-
+    setMasterData(masterData.filter((item) => item.id !== chat.id))
     await firestore.collection('Chats').doc(chat.id).delete();
-    await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, params);
 }
 
 
@@ -231,7 +230,7 @@ export default function Chat({navigation, route}) {
                         width: 75,
                         justifyContent: 'center',
                         alignItems: 'center'}} key = {i}>
-                        <TouchableOpacity onPress = {() => {deleteChat(item, setRefreshing, setFilterData, setMasterData, route.params)}}>
+                        <TouchableOpacity onPress = {() => {deleteChat(item, masterData, setMasterData)}}>
                             <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
                     </View>

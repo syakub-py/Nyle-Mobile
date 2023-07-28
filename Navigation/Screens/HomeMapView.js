@@ -53,9 +53,7 @@ export default function HomeMapView({navigation, route}) {
 
     }, [])
 
-    const renderFooter = () => {
-            return null;
-    };
+
     return (
         <View style = {{ flex: 1 }}>
             <View style = {{zIndex:1}}>
@@ -117,7 +115,8 @@ export default function HomeMapView({navigation, route}) {
             </View>
             <View style = {{zIndex:1, position:'absolute', top:140}}>
                 <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10, backgroundColor:'transparent'}}>
-                    {categories.map((category, index) => (
+                    {
+                        categories.map((category, index) => (
                             <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                                 <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight:'400'}}>
                                     {category}
@@ -156,7 +155,6 @@ export default function HomeMapView({navigation, route}) {
                     snapToAlignment={"center"}
                     showsHorizontalScrollIndicator={false}
                     onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
-                    ListFooterComponent={renderFooter}
                     renderItem={({item, index})=>{
                         return(
                             <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
