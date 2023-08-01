@@ -15,9 +15,10 @@ export default function PostCard({data, username}) {
     const navigation = useNavigation();
     const [index, setIndex] = useState(0)
     const [Liked, setLiked] = useState(isLiked(data.likes, username))
+
     useEffect(() => {
         updateCurrencyPrice(data)
-    }, [data.currency[0]])
+    }, [data.currency[0].value])
 
     const renderDoesDataIncludePostedBy = () => {
         if (Liked) return <Ionicons name ='heart' size = {25} color = {'#e6121d'}/>
