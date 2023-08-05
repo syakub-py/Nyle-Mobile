@@ -21,7 +21,7 @@ import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
 import { CheckBox } from 'react-native-elements';
 import {CustomText, CustomTextInput, CustomTextWithInput} from './Components/CustomText';
-import {getProfilePicture} from "./GlobalFunctions";
+import {getProfilePicture, convertPrice} from "./GlobalFunctions";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -287,7 +287,6 @@ export default function AddPost({route}) {
             console.log("Selected currency updated:", selectedCurrency);
         }, [selectedCurrency]);
         if (checked){
-
             return(
                 <View>
                     <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black', margin: 10 }}>Price</Text>
@@ -306,8 +305,19 @@ export default function AddPost({route}) {
                             placeholder="Select a currency"
                             onChange={(item) => {
                                 if (selectedCurrency !== null && selectedCurrency !== undefined && Object.keys(selectedCurrency).length !== 0) {
-                                    const updatedCurrencyList = [...currencyList, {...item, price: price}];
-                                    setCurrencyList(updatedCurrencyList);
+                                    if (_.size(currencyList) > 0) {
+                                        convertPrice(currencyList[0].label, price, selectedCurrency.label).then((result)=>{
+                                            console.log(result)
+                                            const updatedCurrencyList = [...currencyList, {...item, price:result }];
+                                            setCurrencyList(updatedCurrencyList);
+                                            console.log(updatedCurrencyList)
+                                        })
+
+                                    }else {
+                                        const updatedCurrencyList = [...currencyList, {...item, price: price}];
+                                        setCurrencyList(updatedCurrencyList);
+
+                                    }
                                 } else {
                                     if (Object.keys(item).length !== 0) {
                                         setSelectedCurrency({...item, price: price});

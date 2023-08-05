@@ -1,6 +1,5 @@
 import {firestore, getstorage} from "./Components/Firebase";
 import {Vibration} from "react-native";
-import React from "react";
 import CryptoDataService from '../../Services/CryptoDataService';
 import _ from "lodash"
 
@@ -17,7 +16,7 @@ export const updateCurrencyPrice = async (data) => {
     postRef.get().then((doc) => {
         if (doc.exists) {
             const data = doc.data();
-            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.price).toFixed(2).toString()});
+            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.currency[0].price).toFixed(2).toString()});
             else {
                 if (price !== 0 ) {
                     postRef.set({ USD:(price * data.currency[0].price).toFixed(2).toString() }, { merge: true });
@@ -27,26 +26,13 @@ export const updateCurrencyPrice = async (data) => {
     });
 }
 
-export const ConvertPrice = async (fromUrl, amountFrom, toUrl) =>{
-    let FromPrice = 0
-    let ToPrice = 0;
+export const convertPrice = async (fromSymbol, amountFrom, toSymbol) =>{
     try {
-        const response = await CryptoDataService.getMarketData();
-        const filteredData = response.data.filter((item) => item.image === fromUrl)
-        if (!_.isEmpty(filteredData)) FromPrice = (filteredData[0].current_price) * amountFrom
+        return await fetch(`http://192.168.172.115:5000/api/convertPrice/?from=${fromSymbol.toUpperCase()}&amount=${amountFrom.toUpperCase()}&to=${toSymbol.toUpperCase()}`)
     } catch (error) {
-        console.log(error.message);
+        console.log("server offline");
+        return 0
     }
-
-    try {
-        const response = await CryptoDataService.getMarketData();
-        const filteredData = response.data.filter((item) => item.image === toUrl)
-        if (!_.isEmpty(filteredData)) ToPrice = (filteredData[0].current_price) * amountFrom
-    } catch (error) {
-        console.log(error.message);
-    }
-
-    return FromPrice/ToPrice;
 }
 
 export const generateRating = async (username, setRating, setNumOfReviews) => {
