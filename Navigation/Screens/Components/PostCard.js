@@ -7,7 +7,7 @@ import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from "../
 
 const handleIndexPress = (setIndex, index) =>{
     setIndex(index)
-    Vibration.vibrate(100);
+    // Vibration.vibrate(100);
 }
 
 
@@ -66,9 +66,10 @@ export default function PostCard({data, username}) {
                             <Text style = {{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                             <View style = {{flexDirection:'row', alignItems:'center'}}>
                                 <Image style = {{height:20, width:20, marginTop:4, borderRadius:20}} source = {{uri:updatedCurrencyList(data.currency)[0].value}}/>
-                                <Text style = {{color:'white', fontSize:15, elevation:1, margin:5, fontWeight:'500'}}>{updatedCurrencyList(data.currency)[0].price} </Text>
+                                <Text style = {{color:'white', fontSize:15, elevation:1, marginLeft:5,  marginTop:5, fontWeight:'500'}}>{updatedCurrencyList(data.currency)[0].price} </Text>
+                                <Text style = {{ color:'white', fontSize:11, elevation:1, fontWeight:'500', marginTop:5}}>(${Number(data.USD).toLocaleString('en-US')})</Text>
+
                             </View>
-                            <Text style = {{ color:'white', fontSize:15, elevation:1, fontWeight:'500' }}>${Number(data.USD).toLocaleString('en-US')}</Text>
                         </View>
                     </View>
 

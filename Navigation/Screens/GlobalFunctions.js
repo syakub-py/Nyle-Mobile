@@ -18,9 +18,7 @@ export const updateCurrencyPrice = async (data) => {
             const data = doc.data();
             if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.currency[0].price).toFixed(2).toString()});
             else {
-                if (price !== 0 ) {
-                    postRef.set({ USD:(price * data.currency[0].price).toFixed(2).toString() }, { merge: true });
-                }
+                postRef.set({ USD:(price * data.currency[0].price).toFixed(2).toString() }, { merge: true });
             }
         }
     });
@@ -28,7 +26,7 @@ export const updateCurrencyPrice = async (data) => {
 
 export const convertPrice = async (fromSymbol, amountFrom, toSymbol) =>{
     try {
-        return await fetch(`http://192.168.172.115:5000/api/convertPrice/?from=${fromSymbol.toUpperCase()}&amount=${amountFrom.toUpperCase()}&to=${toSymbol.toUpperCase()}`)
+        return (await fetch(`http://192.168.234.115:5000/api/convertPrice/?from=${fromSymbol.toUpperCase()}&amount=${amountFrom.toUpperCase()}&to=${toSymbol.toUpperCase()}`)).json()
     } catch (error) {
         console.log("server offline");
         return 0

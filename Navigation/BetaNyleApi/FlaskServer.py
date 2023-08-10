@@ -126,6 +126,7 @@ def convert_price():
     from_symbol = request.args.get("from").lower()
     amount_from = int(request.args.get("amount"))
     to_symbol = request.args.get("to").lower()
+
     cg = CoinGeckoAPI()
     from_price = 0
     to_price = 0
@@ -148,5 +149,5 @@ def convert_price():
 
 
 if "__main__" == __name__:
-    app.run(host='192.168.172.115', port=5000)
+    app.run(host='192.168.234.115', port=5000)
     # host='192.168.255.115', port=5000

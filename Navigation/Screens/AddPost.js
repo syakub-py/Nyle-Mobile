@@ -284,7 +284,7 @@ export default function AddPost({route}) {
 
     const renderPrice = () =>{
         useEffect(() => {
-            console.log("Selected currency updated:", selectedCurrency);
+            console.log("Selected currency updated");
         }, [selectedCurrency]);
         if (checked){
             return(
@@ -307,12 +307,9 @@ export default function AddPost({route}) {
                                 if (selectedCurrency !== null && selectedCurrency !== undefined && Object.keys(selectedCurrency).length !== 0) {
                                     if (_.size(currencyList) > 0) {
                                         convertPrice(currencyList[0].label, price, selectedCurrency.label).then((result)=>{
-                                            console.log(result)
-                                            const updatedCurrencyList = [...currencyList, {...item, price:result }];
+                                            const updatedCurrencyList = [...currencyList, {...item, price:result.price }];
                                             setCurrencyList(updatedCurrencyList);
-                                            console.log(updatedCurrencyList)
                                         })
-
                                     }else {
                                         const updatedCurrencyList = [...currencyList, {...item, price: price}];
                                         setCurrencyList(updatedCurrencyList);
