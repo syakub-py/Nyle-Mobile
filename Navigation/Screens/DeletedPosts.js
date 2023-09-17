@@ -100,9 +100,10 @@ const deleteAllPosts = (username, deletedPostList, setDeletedPostList, setRefres
 export default function DeletedPosts({route, navigation}) {
     const [refreshing, setRefreshing] = useState(false);
     const [deletedPostList, setDeletedPostList] = useState([]);
+    const username= route.params.username
 
     useEffect(() => {
-        getPosts(route.params.username, setDeletedPostList)
+        getPosts(username, setDeletedPostList)
     }, [])
 
     return (
@@ -122,7 +123,7 @@ export default function DeletedPosts({route, navigation}) {
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress = {() => {deleteAllPosts(route.params.username, deletedPostList, setDeletedPostList, setRefreshing())}}>
+                    <Pressable onPress = {() => {deleteAllPosts(username, deletedPostList, setDeletedPostList, setRefreshing())}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
@@ -131,10 +132,10 @@ export default function DeletedPosts({route, navigation}) {
                 </View>
                 }
                   refreshControl = {
-                      <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(route.params.username, setRefreshing, setDeletedPostList)} />
+                      <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(username, setRefreshing, setDeletedPostList)} />
                   }
                   renderItem = {({item}) => (
-                      <PostCard data = {item} username = {route.params.username}/>
+                      <PostCard data = {item} username = {username}/>
                   )}
                 renderHiddenItem = {({item}) => (
                     <View style = {{ position: 'absolute',
@@ -144,11 +145,11 @@ export default function DeletedPosts({route, navigation}) {
                         bottom: 0,
                         width: 60,
                         alignItems: 'center'}}>
-                        <TouchableOpacity onPress = {() => deletePost(route.params.username,item, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
+                        <TouchableOpacity onPress = {() => deletePost(username,item, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
                             <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress = {()=> restoreItem(route.params.username,item, setRefreshing, setDeletedPostList)}>
+                        <TouchableOpacity onPress = {()=> restoreItem(username,item, setRefreshing, setDeletedPostList)}>
                             <Ionicons size = {30} name ='arrow-redo-outline' color = {"lightblue"}/>
                         </TouchableOpacity>
                     </View>

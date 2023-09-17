@@ -52,7 +52,9 @@ const deleteImages = (index, imageUrls,setImageUrls) => {
  */
 
 export default function ChatBox({route, navigation}) {
-  const messagesRef = firestore.collection(`Chats/${route.params.conversationID}/messages`);
+  const conversationID = route.params.conversationID
+  const messagesRef = firestore.collection(`Chats/${conversationID}/messages`);
+
   const [imageUrls, setImageUrls] = useState([]);
   const [refresh, setRefreshing] = useState(false);
   const [state, setState] = useState({active:0})
@@ -99,11 +101,11 @@ export default function ChatBox({route, navigation}) {
     }
   }
 
-    const onSend = useCallback(async (message) => {
-        const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + "/messages");
+    const onSend = useCallback(async (message, params) => {
+        const messagesRef = firestore.collection('Chats/'+ params.conversationID + "/messages");
         const title = uuidv4();
 
-        downloadUrls = await upload(imageUrls);
+        downloadUrls = await upload(imageUrls, params.conversationID);
 
         const mappedMessage = {
             _id:title,
@@ -113,9 +115,9 @@ export default function ChatBox({route, navigation}) {
             sent : true,
             received : false,
             user:{
-                _id:route.params.userId,
-                name:route.params.username,
-                avatar:route.params.otherAvatar
+                _id:params.userId,
+                name:params.username,
+                avatar:params.otherAvatar
             }
         }
         setImageUrls([])
@@ -156,7 +158,7 @@ export default function ChatBox({route, navigation}) {
         );
     };
 
-    const upload = async (array) => {
+    const upload = async (array, conversationID) => {
         const UrlDownloads = [];
         if (!_.isEmpty(array)) {
             try {
@@ -165,7 +167,7 @@ export default function ChatBox({route, navigation}) {
                     const filename = element.split("/").pop();
                     const response = await fetch(element);
                     const blob = await response.blob();
-                    const storageRef = getstorage.ref().child(`MessageImages/${route.params.conversationID}/${filename}`);
+                    const storageRef = getstorage.ref().child(`MessageImages/${conversationID}/${filename}`);
                     await storageRef.put(blob);
                     const url = await storageRef.getDownloadURL();
                     UrlDownloads.push(url);
@@ -285,7 +287,7 @@ export default function ChatBox({route, navigation}) {
 
       <GiftedChat
         messages = {messages}
-        onSend = {messages => onSend(messages)}
+        onSend = {messages => onSend(messages, route.params)}
         alwaysShowSend
         scrollToBottom
         user = {{_id:route.params.userId}}

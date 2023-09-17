@@ -26,15 +26,16 @@ const getReviews = async (username) => {
 
 export default function Reviews({route, navigation}) {
     const [ReviewList, setReviewList] = useState([])
-
+    const PostedByUsername = route.params.username
+    const currentUsername = route.params.currentUser
     useEffect(() => {
-        getReviews(route.params.username).then((result) => {
+        getReviews(PostedByUsername).then((result) => {
             setReviewList(result)
         })
     }, [])
 
     const renderIsCurrentUser = () => {
-        if (route.params.currentUser === route.params.username) return <View/>
+        if (currentUsername === PostedByUsername) return <View/>
         
         return (
             <View style = {{
@@ -50,7 +51,7 @@ export default function Reviews({route, navigation}) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     elevation: 6,
-                }} onPress = {() => navigation.navigate("Write Review", {username:route.params.currentUser, PostedBy:route.params.username})}>
+                }} onPress = {() => navigation.navigate("Write Review", {username:currentUsername, PostedBy:PostedByUsername})}>
                     <Ionicons name = "pencil" size = {24} color = "white" />
                 </Pressable>
 
@@ -77,7 +78,7 @@ export default function Reviews({route, navigation}) {
                     </View>
                 }
                 renderItem = {({item}) => (
-                    <ReviewCard data = {item} currentUser = {route.params.currentUser}/>
+                    <ReviewCard data = {item} currentUser = {currentUsername}/>
             )}/>
             {renderIsCurrentUser()}
 

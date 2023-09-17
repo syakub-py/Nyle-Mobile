@@ -14,9 +14,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {readDatabase, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
 import MapPostCard from "./Components/MapPostCard";
-const {width} = Dimensions.get("window");
 import {handleEndReached} from "./GlobalFunctions";
+import BackButton from "./Components/BackButton";
 
+const {width} = Dimensions.get("window");
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
 
 const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch) => {
@@ -35,7 +36,7 @@ export default function HomeMapView({navigation, route}) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [lastDocument, setLastDocument] = useState(null)
     const [loading, setLoading] = useState(false)
-
+    const username = route.params.username
     const handleScroll = (event) => {
         const contentOffset = event.nativeEvent.contentOffset;
         const currentIndex = Math.floor(contentOffset.x / 245);
@@ -47,7 +48,7 @@ export default function HomeMapView({navigation, route}) {
         readDatabase("AllPosts",setMasterData, setFilterData, setLastDocument)
 
         getCityState(40.735081, -73.759658, setState, setCity)
-        getProfilePicture(route.params.username).then((result)=>{
+        getProfilePicture(username).then((result)=>{
             setProfilePic(result)
         })
 
@@ -58,9 +59,7 @@ export default function HomeMapView({navigation, route}) {
         <View style = {{ flex: 1 }}>
             <View style = {{zIndex:1}}>
                 <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13,  alignItems:'center', justifyContent:'center'}}>
-                       <Pressable onPress = {() =>navigation.goBack()}>
-                           <Ionicons name ='chevron-back-outline' size = {30}/>
-                       </Pressable>
+                    <BackButton navigation={navigation}/>
                 </View>
 
 
@@ -69,7 +68,7 @@ export default function HomeMapView({navigation, route}) {
                         <Text style = {{fontSize:18, fontWeight:'bold'}}>{city}, {state}</Text>
                 </View>
 
-                <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, backgroundColor:'transparent',   alignItems:'center', justifyContent:'center'}}>
+                <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center'}}>
                     <Image source={{uri:profilePic}} style={{borderRadius:13, height:"100%", width:"100%"}}/>
                 </View>
             </View>
@@ -157,7 +156,7 @@ export default function HomeMapView({navigation, route}) {
                     onEndReached={()=>{handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading)}}
                     renderItem={({item, index})=>{
                         return(
-                            <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:route.params.profilePicture, username:route.params.username, item})}>
+                            <Pressable key = {index} onPress = {() =>navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:username, item})}>
                                 <View style={{
                                     flex:1,
                                     height: 170,
@@ -178,7 +177,7 @@ export default function HomeMapView({navigation, route}) {
                                     marginLeft: index === 0 ? width/2-230/2 : 15,
                                     marginRight: index === filteredData.length - 1 ? width/2 - 230/2  : 15,
                                 }}>
-                                    <MapPostCard data = {item} username = {route.params.username} />
+                                    <MapPostCard data = {item} username = {username} />
                                 </View>
                             </Pressable>
                         )

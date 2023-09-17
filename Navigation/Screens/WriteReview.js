@@ -2,6 +2,7 @@ import {View, Text, Pressable, TextInput} from 'react-native';
 import {firestore} from "./Components/Firebase";
 import React, {useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import BackButton from "./Components/BackButton";
 
 const PostReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation) => {
     return firestore.collection("Reviews").add({
@@ -31,9 +32,7 @@ export default function WriteReview({route, navigation}) {
     return (
         <View style = {{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style = {{ position: 'absolute', top: 30, left: 10 }}>
-                <Pressable onPress = {() => navigation.goBack()}>
-                    <Ionicons name ='arrow-back-outline' size = {35} />
-                </Pressable>
+                <BackButton navigation={navigation}/>
             </View>
             <View style = {{ paddingTop: 70, paddingHorizontal: 10, margin: 10 }}>
                 <TextInput style = {{ height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 }} placeholder = "Title" onChangeText = {(text) => setTitle(text)} />

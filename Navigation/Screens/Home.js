@@ -5,7 +5,6 @@ import {
   Image,
   Pressable,
   RefreshControl,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -14,16 +13,16 @@ import {
 } from 'react-native';
 import PostCard from './Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
+import {readDatabase, categoryFilter, getProfilePicture, postFilter} from "./GlobalFunctions";
 import {handleEndReached} from "./GlobalFunctions";
 import _ from "lodash";
+import Slider from "./Components/HomeComponents/Slider";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
 */
 
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]
-const postFilters = ["Trending", "Latest Posts", "Most Expensive", "Cheapest", "Top Rated Sellers", "Most Liked", "Sold"]
 const {width} = Dimensions.get("window");
 
 // Function to refresh the data
@@ -36,17 +35,6 @@ const onRefresh = (setRefreshing,setFilterData, setMasterData, setLastDocument) 
 
   // Wait for 0.3 seconds before setting the refreshing state to false
   setTimeout(() => setRefreshing(false), 300);
-};
-
-
-const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch) => {
-  setSelectedCategoryIndex(index);
-  categoryFilter(categories[index], masterData, setFilterData, setCategorySearch)
-};
-
-const handlePostFilterPress = (index, setSelectedPostFilterIndex, masterData, setFilterData) => {
-  setSelectedPostFilterIndex(index);
-  postFilter(postFilters[index], masterData, setFilterData)
 };
 
 // Function to filter the data based on search input
@@ -65,49 +53,21 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
   }
 }
 
-const postFilter = (text, masterData, setFilterData) => {
-  if (text && text !== 'Latest Posts') {
-    switch (text) {
-      case 'Most Expensive':
-        const newDataMostExpensive = masterData.slice().sort((a, b) => (b.price || 0) - (a.price || 0));
-        setFilterData(newDataMostExpensive);
-        break;
-      case 'Trending':
-        const newDataTrending = masterData.slice().sort((a, b) => (b.views || 0) - (a.views || 0));
-        setFilterData(newDataTrending);
-        break;
-      case 'Cheapest':
-        const newDataCheapest = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
-        setFilterData(newDataCheapest);
-        break;
-      case 'Top Rated Sellers':
-        const TopRatedMySellers = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
-        setFilterData(TopRatedMySellers);
-        break;
-      default:
-        setFilterData(masterData);
-        break;
-    }
-  } else {
-    setFilterData(masterData);
-  }
-};
-
 export default function Home({navigation, route}) {
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState([]);
-  const [categorySearch, setCategorySearch] = useState([]);
+  const [sliderSearch, setSliderSearch] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [selectedPostFilterIndex, setSelectedPostFilterIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null)
   const [lastDocument, setLastDocument] = useState(null)
   const [loading, setLoading] = useState(false)
+  const username = route.params.username
 
   useEffect( () => {
     readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
-    getProfilePicture(route.params.username).then((result)=>{
+    getProfilePicture(username).then((result)=>{
       setProfilePic(result)
     })
   }, [])
@@ -130,7 +90,7 @@ export default function Home({navigation, route}) {
 
   return (
     <View style = {{flex:1, backgroundColor:'white'}}>
-      <Pressable onPress = {() =>navigation.navigate("Home Map View", {username:route.params.username})}
+      <Pressable onPress = {() =>navigation.navigate("Home Map View", {username:username})}
         style = {{
         position: 'absolute',
         bottom: 90,
@@ -172,9 +132,9 @@ export default function Home({navigation, route}) {
 
                 <View style={{marginLeft:15}}>
                   <Text style={{fontSize:17, fontWeight:'bold'}}>Welcome Back</Text>
-                  <Text style={{fontWeight:'500', color:"grey"}}>{route.params.username}</Text>
+                  <Text style={{fontWeight:'500', color:"grey"}}>{username}</Text>
                 </View>
-                <Pressable onPress={()=>{navigation.navigate("My Profile", {username: route.params.username})}}>
+                <Pressable onPress={()=>{navigation.navigate("My Profile", {username: username})}}>
                   <Image
                       resizeMode="cover"
                       source={{uri: profilePic}}
@@ -184,20 +144,8 @@ export default function Home({navigation, route}) {
 
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
-                {
-                  categories.map((category, index) => (
-                      <Pressable key = {index}
-                        onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)}
-                        style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}
-                      >
-                        <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
-                          {category}
-                        </Text>
-                      </Pressable>
-                  ))
-                }
-              </ScrollView>
+              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} setFilterData={setFilterData} setSearch={setSliderSearch}/>
+
               <View style = {{
                     flex: 1,
                     flexDirection: 'row',
@@ -213,18 +161,6 @@ export default function Home({navigation, route}) {
                 <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text, masterData, setFilterData, setSearch)} placeholderTextColor = {'gray'} style = {{flex:1, fontWeight:'400', backgroundColor:'white', margin:10, paddingHorizontal:5,}}/>
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{ paddingHorizontal: 15, paddingTop:10, paddingBottom:10}}>
-                {
-                  postFilters.map((filters, index) => (
-                      <Pressable key = {index} onPress = {() => handlePostFilterPress(index, setSelectedPostFilterIndex, masterData, setFilterData)} style = {{backgroundColor: selectedPostFilterIndex === index ? 'black' : 'whitesmoke', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                        <Text style = {{color: selectedPostFilterIndex === index ? '#ffffff' : '#000000', fontSize: 15, fontWeight:'500'}}>
-                          {filters}
-                        </Text>
-                      </Pressable>
-                  ))
-                }
-              </ScrollView>
-
             </View>
           }
 
@@ -233,8 +169,8 @@ export default function Home({navigation, route}) {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing,setFilterData, setMasterData, setLastDocument)} />
         }
         renderItem = {({item}) => (
-          <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
-            <PostCard data = {item} username = {route.params.username}/>
+          <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:username, item})}>
+            <PostCard data = {item} username = {username}/>
           </Pressable>
         )}
         keyExtractor = {item => item.id}

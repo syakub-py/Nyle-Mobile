@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Components/Firebase";
+import BackButton from "./Components/BackButton";
 
 const {width} = Dimensions.get("window");
 
@@ -115,9 +116,7 @@ export default function TransactionCalendar({route, navigation}){
         <View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', zIndex: 1}}>
                 <View style={{ position: 'absolute', top: 30, left: 17, alignSelf: 'center' }}>
-                    <Pressable onPress={() => navigation.goBack()}>
-                        <Ionicons name="chevron-back-outline" size={30} />
-                    </Pressable>
+                    <BackButton navigation={navigation}/>
                 </View>
 
                 <Text style={{fontSize: 20, marginTop: 30 }}>{route.params.item.title}</Text>

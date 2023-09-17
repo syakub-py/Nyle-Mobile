@@ -19,11 +19,14 @@ import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
-import { CheckBox } from 'react-native-elements';
-import {CustomText, CustomTextInput, CustomTextWithInput} from './Components/CustomText';
-import {getProfilePicture, convertPrice} from "./GlobalFunctions";
-const {width} = Dimensions.get("window");
-const height = width * 1;
+import {CustomText, CustomTextWithInput} from './Components/CustomText';
+import {getProfilePicture} from "./GlobalFunctions";
+import renderPrice from "./Components/AddPostsComponents/renderPrice";
+import isImageUrls from "./Components/AddPostsComponents/renderIsImages";
+import renderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
+import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
+import renderAutoSection from "./Components/AddPostsComponents/renderAutoSection";
+
 
 /**
 
@@ -96,7 +99,6 @@ export default function AddPost({route}) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState('');
     const [details, setDetails] = useState('');
-    const [price, setPrice] = useState(randomNumber.toString());
     const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0,});
     const [animating, setAnimating] = useState(false);
     const [category, setCategory] = useState("All");
@@ -108,13 +110,11 @@ export default function AddPost({route}) {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [isFocus, setIsFocus] = useState(false);
-    const [checked, setChecked] = useState(false);
 
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone
     const [imageUrls, setImageUrls] = useState([]);
-    const [selectedCurrency, setSelectedCurrency] = useState({});
     const [currencyList, setCurrencyList] = useState([])
     const [profilePic, setProfilePic] = useState(null)
 
@@ -127,20 +127,6 @@ export default function AddPost({route}) {
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
-    }
-
-    const clear = () => {
-        setTitle('');
-        setDescription('');
-        setDetails('');
-        setPrice('');
-        setCoordinates({latitude: 0, longitude: 0,});
-        setVIN("")
-        setMileage("")
-        setImageUrls([]);
-        setBathrooms("")
-        setBedrooms("")
-        onRefresh(setRefreshing);
     }
 
     const deleteImages = (index) => {
@@ -197,81 +183,12 @@ export default function AddPost({route}) {
         return firestore.collection(collectionPath).doc(title).set(document)
             .then(ref => {
                 Alert.alert("Post added")
-                clear();
             })
             .catch(error => {
                 console.log('Error adding document: ', error);
             });
     }
 
-    const renderCurrencyItem = (item) => {
-        return (
-            <View style = {{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source = {{uri: item.value}} style = {{ width: 30, height: 30, margin:10, borderRadius:50 }} />
-                <Text>{item.label}</Text>
-            </View>
-        );
-    };
-
-    const isImageUrls = () => {
-        if (_.isEmpty(imageUrls)) {
-            return (
-                <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
-                    <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
-                        <Ionicons name ='images-outline' size = {80} color = {'lightgray'}/>
-                    </View>
-                </Pressable>
-            )
-        }
-
-        return (
-            <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
-                <View style = {{width:70, backgroundColor:'black', height:70, borderRadius:40, justifyContent:'center', alignItems:'center', marginTop:20}}>
-                    <Ionicons name ='add-outline' size = {40} color = {'white'}/>
-                </View>
-            </Pressable>
-        )
-    }
-
-    const renderDetailsText = () => {
-        if ((category === "Homes" || category === "Auto"))  return  <View/>
-
-        return (
-            <View>
-                <CustomTextWithInput
-                    text="Details"
-                    onChangeText={(text) => setDetails(text)}
-                    multiline
-                    height={200}
-                />
-            </View>
-        )
-    }
-
-    const renderHomesSection = () => {
-        if (category !== "Homes") return <View/>
-
-        return (
-            <View>
-                <CustomTextWithInput text="Bedrooms" onChangeText={(text) => setBedrooms(text)} multiline />
-                <CustomTextWithInput text="Bathrooms" onChangeText={(text) => setBathrooms(text)} multiline />
-                <CustomTextWithInput text="Square footage" onChangeText={(text) => setSQFT(text)} multiline />
-            </View>
-        )
-    }
-
-    const renderAutoSection = () => {
-        if (category !== "Auto") return <View/>
-
-        return (
-            <View>
-                <CustomTextWithInput text="Make" onChangeText={(text) => setMake(text)} />
-                <CustomTextWithInput text="Model" onChangeText={(text) => setModel(text)} />
-                <CustomTextWithInput text="Mileage" onChangeText={(text) => setMileage(text)} />
-                <CustomTextWithInput text="VIN" onChangeText={(text) => setVIN(text)} />
-            </View>
-        )
-    }
 
     const isAnimating = () => {
         if (!animating) return <View/>
@@ -280,110 +197,6 @@ export default function AddPost({route}) {
                 <ActivityIndicator size = "large" color = "black" animating = {animating} />
             </View>
         )
-    }
-
-    const renderPrice = () =>{
-        useEffect(() => {
-            console.log("Selected currency updated");
-        }, [selectedCurrency]);
-        if (checked){
-            return(
-                <View>
-                    <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'black', margin: 10 }}>Price</Text>
-                    <View style={{ margin: 10 }}>
-                        <CheckBox
-                            title="Accept multiple currencies"
-                            checked={checked}
-                            onPress={() => setChecked(!checked)}
-                        />
-                    </View>
-                    <View style={{ flexDirection: 'row', marginLeft: 30 }}>
-                        <DropdownInput
-                            data={currencies}
-                            labelField="label"
-                            valueField="value"
-                            placeholder="Select a currency"
-                            onChange={(item) => {
-                                if (selectedCurrency !== null && selectedCurrency !== undefined && Object.keys(selectedCurrency).length !== 0) {
-                                    if (_.size(currencyList) > 0) {
-                                        convertPrice(currencyList[0].label, price, selectedCurrency.label).then((result)=>{
-                                            const updatedCurrencyList = [...currencyList, {...item, price:result.price }];
-                                            setCurrencyList(updatedCurrencyList);
-                                        })
-                                    }else {
-                                        const updatedCurrencyList = [...currencyList, {...item, price: price}];
-                                        setCurrencyList(updatedCurrencyList);
-
-                                    }
-                                } else {
-                                    if (Object.keys(item).length !== 0) {
-                                        setSelectedCurrency({...item, price: price});
-                                    } else {
-                                        console.log("Selected currency is empty, not updating.");
-                                    }
-                                    console.log("Selected currency is empty, so not appending to the list.");
-                                }
-                            }}
-                            value={selectedCurrency}
-                            renderItem={renderCurrencyItem}
-                            customStyle={{
-                                width: Dimensions.get('window').width / 3,
-                            }}
-                            setIsFocus={() => setIsFocus(false)}
-                        />
-                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width / 2.5} />
-                    </View>
-
-                    <View style={{zIndex:1, marginLeft:15,}}>
-                        <Text style={{fontSize: 15, fontWeight: 'bold', color: 'black'}}>Currencies Accepted: </Text>
-                        {
-                            currencyList.map((item, index) => (
-                                <View key={index} style={{flexDirection:'row', alignItems:'center',marginLeft:15,  marginBottom:5}}>
-                                    <Image source={{uri:item.value}} style={{height:30, width:30, borderRadius:20}}/>
-                                    <Text style={{marginLeft:5}}>{item.label}</Text>
-                                </View>
-                            ))
-                        }
-                    </View>
-
-                </View>
-            )
-        }else {
-            return (
-                <View>
-                    <Text style = {{fontSize:25, fontWeight:'bold', color:'black',margin:10}}>Price</Text>
-                    <View style={{margin:10}}>
-                        <CheckBox
-                            title="Accept muliple currencies"
-                            checked={checked}
-                            onPress={()=>setChecked(!checked)}
-                        />
-                    </View>
-                    <View style = {{flexDirection:'row', marginLeft:30}}>
-
-                        <DropdownInput
-                            data={currencies}
-                            labelField = "label"
-                            valueField = "value"
-                            placeholder = "Select a currency"
-                            onChange={(item) => {
-                                setSelectedCurrency({...item, price: price});
-                                setCurrencyList([selectedCurrency])
-
-                            }}
-                            value = {selectedCurrency}
-                            renderItem = {renderCurrencyItem}
-                            customStyle = {{
-                                width: Dimensions.get('window').width / 3
-                            }}
-                            setIsFocus={()=>setIsFocus(false)}
-                        />
-
-                        <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
-                    </View>
-                </View>
-            )
-        }
     }
 
     return (
@@ -421,7 +234,7 @@ export default function AddPost({route}) {
                 </View>
 
 
-                {isImageUrls()}
+                {isImageUrls(imageUrls, setImageUrls, SelectImages)}
 
                 <View>
                     <CustomTextWithInput
@@ -452,7 +265,7 @@ export default function AddPost({route}) {
                 </View>
 
                 <View >
-                    {renderPrice()}
+                    {renderPrice(currencies, currencyList, setCurrencyList)}
                 </View>
 
                 <CustomText text="Location" />
@@ -462,9 +275,9 @@ export default function AddPost({route}) {
                     </MapView>
                 </View>
 
-                {renderDetailsText()}
-                {renderHomesSection()}
-                {renderAutoSection()}
+                {renderDetailsText(category, setDetails)}
+                {renderHomesSection(category, setBedrooms, setBathrooms, setSQFT)}
+                {renderAutoSection(category, setMake, setModel, setMileage, setVIN)}
 
                 <View>
                     <CustomTextWithInput

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import BackButton from "./Components/BackButton";
 
 const updateUsername = async (newUsername) => {
     try {
@@ -62,9 +63,7 @@ export default function EditProfile({navigation}) {
                     justifyContent: 'center',
                 }}
             >
-                <Pressable onPress = {() => {navigation.goBack()}}>
-                    <Ionicons name ='chevron-back-outline' size = {30}/>
-                </Pressable>
+                <BackButton navigation={navigation}/>
             </View>
             <TextInput
                 style = {{

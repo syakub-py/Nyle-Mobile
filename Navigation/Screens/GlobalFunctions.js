@@ -201,6 +201,34 @@ export const categoryFilter = (text, masterData, setFilterData, setCategorySearc
     }
 }
 
+export const postFilter = (text, masterData, setFilterData) => {
+    if (text && text !== 'Latest Posts') {
+        switch (text) {
+            case 'Most Expensive':
+                const newDataMostExpensive = masterData.slice().sort((a, b) => (b.price || 0) - (a.price || 0));
+                setFilterData(newDataMostExpensive);
+                break;
+            case 'Trending':
+                const newDataTrending = masterData.slice().sort((a, b) => (b.views || 0) - (a.views || 0));
+                setFilterData(newDataTrending);
+                break;
+            case 'Cheapest':
+                const newDataCheapest = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
+                setFilterData(newDataCheapest);
+                break;
+            case 'Top Rated Sellers':
+                const TopRatedMySellers = masterData.slice().sort((a, b) => (a.price || 0) - (b.price || 0));
+                setFilterData(TopRatedMySellers);
+                break;
+            default:
+                setFilterData(masterData);
+                break;
+        }
+    } else {
+        setFilterData(masterData);
+    }
+};
+
 export const getSoldItems = (UsersPosts) => {
     let counter = 0
     for (let i = 0; i < UsersPosts.length; i++) {

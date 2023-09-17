@@ -17,6 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 import {getProfilePicture} from "./GlobalFunctions";
+import HiddenButton from "./Components/HiddenButton";
 
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);
@@ -222,17 +223,15 @@ export default function Chat({navigation, route}) {
                         <Text style = {{marginBottom:20, fontSize:18, fontWeight: 'bold'}}>Conversations</Text>
                     </View>
                 }
-                renderHiddenItem = {({i, item}) => (
-                    <View style = {{ position: 'absolute',
+                renderHiddenItem = {({item}) => (
+                    <View style={{ position: 'absolute',
                         top: 0,
                         right: 0,
                         bottom: 0,
                         width: 75,
                         justifyContent: 'center',
-                        alignItems: 'center'}} key = {i}>
-                        <TouchableOpacity onPress = {() => {deleteChat(item, masterData, setMasterData)}}>
-                            <Ionicons size = {25} name ='trash-outline' color = {"red"}/>
-                        </TouchableOpacity>
+                        alignItems: 'center'}}>
+                        <HiddenButton iconName={'trash-outline'} color={'red'} onPress={()=>{deleteChat(item, masterData, setMasterData)}}/>
                     </View>
                 )}
                 renderItem = {({item, index}) => {

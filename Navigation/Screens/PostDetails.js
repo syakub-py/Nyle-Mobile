@@ -17,6 +17,7 @@ import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalF
 import CustomMapMarker from "./Components/CustomMapMarker";
 import _ from "lodash";
 import MenuButton from "./Components/MenuButtons";
+import BackButton from "./Components/BackButton";
 const {width} = Dimensions.get("window");
 const height = width * 1;
 
@@ -100,6 +101,7 @@ const getRealEstateData = async (address, setRealEstateData) => {
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const likes = route.params.item.likes
+    const username =route.params.username
     const [state, setState] = useState({active:0})
     const [more, setMore] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
@@ -109,7 +111,7 @@ export default function PostDetails({route, navigation}) {
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
     const [realEstateData, setRealEstateData] = useState([])
-    const [Liked, setLiked] = useState(isLiked(likes, route.params.username))
+    const [Liked, setLiked] = useState(isLiked(likes, username))
 
     useEffect(() => {
         handleViewCounter(setViews, route.params.item);
@@ -146,22 +148,22 @@ export default function PostDetails({route, navigation}) {
         return <Ionicons name ='heart-outline' size = {30}/>
     }
 
-    const renderIsCategoryHomes = () => {
-        if (route.params.item.category === "Homes") {
+    const renderIsCategoryHomes = (item) => {
+        if (item.category === "Homes") {
             return (
                 <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
                     <View style = {{flexDirection:"row", alignContent:'center'}}>
                         <Ionicons name = {'bed'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.bedrooms}</Text>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.bedrooms}</Text>
                     </View>
 
                     <View style = {{flexDirection:"row", alignContent:'center'}}>
                         <Ionicons name = {'water'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10}}>{route.params.item.bathrooms}</Text>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10}}>{item.bathrooms}</Text>
                     </View>
                     <View style = {{flexDirection:"row", alignContent:'center'}}>
                         <Ionicons name = {'expand'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.SQFT}</Text>
+                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.SQFT}</Text>
                     </View>
 
                 </View>
@@ -169,20 +171,20 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const renderIsCategoryAuto = () => {
-        if (route.params.item.category === "Auto") {
+    const renderIsCategoryAuto = (item) => {
+        if (item.category === "Auto") {
             return (
                 <View style = {{flexDirection:"column"}}>
                     <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
 
                         <View style = {{flexDirection:"row", alignContent:'center'}}>
                             <Ionicons name = {'car-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.mileage}</Text>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.mileage}</Text>
                         </View>
 
                         <View style = {{flexDirection:"row", alignContent:'center'}}>
                             <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.Vin}</Text>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.Vin}</Text>
                         </View>
 
                     </View>
@@ -190,12 +192,12 @@ export default function PostDetails({route, navigation}) {
 
                         <View style = {{flexDirection:"row", alignContent:'center'}}>
                             <Ionicons name = {'hammer-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.make}</Text>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.make}</Text>
                         </View>
 
                         <View style = {{flexDirection:"row", alignContent:'center'}}>
                             <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{route.params.item.model}</Text>
+                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.model}</Text>
                         </View>
 
                     </View>
@@ -204,16 +206,16 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const isPostedBySameAsUsername = () => {
-        if (route.params.item.PostedBy !== route.params.username) {
+    const isPostedBySameAsUsername = (item, username) => {
+        if (item.PostedBy !== username) {
             return (
                 <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
                     <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
-                        <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                        <Image source = {{uri:item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                         <View style = {{margin:10,alignSelf:'center'}}>
-                            <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy}</Text>
+                            <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy}</Text>
                             <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: route.params.item.PostedBy , currentUser: route.params.username})}}>
+                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: item.PostedBy , currentUser: username})}}>
                                 <View style = {{
                                     flexDirection: 'row',
                                     alignItems: 'center',
@@ -242,8 +244,8 @@ export default function PostDetails({route, navigation}) {
                 <View style = {{justifyContent:'center', flexDirection:'row', margin:10}}>
                     <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                     <View style = {{margin:10,alignSelf:'center'}}>
-                        <Text style = {{fontWeight:'bold', color:'black', }}>{route.params.item.PostedBy} (You)</Text>
-                        <Text style = {{fontWeight:'bold', color:'lightgrey'}}> Owner </Text>
+                        <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy} (You)</Text>
+                        <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
                         <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
                             <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
                             <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
@@ -254,18 +256,18 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const renderHomesAndAuto = () => {
-        if (!(route.params.item.category !== "Homes" && route.params.item.category !== "Auto")) return  <View></View>
+    const renderHomesAndAuto = (item) => {
+        if (!(item.category !== "Homes" && item.category !== "Auto")) return  <View></View>
 
         return (
             <View>
-                <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{route.params.item.details}</Text>
+                <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{item.details}</Text>
             </View>
         )
     }
 
-    const isRealEstateData = () => {
-        if(realEstateData &&  realEstateData.length === 0 && route.params.item.category === "Homes") {
+    const isRealEstateData = (item, realEstateData) => {
+        if(realEstateData &&  realEstateData.length === 0 && item.category === "Homes") {
             return (
                 <View style = {{ marginLeft: 30 }}>
                     <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
@@ -276,8 +278,8 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const renderHomesSection = () => {
-        if (!(route.params.item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
+    const renderHomesSection = (item, realEstateData) => {
+        if (!(item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
         return (
             <View>
                 <View style = {{ marginLeft: 25 }}>
@@ -297,11 +299,11 @@ export default function PostDetails({route, navigation}) {
         )
     }
 
-    const renderDescription = () =>{
-        if (!_.isEmpty(route.params.item.description)){
+    const renderDescription = (description) =>{
+        if (!_.isEmpty(description)){
             return(
                 <View style = {{marginBottom:20}}>
-                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{(more &&  !_.isEmpty( route.params.item.description)) ?  route.params.item.description :  route.params.item.description.slice(0, 500) + " ..."}</Text>
+                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{(more &&  !_.isEmpty( description)) ?  description :  description.slice(0, 500) + " ..."}</Text>
                 </View>
             )
         }else{
@@ -311,10 +313,10 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const renderArrangePickup = () => {
-        if (route.params.item.PostedBy !== route.params.username){
+    const renderArrangePickup = (item, username, profilePic) => {
+        if (item.PostedBy !== username){
             return(
-                <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:route.params.item ,currentUsername:route.params.username, currentProfilePic:route.params.CurrentUserProfilePic})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>
+                <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:item ,currentUsername:username, currentProfilePic:profilePic})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>
                     <Ionicons name={"calendar-outline"} size={20} color={"white"}/>
                     <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Arrange a pickup</Text>
                 </Pressable>
@@ -333,9 +335,7 @@ export default function PostDetails({route, navigation}) {
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
                 <View style = {{zIndex:1}}>
                     <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress = {() =>navigation.goBack()}>
-                            <Ionicons name ='chevron-back-outline' size = {30}/>
-                        </Pressable>
+                        <BackButton navigation={navigation}/>
                     </View>
 
                     <View style = {{position: 'absolute', top: 30, right: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
@@ -366,7 +366,7 @@ export default function PostDetails({route, navigation}) {
 
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                        <Pressable onPress = {() =>handleLike(route.params.item.title, route.params.username, Liked, setLiked)}>
+                        <Pressable onPress = {() =>handleLike(route.params.item.title, username, Liked, setLiked)}>
                             {renderIsLiked()}
                         </Pressable>
                     </View>
@@ -457,13 +457,13 @@ export default function PostDetails({route, navigation}) {
 
                     <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
 
-                    {renderIsCategoryHomes()}
-                    {renderIsCategoryAuto()}
+                    {renderIsCategoryHomes(route.params.item)}
+                    {renderIsCategoryAuto(route.params.item)}
 
                 </View>
-                {isPostedBySameAsUsername()}
+                {isPostedBySameAsUsername(route.params.item, username)}
 
-                {renderDescription()}
+                {renderDescription(route.params.item.description)}
 
                     <Pressable onLongPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
@@ -483,17 +483,17 @@ export default function PostDetails({route, navigation}) {
                     </Pressable>
 
 
-                {renderHomesAndAuto()}
+                {renderHomesAndAuto(route.params.item)}
 
-                {isRealEstateData()}
+                {isRealEstateData(route.params.item, realEstateData)}
 
-                {renderHomesSection()}
+                {renderHomesSection(route.params.item, realEstateData)}
 
                 <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 
             </ScrollView>
 
-            {renderArrangePickup()}
+            {renderArrangePickup(route.params.item, username, route.params.CurrentUserProfilePic)}
 
 
 

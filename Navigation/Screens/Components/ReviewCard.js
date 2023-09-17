@@ -4,13 +4,14 @@ import {
     Image,
     Pressable,
     ScrollView,
-    TextInput, TouchableOpacity,
+    TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {getProfilePicture} from "../GlobalFunctions";
+import HiddenButton from "./HiddenButton";
 
 const SendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
     const docRef = firestore.collection("Reviews").doc(data.id);
@@ -128,21 +129,14 @@ export default function ReviewCard({data, currentUser}) {
                     )
                 }
                 renderHiddenItem = {({ item, index }) => (
-                    <View
-                        style = {{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            width: 75,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                        key = {index}
-                    >
-                        <TouchableOpacity onPress = {() => handleDeleteReply(index)}>
-                            <Ionicons size = {25} name ='trash-outline' color = {'red'} />
-                        </TouchableOpacity>
+                    <View style={{ position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        width: 75,
+                        justifyContent: 'center',
+                        alignItems: 'center'}}>
+                        <HiddenButton iconName={'trash-outline'} color={"red"} onPress={()=>{handleDeleteReply(index)}}/>
                     </View>
                 )}
             />

@@ -18,6 +18,7 @@ import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
 import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture} from "./GlobalFunctions";
 import _ from "lodash";
+import HiddenButton from "./Components/HiddenButton";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -145,13 +146,14 @@ export default function Profile({ navigation, route }) {
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const [profilePic, setProfilePic] = useState(null)
+  const username  = route.params.username
 
 
   useEffect(() => {
-    getPosts(route.params.username, setUserList);
-    clearDeleted(setRefreshing, route.params.username, setUserList);
-    generateRating(route.params.username, setRating, setNumOfReviews)
-    getProfilePicture(route.params.username).then((result)=>{
+    getPosts(username, setUserList);
+    clearDeleted(setRefreshing, username, setUserList);
+    generateRating(username, setRating, setNumOfReviews)
+    getProfilePicture(username).then((result)=>{
       setProfilePic(result)
     })
   }, []);
@@ -185,7 +187,7 @@ export default function Profile({ navigation, route }) {
           data = {userList}
           rightOpenValue = {-170}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, route.params.username, setUserList)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserList)} />
           }
           ListFooterComponent = {
             <View style = {{height:80}}>
@@ -196,7 +198,7 @@ export default function Profile({ navigation, route }) {
             <View>
               <View>
                 <View style = {{alignItems:'center', marginTop:25}}>
-                  <Pressable onPress={()=>{SelectProfilePic(route.params.username)}}>
+                  <Pressable onPress={()=>{SelectProfilePic(username)}}>
                     <Image source = {{uri:profilePic}} style = {styles.image} resizeMode = "cover"/>
                     <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
                       <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
@@ -205,7 +207,7 @@ export default function Profile({ navigation, route }) {
                 </View>
 
                 <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                  <Pressable onPress = {() => {navigation.navigate("Reviews", {username:route.params.username, currentUser:route.params.username})}}>
+                  <Pressable onPress = {() => {navigation.navigate("Reviews", {username:username, currentUser:username})}}>
                     <View style = {{flexDirection:'column', alignItems:'center'}}>
                       <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>
                       <Text style = {{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
@@ -233,7 +235,7 @@ export default function Profile({ navigation, route }) {
               <Setting
                   title = "Calendar"
                   type = "button"
-                  onPress = {() => navigation.navigate("My Calendar", {currentUsername:route.params.username})}
+                  onPress = {() => navigation.navigate("My Calendar", {currentUsername:username})}
                   nameOfIcon ='calendar-outline'
               />
 
@@ -261,7 +263,7 @@ export default function Profile({ navigation, route }) {
               <Setting
                   title = "Recently Deleted Posts"
                   type = "button"
-                  onPress = {() =>navigation.navigate("Deleted Posts", {username:route.params.username})}
+                  onPress = {() =>navigation.navigate("Deleted Posts", {username:username})}
                   nameOfIcon = 'trash-outline'
               />
 
@@ -277,7 +279,7 @@ export default function Profile({ navigation, route }) {
             }
 
           renderItem = {({item}) => (
-            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:route.params.username, item})}>
+            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:username, item})}>
               <PostCard data = {item}/>
             </Pressable>
             )}
@@ -290,17 +292,9 @@ export default function Profile({ navigation, route }) {
               bottom: 0,
               width: 100,
               alignItems: 'center'}}>
-                <TouchableOpacity onPress = {() =>moveToDelete(item, setRefreshing, route.params.username, setUserList)} style = {{marginRight:20}}>
-                  <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress = {() =>navigation.navigate("Edit Post", {PostTitle: item.title,Price:item.price, Details:item.details, Description:item.description, images:item.pic, Currency:item.currency, Location: item.location, collectionPath:"AllPosts"})}>
-                  <Ionicons size = {30} name ='create-outline' color = {"black"}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress = {() =>markAsSold(item, setRefreshing, route.params.username, setUserList)}>
-                  <Ionicons name = {'checkmark-circle-outline'} color = {"green"} size = {30} style = {{marginLeft:20}}/>
-                </TouchableOpacity>
+                <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, setRefreshing, username, setUserList)} iconName={'trash-outline'}/>
+                <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
+                <HiddenButton color={'green'} onPress = {() =>{markAsSold(item, setRefreshing, username, setUserList)}} iconName={'checkmark-circle-outline'}/>
 
               </View>
             )

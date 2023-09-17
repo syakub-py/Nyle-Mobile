@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
 import {auth} from './Components/Firebase'
-import {getstorage, firestore} from './Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import {AddProfilePicture} from "./GlobalFunctions";
+import BackButton from "./Components/BackButton";
 
 const handleSignUp = (username, password, profilePic, navigation) => {
     auth
@@ -68,9 +68,7 @@ export default function SignUp({navigation}) {
         <View style = {styles.container}>
 
             <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2 ,backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                <Pressable onPress = {() =>navigation.goBack()}>
-                    <Ionicons name ='chevron-back-outline' size = {30}/>
-                </Pressable>
+                <BackButton navigation={navigation}/>
             </View>
 
             <View style = {{alignItems:'center', justifyContent:'center'}}>

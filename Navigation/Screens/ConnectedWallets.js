@@ -2,6 +2,7 @@ import React from 'react';
 import {View, FlatList, Pressable, Text} from 'react-native';
 import WalletCard from "./Components/WalletCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import BackButton from "./Components/BackButton";
 
 const wallets = [
     { name: 'Coinbase Wallet', address: '0xabc12385038**********', balance:"10,964", walletProvider:"https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-logo.png" },
@@ -14,9 +15,7 @@ export default function ConnectedWallets({navigation}) {
         <View>
             <View style = {{zIndex:1}}>
                 <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
-                    <Pressable onPress = {() => navigation.goBack()}>
-                        <Ionicons name ='chevron-back-outline' size = {30}/>
-                    </Pressable>
+                    <BackButton navigation={navigation}/>
                 </View>
             </View>
 
