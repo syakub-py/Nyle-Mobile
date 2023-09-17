@@ -19,7 +19,7 @@ export default function ResetPassword({navigation}) {
         <View style = {styles.container}>
             <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                 <Image
-                    source = {require('./Components/icon.png')}
+                    source = {require('../../assets/icon.png')}
                     style = {{
                         height: 150,
                         width: 150
@@ -28,7 +28,7 @@ export default function ResetPassword({navigation}) {
             <View style = {{position: 'absolute', top: 30, left: 15, height:50, width:50, elevation:2 , backgroundColor:'whitesmoke', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                 <BackButton navigation={navigation}/>
             </View>
-            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username(username)} onChangeText = {(text) => setUsername(text)} />
+            <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username} onChangeText = {(text) => setUsername(text)} />
             <Pressable style = {styles.submitContainer} onPress = {handleResetPassword}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Reset</Text>
             </Pressable>

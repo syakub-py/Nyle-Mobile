@@ -49,7 +49,7 @@ export default function Login({navigation}) {
         <ScrollView style = {styles.container}>
             <View style = {{marginTop:69, alignItems:'center', justifyContent:'center'}}>
                 <Image
-                    source = {require('./Components/icon.png')}
+                    source = {require('../../assets/icon.png')}
                     style = {{
                         height: 150,
                         width: 150

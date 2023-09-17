@@ -7,9 +7,7 @@ import {
     SafeAreaView,
     Image,
     RefreshControl,
-    Pressable,
     TextInput,
-    TouchableOpacity,
     Vibration,
 } from 'react-native';
 import {firestore, getstorage} from './Components/Firebase'
@@ -18,6 +16,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 import {getProfilePicture} from "./GlobalFunctions";
 import HiddenButton from "./Components/HiddenButton";
+import ChatItem from "./Components/ChatComponents/ChatItem";
 
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);
@@ -26,19 +25,8 @@ const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, 
     setTimeout(() => setRefreshing(false), 300);
 };
 
-const findUser = (userArray, params) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== params.username) return index
-    }
-    return "";
-}
 
-const findProfilePic = (userArray, params) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username === params.username) return index
-    }
-    return "";
-}
+
 
 const searchFilter = (text, masterData, setFilterData, setSearch) => {
     if (text) {
@@ -128,7 +116,7 @@ const getChats = async (params, setFilterData, setMasterData) => {
 export default function Chat({navigation, route}) {
     const [filteredData, setFilterData] = useState([]);
     const [masterData, setMasterData] = useState([]);
-    const [search, setSearch] = useState([])
+    const [search, setSearch] = useState('')
     const [refreshing, setRefreshing] = useState(false);
     const [profilePic, setProfilePic] = useState(null)
 
@@ -148,28 +136,6 @@ export default function Chat({navigation, route}) {
 
     const randomNumber = Math.floor(Math.random() * 100);
 
-    const isUserNameLengthGreaterThanTen = (username) => {
-        if (username.length > 10) return <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
-
-        return <Text style = {{fontSize:18, fontWeight:'500'}}>{username}</Text>
-    }
-
-    const isItemLatestMessageLengthGreaterThanTen = (item) => {
-        if (item.latestMessage.length > 10) return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
-
-        return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
-    }
-
-    const isItemImage = (item) => {
-        if (item.image) {
-            return (
-                <View style = {{justifyContent:'center'}}>
-                    <Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
-                </View>
-            )
-        }
-        return <View/>
-    }
 
     return (
         <SafeAreaView style = {styles.container}>
@@ -234,27 +200,9 @@ export default function Chat({navigation, route}) {
                         <HiddenButton iconName={'trash-outline'} color={'red'} onPress={()=>{deleteChat(item, masterData, setMasterData)}}/>
                     </View>
                 )}
-                renderItem = {({item, index}) => {
-                    const username = item.data.owners[findUser(item.data.owners, route.params)].username
-                    return (
-                        <Pressable onPress = {() => {navigation.navigate("chat box", {username: route.params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners, route.params)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, route.params)].profilePic, userId:findUser(item.data.owners, route.params)})}} key = {index}>
-                            <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
-                                <View>
-                                    <Image
-                                        source = {{uri: item.data.owners[findUser(item.data.owners, route.params)].profilePic}}
-                                        style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
-                                    />
-                                </View>
-
-                                <View style = {{flexDirection:'column'}}>
-                                    {isUserNameLengthGreaterThanTen(username)}
-                                    {isItemLatestMessageLengthGreaterThanTen(item)}
-                                </View>
-                                {isItemImage(item)}
-                            </View>
-                        </Pressable>
-                    )
-                }}
+                renderItem = {({item}) => (
+                    <ChatItem item={item} params={route.params} navigation={navigation}/>
+                )}
             />
             <StatusBar style = "auto"/>
         </SafeAreaView>

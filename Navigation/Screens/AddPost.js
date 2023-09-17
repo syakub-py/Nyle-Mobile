@@ -17,7 +17,6 @@ import {firestore, getstorage} from './Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import _ from "lodash"
 import DropdownInput from './Components/AddPostDropdown';
 import {CustomText, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
@@ -110,6 +109,7 @@ export default function AddPost({route}) {
     const [make, setMake] = useState("");
     const [model, setModel] = useState("");
     const [isFocus, setIsFocus] = useState(false);
+    const {width} = Dimensions.get("window");
 
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
