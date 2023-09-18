@@ -240,7 +240,7 @@ export default function PostDetails({route, navigation}) {
                     {renderIsCategoryAuto(route.params.item)}
 
                 </View>
-                {isPostedBySameAsUsername(route.params.item, username, rating, numOfReviews)}
+                {isPostedBySameAsUsername(route.params, username, rating, numOfReviews)}
 
                 {renderDescription(route.params.item.description, more, setMore)}
 

@@ -117,7 +117,7 @@ export default function renderPrice(currencies, currencyList, setCurrencyList){
                         setIsFocus={()=>setIsFocus(false)}
                     />
 
-                    <CustomTextInput onChangeText={(text) => setPrice(text)} width={width/2.5}/>
+                    <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width/2.5}/>
                 </View>
             </View>
         )

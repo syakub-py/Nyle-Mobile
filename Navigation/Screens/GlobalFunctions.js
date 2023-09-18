@@ -45,8 +45,11 @@ export const generateRating = async (username, setRating, setNumOfReviews) => {
     })
     const rating = sum/counter
     const numOfReviews = counter
+
     setRating(rating)
-    setNumOfReviews(numOfReviews)
+    if (!_.isNil(setNumOfReviews)){
+        setNumOfReviews(numOfReviews)
+    }
 }
 
 export const readDatabase = async (

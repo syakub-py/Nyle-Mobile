@@ -41,16 +41,16 @@ const handleAddChat = (params, navigation) => {
     }
 };
 
-export default function isPostedBySameAsUsername(item, username, rating, numOfReviews) {
-    if (item.PostedBy !== username) {
+export default function isPostedBySameAsUsername(params, username, rating, numOfReviews) {
+    if (params.item.PostedBy !== username) {
         return (
             <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
                 <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
-                    <Image source = {{uri:item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                    <Image source = {{uri:params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                     <View style = {{margin:10,alignSelf:'center'}}>
-                        <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy}</Text>
+                        <Text style = {{fontWeight:'bold', color:'black', }}>{params.item.PostedBy}</Text>
                         <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                        <Pressable onPress = {() => {navigation.navigate("Reviews", {username: item.PostedBy , currentUser: username})}}>
+                        <Pressable onPress = {() => {navigation.navigate("Reviews", {username: params.item.PostedBy , currentUser: username})}}>
                             <View style = {{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -65,7 +65,7 @@ export default function isPostedBySameAsUsername(item, username, rating, numOfRe
                     </View>
                 </View>
 
-                <Pressable onPress = {()=>handleAddChat(route.params, navigation)}>
+                <Pressable onPress = {()=>handleAddChat(params, navigation)}>
                     <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
                         <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
                     </View>
@@ -77,9 +77,9 @@ export default function isPostedBySameAsUsername(item, username, rating, numOfRe
     return (
         <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
             <View style = {{justifyContent:'center', flexDirection:'row', margin:10}}>
-                <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
+                <Image source = {{uri:params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
                 <View style = {{margin:10,alignSelf:'center'}}>
-                    <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy} (You)</Text>
+                    <Text style = {{fontWeight:'bold', color:'black', }}>{params.item.PostedBy} (You)</Text>
                     <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
                     <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
                         <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>

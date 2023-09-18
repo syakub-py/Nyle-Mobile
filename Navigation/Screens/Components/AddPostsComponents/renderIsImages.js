@@ -10,7 +10,7 @@ export default function isImageUrls(imageUrls, setImageUrls,SelectImages){
     if (_.isEmpty(imageUrls)) {
         return (
             <Pressable onPress = {()=>SelectImages(imageUrls, setImageUrls)} style = {{justifyContent:'center', alignItems:'center'}}>
-                <View style = {{height:height, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
+                <View style = {{height:height/2, width:width, backgroundColor:'whitesmoke', justifyContent:'center', alignItems:'center'}}>
                     <Ionicons name ='images-outline' size = {80} color = {'lightgray'}/>
                 </View>
             </Pressable>
