@@ -3,7 +3,6 @@ import React, {useState, useEffect} from "react";
 import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
 import {firestore} from "./Components/Firebase";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import {generateRating, getSoldItems} from "./GlobalFunctions";
 import BackButton from "./Components/BackButton";
 import RatingButton from "./Components/RatingButton";

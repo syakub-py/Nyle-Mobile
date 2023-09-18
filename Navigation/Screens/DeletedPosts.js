@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, Pressable, RefreshControl, TouchableOpacity, Text, View} from 'react-native';
+import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from './Components/PostCard.js';
 import {firestore, getstorage} from './Components/Firebase'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {SwipeListView} from 'react-native-swipe-list-view';
+import HiddenButton from "./Components/HiddenButton";
 
 /*
     @route.params = {username:current username}
@@ -123,7 +124,7 @@ export default function DeletedPosts({route, navigation}) {
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress = {() => {deleteAllPosts(username, deletedPostList, setDeletedPostList, setRefreshing())}}>
+                    <Pressable onPress = {() => {deleteAllPosts(username, deletedPostList, setDeletedPostList, setRefreshing)}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
@@ -145,13 +146,13 @@ export default function DeletedPosts({route, navigation}) {
                         bottom: 0,
                         width: 60,
                         alignItems: 'center'}}>
-                        <TouchableOpacity onPress = {() => deletePost(username,item, setRefreshing, setDeletedPostList)} style = {{marginRight:20}}>
-                            <Ionicons size = {30} name ='trash-outline' color = {"red"}/>
-                        </TouchableOpacity>
+                        <View style = {{marginRight:20}}>
+                            <HiddenButton iconName={'trash-outline'} color={"red"} onPress = {() => deletePost(username,item, setRefreshing, setDeletedPostList)}/>
+                        </View>
 
-                        <TouchableOpacity onPress = {()=> restoreItem(username,item, setRefreshing, setDeletedPostList)}>
-                            <Ionicons size = {30} name ='arrow-redo-outline' color = {"lightblue"}/>
-                        </TouchableOpacity>
+                        <View>
+                            <HiddenButton iconName={'arrow-redo-outline'} color={"lightblue"} onPress = {()=> restoreItem(username,item, setRefreshing, setDeletedPostList)}/>
+                        </View>
                     </View>
                 )}
                   keyExtractor = {item => item.id}/>

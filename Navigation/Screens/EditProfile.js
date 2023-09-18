@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {View, TextInput, Pressable, Text} from 'react-native';
 import {auth} from "./Components/Firebase";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import BackButton from "./Components/BackButton";
 
 const updateUsername = async (newUsername) => {

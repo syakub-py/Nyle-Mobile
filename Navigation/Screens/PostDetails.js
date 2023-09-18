@@ -61,7 +61,6 @@ const getRealEstateData = async (address, setRealEstateData) => {
     }
 };
 
-
 export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const likes = route.params.item.likes
@@ -107,8 +106,6 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-
-
     return (
         <SafeAreaView style = {{flex:1}}>
             <ScrollView style = {{backgroundColor:'white'}} showsVerticalScrollIndicator = {false}>
@@ -127,8 +124,8 @@ export default function PostDetails({route, navigation}) {
                         visible={isOpen}
                         animationType="slide"
                         onRequestClose={() => toggleDropdown(isOpen, setIsOpen)}
-                        transparent={true}
-                    >
+                        transparent={true}>
+
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <View style={{ width: 280, height: 250, backgroundColor: '#fff', borderRadius: 20, flexDirection:'column', justifyContent: 'space-between' }}>
                                 <View style={{flexDirection:"row"}}>
@@ -141,6 +138,7 @@ export default function PostDetails({route, navigation}) {
                                 </View>
                             </View>
                         </View>
+
                     </Modal>
 
 
@@ -200,12 +198,14 @@ export default function PostDetails({route, navigation}) {
 
                             }}>{route.params.item.likes.length}</Text>
                         </View>
-                        <View style = {{  flexDirection: 'row',
+                        <View style = {{
+                            flexDirection: 'row',
                             backgroundColor: 'transparent',
                             borderRadius: 5,
                             alignItems:'center'}}>
                             <Ionicons name ='eye' size = {20} color = {'white'}/>
-                            <Text style = {{  color: 'white',
+                            <Text style = {{
+                                color: 'white',
                                 fontSize: 12,
                                 fontWeight: 'bold',
                                 marginLeft: 3,}}>{route.params.item.views}</Text>

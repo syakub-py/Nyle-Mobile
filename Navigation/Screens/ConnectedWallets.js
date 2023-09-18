@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, FlatList, Pressable, Text} from 'react-native';
 import WalletCard from "./Components/WalletCard";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import BackButton from "./Components/BackButton";
 
 const wallets = [
