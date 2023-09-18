@@ -19,6 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture} from "./GlobalFunctions";
 import _ from "lodash";
 import HiddenButton from "./Components/HiddenButton";
+import RatingButton from "./Components/RatingButton";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -207,12 +208,7 @@ export default function Profile({ navigation, route }) {
                 </View>
 
                 <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                  <Pressable onPress = {() => {navigation.navigate("Reviews", {username:username, currentUser:username})}}>
-                    <View style = {{flexDirection:'column', alignItems:'center'}}>
-                      <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>
-                      <Text style = {{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
-                    </View>
-                  </Pressable>
+                  <RatingButton navigation={navigation} rating={rating.toFixed(1)} username={username} currentUsername={username}/>
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                   <View style = {{flexDirection:'column', alignItems:'center'}}>
@@ -304,41 +300,18 @@ export default function Profile({ navigation, route }) {
     );
   }
   
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    image:{
-      width: 100,
-      height: 100,
-      borderRadius: 20,
-      overflow: 'hidden',
-      paddingBottom: 50,
-      margin:20
-    },
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  image:{
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+    overflow: 'hidden',
+    paddingBottom: 50,
+    margin:20
+  },
 
-  });
-
-
-//   <View style = {{marginTop:20}}>
-//   <Text style = {{color: 'black', fontSize:18, fontWeight:'bold'}}>Recent Transactions</Text>
-//   <ScrollView horizontal showsHorizontalScrollIndicator = {false}>
-//     {
-//       transactions.map((item, index) =>(
-//         <View style = {{height:150, width:150, margin:10, shadowColor:'black',elevation:3}} key = {index}>
-//           <ImageBackground source = {{uri:item.pic}}  imageStyle = {{height:150, width:"100%",borderRadius:20}} resizeMode = {'cover'}>
-//             <View style = {{flexDirection:'row', paddingHorizontal:5, paddingTop:3}}>
-//               <Avatar source = {{uri: item.profilePic}} rounded/>
-//               <Text style = {{color:'white', fontWeight:'bold', paddingHorizontal:10, paddingTop:5}}>{item.title}</Text>
-//             </View>
-//             <View style = {{flexDirection:'row', alignItems:'center', paddingHorizontal:10}}>
-//               <Image style = {{height:15, width:15, marginRight:3, marginLeft:3}} source = {{uri:item.currency}}/>
-//               <Text style = {{color:'white',}}>{item.price}</Text>
-//             </View>
-//           </ImageBackground>
-//         </View>
-//       ))
-//     }
-//   </ScrollView>
-// </View>
+});

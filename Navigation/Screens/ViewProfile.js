@@ -6,6 +6,7 @@ import {firestore} from "./Components/Firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {generateRating, getSoldItems} from "./GlobalFunctions";
 import BackButton from "./Components/BackButton";
+import RatingButton from "./Components/RatingButton";
 
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
@@ -54,12 +55,7 @@ export default function ViewProfile({route}) {
                         </View>
 
                         <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: postedByUsername, currentUser: route.params.currentUsername})}}>
-                                <View style = {{flexDirection:'column', alignItems:'center'}}>
-                                    <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>
-                                    <Text style = {{fontSize:17, fontWeight:'bold', paddingRight:5}}>{rating.toFixed(1)}</Text>
-                                </View>
-                            </Pressable>
+                            <RatingButton username={postedByUsername} currentUsername={route.params.currentUsername} rating={rating.toFixed(1)} navigation={navigation}/>
                             <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                             <View style = {{flexDirection:'column', alignItems:'center'}}>

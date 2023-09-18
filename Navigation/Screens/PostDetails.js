@@ -1,5 +1,4 @@
 import {
-    Alert,
     Dimensions, FlatList,
     Image,
     Modal,
@@ -18,49 +17,21 @@ import CustomMapMarker from "./Components/CustomMapMarker";
 import _ from "lodash";
 import MenuButton from "./Components/MenuButtons";
 import BackButton from "./Components/BackButton";
+import isPostedBySameAsUsername from "./Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
+import {renderIsCategoryAuto} from "./Components/PostDetailsComponents/renderIsCategoryAuto";
+import renderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
+import isRealEstateData from "./Components/PostDetailsComponents/renderIsRealEstateData";
+import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
+import renderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAndAuto";
+import renderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
+import renderDescription from "./Components/PostDetailsComponents/renderDescription";
+import renderIsLiked from "./Components/PostDetailsComponents/renderIsLiked";
 const {width} = Dimensions.get("window");
-const height = width * 1;
+const height = width;
 
 /*
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
-
-const handleAddChat = (params, navigation) => {
-    if (params.username !== params.item.PostedBy) {
-        firestore
-            .collection('Chats')
-            .add({
-                owners: [
-                    {
-                        profilePic: params.CurrentUserProfilePic,
-                        username: params.username,
-                    },
-                    {
-                        profilePic: params.item.profilePic,
-                        username: params.item.PostedBy,
-                    },
-                ],
-            })
-            .then((ref) => {
-               const owners =   [
-                    {
-                        profilePic: params.CurrentUserProfilePic,
-                        username: params.username,
-                    },
-                    {
-                        profilePic: params.item.profilePic,
-                        username: params.item.PostedBy,
-                    },
-                ]
-
-                const username = owners[1].username
-                navigation.navigate("chat box", {username: params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, params.username)})
-            })
-            .catch((error) => {
-                Alert.alert('Error adding document: ', error);
-            });
-    }
-};
 
 const toggleDropdown = (isOpen, setIsOpen) => {
     setIsOpen(!isOpen);
@@ -80,13 +51,6 @@ const handleViewCounter = (setViews, item) => {
                 });
         });
 };
-
-const findUser = (userArray, username) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== username) return index
-    }
-    return "";
-}
 
 const getRealEstateData = async (address, setRealEstateData) => {
     try {
@@ -143,191 +107,6 @@ export default function PostDetails({route, navigation}) {
         }
     }
 
-    const renderIsLiked = () => {
-        if (Liked) return <Ionicons name ='heart' size = {30} color = {'#e6121d'}/>
-        return <Ionicons name ='heart-outline' size = {30}/>
-    }
-
-    const renderIsCategoryHomes = (item) => {
-        if (item.category === "Homes") {
-            return (
-                <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>
-                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                        <Ionicons name = {'bed'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.bedrooms}</Text>
-                    </View>
-
-                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                        <Ionicons name = {'water'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10}}>{item.bathrooms}</Text>
-                    </View>
-                    <View style = {{flexDirection:"row", alignContent:'center'}}>
-                        <Ionicons name = {'expand'} color = {'black'} size = {20}/>
-                        <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.SQFT}</Text>
-                    </View>
-
-                </View>
-            )
-        }
-    }
-
-    const renderIsCategoryAuto = (item) => {
-        if (item.category === "Auto") {
-            return (
-                <View style = {{flexDirection:"column"}}>
-                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
-
-                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                            <Ionicons name = {'car-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.mileage}</Text>
-                        </View>
-
-                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.Vin}</Text>
-                        </View>
-
-                    </View>
-                    <View style = {{ flexDirection:"row", alignContent:'center', marginTop:5 }}>
-
-                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                            <Ionicons name = {'hammer-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.make}</Text>
-                        </View>
-
-                        <View style = {{flexDirection:"row", alignContent:'center'}}>
-                            <Ionicons name = {'information-circle-outline'} color = {'black'} size = {20}/>
-                            <Text style = {{fontSize:15, color:'black', marginRight:10, marginLeft:5}}>{item.model}</Text>
-                        </View>
-
-                    </View>
-                </View>
-            )
-        }
-    }
-
-    const isPostedBySameAsUsername = (item, username) => {
-        if (item.PostedBy !== username) {
-            return (
-                <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
-                    <View style = {{justifyContent:'center', flexDirection:'row',  marginLeft:10}}>
-                        <Image source = {{uri:item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
-                        <View style = {{margin:10,alignSelf:'center'}}>
-                            <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy}</Text>
-                            <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                            <Pressable onPress = {() => {navigation.navigate("Reviews", {username: item.PostedBy , currentUser: username})}}>
-                                <View style = {{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    backgroundColor: 'transparent',
-                                    marginTop: 2
-                                }}>
-                                    <Ionicons name = "star" style = {{ marginRight: 3 }} color = "#ebd61e" size = {13} />
-                                    <Text style = {{ fontSize: 12, fontWeight: 'bold' }}>{rating.toFixed(1)}</Text>
-                                    <Text style = {{ fontSize: 10, color:'grey', marginLeft:3}}>({numOfReviews} reviews)</Text>
-                                </View>
-                            </Pressable>
-                        </View>
-                    </View>
-
-                    <Pressable onPress = {()=>handleAddChat(route.params, navigation)}>
-                        <View style = {{height:60, width:60, borderRadius:15, backgroundColor:'#292929', elevation:10, margin:10}}>
-                            <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin:15}}/>
-                        </View>
-                    </Pressable>
-                </View>  
-            )
-        }
-
-        return (
-            <View style = {{flexDirection:"row", justifyContent:'space-between'}}>
-                <View style = {{justifyContent:'center', flexDirection:'row', margin:10}}>
-                    <Image source = {{uri:route.params.item.profilePic}} style = {{height:60, width:60, borderRadius:10, alignSelf:'center'}}/>
-                    <View style = {{margin:10,alignSelf:'center'}}>
-                        <Text style = {{fontWeight:'bold', color:'black', }}>{item.PostedBy} (You)</Text>
-                        <Text style = {{fontWeight:'bold', color:'lightgrey'}}>Owner</Text>
-                        <View style = {{flexDirection:'row', alignItems:'center', marginTop:3}}>
-                            <Ionicons name = {'star'} style = {{marginRight:3}} color = {"#ebd61e"} size = {13}/>
-                            <Text style = {{fontSize:12, fontWeight:'bold'}}>{rating.toFixed(1)}</Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
-    }
-
-    const renderHomesAndAuto = (item) => {
-        if (!(item.category !== "Homes" && item.category !== "Auto")) return  <View></View>
-
-        return (
-            <View>
-                <Text style = {{marginRight:30, marginLeft:30, color:'#a8a5a5', fontSize:15}}>{item.details}</Text>
-            </View>
-        )
-    }
-
-    const isRealEstateData = (item, realEstateData) => {
-        if(realEstateData &&  realEstateData.length === 0 && item.category === "Homes") {
-            return (
-                <View style = {{ marginLeft: 30 }}>
-                    <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
-                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 10 }}>Nothing to show here</Text>
-                </View> 
-            )
-        }
-    }
-
-    const renderHomesSection = (item, realEstateData) => {
-        if (!(item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
-        return (
-            <View>
-                <View style = {{ marginLeft: 25 }}>
-                    <Text style = {{ fontSize: 25, fontWeight: 'bold', color: 'black' }}>Public Records for {route.params.item.title}</Text>
-                    <Text style = {{ fontSize: 15, color: 'lightgrey', marginTop: 5, marginBottom: 5 }}>Beta only works in New York City</Text>
-                    <ScrollView>
-                        {
-                            realEstateData.map((record, index) => (
-                                <View key = {index} style = {{ flexDirection: "row", margin: 5 }}>
-                                    <Text>{record.NAME}</Text>
-                                </View>
-                            ))
-                        }
-                    </ScrollView>
-                </View>
-            </View>
-        )
-    }
-
-    const renderDescription = (description) =>{
-        if (!_.isEmpty(description)){
-            return(
-                <View style = {{marginBottom:20}}>
-                    <Text style = {{marginRight:30, marginLeft:30, color:'black', fontSize:15}} onPress = {() =>setMore(true)}>{(more &&  !_.isEmpty( description)) ?  description :  description.slice(0, 500) + " ..."}</Text>
-                </View>
-            )
-        }else{
-            return (
-                <View/>
-            )
-        }
-    }
-
-    const renderArrangePickup = (item, username, profilePic) => {
-        if (item.PostedBy !== username){
-            return(
-                <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:item ,currentUsername:username, currentProfilePic:profilePic})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>
-                    <Ionicons name={"calendar-outline"} size={20} color={"white"}/>
-                    <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Arrange a pickup</Text>
-                </Pressable>
-            )
-        }else{
-            return(
-                <View/>
-            )
-        }
-    }
-
 
 
     return (
@@ -367,7 +146,7 @@ export default function PostDetails({route, navigation}) {
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, username, Liked, setLiked)}>
-                            {renderIsLiked()}
+                            {renderIsLiked(Liked)}
                         </Pressable>
                     </View>
 
@@ -397,7 +176,7 @@ export default function PostDetails({route, navigation}) {
                             {
                                 images.map((i, k) =>(
                                     <Pressable key = {k} onPress = {() => {console.log(k+1)}}>
-                                        <Image source = {{uri:i}} style = {k == state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
+                                        <Image source = {{uri:i}} style = {k === state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
                                     </Pressable>
                                 ))
                             }
@@ -461,9 +240,9 @@ export default function PostDetails({route, navigation}) {
                     {renderIsCategoryAuto(route.params.item)}
 
                 </View>
-                {isPostedBySameAsUsername(route.params.item, username)}
+                {isPostedBySameAsUsername(route.params.item, username, rating, numOfReviews)}
 
-                {renderDescription(route.params.item.description)}
+                {renderDescription(route.params.item.description, more, setMore)}
 
                     <Pressable onLongPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
