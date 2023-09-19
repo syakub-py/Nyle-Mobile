@@ -2,8 +2,9 @@ import {Dimensions, Image, Modal, Pressable, ScrollView, Text, View} from "react
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MapView, {Circle, Marker} from "react-native-maps";
 import React from "react";
+import CloseButton from "../CloseButton";
 
-export function renderDetailModal (item, modalVisible, setModalVisible) {
+export default function renderDetailModal (item, modalVisible, setModalVisible) {
     const { height } = Dimensions.get('window');
     const {width} = Dimensions.get("window");
     if (modalVisible){
@@ -27,9 +28,9 @@ export function renderDetailModal (item, modalVisible, setModalVisible) {
                             }}>
 
                             <ScrollView style={{ flex: 1}} showsVerticalScrollIndicator={false}>
-                                <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'white', borderColor:'lightgrey', borderWidth:1, height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
-                                    <Ionicons name={'close-outline'} size={20}/>
-                                </Pressable>
+                                <View style={{position:'absolute', top:10, left:10}}>
+                                    <CloseButton setModalVisible={setModalVisible}/>
+                                </View>
 
                                 <View style={{padding: 20}}>
 

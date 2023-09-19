@@ -1,7 +1,6 @@
 import MapView, { Marker, Circle } from 'react-native-maps';
 import React from 'react';
-import {View, Pressable} from 'react-native';
-import Ionicons from "react-native-vector-icons/Ionicons";
+import {View} from 'react-native';
 import CustomMapMarker from "./Components/CustomMapMarker";
 import BackButton from "./Components/BackButton";
 

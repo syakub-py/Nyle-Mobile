@@ -14,11 +14,9 @@ import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from './Components/Firebase'
 import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalFunctions";
 import CustomMapMarker from "./Components/CustomMapMarker";
-import _ from "lodash";
-import MenuButton from "./Components/MenuButtons";
 import BackButton from "./Components/BackButton";
 import isPostedBySameAsUsername from "./Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
-import {renderIsCategoryAuto} from "./Components/PostDetailsComponents/renderIsCategoryAuto";
+import renderIsCategoryAuto from "./Components/PostDetailsComponents/renderIsCategoryAuto";
 import renderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
 import isRealEstateData from "./Components/PostDetailsComponents/renderIsRealEstateData";
 import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
@@ -26,16 +24,15 @@ import renderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAn
 import renderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
 import renderDescription from "./Components/PostDetailsComponents/renderDescription";
 import renderIsLiked from "./Components/PostDetailsComponents/renderIsLiked";
+import MenuButtonModal from "./Components/PostDetailsComponents/renderMenuButtonsModal";
+import LikesAndViews from "./Components/PostDetailsComponents/renderLikesAndViews";
+import ErrorPopUp from "./Components/ErrorPopUp";
 const {width} = Dimensions.get("window");
-const height = width;
+const height =width;
 
 /*
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
-
-const toggleDropdown = (isOpen, setIsOpen) => {
-    setIsOpen(!isOpen);
-};
 
 const handleViewCounter = (setViews, item) => {
     const PostRef = firestore.collection('AllPosts').doc(item.title);
@@ -77,12 +74,19 @@ export default function PostDetails({route, navigation}) {
     const [Liked, setLiked] = useState(isLiked(likes, username))
 
     useEffect(() => {
-        handleViewCounter(setViews, route.params.item);
-        generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
-        if (route.params.item.category === "Homes") {
-            //"79-33 213 street"
-            getRealEstateData(route.params.item.title, setRealEstateData)
+        try{
+            handleViewCounter(setViews, route.params.item);
+            generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
+            if (route.params.item.category === "Homes") {
+                //"79-33 213 street"
+                getRealEstateData(route.params.item.title, setRealEstateData)
+            }
+        }catch (e) {
+            return (
+                <ErrorPopUp error={e}/>
+            )
         }
+
     }, [])
 
     const change = ({ nativeEvent }) => {
@@ -120,34 +124,13 @@ export default function PostDetails({route, navigation}) {
                         </Pressable>
                     </View>
 
-                    <Modal
-                        visible={isOpen}
-                        animationType="slide"
-                        onRequestClose={() => toggleDropdown(isOpen, setIsOpen)}
-                        transparent={true}>
-
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                            <View style={{ width: 280, height: 250, backgroundColor: '#fff', borderRadius: 20, flexDirection:'column', justifyContent: 'space-between' }}>
-                                <View style={{flexDirection:"row"}}>
-                                    <MenuButton title={'Share'} onPress={() => {}} iconName={'share-social-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center',margin:10}} />
-                                    <MenuButton title={'Report'} onPress={() => {}} iconName={'alert-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center', margin:10}} />
-                                </View>
-                                <View style={{flexDirection:"row"}}>
-                                    <MenuButton title={'Share'} onPress={() => {}} iconName={'share-social-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center',margin:10}} />
-                                    <MenuButton title={'Report'} onPress={() => {}} iconName={'alert-outline'} style={{ backgroundColor: 'whitesmoke', width: 120, height: 100, borderRadius: 10, justifyContent: 'center', alignItems: 'center', margin:10}} />
-                                </View>
-                            </View>
-                        </View>
-
-                    </Modal>
-
+                    <MenuButtonModal isOpen={isOpen} setIsOpen={setIsOpen}/>
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, username, Liked, setLiked)}>
                             {renderIsLiked(Liked)}
                         </Pressable>
                     </View>
-
                 </View>
 
                 <View>
@@ -182,34 +165,8 @@ export default function PostDetails({route, navigation}) {
                     </ScrollView>
 
                     <View style = {{flexDirection:'row', position: 'absolute',bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center', marginBottom:5, marginLeft:5, paddingHorizontal:3}}>
-                        <View style = {{
-                            flexDirection: 'row',
-                            backgroundColor: 'transparent',
-                            borderRadius: 5,
-                            alignItems:'center'
-                        }}>
-                            <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
-                            <Text style = {{
-                                color: 'white',
-                                fontSize: 12,
-                                fontWeight: 'bold',
-                                marginLeft: 3,
-                                marginRight: 5,
-
-                            }}>{route.params.item.likes.length}</Text>
-                        </View>
-                        <View style = {{
-                            flexDirection: 'row',
-                            backgroundColor: 'transparent',
-                            borderRadius: 5,
-                            alignItems:'center'}}>
-                            <Ionicons name ='eye' size = {20} color = {'white'}/>
-                            <Text style = {{
-                                color: 'white',
-                                fontSize: 12,
-                                fontWeight: 'bold',
-                                marginLeft: 3,}}>{route.params.item.views}</Text>
-                        </View>
+                        <LikesAndViews color={'#e6121d'} iconName={'heart'} data={route.params.item.likes.length}/>
+                        <LikesAndViews color={'white'} iconName={'eye'} data={route.params.item.views}/>
                     </View>
 
                 </View>
@@ -240,7 +197,7 @@ export default function PostDetails({route, navigation}) {
                     {renderIsCategoryAuto(route.params.item)}
 
                 </View>
-                {isPostedBySameAsUsername(route.params, username, rating, numOfReviews)}
+                {isPostedBySameAsUsername(route.params, username, rating, numOfReviews, navigation)}
 
                 {renderDescription(route.params.item.description, more, setMore)}
 
@@ -272,7 +229,7 @@ export default function PostDetails({route, navigation}) {
 
             </ScrollView>
 
-            {renderArrangePickup(route.params.item, username, route.params.CurrentUserProfilePic)}
+            {renderArrangePickup(route.params.item, username, route.params.CurrentUserProfilePic, navigation)}
 
 
 

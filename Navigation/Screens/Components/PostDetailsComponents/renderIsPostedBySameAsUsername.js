@@ -41,7 +41,7 @@ const handleAddChat = (params, navigation) => {
     }
 };
 
-export default function isPostedBySameAsUsername(params, username, rating, numOfReviews) {
+export default function isPostedBySameAsUsername(params, username, rating, numOfReviews, navigation) {
     if (params.item.PostedBy !== username) {
         return (
             <View style = {{flexDirection:"row", justifyContent:'space-between'}}>

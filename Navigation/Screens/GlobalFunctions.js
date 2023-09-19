@@ -45,7 +45,6 @@ export const generateRating = async (username, setRating, setNumOfReviews) => {
     })
     const rating = sum/counter
     const numOfReviews = counter
-
     setRating(rating)
     if (!_.isNil(setNumOfReviews)){
         setNumOfReviews(numOfReviews)
@@ -190,17 +189,15 @@ export const getCityState = async (lat, lng, setState, setCity) => {
 };
 
 
-export const categoryFilter = (text, masterData, setFilterData, setCategorySearch) => {
+export const categoryFilter = (text, masterData, setFilterData) => {
     if (text && text !== 'All') {
         const newData = masterData.filter((item) => {
             const itemData = item.category ? item.category : ''
             return itemData.indexOf(text)>-1;
         });
         setFilterData(newData);
-        setCategorySearch(text);
     } else {
         setFilterData(masterData);
-        setCategorySearch(text);
     }
 }
 
@@ -245,8 +242,7 @@ export const getProfilePicture = async (username) => {
         const userRef = firestore.collection('ProfilePictures').doc(username);
         const doc = await userRef.get();
         if (doc.exists) {
-            const profilePicture = doc.data().url;
-            return profilePicture;
+            return doc.data().url;
         } else {
             return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         }

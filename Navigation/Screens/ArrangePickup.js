@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {View, Text, ScrollView, Dimensions, Pressable, TextInput, Modal} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
-import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Components/Firebase";
 import BackButton from "./Components/BackButton";
+import CloseButton from "./Components/CloseButton";
 
 const {width} = Dimensions.get("window");
 
@@ -69,9 +69,10 @@ export default function TransactionCalendar({route, navigation}){
                                 }}>
                                 <ScrollView style={{ flex: 1}} showsVerticalScrollIndicator={false}>
 
-                                    <Pressable onPress={()=>setModalVisible(false)} style={{zIndex:1,backgroundColor:'white', borderColor:'lightgrey', borderWidth:1, height:30, width:30, borderRadius:20, position:'absolute', top:10, left:10, alignItems:'center', justifyContent:'center'}}>
-                                        <Ionicons name={'close-outline'} size={20}/>
-                                    </Pressable>
+                                    <View style={{position:'absolute', top:10, left:10,}}>
+                                        <CloseButton setModalVisible={setModalVisible}/>
+                                    </View>
+
 
                                     <View style={{marginTop:30, marginBottom:20}}>
                                         <Calendar

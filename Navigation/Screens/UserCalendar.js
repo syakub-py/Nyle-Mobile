@@ -1,38 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 import {firestore} from "./Components/Firebase";
 import {SwipeListView} from "react-native-swipe-list-view";
-import {BuyerOrSellerCard} from "./Components/UserCalendarComponents/BuyerOrSellerCard";
-import {getRandomLightColor} from "./Components/UserCalendarComponents/BuyerOrSellerCard";
-import {ApproveDenyButton} from "./Components/UserCalendarComponents/ApproveDenyButton";
+import BuyerOrSellerCard, {getRandomLightColor} from "./Components/UserCalendarComponents/BuyerOrSellerCard";
+import ApproveDenyButton from "./Components/UserCalendarComponents/ApproveDenyButton";
 import BackButton from "./Components/BackButton";
+
 const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
-const getCalendarEvents = async (username, setCalendarEvents) => {
-    let results = []
-    const MySellerEvents =  firestore.collection('CalendarEvents').where("seller", "==", username)
+const getCalendarEvents = async (username) => {
+    const MySellerEvents = firestore.collection('CalendarEvents').where("seller", "==", username);
     const MyBuyerEvents = firestore.collection('CalendarEvents').where("buyer", "==", username);
-    Promise.all([MySellerEvents.get(), MyBuyerEvents.get()])
-        .then((querySnapshots) => {
-            const sellerEvents = querySnapshots[0].docs;
-            const buyerEvents = querySnapshots[1].docs;
 
-            // Combine the results or perform any desired operations
-            const combinedResults = sellerEvents.concat(buyerEvents);
-            combinedResults.forEach((doc) => {
-                const resultWithId = { id: doc.id, ...doc.data() };
-                results.push(resultWithId);
-            });
-            setCalendarEvents(results)
-        })
-        .catch((error) => {
-            // Handle any errors
-            console.error("Error getting events:", error);
-        });
-}
+    const [sellerQuerySnapshot, buyerQuerySnapshot] = await Promise.all([MySellerEvents.get(), MyBuyerEvents.get()]);
+
+    const sellerEvents = sellerQuerySnapshot.docs;
+    const buyerEvents = buyerQuerySnapshot.docs;
+
+    // Combine the results or perform any desired operations
+    const combinedResults = sellerEvents.concat(buyerEvents);
+    return combinedResults.map((doc) => ({id: doc.id, ...doc.data()}));
+};
 
 const handleApproveDenyPress = async (DocId, status) => {
     return firestore.collection("CalendarEvents").doc(DocId).set({status:status, seen:true}, { merge: true })
@@ -63,9 +54,15 @@ export default function UserCalendar({navigation,route}){
     const [calendarEvents, setCalendarEvents] = useState([])
     const username =route.params.currentUsername
 
-    useEffect(()=>{
-        getCalendarEvents(username, setCalendarEvents)
-    },[])
+    useEffect(async () => {
+            try {
+                const result = await getCalendarEvents(username);
+                setCalendarEvents(result);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+
+    }, []);
 
 
     const filteredEvents = calendarEvents.filter((event) => {

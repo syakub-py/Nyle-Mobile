@@ -1,7 +1,7 @@
 import {Text, View} from "react-native";
 import React from "react";
 
-export function renderStatus (item){
+export default function renderStatus (item){
     if (item.status === "approved"){
         return(
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

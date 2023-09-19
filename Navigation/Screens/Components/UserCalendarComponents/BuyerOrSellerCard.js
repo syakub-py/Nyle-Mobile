@@ -1,8 +1,8 @@
 import {Image, Pressable, Text, View} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React, {useState} from "react";
-import {renderDetailModal} from "./renderDetailModal";
-import {renderStatus} from "./renderStatus";
+import renderDetailModal from "./renderDetailModal";
+import renderStatus from "./renderStatus";
 
 export function getRandomLightColor() {
     // Generate random values for red, green, and blue components
@@ -13,7 +13,7 @@ export function getRandomLightColor() {
     // Return the RGB color as a string
     return `rgb(${r}, ${g}, ${b})`;
 }
-export function BuyerOrSellerCard (item, username){
+export default function BuyerOrSellerCard (item, username){
     const [modalVisible, setModalVisible] = useState(false);
     if (item.seller === username || item.buyer === username) {
         return (

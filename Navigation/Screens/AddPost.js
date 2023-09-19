@@ -110,7 +110,7 @@ export default function AddPost({route}) {
     const [model, setModel] = useState("");
     const [isFocus, setIsFocus] = useState(false);
     const {width} = Dimensions.get("window");
-
+    const {height} = Dimensions.get("window");
     const categories = [{Label:"All", Value:"All"},{Label:"Tech", Value:"Tech"}, {Label:"Auto", Value:"Auto"}, {Label:"Homes", Value:"Homes"}, {Label:"Bikes", Value:"Bikes"}, {Label:"Bike Parts", Value:"Bike Parts"}, {Label:"Jewelry", Value:"Jewelry"},{Label:"Retail/Wholesale", Value:"Retail/Wholesale"}]
 
     //urls for the phone

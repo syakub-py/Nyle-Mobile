@@ -158,7 +158,6 @@ export default function Profile({ navigation, route }) {
     })
   }, []);
 
-
   const SectionTitle = ({title}) => {
     return (
       <View style = {{marginTop: 20, marginLeft:10}}>
@@ -207,7 +206,7 @@ export default function Profile({ navigation, route }) {
                 </View>
 
                 <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                  {/*<RatingButton navigation={navigation} rating={rating.toFixed(1)} username={username} currentUsername={username}/>*/}
+                  <RatingButton navigation={navigation} rating={rating} username={username} currentUsername={username}/>
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                   <View style = {{flexDirection:'column', alignItems:'center'}}>

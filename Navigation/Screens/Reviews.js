@@ -3,6 +3,7 @@ import React, {useState, useEffect} from "react";
 import {firestore} from "./Components/Firebase";
 import ReviewCard from "./Components/ReviewCard";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import BackButton from "./Components/BackButton";
 
 /*
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
@@ -66,9 +67,7 @@ export default function Reviews({route, navigation}) {
                 ListHeaderComponent = {
                     <View style = {{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                         <View style = {{ position: 'absolute', top: 20, left: 0, zIndex: 1 }}>
-                            <Pressable onPress = {() => navigation.goBack()} style = {{ padding: 10 }}>
-                                <Ionicons name ='arrow-back-outline' size = {30} />
-                            </Pressable>
+                            <BackButton navigation={navigation}/>
                         </View>
                         <View >
                             <View style = {{ height: 50, width: 90, backgroundColor: 'transparent', marginTop: 20 }}>

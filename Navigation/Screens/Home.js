@@ -57,7 +57,6 @@ export default function Home({navigation, route}) {
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState([]);
-  const [sliderSearch, setSliderSearch] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null)
@@ -144,7 +143,7 @@ export default function Home({navigation, route}) {
 
               </View>
 
-              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} setFilterData={setFilterData} setSearch={setSliderSearch}/>
+              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} setFilterData={setFilterData} />
 
               <View style = {{
                     flex: 1,

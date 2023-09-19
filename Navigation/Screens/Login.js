@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, ScrollView,  Image, TouchableOpacity, TextInput, Pressable } from 'react-native';
-import { auth } from './Components/Firebase';
+import React, {useEffect, useState} from 'react';
+import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {auth} from './Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 
 const handleEmailAndPasswordLogin = (username, password) => {
     auth.signInWithEmailAndPassword(username, password)
@@ -39,10 +39,9 @@ export default function Login({navigation}) {
     const [password, setPassword] = useState('')
     
     useEffect(() => {
-        const unsubcribe = auth.onAuthStateChanged(user => {
+        return auth.onAuthStateChanged(user => {
             if (user) navigation.navigate("Main Container", {username: user.email})
-        })
-        return unsubcribe;
+        });
     }, []);
 
     return (
