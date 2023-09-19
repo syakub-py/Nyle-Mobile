@@ -54,7 +54,11 @@ export default function ViewProfile({route}) {
                         </View>
 
                         <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <RatingButton username={postedByUsername} currentUsername={route.params.currentUsername} rating={rating} navigation={navigation}/>
+                            <View style={{flexDirection:'column'}}>
+                                <RatingButton username={postedByUsername} currentUsername={route.params.currentUsername} rating={rating} navigation={navigation}/>
+                                <Text style={{fontSize:13, color:'gray'}}>({numOfReviews} reviews)</Text>
+                            </View>
+
                             <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                             <View style = {{flexDirection:'column', alignItems:'center'}}>
