@@ -22,7 +22,7 @@ import {CustomText, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
 import renderPrice from "./Components/AddPostsComponents/renderPrice";
 import isImageUrls from "./Components/AddPostsComponents/renderIsImages";
-import renderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
+import RenderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
 import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
 import renderAutoSection from "./Components/AddPostsComponents/renderAutoSection";
 
@@ -275,7 +275,7 @@ export default function AddPost({route}) {
                     </MapView>
                 </View>
 
-                {renderDetailsText(category, setDetails)}
+                <RenderDetailsText category = {category} setDetails = {setDetails} />
                 {renderHomesSection(category, setBedrooms, setBathrooms, setSQFT)}
                 {renderAutoSection(category, setMake, setModel, setMileage, setVIN)}
 

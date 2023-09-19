@@ -15,14 +15,13 @@ const isItemLatestMessageLengthGreaterThanTen = (item) => {
 }
 
 const isItemImage = (item) => {
-    if (item.image) {
-        return (
-            <View style = {{justifyContent:'center'}}>
-                <Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
-            </View>
-        )
-    }
-    return <View/>
+	if (!item.image) return <View/>
+
+	return (
+		<View style = {{justifyContent:'center'}}>
+			<Image source = {{uri: item.image}} style = {{height:50, width:50, borderRadius:4, position:'absolute', left:30, elevation:2}}/>
+		</View>
+	)
 }
 
 const findProfilePic = (userArray, params) => {
@@ -31,12 +30,14 @@ const findProfilePic = (userArray, params) => {
     }
     return "";
 }
+
 const findUser = (userArray, params) => {
     for (let index = 0; index < userArray.length; index++) {
         if (userArray[index].username !== params.username) return index
     }
     return "";
 }
+
 export default function ChatItem({item, params, navigation}){
     const username = item.data.owners[findUser(item.data.owners, params)].username
     return (
