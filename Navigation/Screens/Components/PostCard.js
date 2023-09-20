@@ -20,12 +20,14 @@ export default function PostCard({data, username}) {
         updateCurrencyPrice(data)
     }, [data.currency[0].value])
 
-    const renderDoesDataIncludePostedBy = () => {
-        if (Liked) return <Ionicons name ='heart' size = {25} color = {'#e6121d'}/>
+    const RenderDoesDataIncludePostedBy = () => {
+        if (Liked) {
+            return <Ionicons name='heart' size={25} color={'#e6121d'}/>
+        }
         return <Ionicons name ='heart-outline' size = {25}/>
     }
 
-    const renderIsUsernameSameAsPostedBy = () => {
+    const RenderIsUsernameSameAsPostedBy = () => {
         if (username === data.PostedBy) return <Image style = {{height:50, width:50, borderRadius:15, elevation:10, margin:12}} source = {{uri:data.profilePic, elevation:2}}/>
         return (
             <Pressable onPress = {() => navigation.navigate("view profile", {ProfileImage: data.profilePic, postedByUsername:data.PostedBy, currentUsername:username})}>
@@ -56,12 +58,12 @@ export default function PostCard({data, username}) {
                 <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
                      <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
                             <Pressable onPress = {() =>handleLike(data.title, username, Liked,setLiked)}>
-                                {renderDoesDataIncludePostedBy()}
+                                {RenderDoesDataIncludePostedBy()}
                             </Pressable>
                         </View>
 
                     <View style = {{flexDirection:'row'}}>
-                        {renderIsUsernameSameAsPostedBy()}
+                        {RenderIsUsernameSameAsPostedBy()}
                         <View>
                             <Text style = {{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                             <View style = {{flexDirection:'row', alignItems:'center'}}>

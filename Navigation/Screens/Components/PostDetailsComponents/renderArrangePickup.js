@@ -4,7 +4,7 @@ import React from "react";
 import ErrorPopUp from "../ErrorPopUp";
 const {width} = Dimensions.get("window");
 
-export default function renderArrangePickup(item, username, profilePic, navigation){
+export default function RenderArrangePickup(item, username, profilePic, navigation){
     if (item.PostedBy !== username){
         return(
             <Pressable onPress={()=>{navigation.navigate("Transaction Calendar", {item:item ,currentUsername:username, currentProfilePic:profilePic})}} style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:70, width:width-50, justifyContent:'space-evenly', backgroundColor:'black', alignItems:'center', marginLeft:25, marginRight:25, marginBottom:10, borderRadius:10}}>

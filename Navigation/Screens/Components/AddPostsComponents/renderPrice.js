@@ -6,7 +6,7 @@ import _ from "lodash";
 import {convertPrice} from "../../GlobalFunctions";
 import {CustomTextInput} from "../CustomText";
 
-const renderCurrencyItem = (item) => {
+const RenderCurrencyItem = (item) => {
     return (
         <View style = {{ flexDirection: 'row', alignItems: 'center' }}>
             <Image source = {{uri: item.value}} style = {{ width: 30, height: 30, margin:10, borderRadius:50 }} />
@@ -15,7 +15,7 @@ const renderCurrencyItem = (item) => {
     );
 };
 
-export default function renderPrice(currencies, currencyList, setCurrencyList){
+export default function RenderPrice(currencies, currencyList, setCurrencyList){
     const [checked, setChecked] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [price, setPrice] = useState(0);
@@ -63,7 +63,7 @@ export default function renderPrice(currencies, currencyList, setCurrencyList){
                             }
                         }}
                         value={selectedCurrency}
-                        renderItem={renderCurrencyItem}
+                        renderItem={RenderCurrencyItem}
                         customStyle={{
                             width: Dimensions.get('window').width / 3,
                         }}
@@ -110,7 +110,7 @@ export default function renderPrice(currencies, currencyList, setCurrencyList){
 
                         }}
                         value = {selectedCurrency}
-                        renderItem = {renderCurrencyItem}
+                        renderItem = {RenderCurrencyItem}
                         customStyle = {{
                             width: Dimensions.get('window').width / 3
                         }}

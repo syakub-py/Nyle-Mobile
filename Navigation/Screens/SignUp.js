@@ -42,7 +42,7 @@ export default function SignUp({navigation}) {
     const [profilePic, setProfilePic] = useState(null)
     const [refreshing, setRefreshing] = useState(false);
 
-    const renderProfilePicSection = () => {
+    const RenderProfilePicSection = () => {
         if (profilePic == null) {
             return (
                 <View style = {{margin:75, alignItems:'center'}}>
@@ -73,7 +73,7 @@ export default function SignUp({navigation}) {
 
             <View style = {{alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress = {()=>SelectImages(setProfilePic)}>
-                    {renderProfilePicSection()}
+                    {RenderProfilePicSection()}
                 </Pressable>
             </View>
 

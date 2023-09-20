@@ -20,11 +20,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropdownInput from './Components/AddPostDropdown';
 import {CustomText, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
-import renderPrice from "./Components/AddPostsComponents/renderPrice";
+import RenderPrice from "./Components/AddPostsComponents/renderPrice";
 import isImageUrls from "./Components/AddPostsComponents/renderIsImages";
-import renderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
-import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
-import renderAutoSection from "./Components/AddPostsComponents/renderAutoSection";
+import RenderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
+import RenderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
+import RenderAutoSection from "./Components/AddPostsComponents/renderAutoSection";
 
 
 /**
@@ -265,7 +265,7 @@ export default function AddPost({route}) {
                 </View>
 
                 <View >
-                    {renderPrice(currencies, currencyList, setCurrencyList)}
+                    {RenderPrice(currencies, currencyList, setCurrencyList)}
                 </View>
 
                 <CustomText text="Location" />
@@ -275,9 +275,9 @@ export default function AddPost({route}) {
                     </MapView>
                 </View>
 
-                {renderDetailsText(category, setDetails)}
-                {renderHomesSection(category, setBedrooms, setBathrooms, setSQFT)}
-                {renderAutoSection(category, setMake, setModel, setMileage, setVIN)}
+                {RenderDetailsText(category, setDetails)}
+                {RenderHomesSection(category, setBedrooms, setBathrooms, setSQFT)}
+                {RenderAutoSection(category, setMake, setModel, setMileage, setVIN)}
 
                 <View>
                     <CustomTextWithInput

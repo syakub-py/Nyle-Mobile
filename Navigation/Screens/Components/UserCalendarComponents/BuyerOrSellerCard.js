@@ -1,8 +1,8 @@
 import {Image, Pressable, Text, View} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import React, {useState} from "react";
-import renderDetailModal from "./renderDetailModal";
-import renderStatus from "./renderStatus";
+import RenderDetailModal from "./renderDetailModal";
+import RenderStatus from "./renderStatus";
 
 export function getRandomLightColor() {
     // Generate random values for red, green, and blue components
@@ -18,7 +18,7 @@ export default function BuyerOrSellerCard (item, username){
     if (item.seller === username || item.buyer === username) {
         return (
             <Pressable onPress={() => setModalVisible(true)}>
-                {renderDetailModal(item, modalVisible, setModalVisible)}
+                {RenderDetailModal(item, modalVisible, setModalVisible)}
                 <View style={{
                     flexDirection: 'column',
                     margin: 5,
@@ -81,7 +81,7 @@ export default function BuyerOrSellerCard (item, username){
                         />
                     </View>
                     <View style={{flex: 1, position: 'absolute', bottom: 10, right: 10}}>
-                        {renderStatus(item)}
+                        {RenderStatus(item)}
                     </View>
                 </View>
             </Pressable>

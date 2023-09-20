@@ -71,7 +71,7 @@ export default function Home({navigation, route}) {
     })
   }, [])
 
-  const renderFooter = () => {
+  const RenderFooter = () => {
     if (!loading) {
       return (
           <View style = {{height:80}}>
@@ -124,7 +124,7 @@ export default function Home({navigation, route}) {
       <View style = {{zIndex:0}}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          ListFooterComponent = {renderFooter}
+          ListFooterComponent = {RenderFooter}
           ListHeaderComponent = {
             <View style={{flex:1}}>
               <View style={{marginTop: 35, marginRight: 15, flexDirection:'row', justifyContent:'space-between',}}>

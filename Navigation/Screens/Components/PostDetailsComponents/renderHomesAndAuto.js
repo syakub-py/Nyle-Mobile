@@ -2,7 +2,7 @@ import {Text, View} from "react-native";
 import React from "react";
 
 
-export default function renderHomesAndAuto(item){
+export default function RenderHomesAndAuto(item){
     if (!(item.category !== "Homes" && item.category !== "Auto")) return  <View></View>
     return (
         <View>

@@ -16,7 +16,7 @@ export default function MapPostCard({data, username}) {
         generateRating(data.PostedBy, setRating, setNumOfReviews)
     }, [])
 
-    const renderIsLiked = () => {
+    const RenderIsLiked = () => {
         if (Liked) return <Ionicons name ='heart' size = {20} color = {'#e6121d'}/>
         return <Ionicons name ='heart-outline' size = {20}/>
     }
@@ -26,7 +26,7 @@ export default function MapPostCard({data, username}) {
         <ImageBackground source = {{uri: data.pic[0]}}  imageStyle = {{ resizeMode: 'cover', borderRadius: 10 }} style = {{ flex: 1 }}>
             <View style = {{position:'absolute', right:7,top:7, height:30, width:30, borderRadius:12, justifyContent:'center', alignItems:'center'}}>
                 <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
-                    {renderIsLiked()}
+                    {RenderIsLiked()}
                 </Pressable>
             </View>
 

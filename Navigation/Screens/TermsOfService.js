@@ -22,7 +22,7 @@ export default function TermsOfService({route ,navigation}) {
         getTerms(setTermsOfService);
     })
 
-    const renderShowButtons = () => {
+    const RenderShowButtons = () => {
         if (!route.params.showButtons) return <View/>
         return (
             <View style = {{flexDirection:'row', alignSelf:'center'}}>
@@ -58,7 +58,7 @@ export default function TermsOfService({route ,navigation}) {
                     </ScrollView>
                 </View>
 
-                {renderShowButtons()}
+                {RenderShowButtons()}
 
             </View>
         </View>

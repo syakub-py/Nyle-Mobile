@@ -68,7 +68,7 @@ export default function ChatBox({route, navigation}) {
     });
   }
 
-  const renderActions = () => (
+  const RenderActions = () => (
       <View style = {{justifyContent:'center', alignItems:'center', margin:7}}>
         <Pressable onPress = {()=>SelectImages()}>
           <Ionicons name ='images' size = {25}/>
@@ -125,7 +125,7 @@ export default function ChatBox({route, navigation}) {
     }, [imageUrls])
 
 
-    const renderBubble = (props) => {
+    const RenderBubble = (props) => {
         const wrapperStyle = {
             right: {
                 backgroundColor: 'black',
@@ -192,7 +192,7 @@ export default function ChatBox({route, navigation}) {
         markAsRead(route.params)
     }, [])
 
-    const renderIsAnimating = (value, index) => {
+    const RenderIsAnimating = (value, index) => {
         if (animating) {
             return (
                 <View>
@@ -228,14 +228,14 @@ export default function ChatBox({route, navigation}) {
         return (
             imageUrls.map((value, index) => (
                 <View key = {index} style = {{backgroundColor:'#F0F0F0'}}>
-                    {renderIsAnimating(value, index)}
+                    {RenderIsAnimating(value, index)}
                 </View>
             ))
         )
 
     }
 
-  const renderInputToolbar = (props) => {
+  const RenderInputToolbar = (props) => {
     return (
       <View style = {{flex:1}}>
         <ScrollView
@@ -291,9 +291,9 @@ export default function ChatBox({route, navigation}) {
         alwaysShowSend
         scrollToBottom
         user = {{_id:route.params.userId}}
-        renderBubble = {renderBubble}
-        renderActions = {renderActions}
-        renderInputToolbar = {renderInputToolbar}
+        renderBubble = {RenderBubble}
+        renderActions = {RenderActions}
+        renderInputToolbar = {RenderInputToolbar}
         renderMessageImage = {(props) => {
             if (_.isEmpty(props.currentMessage.image)) return <View/>
             else {

@@ -16,14 +16,14 @@ import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalF
 import CustomMapMarker from "./Components/CustomMapMarker";
 import BackButton from "./Components/BackButton";
 import isPostedBySameAsUsername from "./Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
-import renderIsCategoryAuto from "./Components/PostDetailsComponents/renderIsCategoryAuto";
-import renderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
+import RenderIsCategoryAuto from "./Components/PostDetailsComponents/renderIsCategoryAuto";
+import RenderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
 import isRealEstateData from "./Components/PostDetailsComponents/renderIsRealEstateData";
-import renderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
-import renderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAndAuto";
-import renderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
-import renderDescription from "./Components/PostDetailsComponents/renderDescription";
-import renderIsLiked from "./Components/PostDetailsComponents/renderIsLiked";
+import RenderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
+import RenderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAndAuto";
+import RenderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
+import RenderDescription from "./Components/PostDetailsComponents/renderDescription";
+import RenderIsLiked from "./Components/PostDetailsComponents/renderIsLiked";
 import MenuButtonModal from "./Components/PostDetailsComponents/renderMenuButtonsModal";
 import LikesAndViews from "./Components/PostDetailsComponents/renderLikesAndViews";
 import ErrorPopUp from "./Components/ErrorPopUp";
@@ -128,7 +128,7 @@ export default function PostDetails({route, navigation}) {
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, username, Liked, setLiked)}>
-                            {renderIsLiked(Liked)}
+                            {RenderIsLiked(Liked)}
                         </Pressable>
                     </View>
                 </View>
@@ -193,13 +193,13 @@ export default function PostDetails({route, navigation}) {
 
                     <Text style = {{fontSize:12, fontWeight:'bold', color:'black'}}>(${route.params.item.USD})</Text>
 
-                    {renderIsCategoryHomes(route.params.item)}
-                    {renderIsCategoryAuto(route.params.item)}
+                    {RenderIsCategoryHomes(route.params.item)}
+                    {RenderIsCategoryAuto(route.params.item)}
 
                 </View>
                 {isPostedBySameAsUsername(route.params, username, rating, numOfReviews, navigation)}
 
-                {renderDescription(route.params.item.description, more, setMore)}
+                {RenderDescription(route.params.item.description, more, setMore)}
 
                     <Pressable onLongPress = {() => {navigation.navigate("Map", {coordinates:route.params.item.coordinates, firstImage:images[0]})}}>
                         <View style = {{width:width-50, height:300, alignSelf:'center', marginBottom:20, borderRadius: 20, overflow: 'hidden', elevation:3}}>
@@ -219,17 +219,17 @@ export default function PostDetails({route, navigation}) {
                     </Pressable>
 
 
-                {renderHomesAndAuto(route.params.item)}
+                {RenderHomesAndAuto(route.params.item)}
 
                 {isRealEstateData(route.params.item, realEstateData)}
 
-                {renderHomesSection(route.params.item, realEstateData)}
+                {RenderHomesSection(route.params.item, realEstateData)}
 
                 <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 
             </ScrollView>
 
-            {renderArrangePickup(route.params.item, username, route.params.CurrentUserProfilePic, navigation)}
+            {RenderArrangePickup(route.params.item, username, route.params.CurrentUserProfilePic, navigation)}
 
 
 

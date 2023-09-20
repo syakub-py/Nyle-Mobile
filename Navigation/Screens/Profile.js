@@ -212,14 +212,14 @@ export default function Profile({ navigation, route }) {
                   </View>
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
-                  <View style = {{flexDirection:'column', alignItems:'center'}}>
+                  <View style = {{flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
                     <Text style = {{fontSize:20, fontWeight:'500'}}>{_.size(userList)}</Text>
                     <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
                   </View>
 
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
 
-                  <View style = {{flexDirection:'column', alignItems:'center'}}>
+                  <View style = {{flexDirection:'column', alignItems:'center',justifyContent:'center'}}>
                     <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(userList)}</Text>
                     <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
                   </View>

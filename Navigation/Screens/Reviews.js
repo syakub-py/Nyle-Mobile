@@ -35,7 +35,7 @@ export default function Reviews({route, navigation}) {
         })
     }, [])
 
-    const renderIsCurrentUser = () => {
+    const RenderIsCurrentUser = () => {
         if (currentUsername === PostedByUsername) return <View/>
         
         return (
@@ -79,7 +79,7 @@ export default function Reviews({route, navigation}) {
                 renderItem = {({item}) => (
                     <ReviewCard data = {item} currentUser = {currentUsername}/>
             )}/>
-            {renderIsCurrentUser()}
+            {RenderIsCurrentUser()}
 
         </SafeAreaView>
     )

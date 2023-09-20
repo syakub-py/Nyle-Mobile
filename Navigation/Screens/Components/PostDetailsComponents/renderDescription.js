@@ -2,7 +2,7 @@ import _ from "lodash";
 import {Text, View} from "react-native";
 import React from "react";
 
-export default function renderDescription(description, more, setMore){
+export default function RenderDescription(description, more, setMore){
     if (!_.isEmpty(description)){
         return(
             <View style = {{marginBottom:20}}>

@@ -71,7 +71,7 @@ export default function ReviewCard({data, currentUser}) {
         DeleteReply(data, existingReplies, setExistingReplies, index)
     }
 
-    const renderIsRevieweCurrentUser = () => {
+    const RenderIsRevieweCurrentUser = () => {
         if (data.Reviewe !== currentUser) return <View/>
         return (
             <Pressable onPress = {() =>setOpen(!open)}>
@@ -82,7 +82,7 @@ export default function ReviewCard({data, currentUser}) {
         )
     }
 
-    const renderIsOpen = () => {
+    const RenderIsOpen = () => {
         if (open) {
             return (
                 <View style = {{flexDirection:'row', justifyContent:'center'}}>
@@ -99,10 +99,10 @@ export default function ReviewCard({data, currentUser}) {
                 </View>
             )
         }
-        return renderIsRevieweCurrentUser()
+        return RenderIsRevieweCurrentUser()
     }
 
-    const renderIsRevieweCurrentUser2 = () => {
+    const RenderIsRevieweCurrentUser2 = () => {
         if (data.Reviewe !== currentUser){
             return (
                 <ScrollView>
@@ -166,11 +166,11 @@ export default function ReviewCard({data, currentUser}) {
                     <Text style = {{marginTop:5}}>{data.ReviewMessage}</Text>
                 </View>
 
-                {renderIsOpen()}
+                {RenderIsOpen()}
 
             </View>
 
-            {renderIsRevieweCurrentUser2()}
+            {RenderIsRevieweCurrentUser2()}
         </View>
     )
 }

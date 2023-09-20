@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, FlatList, Image, Pressable } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Image } from 'react-native';
 import React, {useState, useEffect} from "react";
 import PostCard from './Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
@@ -21,8 +21,6 @@ const getPosts = async (username, setUserPosts) => {
     })
     setUserPosts(results)
 }
-
-
 
 export default function ViewProfile({route}) {
     const navigation = useNavigation();
@@ -54,21 +52,21 @@ export default function ViewProfile({route}) {
                         </View>
 
                         <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                            <View style={{flexDirection:'column'}}>
+                            <View style={{flexDirection:'column', alignContent:'center'}}>
                                 <RatingButton username={postedByUsername} currentUsername={route.params.currentUsername} rating={rating} navigation={navigation}/>
                                 <Text style={{fontSize:13, color:'gray'}}>({numOfReviews} reviews)</Text>
                             </View>
 
                             <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
-                            <View style = {{flexDirection:'column', alignItems:'center'}}>
+                            <View style = {{flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
                                 <Text style = {{fontSize:20, fontWeight:'500'}}>{UsersPosts.length}</Text>
                                 <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
                             </View>
 
                             <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
 
-                            <View style = {{flexDirection:'column', alignItems:'center'}}>
+                            <View style = {{flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
                                 <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(UsersPosts)}</Text>
                                 <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
                             </View>
