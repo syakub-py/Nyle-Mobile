@@ -1,0 +1,11 @@
+8-21: Nyle Day 1
+	Starting at 8PM
+	Installing libraries, apps on phone for setup
+	Confirmed nyle.store available domain name
+	
+	Decided to split up work into 2: app & website
+		Sam is going with react native 
+		Ariel is going with react web version
+		Modeling design after airbnb
+		Making branches
+		
