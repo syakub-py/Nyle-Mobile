@@ -3,7 +3,7 @@ import {CustomTextWithInput} from "../CustomText";
 import React from "react";
 
 
-export default function RenderDetailsText(category, setDetails){
+export default function RenderDetailsText({category, setDetails}){
     if ((category === "Homes" || category === "Auto")) {
         return <View/>
     }

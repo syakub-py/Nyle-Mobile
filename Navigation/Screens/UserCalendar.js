@@ -72,7 +72,7 @@ export default function UserCalendar({navigation,route}){
     return(
         <SwipeListView
             data={filteredEvents}
-            renderItem={({ item }) => BuyerOrSellerCard(item, username)}
+            renderItem={({ item }) => (<BuyerOrSellerCard item={item} username={username}/>)}
             contentContainerStyle={{
                 flex:1,
                 backgroundColor:"white"

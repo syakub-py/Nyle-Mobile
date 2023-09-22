@@ -2,7 +2,7 @@ import {ScrollView, Text, View} from "react-native";
 import React from "react";
 
 
-export default function RenderHomesSection(item, realEstateData){
+export default function RenderHomesSection({item, realEstateData}){
     if (!(item.category === "Homes" && realEstateData.length > 0 && realEstateData)) return <View></View>
     return (
         <View>

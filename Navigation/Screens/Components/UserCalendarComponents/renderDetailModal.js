@@ -4,7 +4,7 @@ import MapView, {Circle, Marker} from "react-native-maps";
 import React from "react";
 import CloseButton from "../CloseButton";
 
-export default function RenderDetailModal (item, modalVisible, setModalVisible) {
+export default function RenderDetailModal ({item, modalVisible, setModalVisible}) {
     const { height } = Dimensions.get('window');
     const {width} = Dimensions.get("window");
     if (modalVisible){

@@ -3,7 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 
 
-export default function RenderIsCategoryHomes(item){
+export default function RenderIsCategoryHomes({item}){
     if (item.category === "Homes") {
         return (
             <View style = {{flexDirection:"row", alignContent:'center', marginTop:5}}>

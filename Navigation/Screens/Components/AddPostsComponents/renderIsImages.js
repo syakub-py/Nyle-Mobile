@@ -4,7 +4,7 @@ import React from "react";
 import _ from "lodash";
 
 
-export default function isImageUrls(imageUrls, setImageUrls,SelectImages){
+export default function ImageUrls({imageUrls, setImageUrls, SelectImages}){
     const { height } = Dimensions.get('window');
     const {width} = Dimensions.get("window");
     if (_.isEmpty(imageUrls)) {

@@ -2,7 +2,7 @@ import {Text, View} from "react-native";
 import React from "react";
 
 
-export default function isRealEstateData(item, realEstateData){
+export default function RealEstateData({item, realEstateData}){
     if(realEstateData &&  realEstateData.length === 0 && item.category === "Homes") {
         return (
             <View style = {{ marginLeft: 30 }}>

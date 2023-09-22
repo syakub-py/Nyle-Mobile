@@ -3,7 +3,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 
 
-export default function RenderIsCategoryAuto (item){
+export default function RenderIsCategoryAuto ({item}){
     if (item.category === "Auto") {
         return (
             <View style = {{flexDirection:"column"}}>

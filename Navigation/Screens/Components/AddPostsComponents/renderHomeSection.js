@@ -3,7 +3,7 @@ import {CustomTextWithInput} from "../CustomText";
 import React from "react";
 
 
-export default function RenderHomesSection (category, setBedrooms, setBathrooms, setSQFT){
+export default function RenderHomeDataSection ({category, setBedrooms, setBathrooms, setSQFT}){
     if (category !== "Homes") return <View/>
     return (
         <View>

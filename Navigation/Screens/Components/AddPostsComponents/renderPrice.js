@@ -15,7 +15,7 @@ const RenderCurrencyItem = (item) => {
     );
 };
 
-export default function RenderPrice(currencies, currencyList, setCurrencyList){
+export default function RenderPrice({currencies, currencyList, setCurrencyList}){
     const [checked, setChecked] = useState(false);
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [price, setPrice] = useState(0);

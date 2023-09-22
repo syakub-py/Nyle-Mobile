@@ -13,12 +13,12 @@ export function getRandomLightColor() {
     // Return the RGB color as a string
     return `rgb(${r}, ${g}, ${b})`;
 }
-export default function BuyerOrSellerCard (item, username){
+export default function BuyerOrSellerCard ({item, username}){
     const [modalVisible, setModalVisible] = useState(false);
     if (item.seller === username || item.buyer === username) {
         return (
             <Pressable onPress={() => setModalVisible(true)}>
-                {RenderDetailModal(item, modalVisible, setModalVisible)}
+                <RenderDetailModal item={item} modalVisible={modalVisible} setModalVisible={setModalVisible}/>
                 <View style={{
                     flexDirection: 'column',
                     margin: 5,
@@ -81,7 +81,7 @@ export default function BuyerOrSellerCard (item, username){
                         />
                     </View>
                     <View style={{flex: 1, position: 'absolute', bottom: 10, right: 10}}>
-                        {RenderStatus(item)}
+                        <RenderStatus item={item}/>
                     </View>
                 </View>
             </Pressable>

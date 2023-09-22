@@ -21,9 +21,9 @@ import DropdownInput from './Components/AddPostDropdown';
 import {CustomText, CustomTextWithInput} from './Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
 import RenderPrice from "./Components/AddPostsComponents/renderPrice";
-import isImageUrls from "./Components/AddPostsComponents/renderIsImages";
+import ImageUrls from "./Components/AddPostsComponents/renderIsImages";
 import RenderDetailsText from "./Components/AddPostsComponents/renderDetailsText";
-import RenderHomesSection from "./Components/AddPostsComponents/renderHomeSection";
+import RenderHomeDataSection from "./Components/AddPostsComponents/renderHomeSection";
 import RenderAutoSection from "./Components/AddPostsComponents/renderAutoSection";
 
 
@@ -234,8 +234,7 @@ export default function AddPost({route}) {
                 </View>
 
 
-                {isImageUrls(imageUrls, setImageUrls, SelectImages)}
-
+                <ImageUrls imageUrls={imageUrls} setImageUrls={setImageUrls} SelectImages={SelectImages}/>
                 <View>
                     <CustomTextWithInput
                         text="Title"
@@ -265,7 +264,7 @@ export default function AddPost({route}) {
                 </View>
 
                 <View >
-                    {RenderPrice(currencies, currencyList, setCurrencyList)}
+                    <RenderPrice currencies={currencies} currencyList={currencyList} setCurrencyList={setCurrencyList}/>
                 </View>
 
                 <CustomText text="Location" />
@@ -275,10 +274,9 @@ export default function AddPost({route}) {
                     </MapView>
                 </View>
 
-                {RenderDetailsText(category, setDetails)}
-                {RenderHomesSection(category, setBedrooms, setBathrooms, setSQFT)}
-                {RenderAutoSection(category, setMake, setModel, setMileage, setVIN)}
-
+                <RenderDetailsText category={category} setDetails={setDetails}/>
+                <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
+                <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
                 <View>
                     <CustomTextWithInput
                         text="Description"
