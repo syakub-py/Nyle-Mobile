@@ -190,7 +190,7 @@ export default function AddPost({route}) {
     }
 
 
-    const isAnimating = () => {
+    const Animating = () => {
         if (!animating) return <View/>
         return (
             <View>
@@ -287,7 +287,7 @@ export default function AddPost({route}) {
                     />
                 </View>
 
-                {isAnimating()}
+                <Animating/>
 
                 <Pressable onPress = {() => {addPosts("AllPosts")}}>
                     <View style = {{marginBottom:20, marginLeft:10, marginRight:10, backgroundColor:"black", borderRadius: 20, alignItems:"center"}}>

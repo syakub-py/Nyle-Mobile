@@ -19,7 +19,6 @@ import PostedBySameAsUsername from "./Components/PostDetailsComponents/renderIsP
 import RenderIsCategoryAuto from "./Components/PostDetailsComponents/renderIsCategoryAuto";
 import RenderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
 import RealEstateData from "./Components/PostDetailsComponents/renderIsRealEstateData";
-import RenderHomeDataSection from "./Components/AddPostsComponents/renderHomeSection";
 import RenderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAndAuto";
 import RenderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
 import RenderDescription from "./Components/PostDetailsComponents/renderDescription";
@@ -128,7 +127,7 @@ export default function PostDetails({route, navigation}) {
 
                     <View style = {{position: 'absolute', top: 30, right: 75, height:50, width:50, elevation:2 , backgroundColor:'white', borderRadius:13, opacity:0.7, alignItems:'center', justifyContent:'center'}}>
                         <Pressable onPress = {() =>handleLike(route.params.item.title, username, Liked, setLiked)}>
-                            <RenderIsLiked Liked={Liked} size={20}/>
+                            <RenderIsLiked Liked={Liked} size={30}/>
                         </Pressable>
                     </View>
                 </View>

@@ -79,7 +79,7 @@ export default function Reviews({route, navigation}) {
                 renderItem = {({item}) => (
                     <ReviewCard data = {item} currentUser = {currentUsername}/>
             )}/>
-            {RenderIsCurrentUser()}
+            <RenderIsCurrentUser/>
 
         </SafeAreaView>
     )

@@ -56,7 +56,6 @@ export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${conversationID}/messages`);
 
   const [imageUrls, setImageUrls] = useState([]);
-  const [refresh, setRefreshing] = useState(false);
   const [state, setState] = useState({active:0})
   const [animating, setAnimating] = useState(false);
   let downloadUrls =[]
@@ -75,13 +74,6 @@ export default function ChatBox({route, navigation}) {
         </Pressable>
       </View>    
   );
-  
-
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1);
-  };
 
   const SelectImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -192,7 +184,7 @@ export default function ChatBox({route, navigation}) {
         markAsRead(route.params)
     }, [])
 
-    const RenderIsAnimating = (value, index) => {
+    const RenderIsAnimating = ({value, index}) => {
         if (animating) {
             return (
                 <View>
@@ -222,13 +214,13 @@ export default function ChatBox({route, navigation}) {
         }
     }
 
-    const isRenderImageUrls = () => {
+    const RenderImageUrls = () => {
         if (_.isEmpty(imageUrls)) return <View/>
 
         return (
             imageUrls.map((value, index) => (
                 <View key = {index} style = {{backgroundColor:'#F0F0F0'}}>
-                    {RenderIsAnimating(value, index)}
+                    <RenderIsAnimating value={value} index={index}/>
                 </View>
             ))
         )
@@ -248,7 +240,7 @@ export default function ChatBox({route, navigation}) {
             right: 0,
             height: 75,
           }}>
-            {isRenderImageUrls()}
+            <RenderImageUrls/>
         </ScrollView>
         <View style = {{ flex: 1 }}>
           <InputToolbar

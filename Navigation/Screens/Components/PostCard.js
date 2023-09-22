@@ -58,12 +58,12 @@ export default function PostCard({data, username}) {
                 <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
                      <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
                             <Pressable onPress = {() =>handleLike(data.title, username, Liked,setLiked)}>
-                                {RenderDoesDataIncludePostedBy()}
+                                <RenderDoesDataIncludePostedBy/>
                             </Pressable>
                         </View>
 
                     <View style = {{flexDirection:'row'}}>
-                        {RenderIsUsernameSameAsPostedBy()}
+                        <RenderIsUsernameSameAsPostedBy/>
                         <View>
                             <Text style = {{fontSize:15, fontWeight:'bold', color:'white', elevation:1, paddingTop:5}}>{data.title}</Text>
                             <View style = {{flexDirection:'row', alignItems:'center'}}>

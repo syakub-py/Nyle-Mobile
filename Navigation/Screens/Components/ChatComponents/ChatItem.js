@@ -2,19 +2,19 @@ import {Image, Pressable, Text, View} from "react-native";
 import React from "react";
 
 
-const isUserNameLengthGreaterThanTen = (username) => {
+const UserNameLengthGreaterThanTen = ({username}) => {
     if (username.length > 10) return <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
 
     return <Text style = {{fontSize:18, fontWeight:'500'}}>{username}</Text>
 }
 
-const isItemLatestMessageLengthGreaterThanTen = (item) => {
+const ItemLatestMessageLengthGreaterThanTen = ({item}) => {
     if (item.latestMessage.length > 10) return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
 
     return <Text style = {(item.received) ?{color:'gray', fontSize:14, paddingTop:3}:{color:'black', fontSize:14, paddingTop:3, fontWeight:"bold"}}>{item.latestMessage}</Text>
 }
 
-const isItemImage = (item) => {
+const ItemImage = ({item}) => {
     if (item.image) {
         return (
             <View style = {{justifyContent:'center'}}>
@@ -50,10 +50,10 @@ export default function ChatItem({item, params, navigation}){
                 </View>
 
                 <View style = {{flexDirection:'column'}}>
-                    {isUserNameLengthGreaterThanTen(username)}
-                    {isItemLatestMessageLengthGreaterThanTen(item)}
+                    <UserNameLengthGreaterThanTen username={username}/>
+                    <ItemLatestMessageLengthGreaterThanTen item={item}/>
                 </View>
-                {isItemImage(item)}
+                <ItemImage item={item}/>
             </View>
         </Pressable>
     )

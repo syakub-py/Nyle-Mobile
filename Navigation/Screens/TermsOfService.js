@@ -58,7 +58,7 @@ export default function TermsOfService({route ,navigation}) {
                     </ScrollView>
                 </View>
 
-                {RenderShowButtons()}
+                <RenderShowButtons/>
 
             </View>
         </View>

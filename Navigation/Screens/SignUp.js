@@ -73,7 +73,7 @@ export default function SignUp({navigation}) {
 
             <View style = {{alignItems:'center', justifyContent:'center'}}>
                 <Pressable onPress = {()=>SelectImages(setProfilePic)}>
-                    {RenderProfilePicSection()}
+                    <RenderProfilePicSection/>
                 </Pressable>
             </View>
 

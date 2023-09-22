@@ -144,7 +144,7 @@ export default function Chat({navigation, route}) {
                 ListFooterComponent = {
                     <View style = {{height:80}}/>
                 }
-                rightOpenValue = {-50}
+                rightOpenValue = {-70}
                 refreshControl = {
                     <RefreshControl
                         refreshing={refreshing}

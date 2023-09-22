@@ -122,7 +122,7 @@ export default function TransactionCalendar({route, navigation}){
 
                 <Text style={{fontSize: 20, marginTop: 30 }}>{route.params.item.title}</Text>
             </View>
-            {RenderModal()}
+            <RenderModal/>
             <MapView style={{ height: '100%', width: '100%' }} initialCamera = {{center: coordinates, pitch: 0,heading:0,zoom: 10, altitude:0}} onLongPress = {dropMarker}>
                 <Marker coordinate={coordinates}/>
             </MapView>
