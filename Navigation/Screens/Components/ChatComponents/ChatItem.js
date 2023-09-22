@@ -31,7 +31,7 @@ const findProfilePic = (userArray, params) => {
     }
     return "";
 }
-const findUser = (userArray, params) => {
+export const findUser = (userArray, params) => {
     for (let index = 0; index < userArray.length; index++) {
         if (userArray[index].username !== params.username) return index
     }

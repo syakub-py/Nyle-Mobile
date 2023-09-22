@@ -3,7 +3,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import {firestore} from "../Firebase";
 
-
+const findUser = (userArray, username) => {
+    for (let index = 0; index < userArray.length; index++) {
+        if (userArray[index].username !== username) return index
+    }
+    return "";
+}
 const handleAddChat = (params, navigation) => {
     if (params.username !== params.item.PostedBy) {
         firestore
@@ -32,8 +37,7 @@ const handleAddChat = (params, navigation) => {
                     },
                 ]
 
-                const username = owners[1].username
-                navigation.navigate("chat box", {username: params.username, conversationID:ref.id, name: username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, params.username)})
+                navigation.navigate("chat box", {username: params.username, conversationID:ref.id, name: owners[1].username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, params.username)})
             })
             .catch((error) => {
                 Alert.alert('Error adding document: ', error);
