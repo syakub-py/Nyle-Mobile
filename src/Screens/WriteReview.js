@@ -1,8 +1,8 @@
 import {View, Text, Pressable, TextInput} from 'react-native';
-import {firestore} from "./Components/Firebase";
+import {firestore} from "../Components/Firebase";
 import React, {useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import BackButton from "./Components/BackButton";
+import BackButton from "../Components/BackButton";
 
 const PostReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation) => {
     return firestore.collection("Reviews").add({
@@ -28,7 +28,7 @@ export default function WriteReview({route, navigation}) {
     const [reviewMessage, setReviewMessage] = useState("")
     const [title, setTitle] = useState("")
     const [stars, setStars] = useState(0)
-    
+
     return (
         <View style = {{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style = {{ position: 'absolute', top: 30, left: 10 }}>

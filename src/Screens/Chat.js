@@ -10,13 +10,13 @@ import {
     TextInput,
     Vibration,
 } from 'react-native';
-import {firestore, getstorage} from './Components/Firebase'
+import {firestore, getstorage} from '../Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from "lodash"
 import {getProfilePicture} from "./GlobalFunctions";
-import HiddenButton from "./Components/HiddenButton";
-import ChatItem from "./Components/ChatComponents/ChatItem";
+import HiddenButton from "../Components/HiddenButton";
+import ChatItem from "../Components/ChatComponents/ChatItem";
 
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, params) => {
     setRefreshing(true);

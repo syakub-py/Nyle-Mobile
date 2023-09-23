@@ -1,6 +1,6 @@
 import {Image, Pressable, ScrollView, View, Text, SafeAreaView} from "react-native";
 import React from "react";
-import BackButton from "./Components/BackButton";
+import BackButton from "../Components/BackButton";
 
 export default function PhotoCollage({ route, navigation }){
     const pictures = route.params.pictures;

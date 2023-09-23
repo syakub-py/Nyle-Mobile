@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {View, Text, ScrollView, Dimensions, Pressable, TextInput, Modal} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MapView, {Marker} from 'react-native-maps';
-import {firestore} from "./Components/Firebase";
-import BackButton from "./Components/BackButton";
-import CloseButton from "./Components/CloseButton";
+import {firestore} from "../Components/Firebase";
+import BackButton from "../Components/BackButton";
+import CloseButton from "../Components/CloseButton";
 
 const {width} = Dimensions.get("window");
 

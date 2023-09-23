@@ -1,11 +1,11 @@
 import { View, Text, SafeAreaView, FlatList, Image } from 'react-native';
 import React, {useState, useEffect} from "react";
-import PostCard from './Components/PostCard';
+import PostCard from '../Components/PostCard';
 import { useNavigation } from '@react-navigation/native';
-import {firestore} from "./Components/Firebase";
+import {firestore} from "../Components/Firebase";
 import {generateRating, getSoldItems} from "./GlobalFunctions";
-import BackButton from "./Components/BackButton";
-import RatingButton from "./Components/RatingButton";
+import BackButton from "../Components/BackButton";
+import RatingButton from "../Components/RatingButton";
 
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
-import {firestore} from "./Components/Firebase";
+import {firestore} from "../Components/Firebase";
 import {SwipeListView} from "react-native-swipe-list-view";
-import BuyerOrSellerCard, {getRandomLightColor} from "./Components/UserCalendarComponents/BuyerOrSellerCard";
-import ApproveDenyButton from "./Components/UserCalendarComponents/ApproveDenyButton";
-import BackButton from "./Components/BackButton";
+import BuyerOrSellerCard, {getRandomLightColor} from "../Components/UserCalendarComponents/BuyerOrSellerCard";
+import ApproveDenyButton from "../Components/UserCalendarComponents/ApproveDenyButton";
+import BackButton from "../Components/BackButton";
 
 const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);

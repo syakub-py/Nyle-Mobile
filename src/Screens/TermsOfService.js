@@ -1,4 +1,4 @@
-import {firestore} from './Components/Firebase'
+import {firestore} from '../Components/Firebase'
 import {
     View,
     Text,
@@ -37,7 +37,7 @@ export default function TermsOfService({route ,navigation}) {
                     </View>
                 </Pressable>
             </View>
-        )  
+        )
     }
 
     return (

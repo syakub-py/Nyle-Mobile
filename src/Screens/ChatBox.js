@@ -9,7 +9,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore, getstorage} from './Components/Firebase'
+import {firestore, getstorage} from '../Components/Firebase'
 import { v4 as uuidv4 } from 'uuid';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useCollectionData} from "react-firebase-hooks/firestore"
@@ -72,7 +72,7 @@ export default function ChatBox({route, navigation}) {
         <Pressable onPress = {()=>SelectImages()}>
           <Ionicons name ='images' size = {25}/>
         </Pressable>
-      </View>    
+      </View>
   );
 
   const SelectImages = async () => {
@@ -82,7 +82,7 @@ export default function ChatBox({route, navigation}) {
     quality: 1,
     allowsMultipleSelection: true
     });
-  
+
     if (!result.canceled) {
         const currentImageUrls = [...imageUrls];
         const fileJson = result.assets;
@@ -171,7 +171,7 @@ export default function ChatBox({route, navigation}) {
                 return [];
             }
         } else return [];
-        
+
   };
 
     const change = ({nativeEvent}) => {
@@ -262,7 +262,7 @@ export default function ChatBox({route, navigation}) {
     return {color:'#a8a5a5', margin:4, fontSize:7}
   }
 
-  return (  
+  return (
     <SafeAreaView style = {{flex:1}}>
       <View style = {{marginLeft:10, flexDirection:'row'}}>
         <View style = {{ height:50, width:50, backgroundColor:'transparent', alignItems:'center', justifyContent:'center', marginRight:10}}>
@@ -323,6 +323,6 @@ export default function ChatBox({route, navigation}) {
         }
       }
       />
-  </SafeAreaView> 
+  </SafeAreaView>
   )
 }

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
-import PostCard from './Components/PostCard.js';
-import {firestore, getstorage} from './Components/Firebase'
+import PostCard from '../Components/PostCard.js';
+import {firestore, getstorage} from '../Components/Firebase'
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {SwipeListView} from 'react-native-swipe-list-view';
-import HiddenButton from "./Components/HiddenButton";
+import HiddenButton from "../Components/HiddenButton";
 
 /*
     @route.params = {username:current username}

@@ -12,10 +12,10 @@ import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {readDatabase, getCityState, categoryFilter, getProfilePicture} from "./GlobalFunctions";
-import CustomMapMarker from "./Components/CustomMapMarker";
-import MapPostCard from "./Components/MapPostCard";
+import CustomMapMarker from "../Components/CustomMapMarker";
+import MapPostCard from "../Components/MapPostCard";
 import {handleEndReached} from "./GlobalFunctions";
-import BackButton from "./Components/BackButton";
+import BackButton from "../Components/BackButton";
 
 const {width} = Dimensions.get("window");
 const categories = ["All","Tech", "Auto", "Homes", "Bikes", "Bike Parts", "Jewelry","Retail/Wholesale"]

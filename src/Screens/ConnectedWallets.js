@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, FlatList, Pressable, Text} from 'react-native';
-import WalletCard from "./Components/WalletCard";
-import BackButton from "./Components/BackButton";
+import WalletCard from "../Components/WalletCard";
+import BackButton from "../Components/BackButton";
 
 const wallets = [
     { name: 'Coinbase Wallet', address: '0xabc12385038**********', balance:"10,964", walletProvider:"https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-logo.png" },

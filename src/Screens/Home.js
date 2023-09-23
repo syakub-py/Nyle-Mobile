@@ -11,12 +11,12 @@ import {
   Vibration,
   ActivityIndicator
 } from 'react-native';
-import PostCard from './Components/PostCard.js';
+import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
 import {handleEndReached} from "./GlobalFunctions";
 import _ from "lodash";
-import Slider from "./Components/HomeComponents/Slider";
+import Slider from "../Components/HomeComponents/Slider";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}

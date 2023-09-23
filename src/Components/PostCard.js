@@ -2,8 +2,7 @@ import {Image, ImageBackground, Pressable, ScrollView, Text, View, Vibration} fr
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from "../GlobalFunctions";
-
+import { handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList } from '../Screens/GlobalFunctions';
 
 const handleIndexPress = (setIndex, index) =>{
     setIndex(index)

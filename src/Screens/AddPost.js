@@ -13,18 +13,18 @@ import {
     ActivityIndicator, Vibration
 } from 'react-native';
 import faker from 'faker';
-import {firestore, getstorage} from '../../Navigation/Screens/Components/Firebase';
+import { firestore, getstorage } from '../Components/Firebase';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropdownInput from '../Components/AddPostDropdown';
-import {CustomText, CustomTextWithInput} from '../../Navigation/Screens/Components/CustomText';
+import {CustomText, CustomTextWithInput} from '../Components/CustomText';
 import {getProfilePicture} from "./GlobalFunctions";
-import RenderPrice from "../../Navigation/Screens/Components/AddPostsComponents/renderPrice";
-import ImageUrls from "../../Navigation/Screens/Components/AddPostsComponents/renderIsImages";
-import RenderDetailsText from "../../Navigation/Screens/Components/AddPostsComponents/renderDetailsText";
-import RenderHomeDataSection from "../../Navigation/Screens/Components/AddPostsComponents/renderHomeSection";
-import RenderAutoSection from "../../Navigation/Screens/Components/AddPostsComponents/renderAutoSection";
+import RenderPrice from "../Components/AddPostsComponents/renderPrice";
+import ImageUrls from "../Components/AddPostsComponents/renderIsImages";
+import RenderDetailsText from "../Components/AddPostsComponents/renderDetailsText";
+import RenderHomeDataSection from "../Components/AddPostsComponents/renderHomeSection";
+import RenderAutoSection from "../Components/AddPostsComponents/renderAutoSection";
 
 
 /**

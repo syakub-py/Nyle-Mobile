@@ -11,15 +11,15 @@ import {
   View
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import PostCard from './Components/PostCard.js';
+import PostCard from '../Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {firestore, getstorage} from './Components/Firebase'
+import {firestore, getstorage} from '../Components/Firebase'
 import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
 import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture} from "./GlobalFunctions";
 import _ from "lodash";
-import HiddenButton from "./Components/HiddenButton";
-import RatingButton from "./Components/RatingButton";
+import HiddenButton from "../Components/HiddenButton";
+import RatingButton from "../Components/RatingButton";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -166,7 +166,7 @@ export default function Profile({ navigation, route }) {
       </View>
     )
   }
-  
+
   const Setting = ({title, nameOfIcon,type, onPress}) => {
     if (type !== "button") return <View/>
     else {
@@ -180,7 +180,7 @@ export default function Profile({ navigation, route }) {
       )
     }
   }
- 
+
   return (
     <View style = {{backgroundColor:'white'}}>
         <SwipeListView
@@ -269,7 +269,7 @@ export default function Profile({ navigation, route }) {
                   onPress = {() => {navigation.navigate("Terms of Service", {showButtons:false})}}
                   nameOfIcon = 'alert-circle-outline'
               />
-              
+
               <SectionTitle title = {'Posts'}/>
             </View>
             }
@@ -295,11 +295,11 @@ export default function Profile({ navigation, route }) {
               </View>
             )
           }
-        /> 
+        />
     </View>
     );
   }
-  
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable, TextInput, Image} from 'react-native';
-import {auth} from "./Components/Firebase";
-import BackButton from "./Components/BackButton";
+import {auth} from "../Components/Firebase";
+import BackButton from "../Components/BackButton";
 
 const handleResetPassword = (username) => {
     auth.sendPasswordResetEmail(username)

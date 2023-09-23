@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, Image, Pressable, TextInput } from 'react-native';
-import {auth} from './Components/Firebase'
+import {auth} from '../Components/Firebase'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import {AddProfilePicture} from "./GlobalFunctions";
-import BackButton from "./Components/BackButton";
+import BackButton from "../Components/BackButton";
 
 const handleSignUp = (username, password, profilePic, navigation) => {
     auth

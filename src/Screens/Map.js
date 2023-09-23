@@ -1,8 +1,8 @@
 import MapView, { Marker, Circle } from 'react-native-maps';
 import React from 'react';
 import {View} from 'react-native';
-import CustomMapMarker from "./Components/CustomMapMarker";
-import BackButton from "./Components/BackButton";
+import CustomMapMarker from "../Components/CustomMapMarker";
+import BackButton from "../Components/BackButton";
 
 export default function Map({route, navigation}) {
     const coordinates = route.params.coordinates

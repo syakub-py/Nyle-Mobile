@@ -1,4 +1,4 @@
-import {firestore, getstorage} from "./Components/Firebase";
+import {firestore, getstorage} from "../Components/Firebase";
 import {Vibration} from "react-native";
 import CryptoDataService from '../../Services/CryptoDataService';
 import _ from "lodash"

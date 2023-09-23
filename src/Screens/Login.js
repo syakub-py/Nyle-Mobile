@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {auth} from './Components/Firebase';
+import { auth } from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 
@@ -37,7 +37,7 @@ const handleGoogleLogin = async () => {
 export default function Login({navigation}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    
+
     useEffect(() => {
         return auth.onAuthStateChanged(user => {
             if (user) navigation.navigate("Main Container", {username: user.email})

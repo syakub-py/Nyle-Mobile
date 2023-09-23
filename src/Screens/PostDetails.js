@@ -11,21 +11,21 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import {firestore} from './Components/Firebase'
+import {firestore} from '../Components/Firebase'
 import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalFunctions";
-import CustomMapMarker from "./Components/CustomMapMarker";
-import BackButton from "./Components/BackButton";
-import PostedBySameAsUsername from "./Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
-import RenderIsCategoryAuto from "./Components/PostDetailsComponents/renderIsCategoryAuto";
-import RenderIsCategoryHomes from "./Components/PostDetailsComponents/renderIsCategoryHomes";
-import RealEstateData from "./Components/PostDetailsComponents/renderIsRealEstateData";
-import RenderHomesAndAuto from "./Components/PostDetailsComponents/renderHomesAndAuto";
-import RenderArrangePickup from "./Components/PostDetailsComponents/renderArrangePickup";
-import RenderDescription from "./Components/PostDetailsComponents/renderDescription";
-import RenderIsLiked from "./Components/PostDetailsComponents/renderIsLiked";
-import MenuButtonModal from "./Components/PostDetailsComponents/renderMenuButtonsModal";
-import LikesAndViews from "./Components/PostDetailsComponents/renderLikesAndViews";
-import ErrorPopUp from "./Components/ErrorPopUp";
+import CustomMapMarker from "../Components/CustomMapMarker";
+import BackButton from "../Components/BackButton";
+import PostedBySameAsUsername from "../Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
+import RenderIsCategoryAuto from "../Components/PostDetailsComponents/renderIsCategoryAuto";
+import RenderIsCategoryHomes from "../Components/PostDetailsComponents/renderIsCategoryHomes";
+import RealEstateData from "../Components/PostDetailsComponents/renderIsRealEstateData";
+import RenderHomesAndAuto from "../Components/PostDetailsComponents/renderHomesAndAuto";
+import RenderArrangePickup from "../Components/PostDetailsComponents/renderArrangePickup";
+import RenderDescription from "../Components/PostDetailsComponents/renderDescription";
+import RenderIsLiked from "../Components/PostDetailsComponents/renderIsLiked";
+import MenuButtonModal from "../Components/PostDetailsComponents/renderMenuButtonsModal";
+import LikesAndViews from "../Components/PostDetailsComponents/renderLikesAndViews";
+import ErrorPopUp from "../Components/ErrorPopUp";
 const {width} = Dimensions.get("window");
 const height =width;
 
@@ -99,7 +99,7 @@ export default function PostDetails({route, navigation}) {
                 animated: true,
             });
         }
-    
+
         if (slide >= 6) {
             setCurrentOffset(currentOffset + 10);
             scrollViewRef.current.scrollTo({
