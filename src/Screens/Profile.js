@@ -56,14 +56,15 @@ const handleSignOut = async (navigation) => {
   return navigation.navigate("Login");
 };
 
-const deletePost = (item, collectionName, setRefreshing, username, setUserList) => {
+const deletePost = (post, collectionName, userPostList, setUserPostList) => {
+  setUserPostList(userPostList.filter((item) =>(item.title!==post.title)))
   firestore
       .collection(collectionName)
-      .doc(item.title)
+      .doc(post.title)
       .delete()
       .then(() => {
         // delete each image
-        item.pic.forEach((picture, index) => {
+        post.pic.forEach((picture, index) => {
           const picRef = getstorage.refFromURL(picture);
           picRef
               .delete()
@@ -74,14 +75,13 @@ const deletePost = (item, collectionName, setRefreshing, username, setUserList) 
               });
         });
         Alert.alert("Posted deleted!");
-        onRefresh(setRefreshing, username, setUserList);
       })
       .catch((error) => {
         console.log("Error deleting document: " + JSON.stringify(error));
       });
 };
 
-const clearDeleted = async (setRefreshing, username, setUserList) => {
+const clearDeletedAfter30Days = async (username,userPostList, setUserList) => {
   const sourceDocRef = firestore.collection("DeletedPosts");
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -90,7 +90,7 @@ const clearDeleted = async (setRefreshing, username, setUserList) => {
     const snapshot = await query.get();
     const batch = firestore.batch();
     snapshot.forEach((doc) => {
-      deletePost(doc.data(), "DeletedPosts", setRefreshing, username, setUserList);
+      deletePost(doc.data(), "DeletedPosts", userPostList, setUserList);
     });
     await batch.commit();
   } catch (error) {
@@ -108,7 +108,9 @@ const markAsSold = (item, setRefreshing, username, setUserList) => {
       });
 };
 
-const moveToDelete = async (item, setRefreshing, username, setUserList) => {
+const moveToDelete = async (item, userPostsList,setUserList) => {
+  setUserList(userPostsList.filter((post) =>(post.title!==item.title)))
+
   try {
     // Get the source document
     const sourceDocRef = firestore.collection("AllPosts").doc(item.title);
@@ -124,7 +126,6 @@ const moveToDelete = async (item, setRefreshing, username, setUserList) => {
     await destinationCollectionRef.set(sourceData);
 
     await sourceDocRef.delete();
-    onRefresh(setRefreshing, username, setUserList);
   } catch (error) {
     console.error('Error moving document:', error);
   }
@@ -142,7 +143,7 @@ const SelectProfilePic = async (username) => {
 };
 
 export default function Profile({ navigation, route }) {
-  const [userList, setUserList] = useState([]);
+  const [userPostsList, setUserPostsList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0)
@@ -151,8 +152,8 @@ export default function Profile({ navigation, route }) {
 
 
   useEffect(() => {
-    getPosts(username, setUserList);
-    clearDeleted(setRefreshing, username, setUserList);
+    getPosts(username, setUserPostsList);
+    clearDeletedAfter30Days(username,userPostsList, setUserPostsList);
     generateRating(username, setRating, setNumOfReviews)
     getProfilePicture(username).then((result)=>{
       setProfilePic(result)
@@ -184,10 +185,10 @@ export default function Profile({ navigation, route }) {
   return (
     <View style = {{backgroundColor:'white'}}>
         <SwipeListView
-          data = {userList}
+          data = {userPostsList}
           rightOpenValue = {-170}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserList)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserPostsList)} />
           }
           ListFooterComponent = {
             <View style = {{height:80}}/>
@@ -213,14 +214,14 @@ export default function Profile({ navigation, route }) {
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
 
                   <View style = {{flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-                    <Text style = {{fontSize:20, fontWeight:'500'}}>{_.size(userList)}</Text>
+                    <Text style = {{fontSize:20, fontWeight:'500'}}>{_.size(userPostsList)}</Text>
                     <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
                   </View>
 
                   <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
 
                   <View style = {{flexDirection:'column', alignItems:'center',justifyContent:'center'}}>
-                    <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(userList)}</Text>
+                    <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(userPostsList)}</Text>
                     <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
                   </View>
                 </View>
@@ -270,13 +271,13 @@ export default function Profile({ navigation, route }) {
                   nameOfIcon = 'alert-circle-outline'
               />
 
-              <SectionTitle title = {'Posts'}/>
+              <SectionTitle title = {'Your Posts'}/>
             </View>
             }
 
           renderItem = {({item}) => (
             <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:username, item})}>
-              <PostCard data = {item}/>
+              <PostCard data = {item} username={username}/>
             </Pressable>
             )}
 
@@ -288,9 +289,9 @@ export default function Profile({ navigation, route }) {
               bottom: 0,
               width: 100,
               alignItems: 'center'}}>
-                <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, setRefreshing, username, setUserList)} iconName={'trash-outline'}/>
+                <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
                 <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
-                <HiddenButton color={'green'} onPress = {() =>{markAsSold(item, setRefreshing, username, setUserList)}} iconName={'checkmark-circle-outline'}/>
+                <HiddenButton color={'green'} onPress = {() =>{markAsSold(item, setRefreshing, username, setUserPostsList)}} iconName={'checkmark-circle-outline'}/>
 
               </View>
             )

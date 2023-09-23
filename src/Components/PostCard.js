@@ -1,4 +1,4 @@
-import {Image, ImageBackground, Pressable, ScrollView, Text, View, Vibration} from 'react-native';
+import {Image, ImageBackground, Pressable, ScrollView, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
@@ -6,9 +6,7 @@ import { handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList } from '.
 
 const handleIndexPress = (setIndex, index) =>{
     setIndex(index)
-    // Vibration.vibrate(100);
 }
-
 
 export default function PostCard({data, username}) {
     const navigation = useNavigation();
@@ -19,7 +17,7 @@ export default function PostCard({data, username}) {
         updateCurrencyPrice(data)
     }, [data.currency[0].value])
 
-    const RenderDoesDataIncludePostedBy = () => {
+    const RenderLiked = () => {
         if (Liked) {
             return <Ionicons name='heart' size={25} color={'#e6121d'}/>
         }
@@ -55,11 +53,18 @@ export default function PostCard({data, username}) {
         <View style = {{ backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius:10, elevation:3}}>
             <View style = {{width:"100%", height:300}}>
                 <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width:"100%", height:300, borderRadius:10, resizeMode:'cover'}}>
-                     <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
-                            <Pressable onPress = {() =>handleLike(data.title, username, Liked,setLiked)}>
-                                <RenderDoesDataIncludePostedBy/>
-                            </Pressable>
-                        </View>
+                    {
+                        (username !== data.PostedBy)?(
+                            <View style = {{position:'absolute', right:10,top:10, backgroundColor:'white', height:40, width:40, borderRadius:12, justifyContent:'center', alignItems:'center', opacity:0.7}}>
+                                <Pressable onPress = {() =>handleLike(data.title, username, Liked,setLiked)}>
+                                    <RenderLiked/>
+                                </Pressable>
+                            </View>
+                        ):(
+                            <View/>
+                        )
+                    }
+
 
                     <View style = {{flexDirection:'row'}}>
                         <RenderIsUsernameSameAsPostedBy/>

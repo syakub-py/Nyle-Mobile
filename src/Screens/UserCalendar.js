@@ -11,20 +11,6 @@ const handleDayPress = (day, setSelectedDate) => {
     setSelectedDate(day.dateString);
 };
 
-const getCalendarEvents = async (username) => {
-    const MySellerEvents = firestore.collection('CalendarEvents').where("seller", "==", username);
-    const MyBuyerEvents = firestore.collection('CalendarEvents').where("buyer", "==", username);
-
-    const [sellerQuerySnapshot, buyerQuerySnapshot] = await Promise.all([MySellerEvents.get(), MyBuyerEvents.get()]);
-
-    const sellerEvents = sellerQuerySnapshot.docs;
-    const buyerEvents = buyerQuerySnapshot.docs;
-
-    // Combine the results or perform any desired operations
-    const combinedResults = sellerEvents.concat(buyerEvents);
-    return combinedResults.map((doc) => ({id: doc.id, ...doc.data()}));
-};
-
 const handleApproveDenyPress = async (DocId, status) => {
     return firestore.collection("CalendarEvents").doc(DocId).set({status:status, seen:true}, { merge: true })
         .then(ref => {
@@ -55,13 +41,19 @@ export default function UserCalendar({navigation,route}){
     const username =route.params.currentUsername
 
     useEffect(async () => {
-            try {
-                const result = await getCalendarEvents(username);
-                setCalendarEvents(result);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
+        const getCalendarEvents = async (username) => {
+            const MySellerEvents = firestore.collection('CalendarEvents').where("seller", "==", username);
+            const MyBuyerEvents = firestore.collection('CalendarEvents').where("buyer", "==", username);
 
+            const [sellerQuerySnapshot, buyerQuerySnapshot] = await Promise.all([MySellerEvents.get(), MyBuyerEvents.get()]);
+
+            const sellerEvents = sellerQuerySnapshot.docs;
+            const buyerEvents = buyerQuerySnapshot.docs;
+
+            // Combine the results or perform any desired operations
+            const combinedResults = sellerEvents.concat(buyerEvents);
+            setCalendarEvents( combinedResults.map((doc) => ({id: doc.id, ...doc.data()})))
+        };
     }, []);
 
 

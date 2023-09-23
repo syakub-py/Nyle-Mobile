@@ -37,7 +37,6 @@ export default function Reviews({route, navigation}) {
 
     const RenderIsCurrentUser = () => {
         if (currentUsername === PostedByUsername) return <View/>
-
         return (
             <View style = {{
                 position: 'absolute',

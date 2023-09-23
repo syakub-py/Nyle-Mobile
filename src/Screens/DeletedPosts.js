@@ -31,7 +31,8 @@ const onRefresh = (username, setRefreshing, setDeletedPostList) => {
     setTimeout(() => setRefreshing(false), 1000);
 };
 
-const deletePost = (username, item, setRefreshing, setDeletedPostList) => {
+const deletePost = (item, deletedPostList, setDeletedPostList) => {
+    setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)))
     firestore
         .collection("DeletedPosts")
         .doc(item.title)
@@ -58,14 +59,14 @@ const deletePost = (username, item, setRefreshing, setDeletedPostList) => {
                     });
             });
             Alert.alert("Posted deleted!");
-            onRefresh(username, setRefreshing, setDeletedPostList);
         })
         .catch((error) => {
             console.log("Error deleting document: " + JSON.stringify(error));
         });
 };
 
-const restoreItem = async (username, item, setRefreshing, setDeletedPostList) => {
+const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
+    setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)))
     try {
         // Get the source document
         const sourceDocRef = firestore.collection("DeletedPosts").doc(item.title);
@@ -84,17 +85,15 @@ const restoreItem = async (username, item, setRefreshing, setDeletedPostList) =>
             // Delete the source document
             await sourceDocRef.delete();
 
-            // Perform the necessary actions after restoration (e.g., refresh UI)
-            onRefresh(username, setRefreshing, setDeletedPostList);
         }
     } catch (error) {
         console.error('Error restoring document:', error);
     }
 };
 
-const deleteAllPosts = (username, deletedPostList, setDeletedPostList, setRefreshing) => {
-    deletedPostList.forEach((doc , index) => {
-        deletePost(username, doc, setRefreshing, setDeletedPostList)
+const deleteAllPosts = ( deletedPostList, setDeletedPostList) => {
+    deletedPostList.forEach((post) => {
+        deletePost(post, deletedPostList, setDeletedPostList)
     })
 }
 
@@ -124,7 +123,7 @@ export default function DeletedPosts({route, navigation}) {
                         <Text style = {{alignSelf:'center', fontWeight:'bold'}}>Posts will get deleted after 30 days</Text>
                     </View>
 
-                    <Pressable onPress = {() => {deleteAllPosts(username, deletedPostList, setDeletedPostList, setRefreshing)}}>
+                    <Pressable onPress = {() => {deleteAllPosts(deletedPostList, setDeletedPostList)}}>
                         <View style = {{width:100, backgroundColor:'black', margin:10, borderRadius:5}}>
                             <Ionicons name = {"trash"} size = {30} style = {{color:'white', alignSelf:'center'}}/>
                         </View>
@@ -147,11 +146,11 @@ export default function DeletedPosts({route, navigation}) {
                         width: 60,
                         alignItems: 'center'}}>
                         <View style = {{marginRight:20}}>
-                            <HiddenButton iconName={'trash-outline'} color={"red"} onPress = {() => deletePost(username,item, setRefreshing, setDeletedPostList)}/>
+                            <HiddenButton iconName={'trash-outline'} color={"red"} onPress = {() => deletePost(item, deletedPostList, setDeletedPostList)}/>
                         </View>
 
                         <View>
-                            <HiddenButton iconName={'arrow-redo-outline'} color={"lightblue"} onPress = {()=> restoreItem(username,item, setRefreshing, setDeletedPostList)}/>
+                            <HiddenButton iconName={'arrow-redo-outline'} color={"lightblue"} onPress = {()=> restoreItem(item, deletedPostList, setDeletedPostList)}/>
                         </View>
                     </View>
                 )}

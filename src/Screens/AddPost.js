@@ -129,11 +129,8 @@ export default function AddPost({route}) {
         setCoordinates({latitude: coordinate.coordinate.latitude, longitude: coordinate.coordinate.longitude});
     }
 
-    const deleteImages = (index) => {
-        const newArray = imageUrls
-        newArray.splice(index, 1)
-        setImageUrls(newArray)
-        onRefresh(setRefreshing);
+    const deleteImages = (image) => {
+        setImageUrls(imageUrls.filter((item) =>(image!==item)))
     }
 
     const createDocument = ({uniqueFields}, firebaseImageUrls) => ({
@@ -218,7 +215,7 @@ export default function AddPost({route}) {
                             {
                                 imageUrls.map((i, k) =>(
                                     <Pressable key = {k}>
-                                        <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(k)}}>
+                                        <Pressable style = {{zIndex:1}} onPress = {() => {deleteImages(i)}}>
                                             <View style = {styles.shadowBox}>
                                                 <View style = {styles.circle}>
                                                     <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation:1}}/>

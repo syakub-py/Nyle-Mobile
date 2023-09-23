@@ -8,7 +8,9 @@ export const updateCurrencyPrice = async (data) => {
     try {
         const response = await CryptoDataService.getMarketData();
         const filteredData = response.data.filter((item) => item.image === data.currency[0].value)
-        if (!_.isEmpty(filteredData)) price = (filteredData[0].current_price)
+        if (!_.isEmpty(filteredData)) {
+            price = filteredData[0].current_price
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -16,9 +18,12 @@ export const updateCurrencyPrice = async (data) => {
     postRef.get().then((doc) => {
         if (doc.exists) {
             const data = doc.data();
-            if (data.hasOwnProperty('USD') && price !== 0) postRef.update({ USD:(price * data.currency[0].price).toFixed(2).toString()});
-            else {
-                postRef.set({ USD:(price * data.currency[0].price).toFixed(2).toString() }, { merge: true });
+            if (data.hasOwnProperty('USD') && price !== 0) {
+                postRef.update({USD: (price * data.currency[0].price).toFixed(2).toString()});
+            }else{
+                if(price !== 0){
+                    postRef.set({ USD:(price * data.currency[0].price).toFixed(2).toString() }, { merge: true });
+                }
             }
         }
     });
