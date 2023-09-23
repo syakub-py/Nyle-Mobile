@@ -1,6 +1,6 @@
 import {firestore, getstorage} from "../Components/Firebase";
 import {Vibration} from "react-native";
-import CryptoDataService from '../../Services/CryptoDataService';
+import CryptoDataService from '../Services/CryptoDataService';
 import _ from "lodash"
 
 export const updateCurrencyPrice = async (data) => {

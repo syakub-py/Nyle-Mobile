@@ -10,7 +10,7 @@ import React, {useEffect, useState} from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {firestore} from "./Firebase";
 import { SwipeListView } from 'react-native-swipe-list-view';
-import {getProfilePicture} from "../GlobalFunctions";
+import {getProfilePicture} from "../Screens/GlobalFunctions";
 import HiddenButton from "./HiddenButton";
 
 const SendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {

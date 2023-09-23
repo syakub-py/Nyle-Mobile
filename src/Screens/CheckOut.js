@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import RNSwipeVerify from 'react-native-swipe-verify'
 import { Dropdown } from 'react-native-element-dropdown';
-import CryptoDataService from '../../Services/CryptoDataService';
+import CryptoDataService from '../Services/CryptoDataService';
 
 const { width } = Dimensions.get('window')
 

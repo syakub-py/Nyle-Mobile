@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Dimensions, Image, Text, View} from "react-native";
 import {CheckBox} from "react-native-elements";
-import DropdownInput from "../../../../src/Components/AddPostDropdown";
+import DropdownInput from "../../Components/AddPostDropdown";
 import _ from "lodash";
-import {convertPrice} from "../../GlobalFunctions";
+import {convertPrice} from "../../Screens/GlobalFunctions";
 import {CustomTextInput} from "../CustomText";
 
 const RenderCurrencyItem = (item) => {

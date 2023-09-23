@@ -5,7 +5,7 @@ import {
     Text,
     View
 } from 'react-native';
-import {generateRating, handleLike, isLiked} from "../GlobalFunctions";
+import {generateRating, handleLike, isLiked} from "../Screens/GlobalFunctions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import RenderIsLiked from "./PostDetailsComponents/renderIsLiked";
 

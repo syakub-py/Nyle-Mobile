@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from './Screens/Components/Firebase'
+import {firestore} from './Components/Firebase'
 import { Image, View} from "react-native";
 import {getProfilePicture} from "./Screens/GlobalFunctions";
 //Screens
