@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -5,12 +6,11 @@ import {firestore} from './Screens/Components/Firebase'
 import { Image, View} from "react-native";
 import {getProfilePicture} from "./Screens/GlobalFunctions";
 //Screens
-import home from './Screens/Home'
+import home from "./Screens/Home"
 import market from './Screens/Market'
 import chat from './Screens/Chat'
 import profile from './Screens/Profile'
 import addPost from './Screens/AddPost';
-import _ from "lodash";
 
 const Home = 'Home';
 const Market = 'Market';

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Dimensions, Image, Text, View} from "react-native";
 import {CheckBox} from "react-native-elements";
-import DropdownInput from "../AddPostDropdown";
+import DropdownInput from "../../../../src/Components/AddPostDropdown";
 import _ from "lodash";
 import {convertPrice} from "../../GlobalFunctions";
 import {CustomTextInput} from "../CustomText";
