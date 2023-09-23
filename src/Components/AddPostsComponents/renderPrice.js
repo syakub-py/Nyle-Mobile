@@ -23,8 +23,9 @@ export default function RenderPrice({currencies, currencyList, setCurrencyList})
 
 
     useEffect(() => {
-        console.log("Selected currency updated");
+        console.log("Selected currency updated, ", selectedCurrency);
     }, [selectedCurrency]);
+
     if (checked){
         return(
             <View>
@@ -106,9 +107,9 @@ export default function RenderPrice({currencies, currencyList, setCurrencyList})
                         valueField = "value"
                         placeholder = "Select a currency"
                         onChange={(item) => {
-                            setSelectedCurrency({...item, price: price});
-                            setCurrencyList([selectedCurrency])
-
+                            const newSelectedCurrency = {...item, price: price};
+                            setSelectedCurrency(newSelectedCurrency);
+                            setCurrencyList([newSelectedCurrency]);
                         }}
                         value = {selectedCurrency}
                         renderItem = {RenderCurrencyItem}
