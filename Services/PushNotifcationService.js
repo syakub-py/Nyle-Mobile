@@ -14,6 +14,7 @@ export const handleIncomingNotification = () => {
         // Handle the notification according to your app's logic
     });
 };
+
 export const PushNotification = (message) => {
     messaging()
         .getToken()
