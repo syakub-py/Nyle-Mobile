@@ -1,7 +1,6 @@
 import {Image, Pressable, Text, View} from "react-native";
 import React from "react";
 
-
 const UserNameLengthGreaterThanTen = ({username}) => {
     if (username.length > 10) return <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
 

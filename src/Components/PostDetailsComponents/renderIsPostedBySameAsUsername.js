@@ -3,12 +3,16 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React from "react";
 import {firestore} from "../Firebase";
 
-const findUser = (userArray, username) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== username) return index
-    }
-    return "";
+
+// Function to generate a chatID based on usernames
+export const generateChatID = (user1, user2) => {
+    // Sort the usernames to ensure consistency in the chatID
+    const sortedUsers = [user1, user2].sort();
+
+    // Concatenate and return the chatID
+    return `${sortedUsers[0]}_${sortedUsers[1]}`;
 }
+
 const handleAddChat = (params, navigation) => {
     const currentUser = params.username;
     const otherUser = params.item.PostedBy;
@@ -30,19 +34,7 @@ const handleAddChat = (params, navigation) => {
                     name: otherUser,
                     avatar: params.item.profilePic,
                     otherAvatar: params.CurrentUserProfilePic,
-                    userId: findUser(
-                        [
-                            {
-                                profilePic: params.item.profilePic,
-                                username: otherUser,
-                            },
-                            {
-                                profilePic: params.CurrentUserProfilePic,
-                                username: currentUser,
-                            },
-                        ],
-                        currentUser
-                    ),
+                    userId: generateChatID(currentUser, otherUser),
                 });
             } else {
                 // Chat doesn't exist, create a new one
@@ -68,19 +60,7 @@ const handleAddChat = (params, navigation) => {
                             name: otherUser,
                             avatar: params.item.profilePic,
                             otherAvatar: params.CurrentUserProfilePic,
-                            userId: findUser(
-                                [
-                                    {
-                                        profilePic: params.item.profilePic,
-                                        username: otherUser,
-                                    },
-                                    {
-                                        profilePic: params.CurrentUserProfilePic,
-                                        username: currentUser,
-                                    },
-                                ],
-                                currentUser
-                            ),
+                            userId:generateChatID(currentUser, otherUser),
                         });
                     })
                     .catch((error) => {
