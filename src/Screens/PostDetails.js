@@ -61,20 +61,27 @@ export default function PostDetails({route, navigation}) {
     const images = route.params.item.pic
     const likes = route.params.item.likes
     const username =route.params.username
-    const [state, setState] = useState({active:0})
+    const [currentIndex, setCurrentIndex] = useState(0)
     const [more, setMore] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
-    const [views, setViews] = useState(0)
-    const [currentOffset, setCurrentOffset] = useState(0);
     const scrollViewRef = useRef(null);
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
     const [realEstateData, setRealEstateData] = useState([])
     const [Liked, setLiked] = useState(isLiked(likes, username))
 
+
+    useEffect(()=>{
+        scrollViewRef.current?.scrollToIndex({
+            index:currentIndex,
+            animated:true,
+            viewPosition:1
+        })
+    },[currentIndex])
+
+
     useEffect(() => {
         try{
-            handleViewCounter(setViews, route.params.item);
             generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
             if (route.params.item.category === "Homes") {
                 //"79-33 213 street"
@@ -88,25 +95,10 @@ export default function PostDetails({route, navigation}) {
 
     }, [])
 
+
     const change = ({ nativeEvent }) => {
         const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-        const newOffset = nativeEvent.contentOffset.x;
-        setCurrentOffset(newOffset);
-        setState({ active: slide });
-        if (slide <= images.length-4) {
-            scrollViewRef.current.scrollTo({
-                x: 0,
-                animated: true,
-            });
-        }
-
-        if (slide >= 6) {
-            setCurrentOffset(currentOffset + 10);
-            scrollViewRef.current.scrollTo({
-                x: currentOffset,
-                animated: true,
-            });
-        }
+        setCurrentIndex(slide);
     }
 
     return (
@@ -135,7 +127,7 @@ export default function PostDetails({route, navigation}) {
                 <View>
 
                     <View style = {{ maxWidth: 60,zIndex: 1, bottom: 10, right: 10, paddingHorizontal:5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center'}}>
-                        <Text style = {{ color: 'white', fontWeight: 'bold' }}>{state.active + 1}/{images.length}</Text>
+                        <Text style = {{ color: 'white', fontWeight: 'bold' }}>{currentIndex + 1}/{images.length}</Text>
                     </View>
 
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
@@ -151,17 +143,22 @@ export default function PostDetails({route, navigation}) {
                         }
                     </ScrollView>
 
-                    <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{ bottom: 25, paddingHorizontal:5, position: 'absolute', width:width}}  ref = {scrollViewRef}>
-                        <View style = {{flexDirection:'row', alignItems:'center'}}>
-                            {
-                                images.map((i, k) =>(
-                                    <Pressable key = {k} onPress = {() => {console.log(k+1)}}>
-                                        <Image source = {{uri:i}} style = {k === state.active?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {k}/>
-                                    </Pressable>
-                                ))
-                            }
-                        </View>
-                    </ScrollView>
+                    <FlatList
+                    data={images}
+                    horizontal={true}
+                    style = {{ bottom: 25, paddingHorizontal:5, position: 'absolute', width:width}}
+                    contentContainerStyle={{alignItems:'center'}}
+                    showsHorizontalScrollIndicator={false}
+                    ref = {scrollViewRef}
+                    initialScrollIndex={currentIndex}
+                    renderItem={({item, index})=>{
+                        return(
+                            <Pressable key = {item} onPress = {() => {console.log(currentIndex+1)}}>
+                                <Image source = {{uri:item}} style = {currentIndex === index?{height:60, width:60, margin:7, borderRadius:10}:{height:50, width:50, margin:7, borderRadius:10, alignContent:'center'}} key = {item}/>
+                            </Pressable>
+                            )
+                    }}
+                    />
 
                     <View style = {{flexDirection:'row', position: 'absolute',bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center', marginBottom:5, marginLeft:5, paddingHorizontal:3}}>
                         <LikesAndViews color={'#e6121d'} iconName={'heart'} data={route.params.item.likes.length}/>

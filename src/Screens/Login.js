@@ -99,7 +99,7 @@ export default function Login({navigation}) {
                             style={{marginRight:5}}
                             onPress={() => setVisible(!visible)}
                         />
-                        <Text>See Password</Text>
+                        <Text>Show Password</Text>
                     </View>
 
                 </View>
