@@ -33,21 +33,6 @@ const height =width;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
-const handleViewCounter = (setViews, item) => {
-    const PostRef = firestore.collection('AllPosts').doc(item.title);
-    PostRef.get()
-        .then((doc) => {
-            const currentViews = doc.data().views;
-            setViews(currentViews + 1);
-            PostRef.update({ views: currentViews + 1 })
-                .then(() => {
-                })
-                .catch((error) => {
-                    console.error('Error adding value to views:', error);
-                });
-        });
-};
-
 const getRealEstateData = async (address, setRealEstateData) => {
     try {
         const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
