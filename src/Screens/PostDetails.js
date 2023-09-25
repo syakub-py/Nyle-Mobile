@@ -33,6 +33,21 @@ const height =width;
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
 */
 
+const handleViewCounter = (setViews, item) => {
+    const PostRef = firestore.collection('AllPosts').doc(item.title);
+    PostRef.get()
+        .then((doc) => {
+            const currentViews = doc.data().views;
+            setViews(currentViews + 1);
+            PostRef.update({ views: currentViews + 1 })
+                .then(() => {
+                })
+                .catch((error) => {
+                    console.error('Error adding value to views:', error);
+                });
+        });
+};
+
 const getRealEstateData = async (address, setRealEstateData) => {
     try {
         const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
@@ -49,6 +64,7 @@ export default function PostDetails({route, navigation}) {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [more, setMore] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
+    const [views, setViews] = useState(0)
     const scrollViewRef = useRef(null);
     const [rating, setRating] = useState(0)
     const [numOfReviews, setNumOfReviews] = useState(0)
@@ -67,6 +83,7 @@ export default function PostDetails({route, navigation}) {
 
     useEffect(() => {
         try{
+            handleViewCounter(setViews, route.params.item);
             generateRating(route.params.item.PostedBy, setRating, setNumOfReviews)
             if (route.params.item.category === "Homes") {
                 //"79-33 213 street"
@@ -147,7 +164,7 @@ export default function PostDetails({route, navigation}) {
 
                     <View style = {{flexDirection:'row', position: 'absolute',bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems:'center', marginBottom:5, marginLeft:5, paddingHorizontal:3}}>
                         <LikesAndViews color={'#e6121d'} iconName={'heart'} data={route.params.item.likes.length}/>
-                        <LikesAndViews color={'white'} iconName={'eye'} data={route.params.item.views}/>
+                        <LikesAndViews color={'white'} iconName={'eye'} data={views}/>
                     </View>
 
                 </View>
