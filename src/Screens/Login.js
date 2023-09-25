@@ -37,12 +37,20 @@ const handleGoogleLogin = async () => {
 export default function Login({navigation}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [visible, setVisible]  = useState(false)
 
     useEffect(() => {
         return auth.onAuthStateChanged(user => {
             if (user) navigation.navigate("Main Container", {username: user.email})
         });
     }, []);
+
+    const getIsVisibleIcon = () =>{
+        if (!visible){
+            return "eye-outline"
+        }
+        return "eye-off-outline"
+    }
 
     return (
         <ScrollView style = {styles.container}>
@@ -77,12 +85,26 @@ export default function Login({navigation}) {
                     <TextInput placeholder ='Username' onChangeText = {text => setUsername(text)} style = {{marginLeft:25}}/>
                 </View>
                 <View >
-                    <Ionicons name ='ellipse' size = {20} style = {{ position: 'absolute',}}/>
-                    <TextInput placeholder ='Password' onChangeText = {text => setPassword(text) } style = {{marginLeft:25}} secureTextEntry/>
+                    <Ionicons name ='ellipse' size = {20} style = {{ position: 'absolute'}}/>
+                        <TextInput
+                            placeholder="Password"
+                            onChangeText={text => setPassword(text)}
+                            style={{ marginLeft: 25 }}
+                            secureTextEntry={!visible}
+                        />
+                    <View style={{flexDirection:'row', alignItems:'center', marginTop:4}}>
+                        <Ionicons
+                            name={getIsVisibleIcon()}
+                            size={20}
+                            style={{marginRight:5}}
+                            onPress={() => setVisible(!visible)}
+                        />
+                        <Text>See Password</Text>
+                    </View>
+
                 </View>
                 <Pressable onPress = {() => navigation.navigate("Reset Password")}>
                     <Text style = {[styles.text, styles.link, {textAlign:'right'}]}>forgot password?</Text>
-
                 </Pressable>
 
                 <Pressable
