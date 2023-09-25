@@ -10,40 +10,89 @@ const findUser = (userArray, username) => {
     return "";
 }
 const handleAddChat = (params, navigation) => {
-    if (params.username !== params.item.PostedBy) {
-        firestore
-            .collection('Chats')
-            .add({
-                owners: [
-                    {
-                        profilePic: params.CurrentUserProfilePic,
-                        username: params.username,
-                    },
-                    {
-                        profilePic: params.item.profilePic,
-                        username: params.item.PostedBy,
-                    },
-                ],
-            })
-            .then((ref) => {
-                const owners =   [
-                    {
-                        profilePic: params.CurrentUserProfilePic,
-                        username: params.username,
-                    },
-                    {
-                        profilePic: params.item.profilePic,
-                        username: params.item.PostedBy,
-                    },
-                ]
+    const currentUser = params.username;
+    const otherUser = params.item.PostedBy;
 
-                navigation.navigate("chat box", {username: params.username, conversationID:ref.id, name: owners[1].username, avatar: owners[1].profilePic, otherAvatar:owners[0].profilePic, userId:findUser(owners, params.username)})
-            })
-            .catch((error) => {
-                Alert.alert('Error adding document: ', error);
-            });
-    }
+    // Create a unique ID for the chat based on the combination of usernames
+    const chatID = [currentUser, otherUser].sort().join('_');
+
+    // Check if a chat with the same ID already exists
+    firestore
+        .collection('Chats')
+        .doc(chatID)
+        .get()
+        .then((docSnapshot) => {
+            if (docSnapshot.exists) {
+                // Chat already exists, navigate to the existing chat
+                navigation.navigate("chat box", {
+                    username: currentUser,
+                    conversationID: chatID,
+                    name: otherUser,
+                    avatar: params.item.profilePic,
+                    otherAvatar: params.CurrentUserProfilePic,
+                    userId: findUser(
+                        [
+                            {
+                                profilePic: params.item.profilePic,
+                                username: otherUser,
+                            },
+                            {
+                                profilePic: params.CurrentUserProfilePic,
+                                username: currentUser,
+                            },
+                        ],
+                        currentUser
+                    ),
+                });
+            } else {
+                // Chat doesn't exist, create a new one
+                firestore
+                    .collection('Chats')
+                    .doc(chatID)
+                    .set({
+                        owners: [
+                            {
+                                profilePic: params.CurrentUserProfilePic,
+                                username: currentUser,
+                            },
+                            {
+                                profilePic: params.item.profilePic,
+                                username: otherUser,
+                            },
+                        ],
+                    })
+                    .then(() => {
+                        navigation.navigate("chat box", {
+                            username: currentUser,
+                            conversationID: chatID,
+                            name: otherUser,
+                            avatar: params.item.profilePic,
+                            otherAvatar: params.CurrentUserProfilePic,
+                            userId: findUser(
+                                [
+                                    {
+                                        profilePic: params.item.profilePic,
+                                        username: otherUser,
+                                    },
+                                    {
+                                        profilePic: params.CurrentUserProfilePic,
+                                        username: currentUser,
+                                    },
+                                ],
+                                currentUser
+                            ),
+                        });
+                    })
+                    .catch((error) => {
+                        Alert.alert('Error adding document: ', error);
+                    });
+            }
+        })
+        .catch((error) => {
+            Alert.alert('Error checking for existing chat: ', error);
+        });
 };
+
 
 export default function PostedBySameAsUsername({params, username, rating, numOfReviews, navigation}) {
     if (params.item.PostedBy !== username) {

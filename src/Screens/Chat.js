@@ -120,8 +120,6 @@ export default function Chat({navigation, route}) {
     useEffect(() => {
         const fetchData = async () => {
             await getChats(route.params, setFilterData, setMasterData);
-            console.log(masterData)
-
         };
         getProfilePicture(route.params.username).then((result)=>{
             setProfilePic(result)

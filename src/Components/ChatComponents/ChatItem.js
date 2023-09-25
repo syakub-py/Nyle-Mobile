@@ -31,20 +31,20 @@ const findProfilePic = (userArray, params) => {
     }
     return "";
 }
-export const findUser = (userArray, params) => {
+const findUser = (userArray, username) => {
     for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== params.username) return index
+        if (userArray[index].username !== username) return index
     }
     return "";
 }
 export default function ChatItem({item, params, navigation}){
-    const username = item.data.owners[findUser(item.data.owners, params)].username
+    const username = item.data.owners[findUser(item.data.owners, params.username)].username
     return (
-        <Pressable onPress = {() => {navigation.navigate("chat box", {username: params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners, params)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, params)].profilePic, userId:findUser(item.data.owners, params)})}} key = {item}>
+        <Pressable onPress = {() => {navigation.navigate("chat box", {username: params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners,  params.username)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, params)].profilePic, userId:findUser(item.data.owners, params)})}} key = {item}>
             <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
                 <View>
                     <Image
-                        source = {{uri: item.data.owners[findUser(item.data.owners, params)].profilePic}}
+                        source = {{uri: item.data.owners[findUser(item.data.owners,  params.username)].profilePic}}
                         style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
                     />
                 </View>
