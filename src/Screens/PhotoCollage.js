@@ -24,7 +24,7 @@ export default function PhotoCollage({ route, navigation }){
 
             </View>
 
-            <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap' }}>
+            <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', backgroundColor:'white'}}>
                 {
                     pictures.map((photo, key) => {
                         const height = 300;

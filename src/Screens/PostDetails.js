@@ -71,12 +71,11 @@ export default function PostDetails({route, navigation}) {
     const [realEstateData, setRealEstateData] = useState([])
     const [Liked, setLiked] = useState(isLiked(likes, username))
 
-
     useEffect(()=>{
         scrollViewRef.current?.scrollToIndex({
             index:currentIndex,
             animated:true,
-            viewPosition:1
+            viewPosition:0.8
         })
     },[currentIndex])
 
