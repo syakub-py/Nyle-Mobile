@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import {firestore} from '../Components/Firebase'
-import {generateRating, handleLike, isLiked,updatedCurrencyList} from "./GlobalFunctions";
+import {generateRating, handleLike, isLiked, updatedCurrencyList} from "./GlobalFunctions";
 import CustomMapMarker from "../Components/CustomMapMarker";
 import BackButton from "../Components/BackButton";
 import PostedBySameAsUsername from "../Components/PostDetailsComponents/renderIsPostedBySameAsUsername";
@@ -169,8 +169,10 @@ export default function PostDetails({route, navigation}) {
                 </View>
 
                 <View style = {{marginLeft:10, marginTop:10}}>
-                    <View style = {{ backgroundColor:'transparent'}}>
+
+                    <View style = {{ backgroundColor:'transparent', flexDirection:'row'}}>
                         <Text style = {{color:'black',fontSize:23,fontWeight:'bold'}}>{route.params.item.title}</Text>
+                        {/*<Text style = {{color:'lightgray', margin:10,fontSize:14, fontWeight:'semi-bold', alignSelf:'center'}}>({parseDateString(route.params.item.date).toString()})</Text>*/}
                     </View>
 
                     <View style={{width:60}}>
@@ -220,13 +222,10 @@ export default function PostDetails({route, navigation}) {
 
                 <RealEstateData item = {route.params.item} realEstateData={realEstateData}/>
 
-                <Text style = {{color:'#a8a5a5', margin:10,fontSize:17, fontWeight:'semi-bold', alignSelf:'center'}}>{route.params.date}</Text>
 
             </ScrollView>
 
             <RenderArrangePickup item={route.params.item} username={username} profilePic={ route.params.CurrentUserProfilePic} navigation={navigation}/>
-
-
 
             {/*<View style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>*/}
             {/*    <View style = {{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}

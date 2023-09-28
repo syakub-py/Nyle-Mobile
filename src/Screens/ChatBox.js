@@ -258,7 +258,7 @@ export default function ChatBox({route, navigation}) {
   };
 
   const isStateActiveCSS = (state, k) => {
-    if (k == state.active) return {color:'white', margin:4, fontSize:10}
+    if (k === state.active) return {color:'white', margin:4, fontSize:10}
     return {color:'#a8a5a5', margin:4, fontSize:7}
   }
 
@@ -272,7 +272,7 @@ export default function ChatBox({route, navigation}) {
         </View>
 
         <View style = {{ backgroundColor: 'transparent', flexDirection:'row', alignItems:'center'}}>
-          <Image style = {{height:45, width:45, borderRadius:15}} source = {{uri:route.params.avatar}}/>
+          <Image style = {{height:45, width:45, borderRadius:15}} source = {{uri:route.params.otherAvatar}}/>
           <Text style = {{fontWeight:'bold', margin:10, fontSize:16}}>{route.params.name}</Text>
         </View>
       </View>

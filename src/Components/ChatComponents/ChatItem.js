@@ -1,6 +1,6 @@
 import {Image, Pressable, Text, View} from "react-native";
 import React from "react";
-
+import {generateChatID} from "../PostDetailsComponents/renderIsPostedBySameAsUsername";
 const UserNameLengthGreaterThanTen = ({username}) => {
     if (username.length > 10) return <Text style = {{fontSize:18, fontWeight:'500'}}>{username.slice(0, 13) + "..."}</Text>
 
@@ -24,36 +24,44 @@ const ItemImage = ({item}) => {
     return <View/>
 }
 
-const findProfilePic = (userArray, params) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username === params.username) return index
-    }
-    return "";
-}
-const findUser = (userArray, username) => {
-    for (let index = 0; index < userArray.length; index++) {
-        if (userArray[index].username !== username) return index
-    }
-    return "";
-}
-export default function ChatItem({item, params, navigation}){
-    const username = item.data.owners[findUser(item.data.owners, params.username)].username
+
+export default function ChatItem({ item, params, navigation }) {
+    const userId = generateChatID(item.data.owners[0], item.data.owners[1]);
+
+    const MyUsername = params.username;
+    const MyProfilePicture = item.data.owners.find((UserItem)=> UserItem.username  === MyUsername).profilePic
+    const OtherUsername = item.data.owners.find((UserItem)=> UserItem.username !== MyUsername).username
+    const OtherProfilePic =  item.data.owners.find((UserItem)=> UserItem.username  !== MyUsername).profilePic
+
     return (
-        <Pressable onPress = {() => {navigation.navigate("chat box", {username: params.username, conversationID:item.id, name: username, avatar:item.data.owners[findUser(item.data.owners,  params.username)].profilePic, otherAvatar:item.data.owners[findProfilePic(item.data.owners, params)].profilePic, userId:findUser(item.data.owners, params)})}} key = {item}>
-            <View style = {{flexDirection: 'row', marginBottom:15, backgroundColor:"white", alignItems:'center'}} >
+        <Pressable
+            onPress={() => {
+                navigation.navigate("chat box", {
+                    username: params.username,
+                    conversationID: item.id,
+                    name: OtherUsername,
+                    avatar: MyProfilePicture,
+                    otherAvatar:OtherProfilePic,
+                    userId: userId
+                });
+            }}
+            key={item}
+        >
+            <View style={{ flexDirection: 'row', marginBottom: 15, backgroundColor: "white", alignItems: 'center' }}>
                 <View>
                     <Image
-                        source = {{uri: item.data.owners[findUser(item.data.owners,  params.username)].profilePic}}
-                        style = {{width: 60, height:60, borderRadius:15,marginRight:15,}}
+                        source={{ uri:item.data.owners.find((user)=> user.username !== params.username).profilePic }}
+                        style={{ width: 60, height: 60, borderRadius: 15, marginRight: 15 }}
                     />
                 </View>
 
-                <View style = {{flexDirection:'column'}}>
-                    <UserNameLengthGreaterThanTen username={username}/>
-                    <ItemLatestMessageLengthGreaterThanTen item={item}/>
+                <View style={{ flexDirection: 'column' }}>
+                    <UserNameLengthGreaterThanTen username={OtherUsername} />
+                    <ItemLatestMessageLengthGreaterThanTen item={item} />
                 </View>
-                <ItemImage item={item}/>
+                <ItemImage item={item} />
             </View>
         </Pressable>
-    )
+    );
+
 }

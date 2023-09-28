@@ -32,8 +32,8 @@ const handleAddChat = (params, navigation) => {
                     username: currentUser,
                     conversationID: chatID,
                     name: otherUser,
-                    avatar: params.item.profilePic,
-                    otherAvatar: params.CurrentUserProfilePic,
+                    avatar: params.CurrentUserProfilePic,
+                    otherAvatar: params.item.profilePic,
                     userId: generateChatID(currentUser, otherUser),
                 });
             } else {
@@ -58,8 +58,8 @@ const handleAddChat = (params, navigation) => {
                             username: currentUser,
                             conversationID: chatID,
                             name: otherUser,
-                            avatar: params.item.profilePic,
-                            otherAvatar: params.CurrentUserProfilePic,
+                            avatar: params.CurrentUserProfilePic,
+                            otherAvatar: params.item.profilePic,
                             userId:generateChatID(currentUser, otherUser),
                         });
                     })

@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {AddProfilePicture} from "./GlobalFunctions";
 import BackButton from "../Components/BackButton";
 import RenderDoesPasswordFulfillRequirements from "../Components/SignUpCompoenents/renderDoesPasswordFufillRequirements";
+import ShowPassword from "../Components/ShowPassword";
 
 
 
@@ -32,6 +33,7 @@ export default function SignUp({navigation}) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [profilePic, setProfilePic] = useState(null)
+    const [visible, setVisible]  = useState(false)
 
     const requirements = [
         {
@@ -112,8 +114,11 @@ export default function SignUp({navigation}) {
 
             <TextInput placeholder ='Username' style = {styles.textInput} onChangeText = {(text) => setUsername(text)} />
             <RenderDoesPasswordFulfillRequirements requirements={requirements}/>
-            <TextInput placeholder ='Password' style = {styles.textInput} onChangeText = {(text) => setPassword(text)} secureTextEntry/>
+            <TextInput placeholder ='Password' style = {styles.textInput} onChangeText = {(text) => setPassword(text)} secureTextEntry={!visible}/>
+            <View style={{marginLeft:20}}>
+                <ShowPassword visible={visible} setVisible={setVisible}/>
 
+            </View>
 
             <Pressable style = {styles.submitContainer} onPress = {()=>handleSignUp(username, password, profilePic, navigation)}>
                 <Text style = {[styles.text, {color:'white', fontWeight:"600", fontSize: 16}]}>Sign Up</Text>

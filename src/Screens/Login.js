@@ -3,7 +3,7 @@ import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpac
 import { auth } from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
-
+import ShowPassword from "../Components/ShowPassword";
 const handleEmailAndPasswordLogin = (username, password) => {
     auth.signInWithEmailAndPassword(username, password)
         .then(userCredentials => {
@@ -45,12 +45,7 @@ export default function Login({navigation}) {
         });
     }, []);
 
-    const getIsVisibleIcon = () =>{
-        if (!visible){
-            return "eye-outline"
-        }
-        return "eye-off-outline"
-    }
+
 
     return (
         <ScrollView style = {styles.container}>
@@ -92,15 +87,8 @@ export default function Login({navigation}) {
                             style={{ marginLeft: 25 }}
                             secureTextEntry={!visible}
                         />
-                    <View style={{flexDirection:'row', alignItems:'center', marginTop:4}}>
-                        <Ionicons
-                            name={getIsVisibleIcon()}
-                            size={20}
-                            style={{marginRight:5}}
-                            onPress={() => setVisible(!visible)}
-                        />
-                        <Text>Show Password</Text>
-                    </View>
+
+                    <ShowPassword visible={visible} setVisible={setVisible}/>
 
                 </View>
                 <Pressable onPress = {() => navigation.navigate("Reset Password")}>
