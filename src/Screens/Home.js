@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, categoryFilter, getProfilePicture} from "./GlobalFunctions";
+import {readDatabase, categoryFilter, getProfilePicture, getUsername} from "./GlobalFunctions";
 import {handleEndReached} from "./GlobalFunctions";
 import _ from "lodash";
 import Slider from "../Components/HomeComponents/Slider";
+import {LoadingAnimation} from "../Components/LoadingAnimation";
+import {useNavigation} from "@react-navigation/native";
 
 /*
   @route.params = {profilePicture: current profile picture, username: current username}
@@ -53,7 +55,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
   }
 }
 
-export default function Home({navigation, route}) {
+export default function Home() {
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState([]);
@@ -62,14 +64,30 @@ export default function Home({navigation, route}) {
   const [profilePic, setProfilePic] = useState(null)
   const [lastDocument, setLastDocument] = useState(null)
   const [loading, setLoading] = useState(false)
-  const username = route.params.username
+  const [username, setUsername] = useState(null)
+  const navigation = useNavigation()
 
-  useEffect( () => {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const profileName = await getUsername();
+        setUsername(profileName);
+
+        const pic = await getProfilePicture(profileName);
+        setProfilePic(pic);
+
+
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
     readDatabase("AllPosts", setFilterData, setMasterData, setLastDocument)
-    getProfilePicture(username).then((result)=>{
-      setProfilePic(result)
-    })
-  }, [])
+  }, []);
+
+  LoadingAnimation(loading)
 
   const RenderFooter = () => {
     if (!loading) {

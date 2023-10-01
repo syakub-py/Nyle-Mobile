@@ -2,6 +2,7 @@ import {firestore, getstorage} from "../Components/Firebase";
 import {Vibration} from "react-native";
 import CryptoDataService from '../Services/CryptoDataService';
 import _ from "lodash"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const updateCurrencyPrice = async (data) => {
     let price = 0;
@@ -293,40 +294,7 @@ export const AddProfilePicture = async (username, profilePictureUrl) => {
     }
 };
 
+export const getUsername = async () =>{
+    return await AsyncStorage.getItem("@username")
+}
 
-const TimeAgo = ({ date }) => {
-    const currentDate = new Date();
-
-    // Calculate the time difference in milliseconds
-    const timeDifference = currentDate - date;
-    // Convert milliseconds to seconds
-    const seconds = Math.floor(timeDifference / 1000);
-
-    // Define time intervals in seconds
-    const minute = 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-    const week = day * 7;
-    const month = day * 30;
-    const year = day * 365;
-
-    // Determine the appropriate time unit
-    let result;
-    if (seconds < minute) {
-        result = `${seconds} second${seconds === 1 ? '' : 's'} ago`;
-    } else if (seconds < hour) {
-        result = `${Math.floor(seconds / minute)} minute${Math.floor(seconds / minute) === 1 ? '' : 's'} ago`;
-    } else if (seconds < day) {
-        result = `${Math.floor(seconds / hour)} hour${Math.floor(seconds / hour) === 1 ? '' : 's'} ago`;
-    } else if (seconds < week) {
-        result = `${Math.floor(seconds / day)} day${Math.floor(seconds / day) === 1 ? '' : 's'} ago`;
-    } else if (seconds < month) {
-        result = `${Math.floor(seconds / week)} week${Math.floor(seconds / week) === 1 ? '' : 's'} ago`;
-    } else if (seconds < year) {
-        result = `${Math.floor(seconds / month)} month${Math.floor(seconds / month) === 1 ? '' : 's'} ago`;
-    } else {
-        result = `${Math.floor(seconds / year)} year${Math.floor(seconds / year) === 1 ? '' : 's'} ago`;
-    }
-
-    return result
-};

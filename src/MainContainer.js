@@ -3,14 +3,15 @@ import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase'
-import { Image, View} from "react-native";
-import {getProfilePicture} from "./Screens/GlobalFunctions";
+import {ActivityIndicator, Image, View} from "react-native";
+import {getProfilePicture, getUsername} from "./Screens/GlobalFunctions";
 //Screens
 import home from "./Screens/Home"
 import market from './Screens/Market'
 import chat from './Screens/Chat'
 import profile from './Screens/Profile'
 import addPost from './Screens/AddPost';
+import {LoadingAnimation} from "./Components/LoadingAnimation";
 
 const Home = 'Home';
 const Market = 'Market';
@@ -20,17 +21,34 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 
-export default function MainContainer({route}) {
+export default function MainContainer() {
   const [received, setReceived] = useState(true)
   const [profilePic, setProfilePic] = useState(null)
   const [eventSeen, setEventSeen] = useState(true)
+  const [username, setUsername] = useState(null)
+  const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
-    getProfilePicture(route.params.username).then((result)=>{
-      setProfilePic(result)
-    })
-  },[])
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const profileName = await getUsername();
+        setUsername(profileName);
 
+        const pic = await getProfilePicture(profileName);
+        setProfilePic(pic);
+
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+
+  LoadingAnimation(loading);
 
   const MyChatQuery = firestore.collection('Chats');
 
@@ -38,7 +56,7 @@ export default function MainContainer({route}) {
     const latestMessagePromises = [];
 
     ChatSnapshot.docs.forEach((doc) => {
-      const owner = doc.data().owners.find((owner) => owner.username === route.params.username);
+      const owner = doc.data().owners.find((owner) => owner.username === username);
       if (owner) {
         const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
             .orderBy('createdAt', 'desc')
@@ -49,7 +67,7 @@ export default function MainContainer({route}) {
 
     Promise.all(latestMessagePromises).then((results) => {
       results.forEach((latestMessageSnapshot) => {
-        if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== route.params.username) {
+        if (!latestMessageSnapshot.empty && latestMessageSnapshot.docs[0].data().user.name !== username) {
           const latestMessage = latestMessageSnapshot.docs[0].data();
           setReceived(latestMessage.received);
         }
@@ -59,7 +77,7 @@ export default function MainContainer({route}) {
 
 
   const today = new Date().toISOString().split('T')[0];
-  const MyEventsQuery = firestore.collection('CalendarEvents').where("seller","==", route.params.username).where("startTime","==", today);
+  const MyEventsQuery = firestore.collection('CalendarEvents').where("seller","==", username).where("startTime","==", today);
   MyEventsQuery.get().then((eventsSnapshot) =>{
     eventsSnapshot.forEach((doc)=>{
       if (!doc.data().seen){
@@ -138,11 +156,11 @@ export default function MainContainer({route}) {
 
     })}>
 
-        <Tab.Screen name = {Home} component = {home} initialParams = {{ username:route.params.username}}/>
+        <Tab.Screen name = {Home} component = {home}/>
         <Tab.Screen name = {Market} component = {market}/>
-        <Tab.Screen name = {AddPost} component = {addPost} initialParams = {{ username: route.params.username }}/>
-        <Tab.Screen name = {Chat} component = {chat} initialParams = {{ username: route.params.username}}/>
-        <Tab.Screen name = {Profile} component = {profile} initialParams = {{ username: route.params.username}}/>
+        <Tab.Screen name = {AddPost} component = {addPost}/>
+        <Tab.Screen name = {Chat} component = {chat} />
+        <Tab.Screen name = {Profile} component = {profile} initialParams = {{ username: username}}/>
 
     </Tab.Navigator>
   );

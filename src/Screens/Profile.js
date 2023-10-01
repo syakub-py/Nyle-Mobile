@@ -16,10 +16,12 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore, getstorage} from '../Components/Firebase'
 import firebase from "firebase/compat/app";
 import * as ImagePicker from "expo-image-picker";
-import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture} from "./GlobalFunctions";
+import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture, getUsername} from "./GlobalFunctions";
 import _ from "lodash";
 import HiddenButton from "../Components/HiddenButton";
 import RatingButton from "../Components/RatingButton";
+import {LoadingAnimation} from "../Components/LoadingAnimation";
+import {useNavigation} from "@react-navigation/native";
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
@@ -142,23 +144,40 @@ const SelectProfilePic = async (username) => {
   }
 };
 
-export default function Profile({ navigation, route }) {
+export default function Profile() {
   const [userPostsList, setUserPostsList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0)
   const [profilePic, setProfilePic] = useState(null)
-  const username  = route.params.username
-
+  const [username, setUsername] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation()
 
   useEffect(() => {
-    getPosts(username, setUserPostsList);
-    clearDeletedAfter30Days(username,userPostsList, setUserPostsList);
-    generateRating(username, setRating, setNumOfReviews)
-    getProfilePicture(username).then((result)=>{
-      setProfilePic(result)
-    })
+    async function fetchData() {
+      try {
+        const profileName = await getUsername();
+        setUsername(profileName);
+
+        const pic = await getProfilePicture(profileName);
+        setProfilePic(pic);
+
+        getPosts(profileName, setUserPostsList);
+        clearDeletedAfter30Days(profileName,userPostsList, setUserPostsList);
+        generateRating(profileName, setRating, setNumOfReviews)
+
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
+
+
+  LoadingAnimation(loading);
 
   const SectionTitle = ({title}) => {
     return (

@@ -19,12 +19,13 @@ import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropdownInput from '../Components/AddPostDropdown';
 import {CustomText, CustomTextWithInput} from '../Components/CustomText';
-import {getProfilePicture} from "./GlobalFunctions";
+import {getProfilePicture, getUsername, readDatabase} from "./GlobalFunctions";
 import RenderPrice from "../Components/AddPostsComponents/renderPrice";
 import ImageUrls from "../Components/AddPostsComponents/renderIsImages";
 import RenderDetailsText from "../Components/AddPostsComponents/renderDetailsText";
 import RenderHomeDataSection from "../Components/AddPostsComponents/renderHomeSection";
 import RenderAutoSection from "../Components/AddPostsComponents/renderAutoSection";
+import {LoadingAnimation} from "../Components/LoadingAnimation";
 
 
 /**
@@ -90,7 +91,7 @@ const onRefresh = (setRefreshing) => {
 };
 
 
-export default function AddPost({route}) {
+export default function AddPost() {
     let randomNumber = Math.floor(Math.random() * 100);
     faker.seed(randomNumber);
 
@@ -117,12 +118,29 @@ export default function AddPost({route}) {
     const [imageUrls, setImageUrls] = useState([]);
     const [currencyList, setCurrencyList] = useState([])
     const [profilePic, setProfilePic] = useState(null)
+    const [username, setUsername] = useState(null)
+    const [loading, setLoading] = useState(true);
 
-    useEffect(()=>{
-        getProfilePicture(route.params.username).then((result)=>{
-            setProfilePic(result)
-        })
-    },[])
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const profileName = await getUsername();
+                setUsername(profileName);
+
+                const pic = await getProfilePicture(profileName);
+                setProfilePic(pic);
+
+
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, []);
+
+    LoadingAnimation(loading);
 
     const dropMarker = (event) => {
         const coordinate = event.nativeEvent;
@@ -136,7 +154,7 @@ export default function AddPost({route}) {
     const createDocument = ({uniqueFields}, firebaseImageUrls) => ({
         id: randomNumber,
         title: title,
-        PostedBy: route.params.username,
+        PostedBy: username,
         currency: currencyList,
         description: description,
         pic: firebaseImageUrls,

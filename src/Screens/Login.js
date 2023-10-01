@@ -4,6 +4,7 @@ import { auth } from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 import ShowPassword from "../Components/ShowPassword";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const handleEmailAndPasswordLogin = (username, password) => {
     auth.signInWithEmailAndPassword(username, password)
         .then(userCredentials => {
@@ -39,9 +40,12 @@ export default function Login({navigation}) {
     const [password, setPassword] = useState('')
     const [visible, setVisible]  = useState(false)
 
-    useEffect(() => {
-        return auth.onAuthStateChanged(user => {
-            if (user) navigation.navigate("Main Container", {username: user.email})
+    useEffect( () => {
+        return auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await AsyncStorage.setItem("@username", user.email)
+                navigation.navigate("Main Container")
+            }
         });
     }, []);
 
