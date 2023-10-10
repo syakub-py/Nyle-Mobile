@@ -40,7 +40,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@types/faker": "^6.6.9"
+    "@types/faker": "^6.6.9",
+    "eslint": "^8.51.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.33.2"
   },
   "private": true
 }
