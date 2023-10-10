@@ -26,4 +26,10 @@ jobs:
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "ESLint fixes" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Linting" && git push)
+
+      - name: Publish to Expo
+        run: npx expo build:android --non-interactive --no-publish
+        env:
+          EXPO_CLI_USERNAME: Nyle.crypto.store@gmail.com
+          EXPO_CLI_PASSWORD: ${{ secrets.EXPO_TOKEN }}
