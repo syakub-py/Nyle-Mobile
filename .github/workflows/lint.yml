@@ -16,7 +16,7 @@ jobs:
           node-version: '18'  # or your preferred version
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run ESLint with .eslintrc.yml
         run: npx eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc.yml --fix
