@@ -69,13 +69,13 @@ export default function ChatBox({route, navigation}) {
 
   const RenderActions = () => (
     <View style = {{justifyContent: 'center', alignItems: 'center', margin: 7}}>
-      <Pressable onPress = {()=>SelectImages()}>
+      <Pressable onPress = {()=>selectImages()}>
         <Ionicons name ='images' size = {25}/>
       </Pressable>
     </View>
   );
 
-  const SelectImages = async () => {
+  const selectImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       aspect: [4, 3],

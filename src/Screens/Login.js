@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
+// import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import ShowPassword from '../Components/ShowPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const handleEmailAndPasswordLogin = (username, password) => {

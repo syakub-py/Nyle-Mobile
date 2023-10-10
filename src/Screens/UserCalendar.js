@@ -41,19 +41,17 @@ export default function UserCalendar({navigation, route}) {
   const username =route.params.currentUsername;
 
   useEffect(async () => {
-    const getCalendarEvents = async (username) => {
-      const MySellerEvents = firestore.collection('CalendarEvents').where('seller', '==', username);
-      const MyBuyerEvents = firestore.collection('CalendarEvents').where('buyer', '==', username);
+    const MySellerEvents = firestore.collection('CalendarEvents').where('seller', '==', username);
+    const MyBuyerEvents = firestore.collection('CalendarEvents').where('buyer', '==', username);
 
-      const [sellerQuerySnapshot, buyerQuerySnapshot] = await Promise.all([MySellerEvents.get(), MyBuyerEvents.get()]);
+    const [sellerQuerySnapshot, buyerQuerySnapshot] = await Promise.all([MySellerEvents.get(), MyBuyerEvents.get()]);
 
-      const sellerEvents = sellerQuerySnapshot.docs;
-      const buyerEvents = buyerQuerySnapshot.docs;
+    const sellerEvents = sellerQuerySnapshot.docs;
+    const buyerEvents = buyerQuerySnapshot.docs;
 
-      // Combine the results or perform any desired operations
-      const combinedResults = sellerEvents.concat(buyerEvents);
-      setCalendarEvents( combinedResults.map((doc) => ({id: doc.id, ...doc.data()})));
-    };
+    // Combine the results or perform any desired operations
+    const combinedResults = sellerEvents.concat(buyerEvents);
+    setCalendarEvents( combinedResults.map((doc) => ({id: doc.id, ...doc.data()})));
   }, []);
 
 

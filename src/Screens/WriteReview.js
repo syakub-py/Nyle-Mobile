@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
 
-const PostReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation) => {
+const postReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation) => {
   return firestore.collection('Reviews').add({
     Reviewer: username,
     Reviewe: PostedBy,
@@ -47,7 +47,7 @@ export default function WriteReview({route, navigation}) {
           ))}
         </View>
         <TextInput style = {{height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top'}} placeholder = "Review Message" onChangeText = {(text) => setReviewMessage(text)} multiline />
-        <Pressable style = {{width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10}} onPress = {() => PostReview(route.params.username, route.params.PostedBy, title, reviewMessage, stars, navigation)}>
+        <Pressable style = {{width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10}} onPress = {() => postReview(route.params.username, route.params.PostedBy, title, reviewMessage, stars, navigation)}>
           <Text style = {{color: 'white', fontSize: 16}}>Post Review</Text>
         </Pressable>
       </View>

@@ -13,7 +13,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {getProfilePicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
 
-const SendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
+const sendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
   const docRef = firestore.collection('Reviews').doc(data.id);
   const doc = await docRef.get();
 
@@ -32,7 +32,7 @@ const SendReply = async (data, currentUser, reply, existingReplies, setExistingR
   }
 };
 
-const DeleteReply = async (data, existingReplies, setExistingReplies, index) => {
+const deleteReply = async (data, existingReplies, setExistingReplies, index) => {
   const docRef = firestore.collection('Reviews').doc(data.id);
   const doc = await docRef.get();
 
@@ -62,15 +62,15 @@ export default function ReviewCard({data, currentUser}) {
     });
   }, []);
   const handleSendReply = () => {
-    SendReply(data, currentUser, reply, existingReplies, setExistingReplies);
+    sendReply(data, currentUser, reply, existingReplies, setExistingReplies);
     setOpen(!open);
   };
 
   const handleDeleteReply = (index) => {
-    DeleteReply(data, existingReplies, setExistingReplies, index);
+    deleteReply(data, existingReplies, setExistingReplies, index);
   };
 
-  const RenderIsRevieweCurrentUser = () => {
+  const renderIsRevieweCurrentUser = () => {
     if (data.Reviewe !== currentUser) return <View/>;
     return (
       <Pressable onPress = {() =>setOpen(!open)}>
@@ -81,7 +81,7 @@ export default function ReviewCard({data, currentUser}) {
     );
   };
 
-  const RenderIsOpen = () => {
+  const renderIsOpen = () => {
     if (open) {
       return (
         <View style = {{flexDirection: 'row', justifyContent: 'center'}}>
@@ -98,10 +98,10 @@ export default function ReviewCard({data, currentUser}) {
         </View>
       );
     }
-    return RenderIsRevieweCurrentUser();
+    return renderIsRevieweCurrentUser();
   };
 
-  const RenderIsRevieweCurrentUser2 = () => {
+  const renderIsRevieweCurrentUser2 = () => {
     if (data.Reviewe !== currentUser) {
       return (
         <ScrollView>
@@ -167,11 +167,11 @@ export default function ReviewCard({data, currentUser}) {
           <Text style = {{marginTop: 5}}>{data.ReviewMessage}</Text>
         </View>
 
-        {RenderIsOpen()}
+        {renderIsOpen()}
 
       </View>
 
-      {RenderIsRevieweCurrentUser2()}
+      {renderIsRevieweCurrentUser2()}
     </View>
   );
 }

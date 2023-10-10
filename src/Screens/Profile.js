@@ -133,7 +133,7 @@ const moveToDelete = async (item, userPostsList, setUserList) => {
   }
 };
 
-const SelectProfilePic = async (username) => {
+const selectProfilePic = async (username) => {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     aspect: [4, 3],
@@ -216,7 +216,7 @@ export default function Profile() {
             <View>
               <View style = {{alignItems: 'center', marginTop: 25}}>
                 <Pressable onPress={()=>{
-                  SelectProfilePic(username);
+                  selectProfilePic(username);
                 }}>
                   <Image source = {{uri: profilePic}} style = {styles.image} resizeMode = "cover"/>
                   <View style = {{backgroundColor: 'black', height: 25, width: 25, borderRadius: 20, zIndex: 1, position: 'absolute', bottom: 15, left: 15, justifyContent: 'center', alignItems: 'center'}}>
