@@ -68,7 +68,7 @@ export default function Login({navigation}) {
           </View>
         </Pressable>
 
-        <Pressable onPress = {handleGoogleLogin}>
+        <Pressable >
           <View style = {styles.socialButton}>
             <Ionicons name ='logo-google' size = {20} style = {{height: 20, width: 20, marginRight: 5}}/>
             <Text style = {{fontSize: 15, fontWeight: '500'}}>Google</Text>

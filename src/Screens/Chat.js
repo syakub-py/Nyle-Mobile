@@ -176,7 +176,7 @@ export default function Chat() {
               <Image
                 resizeMode="cover"
                 source={{uri: profilePic}}
-                style={{height: 50, width: 50, borderRadius: 15, elevation: 2}}
+                style={{height: 50, width: 50, borderRadius: 15}}
               />
             </View>
 

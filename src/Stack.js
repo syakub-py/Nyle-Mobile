@@ -2,7 +2,7 @@ import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import mainContainer from './MainContainer';
+import MainContainer from './MainContainer';
 import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import ViewProfile from './Screens/ViewProfile';
@@ -27,7 +27,7 @@ const Stack = () => {
   return (
     <Stack.Navigator initaialRouteName = "Login" screenOptions = {{headerShown: false}}>
       <Stack.Screen name = "Login" component = {Login}/>
-      <Stack.Screen name = "Main Container" component = {mainContainer}/>
+      <Stack.Screen name = "Main Container" component = {MainContainer}/>
       <Stack.Screen name = "Sign Up" component = {SignUp}/>
       <Stack.Screen name = "post details" component = {PostDetails}/>
       <Stack.Screen name = "chat box" component = {Chatbox} />

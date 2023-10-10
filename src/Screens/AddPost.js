@@ -12,7 +12,6 @@ import {
   SafeAreaView,
   ActivityIndicator, Vibration,
 } from 'react-native';
-import faker from 'faker';
 import {firestore, getstorage} from '../Components/Firebase';
 import MapView, {Marker} from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
@@ -93,7 +92,7 @@ const onRefresh = (setRefreshing) => {
 
 export default function AddPost() {
   const randomNumber = Math.floor(Math.random() * 100);
-  faker.seed(randomNumber);
+
 
   const [refresh, setRefreshing] = useState(false);
   const [title, setTitle] = useState('');

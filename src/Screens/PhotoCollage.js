@@ -40,7 +40,7 @@ export default function PhotoCollage({route, navigation}) {
                 onPress={() => navigation.navigate('Image Viewer', {pictures: pictures, index: key})}
               >
                 <View style={{flex: 1, padding: 5}}>
-                  <Image source={{uri: photo}} style={{flex: 1, width: '100%', height: '100%', borderRadius: 10, elevation: 1}} />
+                  <Image source={{uri: photo}} style={{flex: 1, width: '100%', height: '100%', borderRadius: 10}} />
                 </View>
               </Pressable>
             );

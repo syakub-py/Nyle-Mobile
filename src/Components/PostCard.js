@@ -25,10 +25,10 @@ export default function PostCard({data, username}) {
   };
 
   const RenderIsUsernameSameAsPostedBy = () => {
-    if (username === data.PostedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, elevation: 10, margin: 12}} source = {{uri: data.profilePic, elevation: 2}}/>;
+    if (username === data.PostedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, margin: 12}} source = {{uri: data.profilePic}}/>;
     return (
       <Pressable onPress = {() => navigation.navigate('view profile', {ProfileImage: data.profilePic, postedByUsername: data.PostedBy, currentUsername: username})}>
-        <Image style = {{height: 50, width: 50, borderRadius: 15, elevation: 10, margin: 12}} source = {{uri: data.profilePic, elevation: 2}}/>
+        <Image style = {{height: 50, width: 50, borderRadius: 15, margin: 12}} source = {{uri: data.profilePic}}/>
       </Pressable>
     );
   };

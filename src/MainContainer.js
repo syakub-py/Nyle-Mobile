@@ -28,7 +28,7 @@ const Tab = createBottomTabNavigator();
  */
 
 
-export default function mainContainer() {
+export default function MainContainer() {
   const [received, setReceived] = useState(true);
   const [profilePic, setProfilePic] = useState(null);
   const [eventSeen, setEventSeen] = useState(true);
