@@ -1,6 +1,9 @@
-name: Lint
+name: Lint and Publish
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types:
+      - closed
 
 jobs:
   run-lint:
@@ -28,8 +31,17 @@ jobs:
           git add -A
           git diff --quiet && git diff --staged --quiet || (git commit -m "Linting" && git push)
 
+  publish-expo:
+    needs: run-lint
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
       - name: Publish to Expo
-        run: npx expo build:android --non-interactive --no-publish
+        run: eas build -p android
         env:
           EXPO_CLI_USERNAME: Nyle.crypto.store@gmail.com
           EXPO_CLI_PASSWORD: ${{ secrets.EXPO_TOKEN }}
