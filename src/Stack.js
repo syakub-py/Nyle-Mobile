@@ -1,6 +1,6 @@
 import Login from './Screens/Login';
 import SignUp from './Screens/SignUp';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import mainContainer from './MainContainer';
 import PostDetails from './Screens/PostDetails';
@@ -8,24 +8,24 @@ import Chatbox from './Screens/ChatBox';
 import ViewProfile from './Screens/ViewProfile';
 import ViewImages from './Screens/ImageViewer';
 import CheckOut from './Screens/CheckOut';
-import ResetPassword from "./Screens/ResetPassword";
-import EditProfile from "./Screens/EditProfile";
-import ConnectedWallets from "./Screens/ConnectedWallets";
-import DeletedPosts from "./Screens/DeletedPosts";
-import Reviews from "./Screens/Reviews";
-import WriteReview from "./Screens/WriteReview";
-import Map from "./Screens/Map";
-import TermsOfService from "./Screens/TermsOfService";
-import HomeMapView from "./Screens/HomeMapView";
-import PhotoCollage from "./Screens/PhotoCollage";
-import Profile from "./Screens/Profile";
-import TransactionCalendar from "./Screens/ArrangePickup";
-import UserCalendar from "./Screens/UserCalendar";
+import ResetPassword from './Screens/ResetPassword';
+import EditProfile from './Screens/EditProfile';
+import ConnectedWallets from './Screens/ConnectedWallets';
+import DeletedPosts from './Screens/DeletedPosts';
+import Reviews from './Screens/Reviews';
+import WriteReview from './Screens/WriteReview';
+import Map from './Screens/Map';
+import TermsOfService from './Screens/TermsOfService';
+import HomeMapView from './Screens/HomeMapView';
+import PhotoCollage from './Screens/PhotoCollage';
+import Profile from './Screens/Profile';
+import TransactionCalendar from './Screens/ArrangePickup';
+import UserCalendar from './Screens/UserCalendar';
 
 const Stack = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initaialRouteName = "Login" screenOptions = {{headerShown:false}}>
+    <Stack.Navigator initaialRouteName = "Login" screenOptions = {{headerShown: false}}>
       <Stack.Screen name = "Login" component = {Login}/>
       <Stack.Screen name = "Main Container" component = {mainContainer}/>
       <Stack.Screen name = "Sign Up" component = {SignUp}/>
@@ -49,6 +49,6 @@ const Stack = () => {
       <Stack.Screen name = "My Calendar" component = {UserCalendar} />
     </Stack.Navigator>
   );
-}
+};
 
 export default Stack;
