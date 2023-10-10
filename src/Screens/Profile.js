@@ -8,31 +8,31 @@ import {
   Text,
   TouchableOpacity,
   Vibration,
-  View
+  View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from '../Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {firestore, getstorage} from '../Components/Firebase'
-import firebase from "firebase/compat/app";
-import * as ImagePicker from "expo-image-picker";
-import {getSoldItems, generateRating, getProfilePicture, AddProfilePicture, getUsername} from "./GlobalFunctions";
-import _ from "lodash";
-import HiddenButton from "../Components/HiddenButton";
-import RatingButton from "../Components/RatingButton";
-import {LoadingAnimation} from "../Components/LoadingAnimation";
-import {useNavigation} from "@react-navigation/native";
+import {firestore, getstorage} from '../Components/Firebase';
+import firebase from 'firebase/compat/app';
+import * as ImagePicker from 'expo-image-picker';
+import {getSoldItems, generateRating, getProfilePicture, addProfilePicture, getUsername} from './GlobalFunctions';
+import _ from 'lodash';
+import HiddenButton from '../Components/HiddenButton';
+import RatingButton from '../Components/RatingButton';
+import {loadingAnimation} from '../Components/LoadingAnimation';
+import {useNavigation} from '@react-navigation/native';
 
 /*
   @route.params = {profilePicture: url of the profile, username: current username}
 */
 
 const getPosts = async (username, setUserList) => {
-  let results = [];
-  const MyPostsQuery = firestore.collection('AllPosts').where("PostedBy", "==", username);
+  const results = [];
+  const MyPostsQuery = firestore.collection('AllPosts').where('PostedBy', '==', username);
   try {
     const postSnapshot = await MyPostsQuery.get();
-    postSnapshot.forEach(doc => {
+    postSnapshot.forEach((doc) => {
       results.push(doc.data());
     });
     setUserList(results);
@@ -55,11 +55,11 @@ const handleSignOut = async (navigation) => {
   } catch (error) {
     console.error(error);
   }
-  return navigation.navigate("Login");
+  return navigation.navigate('Login');
 };
 
 const deletePost = (post, collectionName, userPostList, setUserPostList) => {
-  setUserPostList(userPostList.filter((item) =>(item.title!==post.title)))
+  setUserPostList(userPostList.filter((item) =>(item.title!==post.title)));
   firestore
       .collection(collectionName)
       .doc(post.title)
@@ -73,18 +73,18 @@ const deletePost = (post, collectionName, userPostList, setUserPostList) => {
               .then(() => {
               })
               .catch((error) => {
-                console.log("Error deleting picture:", error);
+                console.log('Error deleting picture:', error);
               });
         });
-        Alert.alert("Posted deleted!");
+        Alert.alert('Posted deleted!');
       })
       .catch((error) => {
-        console.log("Error deleting document: " + JSON.stringify(error));
+        console.log('Error deleting document: ' + JSON.stringify(error));
       });
 };
 
-const clearDeletedAfter30Days = async (username,userPostList, setUserList) => {
-  const sourceDocRef = firestore.collection("DeletedPosts");
+const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
+  const sourceDocRef = firestore.collection('DeletedPosts');
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
   const query = sourceDocRef.where('date', '<', thirtyDaysAgo);
@@ -92,7 +92,7 @@ const clearDeletedAfter30Days = async (username,userPostList, setUserList) => {
     const snapshot = await query.get();
     const batch = firestore.batch();
     snapshot.forEach((doc) => {
-      deletePost(doc.data(), "DeletedPosts", userPostList, setUserList);
+      deletePost(doc.data(), 'DeletedPosts', userPostList, setUserList);
     });
     await batch.commit();
   } catch (error) {
@@ -101,7 +101,7 @@ const clearDeletedAfter30Days = async (username,userPostList, setUserList) => {
 };
 
 const markAsSold = (item, setRefreshing, username, setUserList) => {
-  firestore.collection("AllPosts").doc(item.title).update({ sold: "true" })
+  firestore.collection('AllPosts').doc(item.title).update({sold: 'true'})
       .then(() => {
         onRefresh(setRefreshing, username, setUserList);
       })
@@ -110,19 +110,19 @@ const markAsSold = (item, setRefreshing, username, setUserList) => {
       });
 };
 
-const moveToDelete = async (item, userPostsList,setUserList) => {
-  setUserList(userPostsList.filter((post) =>(post.title!==item.title)))
+const moveToDelete = async (item, userPostsList, setUserList) => {
+  setUserList(userPostsList.filter((post) =>(post.title!==item.title)));
 
   try {
     // Get the source document
-    const sourceDocRef = firestore.collection("AllPosts").doc(item.title);
+    const sourceDocRef = firestore.collection('AllPosts').doc(item.title);
     const sourceDoc = await sourceDocRef.get();
 
     // Get the data from the source document
     const sourceData = sourceDoc.data();
 
     // Create a reference to the destination collection
-    const destinationCollectionRef = firestore.collection("DeletedPosts").doc(item.title);
+    const destinationCollectionRef = firestore.collection('DeletedPosts').doc(item.title);
 
     // Create a new document in the destination collection with the source document data
     await destinationCollectionRef.set(sourceData);
@@ -134,13 +134,13 @@ const moveToDelete = async (item, userPostsList,setUserList) => {
 };
 
 const SelectProfilePic = async (username) => {
-  let result = await ImagePicker.launchImageLibraryAsync({
+  const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     aspect: [4, 3],
     quality: 1,
   });
   if (!result.canceled) {
-      await AddProfilePicture(username, result.assets[0].uri)
+    await addProfilePicture(username, result.assets[0].uri);
   }
 };
 
@@ -148,11 +148,11 @@ export default function Profile() {
   const [userPostsList, setUserPostsList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [rating, setRating] = useState(0);
-  const [numOfReviews, setNumOfReviews] = useState(0)
-  const [profilePic, setProfilePic] = useState(null)
-  const [username, setUsername] = useState(null)
+  const [numOfReviews, setNumOfReviews] = useState(0);
+  const [profilePic, setProfilePic] = useState(null);
+  const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function fetchData() {
@@ -164,11 +164,10 @@ export default function Profile() {
         setProfilePic(pic);
 
         getPosts(profileName, setUserPostsList);
-        clearDeletedAfter30Days(profileName,userPostsList, setUserPostsList);
-        generateRating(profileName, setRating, setNumOfReviews)
-
+        clearDeletedAfter30Days(profileName, userPostsList, setUserPostsList);
+        generateRating(profileName, setRating, setNumOfReviews);
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error('Error fetching data: ', error);
       } finally {
         setLoading(false);
       }
@@ -177,160 +176,166 @@ export default function Profile() {
   }, []);
 
 
-  LoadingAnimation(loading);
+  loadingAnimation(loading);
 
   const SectionTitle = ({title}) => {
     return (
-      <View style = {{marginTop: 20, marginLeft:10}}>
-        <Text style = {{color: 'black', fontSize:20, fontWeight:'bold'}}>{title}</Text>
+      <View style = {{marginTop: 20, marginLeft: 10}}>
+        <Text style = {{color: 'black', fontSize: 20, fontWeight: 'bold'}}>{title}</Text>
       </View>
-    )
-  }
+    );
+  };
 
-  const Setting = ({title, nameOfIcon,type, onPress}) => {
-    if (type !== "button") return <View/>
+  const Setting = ({title, nameOfIcon, type, onPress}) => {
+    if (type !== 'button') return <View/>;
     else {
       return (
-        <TouchableOpacity style = {{flexDirection: 'row', height:50, alignItems:'center', width:'100%', marginLeft:20}} onPress = {onPress}>
-          <View style = {{flexDirection:'row'}}>
-            <Ionicons name = {nameOfIcon} style = {{color:'black', marginRight: 20}} size = {25}/>
-            <Text style = {{flex:1, color:'black', fontSize: 16, fontWeight:'bold'}}>{title}</Text>
+        <TouchableOpacity style = {{flexDirection: 'row', height: 50, alignItems: 'center', width: '100%', marginLeft: 20}} onPress = {onPress}>
+          <View style = {{flexDirection: 'row'}}>
+            <Ionicons name = {nameOfIcon} style = {{color: 'black', marginRight: 20}} size = {25}/>
+            <Text style = {{flex: 1, color: 'black', fontSize: 16, fontWeight: 'bold'}}>{title}</Text>
           </View>
         </TouchableOpacity>
-      )
+      );
     }
-  }
+  };
 
   return (
-    <View style = {{backgroundColor:'white'}}>
-        <SwipeListView
-          data = {userPostsList}
-          rightOpenValue = {-170}
-          refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserPostsList)} />
-          }
-          ListFooterComponent = {
-            <View style = {{height:80}}/>
-          }
-          ListHeaderComponent = {
+    <View style = {{backgroundColor: 'white'}}>
+      <SwipeListView
+        data = {userPostsList}
+        rightOpenValue = {-170}
+        refreshControl = {
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserPostsList)} />
+        }
+        ListFooterComponent = {
+          <View style = {{height: 80}}/>
+        }
+        ListHeaderComponent = {
+          <View>
             <View>
-              <View>
-                <View style = {{alignItems:'center', marginTop:25}}>
-                  <Pressable onPress={()=>{SelectProfilePic(username)}}>
-                    <Image source = {{uri:profilePic}} style = {styles.image} resizeMode = "cover"/>
-                    <View style = {{backgroundColor:'black', height:25, width:25, borderRadius:20, zIndex:1, position: 'absolute',  bottom: 15, left:15, justifyContent:'center', alignItems:'center'}}>
-                      <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
-                    </View>
-                  </Pressable>
-                </View>
-
-                <View style = {{flexDirection:'row', alignSelf:'center', paddingTop:10}}>
-                  <View style={{flexDirection:'column'}}>
-                    <RatingButton navigation={navigation} rating={rating} username={username} currentUsername={username}/>
-
-                    <Text style={{fontSize:13, color:'gray'}}>({numOfReviews} reviews)</Text>
+              <View style = {{alignItems: 'center', marginTop: 25}}>
+                <Pressable onPress={()=>{
+                  SelectProfilePic(username);
+                }}>
+                  <Image source = {{uri: profilePic}} style = {styles.image} resizeMode = "cover"/>
+                  <View style = {{backgroundColor: 'black', height: 25, width: 25, borderRadius: 20, zIndex: 1, position: 'absolute', bottom: 15, left: 15, justifyContent: 'center', alignItems: 'center'}}>
+                    <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
                   </View>
-                  <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft:10, marginRight:10}} />
-
-                  <View style = {{flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-                    <Text style = {{fontSize:20, fontWeight:'500'}}>{_.size(userPostsList)}</Text>
-                    <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Total Items</Text>
-                  </View>
-
-                  <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%',marginLeft:10, marginRight:10}} />
-
-                  <View style = {{flexDirection:'column', alignItems:'center',justifyContent:'center'}}>
-                    <Text style = {{fontSize:20, fontWeight:'500'}}>{getSoldItems(userPostsList)}</Text>
-                    <Text style = {{fontSize:15, fontWeight:'400', color:'lightgray'}}>Sold items</Text>
-                  </View>
-                </View>
-
+                </Pressable>
               </View>
 
+              <View style = {{flexDirection: 'row', alignSelf: 'center', paddingTop: 10}}>
+                <View style={{flexDirection: 'column'}}>
+                  <RatingButton navigation={navigation} rating={rating} username={username} currentUsername={username}/>
 
-              <Setting
-                  title = "Calendar"
-                  type = "button"
-                  onPress = {() => navigation.navigate("My Calendar", {currentUsername:username})}
-                  nameOfIcon ='calendar-outline'
-              />
+                  <Text style={{fontSize: 13, color: 'gray'}}>({numOfReviews} reviews)</Text>
+                </View>
+                <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
-              <Setting
-                  title = "Wallet(s)"
-                  type = "button"
-                  onPress = {() => navigation.navigate("Connected Wallets")}
-                  nameOfIcon = "wallet-outline"
-                />
+                <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{_.size(userPostsList)}</Text>
+                  <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Total Items</Text>
+                </View>
 
-                <Setting
-                  title = "Security and Privacy"
-                  type = "button"
-                  onPress = {() => navigation.navigate("Edit Profile")}
-                  nameOfIcon ='person-outline'
-                />
+                <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
-                <Setting
-                  title = "Log Out"
-                  type = "button"
-                  onPress = {()=>handleSignOut(navigation)}
-                  nameOfIcon = 'log-out-outline'
-                />
+                <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{getSoldItems(userPostsList)}</Text>
+                  <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Sold items</Text>
+                </View>
+              </View>
 
-              <Setting
-                  title = "Recently Deleted Posts"
-                  type = "button"
-                  onPress = {() =>navigation.navigate("Deleted Posts", {username:username})}
-                  nameOfIcon = 'trash-outline'
-              />
-
-              <Setting
-                  title = "Terms of Service"
-                  type = "button"
-                  onPress = {() => {navigation.navigate("Terms of Service", {showButtons:false})}}
-                  nameOfIcon = 'alert-circle-outline'
-              />
-
-              <SectionTitle title = {'Your Posts'}/>
             </View>
-            }
 
-          renderItem = {({item}) => (
-            <Pressable onPress = {() => navigation.navigate("post details", {CurrentUserProfilePic:profilePic, username:username, item})}>
-              <PostCard data = {item} username={username}/>
-            </Pressable>
-            )}
 
-          renderHiddenItem = {({item}) => (
-              <View style = {{ position: 'absolute',
-              flexDirection:'row',
-              top: 0,
-              right: 70,
-              bottom: 0,
-              width: 100,
-              alignItems: 'center'}}>
-                <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
-                <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
-                <HiddenButton color={'green'} onPress = {() =>{markAsSold(item, setRefreshing, username, setUserPostsList)}} iconName={'checkmark-circle-outline'}/>
+            <Setting
+              title = "Calendar"
+              type = "button"
+              onPress = {() => navigation.navigate('My Calendar', {currentUsername: username})}
+              nameOfIcon ='calendar-outline'
+            />
 
-              </View>
-            )
-          }
-        />
+            <Setting
+              title = "Wallet(s)"
+              type = "button"
+              onPress = {() => navigation.navigate('Connected Wallets')}
+              nameOfIcon = "wallet-outline"
+            />
+
+            <Setting
+              title = "Security and Privacy"
+              type = "button"
+              onPress = {() => navigation.navigate('Edit Profile')}
+              nameOfIcon ='person-outline'
+            />
+
+            <Setting
+              title = "Log Out"
+              type = "button"
+              onPress = {()=>handleSignOut(navigation)}
+              nameOfIcon = 'log-out-outline'
+            />
+
+            <Setting
+              title = "Recently Deleted Posts"
+              type = "button"
+              onPress = {() =>navigation.navigate('Deleted Posts', {username: username})}
+              nameOfIcon = 'trash-outline'
+            />
+
+            <Setting
+              title = "Terms of Service"
+              type = "button"
+              onPress = {() => {
+                navigation.navigate('Terms of Service', {showButtons: false});
+              }}
+              nameOfIcon = 'alert-circle-outline'
+            />
+
+            <SectionTitle title = {'Your Posts'}/>
+          </View>
+        }
+
+        renderItem = {({item}) => (
+          <Pressable onPress = {() => navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, item})}>
+            <PostCard data = {item} username={username}/>
+          </Pressable>
+        )}
+
+        renderHiddenItem = {({item}) => (
+          <View style = {{position: 'absolute',
+            flexDirection: 'row',
+            top: 0,
+            right: 70,
+            bottom: 0,
+            width: 100,
+            alignItems: 'center'}}>
+            <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
+            <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
+            <HiddenButton color={'green'} onPress = {() =>{
+              markAsSold(item, setRefreshing, username, setUserPostsList);
+            }} iconName={'checkmark-circle-outline'}/>
+
+          </View>
+        )
+        }
+      />
     </View>
-    );
-  }
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-  image:{
+  image: {
     width: 100,
     height: 100,
     borderRadius: 20,
     overflow: 'hidden',
     paddingBottom: 50,
-    margin:20
+    margin: 20,
   },
 });

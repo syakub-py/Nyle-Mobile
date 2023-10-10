@@ -9,4 +9,9 @@ parserOptions:
   sourceType: module
 plugins:
   - react
-rules: {}
+rules: {
+  "max-len": "off",
+  "require-jsdoc": "off",
+  "react/prop-types": "off"
+
+}
