@@ -1,4 +1,4 @@
-import { GiftedChat} from 'react-native-gifted-chat';
+import {GiftedChat} from 'react-native-gifted-chat';
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
@@ -12,12 +12,10 @@ import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
-import * as ImagePicker from 'expo-image-picker';
 import _ from 'lodash';
 import {getProfilePicture, getUsername} from './GlobalFunctions';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
-import RenderIsAnimating from '../Components/ChatBoxComponents/renderIsAnimating';
 import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
 
@@ -174,9 +172,9 @@ export default function ChatBox({route, navigation}) {
         alwaysShowSend
         scrollToBottom
         user = {{_id: route.params.userId}}
-        renderBubble = {()=><RenderBubble imageUrls={imageUrls}/>}
+        renderBubble={(props) => <RenderBubble {...props} imageUrls={imageUrls} />}
         renderActions = {()=><RenderActions imageUrls={imageUrls} setImageUrls={setImageUrls}/>}
-        renderInputToolbar = {()=><RenderInputToolbar imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
+        renderInputToolbar = {(props)=><RenderInputToolbar {...props} imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
         renderMessageImage = {(props) => {
           if (_.isEmpty(props.currentMessage.image)) return <View/>;
           else {
