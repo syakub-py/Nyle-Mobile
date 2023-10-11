@@ -44,10 +44,8 @@ export default function ChatItem({item, username, navigation}) {
     <Pressable
       onPress={() => {
         navigation.navigate('chat box', {
-          username: username,
           conversationID: item.id,
           name: OtherUsername,
-          avatar: MyProfilePicture,
           otherAvatar: OtherProfilePic,
           userId: userId,
         });

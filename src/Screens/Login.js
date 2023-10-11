@@ -5,11 +5,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import ShowPassword from '../Components/ShowPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const handleEmailAndPasswordLogin = (username, password) => {
   auth.signInWithEmailAndPassword(username, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
       })
       .catch((error) => alert(error.message));
 };

@@ -1,4 +1,4 @@
-import {Bubble, GiftedChat, InputToolbar} from 'react-native-gifted-chat';
+import { GiftedChat} from 'react-native-gifted-chat';
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
@@ -6,7 +6,6 @@ import {
   Pressable,
   Image,
   ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
@@ -15,6 +14,12 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import _ from 'lodash';
+import {getProfilePicture, getUsername} from './GlobalFunctions';
+import {loadingAnimation} from '../Components/LoadingAnimation';
+import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
+import RenderIsAnimating from '../Components/ChatBoxComponents/renderIsAnimating';
+import RenderActions from '../Components/ChatBoxComponents/renderActions';
+import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
 
 const clearMessages = async (messagesRef) => {
   const today = new Date();
@@ -32,20 +37,16 @@ const clearMessages = async (messagesRef) => {
   });
 };
 
-const markAsRead = async (params) => {
-  const unreadMessagesRef = firestore.collection('Chats/'+ params.conversationID + '/messages').where('received', '==', false);
+const markAsRead = async (conversationID, username) => {
+  const unreadMessagesRef = firestore.collection('Chats/'+conversationID + '/messages').where('received', '==', false);
   await unreadMessagesRef.get().then((docs) => {
     docs.forEach((doc) => {
       const currentMessageData = doc.data();
-      if (currentMessageData.user.name !== params.username) doc.ref.update({received: true});
+      if (currentMessageData.user.name !== username) doc.ref.update({received: true});
     });
   });
 };
 
-const deleteImages = (index, imageUrls, setImageUrls) => {
-  const newArray = imageUrls.filter((_, i) => i !== index);
-  setImageUrls(newArray);
-};
 
 /*
     @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
@@ -60,38 +61,34 @@ export default function ChatBox({route, navigation}) {
   const [animating, setAnimating] = useState(false);
   let downloadUrls =[];
   let [messages] = useCollectionData(messagesRef);
+  const [username, setUsername] = useState(null);
+  const [profilePic, setProfilePic] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const profileName = await getUsername();
+        setUsername(profileName);
+
+        const pic = await getProfilePicture(profileName);
+        setProfilePic(pic);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+  loadingAnimation(loading);
 
   if (messages) {
     messages = messages.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
   }
-
-  const RenderActions = () => (
-    <View style = {{justifyContent: 'center', alignItems: 'center', margin: 7}}>
-      <Pressable onPress = {()=>selectImages()}>
-        <Ionicons name ='images' size = {25}/>
-      </Pressable>
-    </View>
-  );
-
-  const selectImages = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      aspect: [4, 3],
-      quality: 1,
-      allowsMultipleSelection: true,
-    });
-
-    if (!result.canceled) {
-      const currentImageUrls = [...imageUrls];
-      const fileJson = result.assets;
-      fileJson.forEach((element) => {
-        currentImageUrls.push(element.uri);
-      });
-      setImageUrls(currentImageUrls);
-    }
-  };
 
   const onSend = useCallback(async (message, params) => {
     const messagesRef = firestore.collection('Chats/'+ params.conversationID + '/messages');
@@ -108,47 +105,14 @@ export default function ChatBox({route, navigation}) {
       received: false,
       user: {
         _id: params.userId,
-        name: params.username,
-        avatar: params.otherAvatar,
+        name: username,
+        avatar: profilePic,
       },
     };
     setImageUrls([]);
     messagesRef.add(mappedMessage);
   }, [imageUrls]);
 
-
-  const RenderBubble = (props) => {
-    const wrapperStyle = {
-      right: {
-        backgroundColor: 'black',
-        borderWidth: 3,
-        borderRadius: 18,
-        ...(imageUrls.length > 0 && {marginBottom: 90}),
-      },
-      left: {
-        backgroundColor: '#ebebeb',
-        borderWidth: 3,
-        borderRadius: 18,
-        borderColor: '#ebebeb',
-        ...(imageUrls.length > 0 && {marginBottom: 90}),
-      },
-    };
-
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle = {wrapperStyle}
-        textStyle = {{
-          right: {
-            color: '#fff',
-            flexWrap: 'wrap',
-          },
-          left: {
-            flexWrap: 'wrap',
-          },
-        }}/>
-    );
-  };
 
   const upload = async (array, conversationID) => {
     const UrlDownloads = [];
@@ -180,80 +144,9 @@ export default function ChatBox({route, navigation}) {
 
   useEffect(() => {
     clearMessages(messagesRef);
-    markAsRead(route.params);
+    markAsRead(route.params.userId, username);
   }, []);
 
-  const RenderIsAnimating = ({value, index}) => {
-    if (animating) {
-      return (
-        <View>
-          <View style = {{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
-            <ActivityIndicator size = "large" color = "black" />
-          </View>
-          <Image
-            source = {{uri: value}}
-            style = {{width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Pressable style = {{zIndex: 1}} onPress = {() =>deleteImages(index, imageUrls, setImageUrls)}>
-            <View style = {{backgroundColor: 'red', height: 20, width: 20, borderRadius: 20, position: 'absolute', left: 3, top: 0, alignItems: 'center', justifyContent: 'center'}}>
-              <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation: 1}}/>
-            </View>
-          </Pressable>
-          <Image
-            source = {{uri: value}}
-            style = {{width: 70, height: 70, borderRadius: 15, marginLeft: 10}}
-          />
-        </View>
-      );
-    }
-  };
-
-  const RenderImageUrls = () => {
-    if (_.isEmpty(imageUrls)) return <View/>;
-
-    return (
-      imageUrls.map((value, index) => (
-        <View key = {index} style = {{backgroundColor: '#F0F0F0'}}>
-          <RenderIsAnimating value={value} index={index}/>
-        </View>
-      ))
-    );
-  };
-
-  const RenderInputToolbar = (props) => {
-    return (
-      <View style = {{flex: 1}}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator = {false}
-          style = {{
-            position: 'absolute',
-            bottom: 55,
-            left: 0,
-            right: 0,
-            height: 75,
-          }}>
-          <RenderImageUrls/>
-        </ScrollView>
-        <View style = {{flex: 1}}>
-          <InputToolbar
-            {...props}
-            primaryStyle = {{
-              backgroundColor: '#F0F0F0',
-              paddingHorizontal: 5,
-              paddingTop: 5,
-              paddingBottom: 5,
-            }}
-          />
-        </View>
-      </View>
-    );
-  };
 
   const isStateActiveCSS = (state, k) => {
     if (k === state.active) return {color: 'white', margin: 4, fontSize: 10};
@@ -271,7 +164,7 @@ export default function ChatBox({route, navigation}) {
 
         <View style = {{backgroundColor: 'transparent', flexDirection: 'row', alignItems: 'center'}}>
           <Image style = {{height: 45, width: 45, borderRadius: 15}} source = {{uri: route.params.otherAvatar}}/>
-          <Text style = {{fontWeight: 'bold', margin: 10, fontSize: 16}}>{route.params.name}</Text>
+          <Text style = {{fontWeight: 'bold', margin: 10, fontSize: 16}}>{username}</Text>
         </View>
       </View>
 
@@ -281,9 +174,9 @@ export default function ChatBox({route, navigation}) {
         alwaysShowSend
         scrollToBottom
         user = {{_id: route.params.userId}}
-        renderBubble = {RenderBubble}
-        renderActions = {RenderActions}
-        renderInputToolbar = {RenderInputToolbar}
+        renderBubble = {()=><RenderBubble imageUrls={imageUrls}/>}
+        renderActions = {()=><RenderActions imageUrls={imageUrls} setImageUrls={setImageUrls}/>}
+        renderInputToolbar = {()=><RenderInputToolbar imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
         renderMessageImage = {(props) => {
           if (_.isEmpty(props.currentMessage.image)) return <View/>;
           else {

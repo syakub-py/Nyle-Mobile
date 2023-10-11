@@ -58,7 +58,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 export default function Home() {
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null);
