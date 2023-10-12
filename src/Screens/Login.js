@@ -8,9 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const handleEmailAndPasswordLogin = (username, password) => {
   auth.signInWithEmailAndPassword(username, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-      })
       .catch((error) => alert(error.message));
 };
 
