@@ -5,12 +5,10 @@ import {
   Text,
   Pressable,
   Image,
-  ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 import _ from 'lodash';
 import {getProfilePicture, getUsername} from './GlobalFunctions';
@@ -18,6 +16,7 @@ import {loadingAnimation} from '../Components/LoadingAnimation';
 import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
 import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
+import RenderMessageImage from '../Components/ChatBoxComponents/renderMessageImage';
 
 const clearMessages = async (messagesRef) => {
   const today = new Date();
@@ -55,7 +54,6 @@ export default function ChatBox({route, navigation}) {
   const messagesRef = firestore.collection(`Chats/${conversationID}/messages`);
 
   const [imageUrls, setImageUrls] = useState([]);
-  const [state, setState] = useState({active: 0});
   const [animating, setAnimating] = useState(false);
   let downloadUrls =[];
   let [messages] = useCollectionData(messagesRef);
@@ -65,6 +63,7 @@ export default function ChatBox({route, navigation}) {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -79,8 +78,13 @@ export default function ChatBox({route, navigation}) {
     }
 
     fetchData();
+    clearMessages(messagesRef);
+    markAsRead(route.params.userId, username);
   }, []);
-  loadingAnimation(loading);
+
+  useEffect(() => {
+    loadingAnimation(loading);
+  }, [loading]);
 
   if (messages) {
     messages = messages.sort((a, b) => {
@@ -135,24 +139,8 @@ export default function ChatBox({route, navigation}) {
     } else return [];
   };
 
-  const change = ({nativeEvent}) => {
-    const slide = Math.floor(nativeEvent.contentOffset.x/nativeEvent.layoutMeasurement.width);
-    if (slide !== state.active) setState({active: slide});
-  };
-
-  useEffect(() => {
-    clearMessages(messagesRef);
-    markAsRead(route.params.userId, username);
-  }, []);
-
-
-  const isStateActiveCSS = (state, k) => {
-    if (k === state.active) return {color: 'white', margin: 4, fontSize: 10};
-    return {color: '#a8a5a5', margin: 4, fontSize: 7};
-  };
-
   return (
-    <SafeAreaView style = {{flex: 1}}>
+    <View style={{flex: 1}}>
       <View style = {{marginLeft: 10, flexDirection: 'row'}}>
         <View style = {{height: 50, width: 50, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center', marginRight: 10}}>
           <Pressable onPress = {() =>navigation.goBack()}>
@@ -162,10 +150,9 @@ export default function ChatBox({route, navigation}) {
 
         <View style = {{backgroundColor: 'transparent', flexDirection: 'row', alignItems: 'center'}}>
           <Image style = {{height: 45, width: 45, borderRadius: 15}} source = {{uri: route.params.otherAvatar}}/>
-          <Text style = {{fontWeight: 'bold', margin: 10, fontSize: 16}}>{username}</Text>
+          <Text style = {{fontWeight: 'bold', margin: 10, fontSize: 16}}>{route.params.name}</Text>
         </View>
       </View>
-
       <GiftedChat
         messages = {messages}
         onSend = {(messages) => onSend(messages, route.params)}
@@ -175,43 +162,8 @@ export default function ChatBox({route, navigation}) {
         renderBubble={(props) => <RenderBubble {...props} imageUrls={imageUrls} />}
         renderActions = {()=><RenderActions imageUrls={imageUrls} setImageUrls={setImageUrls}/>}
         renderInputToolbar = {(props)=><RenderInputToolbar {...props} imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
-        renderMessageImage = {(props) => {
-          if (_.isEmpty(props.currentMessage.image)) return <View/>;
-          else {
-            return (
-              <View style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
-                <Pressable onLongPress= {() =>navigation.navigate('Image Viewer', {pictures: props.currentMessage.image})}>
-                  <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false} pagingEnabled = {true} onScroll = {change} style = {{width: 200, height: 200, borderTopRightRadius: 15, borderTopLeftRadius: 15}}>
-                    {
-                      props.currentMessage.image.map((image, index) => {
-                        return (
-                          <Image
-                            key = {index}
-                            source = {{uri: image}}
-                            style = {{
-                              width: 200,
-                              height: 200,
-                              borderRadius: 15,
-                            }}
-                            resizeMode = "cover"
-                          />
-                        );
-                      })}
-                  </ScrollView>
-                  <View style = {{flexDirection: 'row', position: 'absolute', bottom: 0, alignSelf: 'center', alignItems: 'center'}}>
-                    {
-                      props.currentMessage.image.map((i, k) => (
-                        <Text style = {isStateActiveCSS(state, k)} key = {k}>⬤</Text>
-                      ))
-                    }
-                  </View>
-                </Pressable>
-              </View>
-            );
-          }
-        }
-        }
+        renderMessageImage = {(props) => <RenderMessageImage props={props}/>}
       />
-    </SafeAreaView>
+    </View>
   );
 }
