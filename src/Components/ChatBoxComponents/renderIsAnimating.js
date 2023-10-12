@@ -3,7 +3,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 
 
-
 const deleteImages = (index, imageUrls, setImageUrls) => {
   const newArray = imageUrls.filter((_, i) => i !== index);
   setImageUrls(newArray);
