@@ -1,4 +1,4 @@
-import {GiftedChat} from 'react-native-gifted-chat';
+// import {GiftedChat} from 'react-native-gifted-chat';
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
@@ -9,7 +9,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
 import _ from 'lodash';
 import {getProfilePicture, getUsername} from './GlobalFunctions';
 import {loadingAnimation} from '../Components/LoadingAnimation';
@@ -17,6 +16,7 @@ import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
 import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
 import RenderMessageImage from '../Components/ChatBoxComponents/renderMessageImage';
+import {GiftedChat} from 'react-native-gifted-chat';
 
 const clearMessages = async (messagesRef) => {
   const today = new Date();
@@ -56,10 +56,12 @@ export default function ChatBox({route, navigation}) {
   const [imageUrls, setImageUrls] = useState([]);
   const [animating, setAnimating] = useState(false);
   let downloadUrls =[];
-  let [messages] = useCollectionData(messagesRef);
+  const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const wss = new WebSocket('ws://localhost:8080');
 
   useEffect(() => {
     async function fetchData() {
@@ -76,27 +78,61 @@ export default function ChatBox({route, navigation}) {
         setLoading(false);
       }
     }
-
     fetchData();
-    clearMessages(messagesRef);
-    markAsRead(route.params.userId, username);
+    // clearMessages(messagesRef);
+    // markAsRead(route.params.userId, username);
+
+    wss.onopen = () => {
+      console.log('Connected to the WebSocket');
+    };
+    wss.onmessage = (event) => {
+      console.log(`Message from server: ${event.data}`);
+
+      // Parse the incoming message
+      const incomingMessage = JSON.parse(event.data);
+
+      // You may need to format the incoming message to match your existing message structure
+      const formattedMessage = {
+        _id: incomingMessage._id || uuidv4(),
+        createdAt: new Date(incomingMessage.createdAt).toString(),
+        text: incomingMessage.text,
+        image: incomingMessage.image,
+        sent: true,
+        received: true, // Since it's coming from the server, marking as received
+        user: incomingMessage.user || {
+          _id: incomingMessage.userId || 'unknownId',
+          name: incomingMessage.username || 'unknownName',
+          avatar: incomingMessage.profilePic || 'unknownAvatar',
+        },
+      };
+
+      // Add it to your state messages array
+      setMessages((previousMessages) => GiftedChat.append(previousMessages, formattedMessage));
+    };
+
+    return () => {
+      wss.onmessage = null;
+      wss.onopen = null;
+    };
   }, []);
 
-  useEffect(() => {
-    loadingAnimation(loading);
-  }, [loading]);
+
+  loadingAnimation(loading);
+
 
   if (messages) {
-    messages = messages.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    setMessages(
+        messages.sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }),
+    );
   }
 
-  const onSend = useCallback(async (message, params) => {
-    const messagesRef = firestore.collection('Chats/'+ params.conversationID + '/messages');
+  const onSend = useCallback(async (message) => {
+    const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + '/messages');
     const title = uuidv4();
 
-    downloadUrls = await upload(imageUrls, params.conversationID);
+    downloadUrls = await upload(imageUrls, route.params.conversationID);
 
     const mappedMessage = {
       _id: title,
@@ -106,13 +142,14 @@ export default function ChatBox({route, navigation}) {
       sent: true,
       received: false,
       user: {
-        _id: params.userId,
+        _id: route.params.userId,
         name: username,
         avatar: profilePic,
       },
     };
     setImageUrls([]);
     messagesRef.add(mappedMessage);
+    wss.send(JSON.stringify(mappedMessage));
   }, [imageUrls]);
 
 
@@ -140,7 +177,7 @@ export default function ChatBox({route, navigation}) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{marginTop: 20}}>
       <View style = {{marginLeft: 10, flexDirection: 'row'}}>
         <View style = {{height: 50, width: 50, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center', marginRight: 10}}>
           <Pressable onPress = {() =>navigation.goBack()}>
@@ -155,7 +192,7 @@ export default function ChatBox({route, navigation}) {
       </View>
       <GiftedChat
         messages = {messages}
-        onSend = {(messages) => onSend(messages, route.params)}
+        onSend = {(messages) => onSend(messages)}
         alwaysShowSend
         scrollToBottom
         user = {{_id: route.params.userId}}
