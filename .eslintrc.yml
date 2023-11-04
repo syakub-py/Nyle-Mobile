@@ -13,5 +13,4 @@ rules: {
   "max-len": "off",
   "require-jsdoc": "off",
   "react/prop-types": "off"
-
 }

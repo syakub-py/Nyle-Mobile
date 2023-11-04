@@ -7,7 +7,6 @@ import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import ViewProfile from './Screens/ViewProfile';
 import ViewImages from './Screens/ImageViewer';
-import CheckOut from './Screens/CheckOut';
 import ResetPassword from './Screens/ResetPassword';
 import EditProfile from './Screens/EditProfile';
 import ConnectedWallets from './Screens/ConnectedWallets';
@@ -19,8 +18,6 @@ import TermsOfService from './Screens/TermsOfService';
 import HomeMapView from './Screens/HomeMapView';
 import PhotoCollage from './Screens/PhotoCollage';
 import Profile from './Screens/Profile';
-import TransactionCalendar from './Screens/ArrangePickup';
-import UserCalendar from './Screens/UserCalendar';
 
 const Stack = () => {
   const Stack = createNativeStackNavigator();
@@ -33,7 +30,6 @@ const Stack = () => {
       <Stack.Screen name = "chat box" component = {Chatbox} />
       <Stack.Screen name = "view profile" component = {ViewProfile} />
       <Stack.Screen name = "Image Viewer" component = {ViewImages} />
-      <Stack.Screen name = "Check Out" component = {CheckOut} />
       <Stack.Screen name = "Reset Password" component = {ResetPassword} />
       <Stack.Screen name = "Edit Profile" component = {EditProfile} />
       <Stack.Screen name = "Connected Wallets" component = {ConnectedWallets} />
@@ -45,8 +41,6 @@ const Stack = () => {
       <Stack.Screen name = "Home Map View" component = {HomeMapView} />
       <Stack.Screen name = "Photo Collage" component = {PhotoCollage} />
       <Stack.Screen name = "My Profile" component = {Profile} />
-      <Stack.Screen name = "Transaction Calendar" component = {TransactionCalendar} />
-      <Stack.Screen name = "My Calendar" component = {UserCalendar} />
     </Stack.Navigator>
   );
 };

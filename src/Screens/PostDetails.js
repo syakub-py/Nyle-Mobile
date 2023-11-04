@@ -19,7 +19,6 @@ import RenderIsCategoryAuto from '../Components/PostDetailsComponents/renderIsCa
 import RenderIsCategoryHomes from '../Components/PostDetailsComponents/renderIsCategoryHomes';
 import RealEstateData from '../Components/PostDetailsComponents/renderIsRealEstateData';
 import RenderHomesAndAuto from '../Components/PostDetailsComponents/renderHomesAndAuto';
-import RenderArrangePickup from '../Components/PostDetailsComponents/renderArrangePickup';
 import RenderDescription from '../Components/PostDetailsComponents/renderDescription';
 import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
 import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
@@ -229,7 +228,6 @@ export default function PostDetails({route, navigation}) {
 
       </ScrollView>
 
-      <RenderArrangePickup item={route.params.item} username={username} profilePic={ route.params.CurrentUserProfilePic} navigation={navigation}/>
 
       {/* <View style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>*/}
       {/*    <View style = {{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}

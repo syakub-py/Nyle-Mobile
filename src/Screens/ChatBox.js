@@ -1,4 +1,3 @@
-// import {GiftedChat} from 'react-native-gifted-chat';
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
@@ -61,7 +60,7 @@ export default function ChatBox({route, navigation}) {
   const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const wss = new WebSocket('ws://localhost:8080');
+  const wss = new WebSocket('ws://192.168.133.56:8080');
 
   useEffect(() => {
     async function fetchData() {
@@ -69,7 +68,6 @@ export default function ChatBox({route, navigation}) {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
-
         const pic = await getProfilePicture(profileName);
         setProfilePic(pic);
       } catch (error) {
@@ -78,27 +76,29 @@ export default function ChatBox({route, navigation}) {
         setLoading(false);
       }
     }
+
     fetchData();
-    // clearMessages(messagesRef);
-    // markAsRead(route.params.userId, username);
 
     wss.onopen = () => {
       console.log('Connected to the WebSocket');
     };
+
+    wss.onerror = (error)=>{
+      console.log('There was an error connecting to the web socket ' + error.message);
+    };
+
     wss.onmessage = (event) => {
       console.log(`Message from server: ${event.data}`);
 
-      // Parse the incoming message
       const incomingMessage = JSON.parse(event.data);
 
-      // You may need to format the incoming message to match your existing message structure
       const formattedMessage = {
         _id: incomingMessage._id || uuidv4(),
         createdAt: new Date(incomingMessage.createdAt).toString(),
         text: incomingMessage.text,
         image: incomingMessage.image,
         sent: true,
-        received: true, // Since it's coming from the server, marking as received
+        received: true,
         user: incomingMessage.user || {
           _id: incomingMessage.userId || 'unknownId',
           name: incomingMessage.username || 'unknownName',
@@ -106,9 +106,20 @@ export default function ChatBox({route, navigation}) {
         },
       };
 
-      // Add it to your state messages array
       setMessages((previousMessages) => GiftedChat.append(previousMessages, formattedMessage));
     };
+
+
+    if (messages) {
+      const sortedMessages = [...messages].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      setMessages(sortedMessages);
+    }
+
+    clearMessages(messagesRef);
+    markAsRead(route.params.userId, username);
 
     return () => {
       wss.onmessage = null;
@@ -118,15 +129,6 @@ export default function ChatBox({route, navigation}) {
 
 
   loadingAnimation(loading);
-
-
-  if (messages) {
-    setMessages(
-        messages.sort((a, b) => {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        }),
-    );
-  }
 
   const onSend = useCallback(async (message) => {
     const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + '/messages');
@@ -149,6 +151,7 @@ export default function ChatBox({route, navigation}) {
     };
     setImageUrls([]);
     messagesRef.add(mappedMessage);
+
     wss.send(JSON.stringify(mappedMessage));
   }, [imageUrls]);
 

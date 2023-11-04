@@ -18,14 +18,22 @@ export default function MapPostCard({data, username}) {
   }, []);
 
 
+  const RenderLikeButton = () =>{
+    if (username !== data.PostedBy) {
+      return (
+        <View style = {{position: 'absolute', right: 7, top: 7, height: 30, width: 30, borderRadius: 12, justifyContent: 'center', alignItems: 'center'}}>
+          <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
+            <RenderIsLiked Liked={Liked} size={20}/>
+          </Pressable>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
     <ImageBackground source = {{uri: data.pic[0]}} imageStyle = {{resizeMode: 'cover', borderRadius: 10}} style = {{flex: 1}}>
-      <View style = {{position: 'absolute', right: 7, top: 7, height: 30, width: 30, borderRadius: 12, justifyContent: 'center', alignItems: 'center'}}>
-        <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
-          <RenderIsLiked Liked={Liked} size={20}/>
-        </Pressable>
-      </View>
-
+      <RenderLikeButton/>
       <View style = {{flexDirection: 'row', backgroundColor: 'white', alignSelf: 'center', justifyContent: 'space-between', position: 'absolute', bottom: 10, borderRadius: 10, padding: 5, width: 215}}>
         <View>
           <Text style = {{fontSize: 14, fontWeight: '500', alignSelf: 'center'}}>{data.title}</Text>

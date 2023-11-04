@@ -248,14 +248,6 @@ export default function Profile() {
 
             </View>
 
-
-            <Setting
-              title = "Calendar"
-              type = "button"
-              onPress = {() => navigation.navigate('My Calendar', {currentUsername: username})}
-              nameOfIcon ='calendar-outline'
-            />
-
             <Setting
               title = "Wallet(s)"
               type = "button"
