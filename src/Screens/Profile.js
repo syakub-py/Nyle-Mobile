@@ -4,7 +4,6 @@ import {
   Image,
   Pressable,
   RefreshControl,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Vibration,
@@ -218,7 +217,14 @@ export default function Profile() {
                 <Pressable onPress={()=>{
                   selectProfilePic(username);
                 }}>
-                  <Image source = {{uri: profilePic}} style = {styles.image} resizeMode = "cover"/>
+                  <Image source = {{uri: profilePic}} style = {{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    paddingBottom: 50,
+                    margin: 20,
+                  }} resizeMode = "cover"/>
                   <View style = {{backgroundColor: 'black', height: 25, width: 25, borderRadius: 20, zIndex: 1, position: 'absolute', bottom: 15, left: 15, justifyContent: 'center', alignItems: 'center'}}>
                     <Ionicons name = {'add-outline'} color = {'white'} size = {19}/>
                   </View>
@@ -316,18 +322,3 @@ export default function Profile() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
-    overflow: 'hidden',
-    paddingBottom: 50,
-    margin: 20,
-  },
-});

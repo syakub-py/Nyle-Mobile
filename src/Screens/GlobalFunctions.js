@@ -95,7 +95,6 @@ export const handleEndReached = async (
     setLoading) => {
   setLoading(true);
   const postRef = firestore.collection('AllPosts');
-  // Retrieve the next two elements using startAfter
   let querySnapshot = null;
   if (lastDocument) {
     querySnapshot = await postRef
@@ -106,7 +105,6 @@ export const handleEndReached = async (
     querySnapshot = await postRef.limit(2).get();
   }
 
-  // Combine the initial set and the next two elements
   const results = querySnapshot.docs.map((doc) => doc.data());
   currentData = currentData.concat(results);
   setFilterData(currentData);
