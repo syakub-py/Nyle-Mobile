@@ -113,7 +113,6 @@ export default function AddPost() {
   const {height} = Dimensions.get('window');
   const categories = [{Label: 'All', Value: 'All'}, {Label: 'Tech', Value: 'Tech'}, {Label: 'Auto', Value: 'Auto'}, {Label: 'Homes', Value: 'Homes'}, {Label: 'Bikes', Value: 'Bikes'}, {Label: 'Bike Parts', Value: 'Bike Parts'}, {Label: 'Jewelry', Value: 'Jewelry'}, {Label: 'Retail/Wholesale', Value: 'Retail/Wholesale'}];
 
-  // urls for the phone
   const [imageUrls, setImageUrls] = useState([]);
   const [currencyList, setCurrencyList] = useState([]);
   const [profilePic, setProfilePic] = useState(null);
@@ -121,7 +120,7 @@ export default function AddPost() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -134,7 +133,7 @@ export default function AddPost() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchUsernameAndProfilePicture();
   }, []);
 
   loadingAnimation(loading);

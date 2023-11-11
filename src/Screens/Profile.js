@@ -22,10 +22,6 @@ import RatingButton from '../Components/RatingButton';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
 
-/*
-  @route.params = {profilePicture: url of the profile, username: current username}
-*/
-
 const getPosts = async (username, setUserList) => {
   const results = [];
   const MyPostsQuery = firestore.collection('AllPosts').where('PostedBy', '==', username);
@@ -65,7 +61,7 @@ const deletePost = (post, collectionName, userPostList, setUserPostList) => {
       .delete()
       .then(() => {
         // delete each image
-        post.pic.forEach((picture, index) => {
+        post.pic.forEach((picture) => {
           const picRef = getstorage.refFromURL(picture);
           picRef
               .delete()
@@ -99,36 +95,22 @@ const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
   }
 };
 
-const markAsSold = (item, setRefreshing, username, setUserList) => {
-  firestore.collection('AllPosts').doc(item.title).update({sold: 'true'})
-      .then(() => {
-        onRefresh(setRefreshing, username, setUserList);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-};
-
-const moveToDelete = async (item, userPostsList, setUserList) => {
+const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
   setUserList(userPostsList.filter((post) =>(post.title!==item.title)));
 
   try {
-    // Get the source document
     const sourceDocRef = firestore.collection('AllPosts').doc(item.title);
     const sourceDoc = await sourceDocRef.get();
 
-    // Get the data from the source document
     const sourceData = sourceDoc.data();
 
-    // Create a reference to the destination collection
     const destinationCollectionRef = firestore.collection('DeletedPosts').doc(item.title);
 
-    // Create a new document in the destination collection with the source document data
     await destinationCollectionRef.set(sourceData);
 
     await sourceDocRef.delete();
   } catch (error) {
-    console.error('Error moving document:', error);
+    console.error('Error moving document to delete collection:', error);
   }
 };
 
@@ -154,7 +136,7 @@ export default function Profile() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -171,7 +153,7 @@ export default function Profile() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchUsernameAndProfilePicture();
   }, []);
 
 
@@ -309,12 +291,8 @@ export default function Profile() {
             bottom: 0,
             width: 100,
             alignItems: 'center'}}>
-            <HiddenButton color={'red'} onPress = {() =>moveToDelete(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
+            <HiddenButton color={'red'} onPress = {() =>moveToDeleteCollection(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
             <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
-            <HiddenButton color={'green'} onPress = {() =>{
-              markAsSold(item, setRefreshing, username, setUserPostsList);
-            }} iconName={'checkmark-circle-outline'}/>
-
           </View>
         )
         }

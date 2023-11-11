@@ -117,7 +117,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -132,7 +132,7 @@ export default function Chat() {
       }
     }
 
-    fetchData();
+    fetchUsernameAndProfilePicture();
   }, []);
 
 

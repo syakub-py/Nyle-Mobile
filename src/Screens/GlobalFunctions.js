@@ -163,21 +163,6 @@ export const handleLike = async (doc, username, Liked, setLiked) => {
   Vibration.vibrate(100);
 };
 
-// const generatePriceHomes = async (bedrooms, bathrooms) => {
-//   let price = 0;
-//   let counter = 0;
-//
-//   const similarPostsQuery = firestore.collection('AllPosts').where('sold', '==', 'true').where('bedrooms', '==', bedrooms).where('bathrooms', '==', bathrooms);
-//
-//   await similarPostsQuery.get().then((postSnapshot) => {
-//     postSnapshot.forEach((doc) => {
-//       price = price + doc.data().price;
-//       counter++;
-//     });
-//   });
-//   return price/counter;
-// };
-
 export const getCityState = async (lat, lng, setState, setCity) => {
   try {
     const response = await fetch(`http://192.168.255.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);

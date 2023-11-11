@@ -29,16 +29,8 @@ const ItemImage = ({item}) => {
 export default function ChatItem({item, username, navigation}) {
   const userId = generateChatID(item.data.owners[0], item.data.owners[1]);
 
-  const MyProfilePicture = item.data.owners.find((UserItem)=> UserItem.username === username).profilePic;
   const OtherUsername = item.data.owners.find((UserItem)=> UserItem.username !== username).username;
   const OtherProfilePic = item.data.owners.find((UserItem)=> UserItem.username !== username).profilePic;
-
-  console.log(OtherUsername);
-  console.log(OtherProfilePic);
-
-  console.log(MyProfilePicture);
-  console.log(username);
-
 
   return (
     <Pressable

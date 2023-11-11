@@ -17,13 +17,11 @@ import BackButton from '../Components/BackButton';
 import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
 import RenderIsCategoryAuto from '../Components/PostDetailsComponents/renderIsCategoryAuto';
 import RenderIsCategoryHomes from '../Components/PostDetailsComponents/renderIsCategoryHomes';
-import RealEstateData from '../Components/PostDetailsComponents/renderIsRealEstateData';
 import RenderHomesAndAuto from '../Components/PostDetailsComponents/renderHomesAndAuto';
 import RenderDescription from '../Components/PostDetailsComponents/renderDescription';
 import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
 import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
 import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
-import ErrorPopUp from '../Components/ErrorPopUp';
 const {width} = Dimensions.get('window');
 const height =width;
 
@@ -46,14 +44,6 @@ const handleViewCounter = (setViews, item) => {
       });
 };
 
-const getRealEstateData = async (address, setRealEstateData) => {
-  try {
-    const response = await fetch(`http://192.168.255.115:5000/api/getOwner/?address=${address.toUpperCase()}`);
-    setRealEstateData(response.json());
-  } catch (error) {
-    console.log('server offline');
-  }
-};
 
 export default function PostDetails({route, navigation}) {
   const images = route.params.item.pic;
@@ -66,7 +56,6 @@ export default function PostDetails({route, navigation}) {
   const scrollViewRef = useRef(null);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
-  const [realEstateData, setRealEstateData] = useState([]);
   const [Liked, setLiked] = useState(isLiked(likes, username));
 
   useEffect(()=>{
@@ -82,14 +71,7 @@ export default function PostDetails({route, navigation}) {
     try {
       handleViewCounter(setViews, route.params.item);
       generateRating(route.params.item.PostedBy, setRating, setNumOfReviews);
-      if (route.params.item.category === 'Homes') {
-        // "79-33 213 street"
-        getRealEstateData(route.params.item.title, setRealEstateData);
-      }
     } catch (e) {
-      return (
-        <ErrorPopUp error={e}/>
-      );
     }
   }, []);
 
@@ -222,9 +204,6 @@ export default function PostDetails({route, navigation}) {
 
 
         <RenderHomesAndAuto item={route.params.item}/>
-
-        <RealEstateData item = {route.params.item} realEstateData={realEstateData}/>
-
 
       </ScrollView>
 

@@ -20,26 +20,18 @@ import Slider from '../Components/HomeComponents/Slider';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
 
-/*
-  @route.params = {profilePicture: current profile picture, username: current username}
-*/
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-// Function to refresh the data
 const onRefresh = (setRefreshing, setFilterData, setMasterData, setLastDocument) => {
-  // Set the refreshing state to true
   setRefreshing(true);
-  // Retrieve posts from the database and update the state variables
   readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
   Vibration.vibrate(100);
 
-  // Wait for 0.3 seconds before setting the refreshing state to false
   setTimeout(() => setRefreshing(false), 300);
 };
 
-// Function to filter the data based on search input
 const searchFilter = (text, masterData, setFilterData, setSearch) => {
   if (text) {
     const newData = masterData.filter((item) => {
@@ -68,7 +60,7 @@ export default function Home() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -81,7 +73,7 @@ export default function Home() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchUsernameAndProfilePicture();
     readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
   }, []);
 

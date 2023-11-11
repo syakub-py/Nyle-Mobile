@@ -6,9 +6,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
 
-/*
-    @route.params = {username:current username}
-* */
 
 const getPosts = async (username, setDeletedPostList) => {
   const results = [];
@@ -38,13 +35,11 @@ const deletePost = (item, deletedPostList, setDeletedPostList) => {
       .doc(item.title)
       .delete()
       .then(() => {
-        // delete each image
         item.pic.forEach((picture, index) => {
           const picRef = getstorage.refFromURL(picture);
           picRef
               .getMetadata()
               .then(() => {
-                // Picture exists in storage, proceed with deletion
                 picRef
                     .delete()
                     .then(() => {
@@ -54,7 +49,6 @@ const deletePost = (item, deletedPostList, setDeletedPostList) => {
                     });
               })
               .catch((error) => {
-                // Picture does not exist in storage
                 console.log('Picture does not exist:', error);
               });
         });
@@ -68,21 +62,16 @@ const deletePost = (item, deletedPostList, setDeletedPostList) => {
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
   try {
-    // Get the source document
     const sourceDocRef = firestore.collection('DeletedPosts').doc(item.title);
     const sourceDocSnapshot = await sourceDocRef.get();
 
     if (sourceDocSnapshot.exists) {
-      // Get the data from the source document
       const sourceData = sourceDocSnapshot.data();
 
-      // Create a reference to the destination collection
       const destinationCollectionRef = firestore.collection('AllPosts').doc(item.title);
 
-      // Create a new document in the destination collection with the source document data
       await destinationCollectionRef.set(sourceData);
 
-      // Delete the source document
       await sourceDocRef.delete();
     }
   } catch (error) {

@@ -63,7 +63,7 @@ export default function ChatBox({route, navigation}) {
   const wss = new WebSocket('ws://192.168.133.56:8080');
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       setLoading(true);
       try {
         const profileName = await getUsername();
@@ -77,7 +77,7 @@ export default function ChatBox({route, navigation}) {
       }
     }
 
-    fetchData();
+    fetchUsernameAndProfilePicture();
 
     wss.onopen = () => {
       console.log('Connected to the WebSocket');

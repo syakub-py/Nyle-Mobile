@@ -33,38 +33,22 @@ export default function PostCard({data, username}) {
     );
   };
 
-  // const renderIsDataSold = () => {
-  //     if (data.sold === "true") {
-  //         <View style = {{flexDirection:"row", alignItems:"center"}}>
-  //             <View style = {{backgroundColor:"red", height:10, width:10, borderRadius:10}}></View>
-  //             <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Sold</Text>
-  //         </View>
-  //     }
-  //     return (
-  //         <View style = {{flexDirection:"row", alignItems:"center"}}>
-  //             <View style = {{backgroundColor:"lightgreen", height:10, width:10, borderRadius:10}}></View>
-  //             <Text style = {{color:"white", fontSize:12, paddingLeft:5, fontWeight:'600'}}>Available</Text>
-  //         </View>
-  //     )
-  // }
-
 
   return (
     <View style = {{backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius: 10, elevation: 3}}>
       <View style = {{width: '100%', height: 300}}>
         <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width: '100%', height: 300, borderRadius: 10, resizeMode: 'cover'}}>
           {
-                        (username !== data.PostedBy)?(
-                            <View style = {{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7}}>
-                              <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
-                                <RenderLiked/>
-                              </Pressable>
-                            </View>
-                        ):(
-                            <View/>
-                        )
+            (username !== data.PostedBy)?(
+                <View style = {{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7}}>
+                  <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
+                    <RenderLiked/>
+                  </Pressable>
+                </View>
+            ):(
+                <View/>
+            )
           }
-
 
           <View style = {{flexDirection: 'row'}}>
             <RenderIsUsernameSameAsPostedBy/>
@@ -74,11 +58,9 @@ export default function PostCard({data, username}) {
                 <Image style = {{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source = {{uri: updatedCurrencyList(data.currency)[0].value}}/>
                 <Text style = {{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, marginTop: 5, fontWeight: '500'}}>{updatedCurrencyList(data.currency)[0].price} </Text>
                 <Text style = {{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500', marginTop: 5}}>(${Number(data.USD).toLocaleString('en-US')})</Text>
-
               </View>
             </View>
           </View>
-
 
           <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{position: 'absolute', top: 225, width: '100%'}} >
             <View style = {{flexDirection: 'row', alignItems: 'center'}}>
@@ -92,9 +74,6 @@ export default function PostCard({data, username}) {
               }
             </View>
           </ScrollView>
-          {/* <View style = {{position: 'absolute', top:280, left:10}}>*/}
-          {/*    {renderIsDataSold()}*/}
-          {/* </View>*/}
 
         </ImageBackground>
       </View>

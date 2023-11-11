@@ -36,7 +36,7 @@ export default function MainContainer() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchUsernameAndProfilePicture() {
       try {
         const profileName = await getUsername();
         setUsername(profileName);
@@ -50,7 +50,7 @@ export default function MainContainer() {
       }
     }
 
-    fetchData();
+    fetchUsernameAndProfilePicture();
   }, []);
 
 
