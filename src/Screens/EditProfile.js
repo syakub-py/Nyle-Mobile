@@ -5,7 +5,6 @@ import BackButton from '../Components/BackButton';
 
 const updateUsername = async (newUsername) => {
   try {
-    // Get the current user
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
@@ -13,7 +12,6 @@ const updateUsername = async (newUsername) => {
       return;
     }
 
-    // Update the username in the user profile
     await currentUser.updateProfile({displayName: newUsername});
 
     alert('Username reset successful.');
@@ -24,7 +22,6 @@ const updateUsername = async (newUsername) => {
 
 const updatePassword = async (newPassword) => {
   try {
-    // Get the current user
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
@@ -32,7 +29,6 @@ const updatePassword = async (newPassword) => {
       return;
     }
 
-    // Update the password
     await currentUser.updatePassword(newPassword);
 
     alert('Password update successful.');

@@ -66,12 +66,10 @@ export const readDatabase = async (
   try {
     const postRef = firestore.collection(collectionName);
 
-    // Fetch the initial two documents
     const querySnapshot = await postRef.limit(2).get();
 
     let results = querySnapshot.docs.map((doc) => doc.data());
 
-    // Sort the results by date in descending order
     results = results.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     setMasterData(results);
@@ -136,9 +134,7 @@ export const handleLike = async (doc, username, Liked, setLiked) => {
       .then((doc) => {
         if (doc.exists && !doc.data().likes.includes(username)) {
           const likesArray = doc.data().likes || [];
-          // Modify the array as needed
           likesArray.push(username);
-          // Write the updated array back to the document
           PostRef.update({likes: likesArray})
               .then(() => {
               })
@@ -248,7 +244,6 @@ export const addProfilePicture = async (username, profilePictureUrl) => {
 
     const profilePicturesRef = firestore.collection('ProfilePictures');
 
-    // Create a new document in the collection with the user ID as the document ID
     await profilePicturesRef.doc(username).set({
       url: url,
     });
@@ -264,7 +259,6 @@ export const addProfilePicture = async (username, profilePictureUrl) => {
         batch.update(docRef, {profilePic: url});
       });
 
-      // Commit the batch update
       await batch.commit();
       console.log('Profile picture field updated successfully');
     }

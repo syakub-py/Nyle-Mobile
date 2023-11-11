@@ -60,7 +60,6 @@ const deletePost = (post, collectionName, userPostList, setUserPostList) => {
       .doc(post.title)
       .delete()
       .then(() => {
-        // delete each image
         post.pic.forEach((picture) => {
           const picRef = getstorage.refFromURL(picture);
           picRef

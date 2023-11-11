@@ -155,7 +155,6 @@ export default function PostDetails({route, navigation}) {
 
           <View style = {{backgroundColor: 'transparent', flexDirection: 'row'}}>
             <Text style = {{color: 'black', fontSize: 23, fontWeight: 'bold'}}>{route.params.item.title}</Text>
-            {/* <Text style = {{color:'lightgray', margin:10,fontSize:14, fontWeight:'semi-bold', alignSelf:'center'}}>({parseDateString(route.params.item.date).toString()})</Text>*/}
           </View>
 
           <View style={{width: 60}}>
@@ -173,7 +172,7 @@ export default function PostDetails({route, navigation}) {
             />
           </View>
 
-          <Text style = {{fontSize: 12, fontWeight: 'bold', color: 'black'}}>(${route.params.item.USD})</Text>
+          <Text style = {{fontSize: 12, fontWeight: 'bold', color: 'black'}}>${Number(route.params.item.USD).toLocaleString('en-US')}</Text>
 
           <RenderIsCategoryHomes item={route.params.item}/>
           <RenderIsCategoryAuto item={route.params.item}/>

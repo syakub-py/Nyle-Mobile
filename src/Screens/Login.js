@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import {GoogleAuthProvider, signInWithPopup} from 'firebase/auth';
 import ShowPassword from '../Components/ShowPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,27 +9,6 @@ const handleEmailAndPasswordLogin = (username, password) => {
   auth.signInWithEmailAndPassword(username, password)
       .catch((error) => alert(error.message));
 };
-
-// const handleGoogleLogin = async () => {
-//   try {
-//     const result = await signInWithPopup(auth, new GoogleAuthProvider());
-//     // This gives you a Google Access Token. You can use it to access the Google API.
-//     const credential = GoogleAuthProvider.credentialFromResult(result);
-//     const token = credential.accessToken;
-//     // The signed-in user info.
-//     const user = result.user;
-//     // IdP data available using getAdditionalUserInfo(result)
-//   } catch (error) {
-//     // Handle Errors here.
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // The email of the user's account used.
-//     const email = error.email;
-//     // The AuthCredential type that was used.
-//     const credential = GoogleAuthProvider.credentialFromError(error);
-//     console.log(errorMessage);
-//   }
-// };
 
 export default function Login({navigation}) {
   const [username, setUsername] = useState('');

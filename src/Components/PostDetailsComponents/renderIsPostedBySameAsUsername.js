@@ -4,12 +4,9 @@ import React from 'react';
 import {firestore} from '../Firebase';
 
 
-// Function to generate a chatID based on usernames
 export const generateChatID = (user1, user2) => {
-  // Sort the usernames to ensure consistency in the chatID
   const sortedUsers = [user1, user2].sort();
 
-  // Concatenate and return the chatID
   return `${sortedUsers[0]}_${sortedUsers[1]}`;
 };
 
@@ -17,17 +14,14 @@ const handleAddChat = (params, navigation) => {
   const currentUser = params.username;
   const otherUser = params.item.PostedBy;
 
-  // Create a unique ID for the chat based on the combination of usernames
   const chatID = [currentUser, otherUser].sort().join('_');
 
-  // Check if a chat with the same ID already exists
   firestore
       .collection('Chats')
       .doc(chatID)
       .get()
       .then((docSnapshot) => {
         if (docSnapshot.exists) {
-          // Chat already exists, navigate to the existing chat
           navigation.navigate('chat box', {
             username: currentUser,
             conversationID: chatID,
@@ -37,7 +31,6 @@ const handleAddChat = (params, navigation) => {
             userId: generateChatID(currentUser, otherUser),
           });
         } else {
-          // Chat doesn't exist, create a new one
           firestore
               .collection('Chats')
               .doc(chatID)

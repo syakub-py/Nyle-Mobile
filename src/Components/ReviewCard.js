@@ -125,8 +125,7 @@ export default function ReviewCard({data, currentUser}) {
             <Text style = {{fontWeight: 'bold'}}>{item.username} (You)</Text>
             <Text>{item.message}</Text>
           </View>
-        )
-        }
+        )}
         renderHiddenItem = {({item, index}) => (
           <View style={{position: 'absolute',
             top: 0,

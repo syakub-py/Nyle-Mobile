@@ -5,7 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase';
 import {Image, View} from 'react-native';
 import {getProfilePicture, getUsername} from './Screens/GlobalFunctions';
-// Screens
 import home from './Screens/Home';
 import market from './Screens/Market';
 import chat from './Screens/Chat';

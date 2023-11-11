@@ -64,14 +64,17 @@ export default function Reviews({route, navigation}) {
 
       <FlatList data = {ReviewList}
         ListHeaderComponent = {
-          <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
-            <View style = {{position: 'absolute', top: 20, left: 0, zIndex: 1}}>
+          <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
+
+            <View style = {{zIndex: 1}}>
               <BackButton navigation={navigation}/>
             </View>
-            <View >
-              <View style = {{height: 50, width: 90, backgroundColor: 'transparent', marginTop: 20}}>
+
+            <View style={{flexDirection: 'column'}}>
+              <View style = {{width: 90, backgroundColor: 'transparent'}}>
                 <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Reviews</Text>
               </View>
+              <Text style={{color: 'lightgray', fontSize: 13}}>{PostedByUsername}</Text>
             </View>
           </View>
         }

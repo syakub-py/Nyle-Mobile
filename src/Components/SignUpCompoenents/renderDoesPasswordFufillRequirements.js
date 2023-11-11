@@ -20,11 +20,9 @@ function Requirement({requirement}) {
   const [color, setColor] = useState('black');
 
   useEffect(() => {
-    // Update the icon and color based on the requirement's fulfillment
     const newIconName = requirement.fulfilled ? 'checkmark-circle' : 'checkmark-circle-outline';
     const newColor = requirement.fulfilled ? 'green' : 'black';
 
-    // Set the state with the updated values for this requirement
     setIconName(newIconName);
     setColor(newColor);
   }, [requirement.fulfilled]);
