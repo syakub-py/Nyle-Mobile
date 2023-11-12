@@ -4,7 +4,7 @@ import BackButton from '../Components/BackButton';
 
 export default function PhotoCollage({route, navigation}) {
   const pictures = route.params.pictures;
-
+  const price = route.params.priceInUSD;
   return (
     <SafeAreaView>
       <View style={{height: 80, backgroundColor: 'white'}}>
@@ -16,8 +16,9 @@ export default function PhotoCollage({route, navigation}) {
 
           <Image source={{uri: pictures[0]}} style={{height: 40, width: 40, marginRight: 6, borderRadius: 7}}/>
 
-          <View>
+          <View style={{flexDirection: 'column'}}>
             <Text style={{fontWeight: 'bold', fontSize: 15}}>{route.params.title}</Text>
+            <Text style={{color: 'lightgray'}}>${Number(price).toLocaleString('en-US')}</Text>
           </View>
 
         </View>

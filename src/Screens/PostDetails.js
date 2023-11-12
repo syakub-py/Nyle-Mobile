@@ -114,7 +114,7 @@ export default function PostDetails({route, navigation}) {
             {
               images.map((image, key) => (
                 <Pressable onPress = {() => {
-                  navigation.navigate('Photo Collage', {pictures: images, index: key, title: route.params.item.title});
+                  navigation.navigate('Photo Collage', {pictures: images, index: key, title: route.params.item.title, priceInUSD: route.params.item.USD});
                 }} key = {key}>
                   <View style = {{width, height, position: 'relative'}} >
                     <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri: image}} key = {key}/>
@@ -157,22 +157,22 @@ export default function PostDetails({route, navigation}) {
             <Text style = {{color: 'black', fontSize: 23, fontWeight: 'bold'}}>{route.params.item.title}</Text>
           </View>
 
-          <View style={{width: 60}}>
+          <View style={{maxWidth: 135, flexDirection: 'row'}}>
             <FlatList horizontal
               data={updatedCurrencyList(route.params.item.currency)}
               snapToAlignment={'center'}
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               renderItem={({item})=>(
-                <View style = {{width: 60, backgroundColor: 'transparent', borderRadius: 4, alignItems: 'center', flexDirection: 'row', marginTop: 5}}>
+                <View style = {{width: 60, backgroundColor: 'transparent', borderRadius: 4, alignItems: 'center', flexDirection: 'row', marginTop: 3, marginRight: 6}}>
                   <Image style = {{height: 20, width: 20, marginRight: 7, borderRadius: 20}} resizeMode = {'cover'} source = {{uri: item.value}}/>
                   <Text style = {{fontSize: 20, fontWeight: 'bold', color: 'black', marginRight: 10}}>{item.price}</Text>
                 </View>
               )}
             />
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: 'black', alignSelf: 'center'}}>${Number(route.params.item.USD).toLocaleString('en-US')}</Text>
           </View>
 
-          <Text style = {{fontSize: 12, fontWeight: 'bold', color: 'black'}}>${Number(route.params.item.USD).toLocaleString('en-US')}</Text>
 
           <RenderIsCategoryHomes item={route.params.item}/>
           <RenderIsCategoryAuto item={route.params.item}/>

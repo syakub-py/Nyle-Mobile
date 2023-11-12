@@ -20,12 +20,6 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 
-/**
- * Main container component.
- *
- * @returns {React.Component} The rendered component.
- */
-
 
 export default function MainContainer() {
   const [received, setReceived] = useState(true);
