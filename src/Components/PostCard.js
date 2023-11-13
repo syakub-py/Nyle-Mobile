@@ -1,10 +1,11 @@
-import {Image, ImageBackground, Pressable, ScrollView, Text, View} from 'react-native';
+import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
 
-const handleIndexPress = (setIndex, index) =>{
+const handleScroll = (setIndex, index) =>{
+  console.log(index);
   setIndex(index);
 };
 
@@ -33,21 +34,20 @@ export default function PostCard({data, username}) {
     );
   };
 
-
   return (
     <View style = {{backgroundColor: 'white', marginBottom: 10, margin: 10, borderRadius: 10, elevation: 3}}>
       <View style = {{width: '100%', height: 300}}>
         <ImageBackground source = {{uri: data.pic[index]}} imageStyle = {{width: '100%', height: 300, borderRadius: 10, resizeMode: 'cover'}}>
           {
-            (username !== data.PostedBy)?(
-                <View style = {{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7}}>
-                  <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
-                    <RenderLiked/>
-                  </Pressable>
-                </View>
-            ):(
-                <View/>
-            )
+              (username !== data.PostedBy)?(
+                  <View style = {{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7}}>
+                    <Pressable onPress = {() =>handleLike(data.title, username, Liked, setLiked)}>
+                      <RenderLiked/>
+                    </Pressable>
+                  </View>
+              ):(
+                  <View/>
+              )
           }
 
           <View style = {{flexDirection: 'row'}}>
@@ -62,19 +62,21 @@ export default function PostCard({data, username}) {
             </View>
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{position: 'absolute', top: 225, width: '100%'}} >
-            <View style = {{flexDirection: 'row', alignItems: 'center'}}>
-              {data.pic.map((i, k) =>(
-                <Pressable key = {k} onPress = {() => {
-                  handleIndexPress(setIndex, k);
-                }}>
-                  <Image source = {{uri: i}} style = {k === index?{height: 60, width: 60, margin: 7, borderRadius: 10}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {k}/>
-                </Pressable>
-              ))
-              }
-            </View>
-          </ScrollView>
-
+          {/*<FlatList*/}
+          {/*  data={data.pic}*/}
+          {/*  horizontal*/}
+          {/*  pagingEnabled={true}*/}
+          {/*  showsHorizontalScrollIndicator={false}*/}
+          {/*  contentContainerStyle={{width: 500}}*/}
+          {/*  onScroll={(event) => {*/}
+          {/*    const scrollIndex = Math.floor(event.nativeEvent.contentOffset.x / (500 / data.pic.length));*/}
+          {/*    handleScroll(setIndex, scrollIndex);*/}
+          {/*  }}*/}
+          {/*  snapToAlignment={'center'}*/}
+          {/*  renderItem={({item, k}) => (*/}
+          {/*    <Image source={{uri: item}} style={{height: 50, width: 50, margin: 7, borderRadius: 10, transform: [{scale: index === k ? 1.1 : 0.9}]}} key={k} />*/}
+          {/*  )}*/}
+          {/*/>*/}
         </ImageBackground>
       </View>
     </View>

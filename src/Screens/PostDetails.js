@@ -53,13 +53,15 @@ export default function PostDetails({route, navigation}) {
   const [more, setMore] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [views, setViews] = useState(0);
-  const scrollViewRef = useRef(null);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const [Liked, setLiked] = useState(isLiked(likes, username));
 
+  const smallFlatListRef = useRef(null);
+  const mainFlatListRef = useRef(null);
+
   useEffect(()=>{
-    scrollViewRef.current?.scrollToIndex({
+    smallFlatListRef.current?.scrollToIndex({
       index: currentIndex,
       animated: true,
       viewPosition: 0.8,
@@ -79,6 +81,15 @@ export default function PostDetails({route, navigation}) {
   const change = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     setCurrentIndex(slide);
+  };
+
+  const scrollToActiveIndex = (index) =>{
+    mainFlatListRef.current.scrollToIndex({
+      index: index,
+      animated: true,
+      viewPosition: 0.8,
+    });
+    setCurrentIndex(index);
   };
 
   return (
@@ -109,21 +120,32 @@ export default function PostDetails({route, navigation}) {
           <View style = {{maxWidth: 60, zIndex: 1, bottom: 10, right: 10, paddingHorizontal: 5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center'}}>
             <Text style = {{color: 'white', fontWeight: 'bold'}}>{currentIndex + 1}/{images.length}</Text>
           </View>
-
-          <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false} onScroll = {change}>
-            {
-              images.map((image, key) => (
-                <Pressable onPress = {() => {
-                  navigation.navigate('Photo Collage', {pictures: images, index: key, title: route.params.item.title, priceInUSD: route.params.item.USD});
-                }} key = {key}>
-                  <View style = {{width, height, position: 'relative'}} >
-                    <Image style = {{width, height}} resizeMode = {'cover'} source = {{uri: image}} key = {key}/>
-                  </View>
-                </Pressable>
-              ),
-              )
-            }
-          </ScrollView>
+          <FlatList
+            data={images}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={change}
+            ref = {mainFlatListRef}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <Pressable
+                onPress={() => {
+                  navigation.navigate('Photo Collage', {
+                    pictures: images,
+                    index,
+                    title: route.params.item.title,
+                    priceInUSD: route.params.item.USD,
+                  });
+                }}
+                key={index}
+              >
+                <View style={{width, height, position: 'relative'}}>
+                  <Image style={{width, height}} resizeMode={'cover'} source={{uri: item}} />
+                </View>
+              </Pressable>
+            )}
+          />
 
           <FlatList
             data={images}
@@ -131,12 +153,13 @@ export default function PostDetails({route, navigation}) {
             style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
             contentContainerStyle={{alignItems: 'center'}}
             showsHorizontalScrollIndicator={false}
-            ref = {scrollViewRef}
+            ref = {smallFlatListRef}
             initialScrollIndex={currentIndex}
             renderItem={({item, index})=>{
               return (
                 <Pressable key = {item} onPress = {() => {
-                  console.log(currentIndex+1);
+                  scrollToActiveIndex(index);
+                  console.log(index);
                 }}>
                   <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
                 </Pressable>
@@ -205,21 +228,6 @@ export default function PostDetails({route, navigation}) {
         <RenderHomesAndAuto item={route.params.item}/>
 
       </ScrollView>
-
-
-      {/* <View style = {{flexDirection:'row', position: 'absolute', bottom: 0, height:'10%', width:'100%', justifyContent:'space-evenly', backgroundColor:'transparent', alignItems:'center'}}>*/}
-      {/*    <View style = {{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}
-      {/*        <Pressable>*/}
-      {/*            <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Place Bid</Text>*/}
-      {/*        </Pressable>*/}
-      {/*    </View>*/}
-
-      {/*    <View style = {{justifyContent:"center", backgroundColor:"black", borderRadius:200, width:150, height:50, alignItems:'center'}}>*/}
-      {/*        <Pressable onPress = {() => navigation.navigate("Check Out", {title: route.params.PostTitle, price:route.params.Price, currency: route.params.Currency})}>*/}
-      {/*            <Text style = {{color:'white', fontSize:15, fontWeight:"bold"}}>Buy out</Text>*/}
-      {/*        </Pressable>*/}
-      {/*    </View>*/}
-      {/* </View>*/}
     </SafeAreaView>
   );
 }
