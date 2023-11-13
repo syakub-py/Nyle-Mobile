@@ -1,4 +1,4 @@
-import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
+import {Dimensions, FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
@@ -62,21 +62,20 @@ export default function PostCard({data, username}) {
             </View>
           </View>
 
-          {/*<FlatList*/}
-          {/*  data={data.pic}*/}
-          {/*  horizontal*/}
-          {/*  pagingEnabled={true}*/}
-          {/*  showsHorizontalScrollIndicator={false}*/}
-          {/*  contentContainerStyle={{width: 500}}*/}
-          {/*  onScroll={(event) => {*/}
-          {/*    const scrollIndex = Math.floor(event.nativeEvent.contentOffset.x / (500 / data.pic.length));*/}
-          {/*    handleScroll(setIndex, scrollIndex);*/}
-          {/*  }}*/}
-          {/*  snapToAlignment={'center'}*/}
-          {/*  renderItem={({item, k}) => (*/}
-          {/*    <Image source={{uri: item}} style={{height: 50, width: 50, margin: 7, borderRadius: 10, transform: [{scale: index === k ? 1.1 : 0.9}]}} key={k} />*/}
-          {/*  )}*/}
-          {/*/>*/}
+          <FlatList
+            data={data.pic}
+            horizontal
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            onScroll={(event) => {
+              const scrollIndex = Math.min(Math.max(0, Math.floor(event.nativeEvent.contentOffset.x / 57)), data.pic.length);
+              handleScroll(setIndex, scrollIndex);
+            }}
+            snapToAlignment={'center'}
+            renderItem={({item, k}) => (
+              <Image source={{uri: item}} style={{height: 50, width: 50, marginLeft: 7, borderRadius: 10, transform: [{scale: index === k ? 1.1 : 0.9}]}} key={k} />
+            )}
+          />
         </ImageBackground>
       </View>
     </View>

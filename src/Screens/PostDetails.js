@@ -23,7 +23,7 @@ import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
 import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
 import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
 const {width} = Dimensions.get('window');
-const height =width;
+const height = width;
 
 /*
     @route.params = {Currency:url of the currency, CurrentUserProfilePic:current users profile picture, DatePosted:the date the post was posted, Description: description of the post, details: minor details of post, Likes: array of usernames that liked the post, PostTitle:the title of the post, images:array of urls of the images of the post, postedBy:the user that made the post, username:the current username, views: number of views}
@@ -159,9 +159,8 @@ export default function PostDetails({route, navigation}) {
               return (
                 <Pressable key = {item} onPress = {() => {
                   scrollToActiveIndex(index);
-                  console.log(index);
                 }}>
-                  <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
+                  <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10, borderWidth: 2, borderColor: 'white'}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
                 </Pressable>
               );
             }}
