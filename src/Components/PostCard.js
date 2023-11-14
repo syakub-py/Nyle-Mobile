@@ -1,13 +1,10 @@
-import {Dimensions, FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
+import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
 
-const handleScroll = (setIndex, index) =>{
-  console.log(index);
-  setIndex(index);
-};
+
 
 export default function PostCard({data, username}) {
   const navigation = useNavigation();
@@ -23,6 +20,13 @@ export default function PostCard({data, username}) {
       return <Ionicons name='heart' size={25} color={'#e6121d'}/>;
     }
     return <Ionicons name ='heart-outline' size = {25}/>;
+  };
+  const handleScroll = (setIndex, currentIndex) => {
+    if (index !== currentIndex) {
+      setIndex(currentIndex);
+    }
+
+    return currentIndex.toString();
   };
 
   const RenderIsUsernameSameAsPostedBy = () => {
@@ -67,14 +71,18 @@ export default function PostCard({data, username}) {
             horizontal
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
-            onScroll={(event) => {
-              const scrollIndex = Math.min(Math.max(0, Math.floor(event.nativeEvent.contentOffset.x / 57)), data.pic.length);
-              handleScroll(setIndex, scrollIndex);
-            }}
             snapToAlignment={'center'}
-            renderItem={({item, k}) => (
-              <Image source={{uri: item}} style={{height: 50, width: 50, marginLeft: 7, borderRadius: 10, transform: [{scale: index === k ? 1.1 : 0.9}]}} key={k} />
-            )}
+            renderItem={({item, k}) => {
+              return (
+                <Image source={{uri: item}} style={{
+                  height: 50,
+                  width: 50,
+                  marginLeft: 7,
+                  borderRadius: 10,
+                  transform: [{scale: index === k ? 1.1 : 0.9}],
+                }} key={k}/>
+              );
+            }}
           />
         </ImageBackground>
       </View>
