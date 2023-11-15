@@ -156,8 +156,9 @@ export default function HomeMapView({navigation, route}) {
             handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading);
           }}
           renderItem={({item, index})=>{
+            const data = item;
             return (
-              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, item})}>
+              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, data})}>
                 <View style={{
                   flex: 1,
                   height: 170,
