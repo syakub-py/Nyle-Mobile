@@ -61,7 +61,7 @@ export default function PostDetails({route, navigation}) {
     smallFlatListRef.current?.scrollToIndex({
       index: currentIndex,
       animated: true,
-      viewPosition: 0.8,
+      viewPosition: 0.5,
     });
   }, [currentIndex]);
 

@@ -4,14 +4,22 @@ import React from 'react';
 
 export default function RenderDescription({description, more, setMore}) {
   if (!_.isEmpty(description)) {
+    const toggleShowFull = () => {
+      setMore(!more);
+    };
+
+    const truncatedDescription = more ? description : `${description.slice(0, 500)}`;
+
     return (
-      <View style = {{marginBottom: 20}}>
-        <Text style = {{marginRight: 30, marginLeft: 30, color: 'black', fontSize: 15}} onPress = {() =>setMore(true)}>{(more && !_.isEmpty( description)) ? description : description.slice(0, 500) + ' ...'}</Text>
+      <View style={{marginBottom: 20}}>
+        <Text style={{marginRight: 30, marginLeft: 30, color: 'grey', fontSize: 15}}>
+          {truncatedDescription}
+          {!more && description.length > 500 && (
+            <Text style={{fontWeight: 'bold', color: 'black'}} onPress={toggleShowFull}>...more</Text>
+          )}
+        </Text>
       </View>
     );
-  } else {
-    return (
-      <View/>
-    );
   }
+  return null;
 }
