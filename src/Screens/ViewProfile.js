@@ -79,7 +79,7 @@ export default function ViewProfile({route}) {
           data = {UsersPosts}
           renderItem = {({item}) => (
             <View>
-              <PostCard data = {item}/>
+              <PostCard data = {item} username={route.params.currentUsername} currentProfilePicture={route.params.currentProfilePicture}/>
             </View>
           )}
         />

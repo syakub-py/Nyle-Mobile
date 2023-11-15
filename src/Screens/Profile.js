@@ -259,7 +259,7 @@ export default function Profile() {
             <Setting
               title = "Recently Deleted Posts"
               type = "button"
-              onPress = {() =>navigation.navigate('Deleted Posts', {username: username})}
+              onPress = {() =>navigation.navigate('Deleted Posts', {username: username, currentProfilePicture: profilePic})}
               nameOfIcon = 'trash-outline'
             />
 
@@ -277,9 +277,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <Pressable onPress = {() => navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, item})}>
-            <PostCard data = {item} username={username}/>
-          </Pressable>
+          <PostCard data = {item} username={username} currentProfilePicture={profilePic}/>
         )}
 
         renderHiddenItem = {({item}) => (

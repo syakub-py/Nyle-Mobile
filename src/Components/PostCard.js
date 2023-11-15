@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
 
-export default function PostCard({data, username}) {
+export default function PostCard({data, username, currentProfilePicture}) {
   const navigation = useNavigation();
   const [Liked, setLiked] = useState(isLiked(data.likes, username));
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,7 +33,7 @@ export default function PostCard({data, username}) {
   const RenderIsUsernameSameAsPostedBy = () => {
     if (username === data.PostedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>;
     return (
-      <Pressable onPress = {() => navigation.navigate('view profile', {ProfileImage: data.profilePic, postedByUsername: data.PostedBy, currentUsername: username})}>
+      <Pressable onPress = {() => navigation.navigate('view profile', {ProfileImage: data.profilePic, postedByUsername: data.PostedBy, currentUsername: username, currentProfilePicture})}>
         <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>
       </Pressable>
     );
@@ -83,7 +83,9 @@ export default function PostCard({data, username}) {
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}
         renderItem={({item}) => (
-          <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: 365, height: 300, borderRadius: 10, zIndex: 0}}/>
+          <Pressable onPress={() => navigation.navigate('post details', {CurrentUserProfilePic: currentProfilePicture, username: username, data})}>
+            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: 365, height: 300, borderRadius: 10, zIndex: 0}}/>
+          </Pressable>
         )}
       />
 
@@ -107,7 +109,7 @@ export default function PostCard({data, username}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: 60, width: 60, transform: [{scale: index === currentIndex ? 1.1 : scaleFactor}], borderRadius: 10, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? 365/2-(60/2) : 10, marginRight: index === data.pic.length - 1 ? 365/2 - (60/2) : 10}} key = {item}/>
+              <Image source = {{uri: item}} style = {{height: 60, width: 60, transform: [{scale: index === currentIndex ? 1.1 : scaleFactor}], borderRadius: 10, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? 365/2-(60/2) : 5, marginRight: index === data.pic.length - 1 ? 365/2 - (60/2) : 5}} key = {item}/>
             </Pressable>
           );
         }}
