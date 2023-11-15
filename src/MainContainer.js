@@ -79,17 +79,6 @@ export default function MainContainer() {
     });
   });
 
-
-  const today = new Date().toISOString().split('T')[0];
-  const MyEventsQuery = firestore.collection('CalendarEvents').where('seller', '==', username).where('startTime', '==', today);
-  MyEventsQuery.get().then((eventsSnapshot) =>{
-    eventsSnapshot.forEach((doc)=>{
-      if (!doc.data().seen) {
-        setEventSeen(false);
-      }
-    });
-  });
-
   return (
     <Tab.Navigator initialRouteName = {home}
       screenOptions = {({route}) => ({

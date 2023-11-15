@@ -125,7 +125,7 @@ export default function DeletedPosts({route, navigation}) {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(username, setRefreshing, setDeletedPostList)} />
         }
         renderItem = {({item}) => (
-          <PostCard data = {item} username = {username}/>
+          <PostCard data = {item} username = {username} currentProfilePicture={route.params.currentProfilePicture}/>
         )}
         renderHiddenItem = {({item}) => (
           <View style = {{position: 'absolute',

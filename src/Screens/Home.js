@@ -178,9 +178,7 @@ export default function Home() {
             <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, setLastDocument)} />
           }
           renderItem = {({item}) => (
-            <Pressable onPress = {() => navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, item})}>
-              <PostCard data = {item} username = {username}/>
-            </Pressable>
+            <PostCard data = {item} username = {username} currentProfilePicture={profilePic}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{

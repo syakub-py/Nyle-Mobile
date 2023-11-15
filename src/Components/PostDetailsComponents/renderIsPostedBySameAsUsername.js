@@ -68,16 +68,16 @@ const handleAddChat = (params, navigation) => {
 
 
 export default function PostedBySameAsUsername({params, username, rating, numOfReviews, navigation}) {
-  if (params.item.PostedBy !== username) {
+  if (params.data.PostedBy !== username) {
     return (
       <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style = {{justifyContent: 'center', flexDirection: 'row', marginLeft: 10}}>
-          <Image source = {{uri: params.item.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+          <Image source = {{uri: params.data.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
           <View style = {{margin: 10, alignSelf: 'center'}}>
-            <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.item.PostedBy}</Text>
+            <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.data.PostedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
             <Pressable onPress = {() => {
-              navigation.navigate('Reviews', {username: params.item.PostedBy, currentUser: username});
+              navigation.navigate('Reviews', {username: params.data.PostedBy, currentUser: username});
             }}>
               <View style = {{
                 flexDirection: 'row',
@@ -105,9 +105,9 @@ export default function PostedBySameAsUsername({params, username, rating, numOfR
   return (
     <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
       <View style = {{justifyContent: 'center', flexDirection: 'row', margin: 10}}>
-        <Image source = {{uri: params.item.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+        <Image source = {{uri: params.data.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
         <View style = {{margin: 10, alignSelf: 'center'}}>
-          <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.item.PostedBy} (You)</Text>
+          <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.data.PostedBy} (You)</Text>
           <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
           <View style = {{flexDirection: 'row', alignItems: 'center', marginTop: 3}}>
             <Ionicons name = {'star'} style = {{marginRight: 3}} color = {'#ebd61e'} size = {13}/>
