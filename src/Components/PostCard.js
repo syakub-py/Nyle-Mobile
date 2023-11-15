@@ -92,10 +92,13 @@ export default function PostCard({data, username, currentProfilePicture}) {
       <FlatList
         data={data.pic}
         horizontal={true}
-        style = {{bottom: 25,
+        style = {{bottom: 10,
           position: 'absolute',
-          width: 365,
-          height: 70}}
+          width: 150,
+          height: 70,
+          left: '50%',
+          marginLeft: -75,
+        }}
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}
@@ -109,7 +112,7 @@ export default function PostCard({data, username, currentProfilePicture}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: 60, width: 60, transform: [{scale: index === currentIndex ? 1.1 : scaleFactor}], borderRadius: 10, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? 365/2-(60/2) : 5, marginRight: index === data.pic.length - 1 ? 365/2 - (60/2) : 5}} key = {item}/>
+              <Image source = {{uri: item}} style = {{height: 40, width: 40, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? 150/2-(40/2) : 3, marginRight: index === data.pic.length - 1 ? 150/2 - (40/2) : 3}} key = {item}/>
             </Pressable>
           );
         }}
