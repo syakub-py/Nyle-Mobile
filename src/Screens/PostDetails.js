@@ -86,7 +86,7 @@ export default function PostDetails({route, navigation}) {
   const scrollToActiveIndex = (index) =>{
     mainFlatListRef.current.scrollToIndex({
       index: index,
-      animated: true,
+      animated: false,
       viewPosition: 0.8,
     });
     setCurrentIndex(index);
@@ -222,10 +222,7 @@ export default function PostDetails({route, navigation}) {
             </MapView>
           </View>
         </Pressable>
-
-
         <RenderHomesAndAuto item={route.params.item}/>
-
       </ScrollView>
     </SafeAreaView>
   );
