@@ -24,7 +24,6 @@ const Tab = createBottomTabNavigator();
 export default function MainContainer() {
   const [received, setReceived] = useState(true);
   const [profilePic, setProfilePic] = useState(null);
-  const [eventSeen, setEventSeen] = useState(true);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -126,20 +125,8 @@ export default function MainContainer() {
                 </View>
               );
             }
-          } else if (rn === Profile && !_.isEmpty(profilePic)) {
-            if (eventSeen) {
-              return <Image source = {{uri: profilePic}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>;
-            } else {
-              return (
-                <View>
-                  <View style = {{backgroundColor: 'red', height: 15, width: 15, borderRadius: 10, elevation: 2, zIndex: 1, position: 'absolute', left: 0, top: 0, alignItems: 'center', justifyContent: 'center'}}>
-                    <Ionicons name = {'calendar-outline'} size = {10} color = {'white'}/>
-                  </View>
-                  <Image source = {{uri: profilePic}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>
-                </View>
-              );
-            }
-          } else if (rn === AddPost) {
+          } else if (rn === Profile && !_.isEmpty(profilePic)) return <Image source = {{uri: profilePic}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>;
+          else if (rn === AddPost) {
             iconName = focused ? 'add-circle' : 'add-circle-outline';
             return <Ionicons name = {iconName} size = {32} color = {color}/>;
           }
