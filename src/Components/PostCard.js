@@ -10,6 +10,10 @@ export default function PostCard({data, username, currentProfilePicture}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
+  const ITEM_WIDTH = 365;
+  const ITEM_HEIGHT = 300;
+  const FLATLIST_WIDTH = 140;
+  const FLATLIST_PICTURE_DIMENSIONS = 40;
 
   useEffect(() => {
     updateCurrencyPrice(data);
@@ -84,7 +88,7 @@ export default function PostCard({data, username, currentProfilePicture}) {
         snapToAlignment={'center'}
         renderItem={({item}) => (
           <Pressable onPress={() => navigation.navigate('post details', {CurrentUserProfilePic: currentProfilePicture, username: username, data})}>
-            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: 365, height: 300, borderRadius: 10, zIndex: 0}}/>
+            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: ITEM_WIDTH, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
           </Pressable>
         )}
       />
@@ -92,12 +96,13 @@ export default function PostCard({data, username, currentProfilePicture}) {
       <FlatList
         data={data.pic}
         horizontal={true}
-        style = {{bottom: 10,
+        style = {{
+          bottom: 10,
           position: 'absolute',
           width: 150,
           height: 70,
           left: '50%',
-          marginLeft: -75,
+          marginLeft: -70,
         }}
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
         showsHorizontalScrollIndicator={false}
@@ -112,7 +117,7 @@ export default function PostCard({data, username, currentProfilePicture}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: 40, width: 40, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? 150/2-(40/2) : 3, marginRight: index === data.pic.length - 1 ? 150/2 - (40/2) : 3}} key = {item}/>
+              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === data.pic.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
             </Pressable>
           );
         }}
