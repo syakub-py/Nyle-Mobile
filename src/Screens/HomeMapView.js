@@ -11,7 +11,7 @@ import {
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, getCityState, categoryFilter, getProfilePicture} from './GlobalFunctions';
+import {readDatabase, categoryFilter, getProfilePicture} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import MapPostCard from '../Components/MapPostCard';
 import {handleEndReached} from './GlobalFunctions';
@@ -47,7 +47,6 @@ export default function HomeMapView({navigation, route}) {
   useEffect(() => {
     readDatabase('AllPosts', setMasterData, setFilterData, setLastDocument);
 
-    getCityState(40.735081, -73.759658, setState, setCity);
     getProfilePicture(username).then((result)=>{
       setProfilePic(result);
     });
@@ -130,7 +129,7 @@ export default function HomeMapView({navigation, route}) {
         {filteredData.map((item, index) => (
           <View key = {index}>
             <Marker coordinate = {item.coordinates}>
-              <CustomMapMarker firstImage = {item.pic[0]} />
+              <CustomMapMarker firstImage = {item.pictures[0]} />
             </Marker>
 
             <Circle
@@ -156,9 +155,8 @@ export default function HomeMapView({navigation, route}) {
             handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading);
           }}
           renderItem={({item, index})=>{
-            const data = item;
             return (
-              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {CurrentUserProfilePic: profilePic, username: username, data})}>
+              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {username: username})}>
                 <View style={{
                   flex: 1,
                   height: 170,

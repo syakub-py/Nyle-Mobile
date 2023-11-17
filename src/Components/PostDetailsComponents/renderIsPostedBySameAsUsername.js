@@ -2,6 +2,7 @@ import {Alert, Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import {firestore} from '../Firebase';
+import {getProfilePicture} from '../../Screens/GlobalFunctions';
 
 
 export const generateChatID = (user1, user2) => {
@@ -12,7 +13,7 @@ export const generateChatID = (user1, user2) => {
 
 const handleAddChat = (params, navigation) => {
   const currentUser = params.username;
-  const otherUser = params.item.PostedBy;
+  const otherUser = params.item.postedBy;
 
   const chatID = [currentUser, otherUser].sort().join('_');
 
@@ -67,17 +68,17 @@ const handleAddChat = (params, navigation) => {
 };
 
 
-export default function PostedBySameAsUsername({params, username, rating, numOfReviews, navigation}) {
-  if (params.data.PostedBy !== username) {
+export default function PostedBySameAsUsername({postedBy, username, rating, numOfReviews, navigation}) {
+  if (postedBy !== username) {
     return (
       <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style = {{justifyContent: 'center', flexDirection: 'row', marginLeft: 10}}>
-          <Image source = {{uri: params.data.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+          {/* <Image source = {{uri: getProfilePicture(username)}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/> */}
           <View style = {{margin: 10, alignSelf: 'center'}}>
-            <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.data.PostedBy}</Text>
+            <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
             <Pressable onPress = {() => {
-              navigation.navigate('Reviews', {username: params.data.PostedBy, currentUser: username});
+              navigation.navigate('Reviews', {username: postedBy, currentUser: username});
             }}>
               <View style = {{
                 flexDirection: 'row',
@@ -93,11 +94,11 @@ export default function PostedBySameAsUsername({params, username, rating, numOfR
           </View>
         </View>
 
-        <Pressable onPress = {()=>handleAddChat(params, navigation)}>
-          <View style = {{height: 60, width: 60, borderRadius: 15, backgroundColor: '#292929', elevation: 10, margin: 10}}>
-            <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin: 15}}/>
-          </View>
-        </Pressable>
+        {/* <Pressable onPress = {()=>handleAddChat(params, navigation)}> */}
+        <View style = {{height: 60, width: 60, borderRadius: 15, backgroundColor: '#292929', elevation: 10, margin: 10}}>
+          <Ionicons name = "chatbox-ellipses-outline" color = {'white'} size = {30} style = {{margin: 15}}/>
+        </View>
+        {/* </Pressable> */}
       </View>
     );
   }
@@ -105,9 +106,9 @@ export default function PostedBySameAsUsername({params, username, rating, numOfR
   return (
     <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
       <View style = {{justifyContent: 'center', flexDirection: 'row', margin: 10}}>
-        <Image source = {{uri: params.data.profilePic}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+        {/* <Image source = {{uri: ''}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/> */}
         <View style = {{margin: 10, alignSelf: 'center'}}>
-          <Text style = {{fontWeight: 'bold', color: 'black'}}>{params.data.PostedBy} (You)</Text>
+          <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy} (You)</Text>
           <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
           <View style = {{flexDirection: 'row', alignItems: 'center', marginTop: 3}}>
             <Ionicons name = {'star'} style = {{marginRight: 3}} color = {'#ebd61e'} size = {13}/>

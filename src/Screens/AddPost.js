@@ -8,11 +8,9 @@ import {
   Image,
   Pressable,
   Dimensions,
-  Alert,
   SafeAreaView,
   ActivityIndicator, Vibration,
 } from 'react-native';
-import {firestore, getstorage} from '../Components/Firebase';
 import MapView, {Marker} from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -42,28 +40,6 @@ const currencies = [
   {label: 'Solana', value: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422'},
 ];
 
-const upload = async (PhoneImagesArray, title, setAnimating) => {
-  const UrlDownloads = [];
-  setAnimating(true);
-  try {
-    for (const element of PhoneImagesArray) {
-      const filename = element.split('/').pop();
-      const response = await fetch(element);
-      const blob = await response.blob();
-      const storageRef = getstorage.ref().child(`images/${title}/${filename}`);
-      await storageRef.put(blob);
-      const url = await storageRef.getDownloadURL();
-      UrlDownloads.push(url);
-    }
-    setAnimating(false);
-
-    return UrlDownloads;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
 
 const selectImages = async (imageUrls, setImageUrls) => {
   const result = await ImagePicker.launchImageLibraryAsync({
@@ -92,8 +68,6 @@ const onRefresh = (setRefreshing) => {
 
 export default function AddPost() {
   const randomNumber = Math.floor(Math.random() * 100);
-
-
   const [refresh, setRefreshing] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -147,59 +121,44 @@ export default function AddPost() {
     setImageUrls(imageUrls.filter((item) =>(image!==item)));
   };
 
-  const createDocument = ({uniqueFields}, firebaseImageUrls) => ({
-    id: randomNumber,
-    title: title,
-    PostedBy: username,
-    currency: currencyList,
-    description: description,
-    pic: firebaseImageUrls,
-    profilePic: profilePic,
-    coordinates: coordinates,
-    views: 0,
-    likes: [],
-    sold: 'false',
-    category: category,
-    date: new Date().toLocaleString(),
-    ...uniqueFields,
-  });
-
-  const addPosts = async (collectionPath) => {
-    if (!collectionPath) throw new Error('Error: collection name cannot be empty');
-
-    const firebaseImageUrls = await upload(imageUrls, title, setAnimating);
+  const createPost = (localImageUrls) => {
     let uniqueFields = {};
 
     if (category === 'Auto') {
       uniqueFields = {
-        Vin: VIN,
-        mileage: mileage,
-        make: make,
-        model: model,
+        Vin: VIN || '',
+        mileage: mileage || 0,
+        make: make || '',
+        model: model || '',
       };
     } else if (category === 'Homes') {
       uniqueFields = {
-        bedrooms: bedrooms,
-        bathrooms: bathrooms,
-        SQFT: SQFT,
+        bedrooms: bedrooms || 0,
+        bathrooms: bathrooms || 0,
+        SQFT: SQFT || 0,
       };
     } else {
       uniqueFields = {
-        details: details,
+        details: details || '',
       };
     }
-
-    const document = createDocument({uniqueFields}, firebaseImageUrls);
-
-    return firestore.collection(collectionPath).doc(title).set(document)
-        .then((ref) => {
-          Alert.alert('Post added');
-        })
-        .catch((error) => {
-          console.log('Error adding document: ', error);
-        });
+    return {
+      id: randomNumber || '',
+      title: title || '',
+      postedBy: username || '',
+      currency: currencyList || '',
+      description: description || '',
+      pictures: localImageUrls || [],
+      profilePicture: profilePic || '',
+      coordinates: coordinates || {},
+      views: 0,
+      likes: [],
+      sold: false,
+      category: category || '',
+      date: new Date().toLocaleString(),
+      ...uniqueFields,
+    };
   };
-
 
   const Animating = () => {
     if (!animating) return <View/>;

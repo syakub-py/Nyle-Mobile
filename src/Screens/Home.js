@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,20 +13,19 @@ import {
 } from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, categoryFilter, getProfilePicture, getUsername} from './GlobalFunctions';
-import {handleEndReached} from './GlobalFunctions';
+import {categoryFilter, getProfilePicture, getUsername} from './GlobalFunctions';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
+import {AppContext} from '../Contexts/Context';
 
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-const onRefresh = (setRefreshing, setFilterData, setMasterData, setLastDocument) => {
+const onRefresh = (setRefreshing) => {
   setRefreshing(true);
-  readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
   Vibration.vibrate(100);
 
   setTimeout(() => setRefreshing(false), 300);
@@ -47,6 +46,7 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
   }
 };
 
+
 export default function Home() {
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
@@ -58,6 +58,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState(null);
   const navigation = useNavigation();
+  const nyleContext = useContext(AppContext);
 
   useEffect(() => {
     async function fetchUsernameAndProfilePicture() {
@@ -74,7 +75,11 @@ export default function Home() {
       }
     }
     fetchUsernameAndProfilePicture();
-    readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
+
+    nyleContext.readDatabase('AllPosts').then((result)=>{
+      setMasterData(result);
+      setFilterData(result);
+    });
   }, []);
 
   loadingAnimation(loading);
@@ -178,12 +183,12 @@ export default function Home() {
             <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, setLastDocument)} />
           }
           renderItem = {({item}) => (
-            <PostCard data = {item} username = {username} currentProfilePicture={profilePic}/>
+            <PostCard title = {item.title} username = {username} currentProfilePicture={profilePic}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{
             if (_.size(masterData)>1) {
-              handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading);
+              nyleContext.handleEndReached();
             }
           }}
         />

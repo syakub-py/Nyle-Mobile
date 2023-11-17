@@ -1,5 +1,4 @@
 import {firestore, getstorage} from '../Components/Firebase';
-import {Vibration} from 'react-native';
 import CryptoDataService from '../Services/CryptoDataService';
 import _ from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,7 +7,7 @@ export const updateCurrencyPrice = async (data) => {
   let price = 0;
   try {
     const response = await CryptoDataService.getMarketData();
-    const filteredData = response.data.filter((item) => item.image === data.currency[0].value);
+    const filteredData = response.data.filter((item) => item.image === data.currencies[0].value);
     if (!_.isEmpty(filteredData)) {
       price = filteredData[0].current_price;
     }
@@ -20,10 +19,10 @@ export const updateCurrencyPrice = async (data) => {
     if (doc.exists) {
       const data = doc.data();
       if (data.hasOwnProperty('USD') && price !== 0) {
-        postRef.update({USD: (price * data.currency[0].price).toFixed(2).toString()});
+        postRef.update({USD: (price * data.currencies[0].price).toFixed(2).toString()});
       } else {
         if (price !== 0) {
-          postRef.set({USD: (price * data.currency[0].price).toFixed(2).toString()}, {merge: true});
+          postRef.set({USD: (price * data.currencies[0].price).toFixed(2).toString()}, {merge: true});
         }
       }
     }
@@ -57,65 +56,6 @@ export const generateRating = async (username, setRating, setNumOfReviews) => {
   }
 };
 
-export const readDatabase = async (
-    collectionName,
-    setMasterData,
-    setFilterData,
-    setLastDocument,
-) => {
-  try {
-    const postRef = firestore.collection(collectionName);
-
-    const querySnapshot = await postRef.limit(2).get();
-
-    let results = querySnapshot.docs.map((doc) => doc.data());
-
-    results = results.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    setMasterData(results);
-    setFilterData(results);
-
-    if (querySnapshot.docs.length > 0) {
-      const lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
-      setLastDocument(lastDocument);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const handleEndReached = async (
-    currentData,
-    lastDocument,
-    setFilterData,
-    setMasterData,
-    setLastDocument,
-    setLoading) => {
-  setLoading(true);
-  const postRef = firestore.collection('AllPosts');
-  let querySnapshot = null;
-  if (lastDocument) {
-    querySnapshot = await postRef
-        .startAfter(lastDocument)
-        .limit(2)
-        .get();
-  } else {
-    querySnapshot = await postRef.limit(2).get();
-  }
-
-  const results = querySnapshot.docs.map((doc) => doc.data());
-  currentData = currentData.concat(results);
-  setFilterData(currentData);
-  setMasterData(currentData);
-
-  if (querySnapshot.docs.length > 0) {
-    const newLastDocument =
-            querySnapshot.docs[querySnapshot.docs.length - 1];
-    setLastDocument(newLastDocument);
-  }
-  setLoading(false);
-};
-
 
 export const updatedCurrencyList = (currencyList) =>{
   if (_.size(currencyList)>1) {
@@ -128,49 +68,6 @@ export const updatedCurrencyList = (currencyList) =>{
 export const isLiked = (likes, username) =>{
   return likes.includes(username);
 };
-export const handleLike = async (doc, username, Liked, setLiked) => {
-  const PostRef = firestore.collection('AllPosts').doc(doc);
-  PostRef.get()
-      .then((doc) => {
-        if (doc.exists && !doc.data().likes.includes(username)) {
-          const likesArray = doc.data().likes || [];
-          likesArray.push(username);
-          PostRef.update({likes: likesArray})
-              .then(() => {
-              })
-              .catch((error) => {
-                console.error('Error adding Like:', error);
-              });
-        } else {
-          const likesArray = doc.data().likes || [];
-          const updatedLikesArray = likesArray.filter((username) => username !== username);
-          PostRef.update({likes: updatedLikesArray})
-              .then(() => {
-              })
-              .catch((error) => {
-                console.error('Error removing like:', error);
-              });
-        }
-      })
-      .catch((error) => {
-        console.error('Error getting document:', error);
-      });
-  setLiked(!Liked);
-  Vibration.vibrate(100);
-};
-
-export const getCityState = async (lat, lng, setState, setCity) => {
-  try {
-    const response = await fetch(`http://192.168.255.115:5000/api/findCityState/?lat=${lat}&lng=${lng}`);
-    const JSONresponse = await response.json();
-    setState(JSONresponse.state);
-    setCity(JSONresponse.city);
-  } catch (error) {
-    console.log('server offline');
-    return {city: '', state: ''};
-  }
-};
-
 
 export const categoryFilter = (text, masterData, setFilterData) => {
   if (text && text !== 'All') {

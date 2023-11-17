@@ -12,7 +12,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from '../Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore} from '../Components/Firebase';
 import firebase from 'firebase/compat/app';
 import * as ImagePicker from 'expo-image-picker';
 import {getSoldItems, generateRating, getProfilePicture, addProfilePicture, getUsername} from './GlobalFunctions';
@@ -53,29 +53,6 @@ const handleSignOut = async (navigation) => {
   return navigation.navigate('Login');
 };
 
-const deletePost = (post, collectionName, userPostList, setUserPostList) => {
-  setUserPostList(userPostList.filter((item) =>(item.title!==post.title)));
-  firestore
-      .collection(collectionName)
-      .doc(post.title)
-      .delete()
-      .then(() => {
-        post.pic.forEach((picture) => {
-          const picRef = getstorage.refFromURL(picture);
-          picRef
-              .delete()
-              .then(() => {
-              })
-              .catch((error) => {
-                console.log('Error deleting picture:', error);
-              });
-        });
-        Alert.alert('Posted deleted!');
-      })
-      .catch((error) => {
-        console.log('Error deleting document: ' + JSON.stringify(error));
-      });
-};
 
 const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
   const sourceDocRef = firestore.collection('DeletedPosts');
@@ -85,10 +62,10 @@ const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
   try {
     const snapshot = await query.get();
     const batch = firestore.batch();
-    snapshot.forEach((doc) => {
-      deletePost(doc.data(), 'DeletedPosts', userPostList, setUserList);
-    });
-    await batch.commit();
+    // snapshot.forEach((doc) => {
+    //   deletePost(doc.data(), 'DeletedPosts', userPostList, setUserList);
+    // });
+    // await batch.commit();
   } catch (error) {
     console.error('Error clearing deleted posts:', error);
   }
@@ -277,7 +254,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <PostCard data = {item} username={username} currentProfilePicture={profilePic}/>
+          <PostCard title = {item.title} username={username} currentProfilePicture={profilePic}/>
         )}
 
         renderHiddenItem = {({item}) => (

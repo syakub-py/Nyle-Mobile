@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from '../Components/PostCard.js';
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
@@ -26,37 +26,6 @@ const onRefresh = (username, setRefreshing, setDeletedPostList) => {
   setRefreshing(true);
   getPosts(username, setDeletedPostList);
   setTimeout(() => setRefreshing(false), 1000);
-};
-
-const deletePost = (item, deletedPostList, setDeletedPostList) => {
-  setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
-  firestore
-      .collection('DeletedPosts')
-      .doc(item.title)
-      .delete()
-      .then(() => {
-        item.pic.forEach((picture, index) => {
-          const picRef = getstorage.refFromURL(picture);
-          picRef
-              .getMetadata()
-              .then(() => {
-                picRef
-                    .delete()
-                    .then(() => {
-                    })
-                    .catch((error) => {
-                      console.log('Error deleting picture:', error);
-                    });
-              })
-              .catch((error) => {
-                console.log('Picture does not exist:', error);
-              });
-        });
-        Alert.alert('Posted deleted!');
-      })
-      .catch((error) => {
-        console.log('Error deleting document: ' + JSON.stringify(error));
-      });
 };
 
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
@@ -125,7 +94,7 @@ export default function DeletedPosts({route, navigation}) {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(username, setRefreshing, setDeletedPostList)} />
         }
         renderItem = {({item}) => (
-          <PostCard data = {item} username = {username} currentProfilePicture={route.params.currentProfilePicture}/>
+          <PostCard title = {item.title} username = {username} currentProfilePicture={route.params.currentProfilePicture}/>
         )}
         renderHiddenItem = {({item}) => (
           <View style = {{position: 'absolute',
