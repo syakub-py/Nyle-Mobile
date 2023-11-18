@@ -9,22 +9,6 @@ import BackButton from '../Components/BackButton';
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-const getReviews = async (username) => {
-  let results = [];
-  const MyReviewsQuery = firestore.collection('Reviews').where('Reviewe', '==', username);
-  await MyReviewsQuery.get().then((postSnapshot) => {
-    postSnapshot.forEach((doc) => {
-      results.push({id: doc.id, ...doc.data()});
-    });
-  });
-  if (results) {
-    results = results.sort((a, b) => {
-      return new Date(b.DatePosted) - new Date(a.DatePosted);
-    });
-  }
-  return results;
-};
-
 export default function Reviews({route, navigation}) {
   const [ReviewList, setReviewList] = useState([]);
   const PostedByUsername = route.params.username;

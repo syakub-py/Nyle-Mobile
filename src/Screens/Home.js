@@ -24,10 +24,13 @@ import {AppContext} from '../Contexts/Context';
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-const onRefresh = (setRefreshing) => {
+const onRefresh = (setRefreshing, setMasterData, setFilteredData, nyleContext) => {
   setRefreshing(true);
   Vibration.vibrate(100);
-
+  nyleContext.readDatabase('AllPosts').then((result)=>{
+    setMasterData(result);
+    setFilteredData(result);
+  });
   setTimeout(() => setRefreshing(false), 300);
 };
 
@@ -48,17 +51,16 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 
 
 export default function Home() {
+  const nyleContext = useContext(AppContext);
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [profilePic, setProfilePic] = useState(null);
-  const [lastDocument, setLastDocument] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState(nyleContext.currentUser);
   const navigation = useNavigation();
-  const nyleContext = useContext(AppContext);
 
   useEffect(() => {
     async function fetchUsernameAndProfilePicture() {
@@ -180,7 +182,7 @@ export default function Home() {
 
           data = {filteredData}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, setLastDocument)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, nyleContext)} />
           }
           renderItem = {({item}) => (
             <PostCard title = {item.title} username = {username} currentProfilePicture={profilePic}/>

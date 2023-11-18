@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsTex
 import RenderHomeDataSection from '../Components/AddPostsComponents/renderHomeSection';
 import RenderAutoSection from '../Components/AddPostsComponents/renderAutoSection';
 import {loadingAnimation} from '../Components/LoadingAnimation';
+import {AppContext} from '../Contexts/Context';
 
 
 /**
@@ -67,13 +68,11 @@ const onRefresh = (setRefreshing) => {
 
 
 export default function AddPost() {
-  const randomNumber = Math.floor(Math.random() * 100);
   const [refresh, setRefreshing] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [details, setDetails] = useState('');
   const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0});
-  const [animating, setAnimating] = useState(false);
   const [category, setCategory] = useState('All');
   const [VIN, setVIN] = useState('');
   const [mileage, setMileage] = useState('');
@@ -92,6 +91,8 @@ export default function AddPost() {
   const [profilePic, setProfilePic] = useState(null);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+  const nyleContext = useContext(AppContext);
+
 
   useEffect(() => {
     async function fetchUsernameAndProfilePicture() {
@@ -143,10 +144,10 @@ export default function AddPost() {
       };
     }
     return {
-      id: randomNumber || '',
+      id: Math.floor(Math.random() * 100),
       title: title || '',
       postedBy: username || '',
-      currency: currencyList || '',
+      currencies: currencyList || '',
       description: description || '',
       pictures: localImageUrls || [],
       profilePicture: profilePic || '',
@@ -160,13 +161,9 @@ export default function AddPost() {
     };
   };
 
-  const Animating = () => {
-    if (!animating) return <View/>;
-    return (
-      <View>
-        <ActivityIndicator size = "large" color = "black" animating = {animating} />
-      </View>
-    );
+  const load = (loading) => {
+    if (!loading) return null;
+    return <ActivityIndicator size = "large" color = "black" animating = {loading} />;
   };
 
   return (
@@ -236,7 +233,7 @@ export default function AddPost() {
         </View>
 
         <View >
-          <RenderPrice currencies={currencies} currencyList={currencyList} setCurrencyList={setCurrencyList}/>
+          <RenderPrice currencies={currencies} currencyList={currencyList} setCurrencyList={setCurrencyList} setIsFocus={setIsFocus}/>
         </View>
 
         <CustomText text="Location" />
@@ -259,10 +256,10 @@ export default function AddPost() {
           />
         </View>
 
-        <Animating/>
-
+        {load(loading)}
         <Pressable onPress = {() => {
-          addPosts('AllPosts');
+          setLoading(true);
+          nyleContext.addPost('AllPosts', createPost(imageUrls)).then(()=>setLoading(false));
         }}>
           <View style = {{marginBottom: 20, marginLeft: 10, marginRight: 10, backgroundColor: 'black', borderRadius: 20, alignItems: 'center'}}>
             <Text style = {{margin: 10, color: 'white', fontWeight: 'bold'}}>Add post</Text>

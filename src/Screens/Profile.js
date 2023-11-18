@@ -24,7 +24,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const getPosts = async (username, setUserList) => {
   const results = [];
-  const MyPostsQuery = firestore.collection('AllPosts').where('PostedBy', '==', username);
+  const MyPostsQuery = firestore.collection('AllPosts').where('postedBy', '==', username);
   try {
     const postSnapshot = await MyPostsQuery.get();
     postSnapshot.forEach((doc) => {
@@ -53,8 +53,7 @@ const handleSignOut = async (navigation) => {
   return navigation.navigate('Login');
 };
 
-
-const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
+const clearDeletedAfter30Days = async (nyleContext) => {
   const sourceDocRef = firestore.collection('DeletedPosts');
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -62,10 +61,10 @@ const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
   try {
     const snapshot = await query.get();
     const batch = firestore.batch();
-    // snapshot.forEach((doc) => {
-    //   deletePost(doc.data(), 'DeletedPosts', userPostList, setUserList);
-    // });
-    // await batch.commit();
+    snapshot.forEach((doc) => {
+      nyleContext.deletePost(doc.data());
+    });
+    await batch.commit();
   } catch (error) {
     console.error('Error clearing deleted posts:', error);
   }

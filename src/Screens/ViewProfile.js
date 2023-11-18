@@ -13,7 +13,7 @@ import RatingButton from '../Components/RatingButton';
 
 const getPosts = async (username, setUserPosts) => {
   const results = [];
-  const MyPostsQuery = firestore.collection('AllPosts').where('PostedBy', '==', username);
+  const MyPostsQuery = firestore.collection('AllPosts').where('postedBy', '==', username);
   await MyPostsQuery.get().then((postSnapshot) => {
     postSnapshot.forEach((doc) => {
       results.push(doc.data());

@@ -34,7 +34,6 @@ export default function PostDetails({route, navigation}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [more, setMore] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [views, setViews] = useState(postContext.views);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const [Liked, setLiked] = useState(false);
@@ -52,6 +51,7 @@ export default function PostDetails({route, navigation}) {
 
 
   useEffect(() => {
+    postContext.handleViewCounter();
     generateRating(postContext.postedBy, setRating, setNumOfReviews);
   }, []);
 
@@ -146,7 +146,7 @@ export default function PostDetails({route, navigation}) {
 
           <View style = {{flexDirection: 'row', position: 'absolute', bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center', marginBottom: 5, marginLeft: 5, paddingHorizontal: 3}}>
             <LikesAndViews color={'#e6121d'} iconName={'heart'} data={likes.length}/>
-            <LikesAndViews color={'white'} iconName={'eye'} data={views}/>
+            <LikesAndViews color={'white'} iconName={'eye'} data={postContext.views}/>
           </View>
 
         </View>

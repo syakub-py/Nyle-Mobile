@@ -1,26 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import {firestore} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
+import {AppContext} from '../Contexts/Context';
 
 
-const getPosts = async (username, setDeletedPostList) => {
-  const results = [];
-  const MyPostsQuery = firestore.collection('DeletedPosts').where('PostedBy', '==', username);
-  try {
-    await MyPostsQuery.get().then((postSnapshot) => {
-      postSnapshot.forEach((doc) => {
-        results.push(doc.data());
-      });
-    });
-    setDeletedPostList(results);
-  } catch (error) {
-    Alert.alert('Error Getting Posts: ', error);
-  }
-};
+
 
 const onRefresh = (username, setRefreshing, setDeletedPostList) => {
   setRefreshing(true);
@@ -48,9 +36,9 @@ const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   }
 };
 
-const deleteAllPosts = ( deletedPostList, setDeletedPostList) => {
+const deleteAllPosts = (deletedPostList, nyleContext) => {
   deletedPostList.forEach((post) => {
-    deletePost(post, deletedPostList, setDeletedPostList);
+    nyleContext.deletePost(post);
   });
 };
 
@@ -58,6 +46,7 @@ export default function DeletedPosts({route, navigation}) {
   const [refreshing, setRefreshing] = useState(false);
   const [deletedPostList, setDeletedPostList] = useState([]);
   const username= route.params.username;
+  const nyleContext =useContext(AppContext);
 
   useEffect(() => {
     getPosts(username, setDeletedPostList);
@@ -81,7 +70,7 @@ export default function DeletedPosts({route, navigation}) {
             </View>
 
             <Pressable onPress = {() => {
-              deleteAllPosts(deletedPostList, setDeletedPostList);
+              deleteAllPosts(deletedPostList, nyleContext);
             }}>
               <View style = {{width: 100, backgroundColor: 'black', margin: 10, borderRadius: 5}}>
                 <Ionicons name = {'trash'} size = {30} style = {{color: 'white', alignSelf: 'center'}}/>
@@ -105,7 +94,7 @@ export default function DeletedPosts({route, navigation}) {
             width: 60,
             alignItems: 'center'}}>
             <View style = {{marginRight: 20}}>
-              <HiddenButton iconName={'trash-outline'} color={'red'} onPress = {() => deletePost(item, deletedPostList, setDeletedPostList)}/>
+              <HiddenButton iconName={'trash-outline'} color={'red'} onPress = {() => nyleContext.deletePost(item)}/>
             </View>
 
             <View>

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Dimensions, Image, Text, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import DropdownInput from '../../Components/AddPostDropdown';
-import _ from 'lodash';
 import {CustomTextInput} from '../CustomText';
 
 const RenderCurrencyItem = (item) => {
@@ -14,11 +13,10 @@ const RenderCurrencyItem = (item) => {
   );
 };
 
-export default function RenderPrice({currencies, currencyList, setCurrencyList}) {
+export default function RenderPrice({currencies, currencyList, setCurrencyList, setIsFocus}) {
   const [checked, setChecked] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState({});
   const [price, setPrice] = useState(0);
-
 
   useEffect(() => {
     console.log('Selected currency updated, ', selectedCurrency);

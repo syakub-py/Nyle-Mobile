@@ -9,33 +9,29 @@ import {
   View,
 } from 'react-native';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, categoryFilter, getProfilePicture} from './GlobalFunctions';
+import {categoryFilter, getProfilePicture} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import MapPostCard from '../Components/MapPostCard';
-import {handleEndReached} from './GlobalFunctions';
 import BackButton from '../Components/BackButton';
+import {AppContext} from '../Contexts/Context';
 
 const {width} = Dimensions.get('window');
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 
-const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch) => {
+const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData) => {
   setSelectedCategoryIndex(index);
-  categoryFilter(categories[index], masterData, setFilterData, setCategorySearch);
+  categoryFilter(categories[index], masterData, setFilterData);
 };
 
 export default function HomeMapView({navigation, route}) {
   const [masterData, setMasterData] = useState([]);
   const [filteredData, setFilterData] = useState([]);
-  const [, setCategorySearch] = useState([]);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
   const [profilePic, setProfilePic] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [lastDocument, setLastDocument] = useState(null);
-  const [, setLoading] = useState(false);
+  const nyleContext = useContext(AppContext);
   const username = route.params.username;
   const handleScroll = (event) => {
     const contentOffset = event.nativeEvent.contentOffset;
@@ -45,7 +41,10 @@ export default function HomeMapView({navigation, route}) {
   };
 
   useEffect(() => {
-    readDatabase('AllPosts', setMasterData, setFilterData, setLastDocument);
+    nyleContext.readDatabase('AllPosts').then((result)=>{
+      setFilterData(result);
+      setMasterData(result);
+    });
 
     getProfilePicture(username).then((result)=>{
       setProfilePic(result);
@@ -63,7 +62,7 @@ export default function HomeMapView({navigation, route}) {
 
         <View style = {{position: 'absolute', alignSelf: 'center', height: 100, width: 130, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}>
           <Ionicons name ='location' size = {30} style = {{marginRight: 5}} color = {'red'}/>
-          <Text style = {{fontSize: 18, fontWeight: 'bold'}}>{city}, {state}</Text>
+          <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Queens, New York</Text>
         </View>
 
         <View style = {{position: 'absolute', top: 30, right: 15, height: 50, width: 50, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
@@ -114,7 +113,7 @@ export default function HomeMapView({navigation, route}) {
         <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent'}}>
           {
             categories.map((category, index) => (
-              <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData, setCategorySearch)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+              <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                 <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight: '400'}}>
                   {category}
                 </Text>
@@ -152,11 +151,11 @@ export default function HomeMapView({navigation, route}) {
           snapToAlignment={'center'}
           showsHorizontalScrollIndicator={false}
           onEndReached={()=>{
-            handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading);
+            nyleContext.handleEndReached();
           }}
           renderItem={({item, index})=>{
             return (
-              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {username: username})}>
+              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {title: item.title})}>
                 <View style={{
                   flex: 1,
                   height: 170,
