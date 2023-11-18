@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react';
 import PostCard from '../Components/PostCard';
 import {useNavigation} from '@react-navigation/native';
 import {firestore} from '../Components/Firebase';
-import {generateRating, getSoldItems} from './GlobalFunctions';
 import BackButton from '../Components/BackButton';
 import RatingButton from '../Components/RatingButton';
 
@@ -31,7 +30,6 @@ export default function ViewProfile({route}) {
 
   useEffect(() => {
     getPosts(postedByUsername, setUserPosts);
-    generateRating(postedByUsername, setRating, setNumOfReviews);
   }, []);
 
   return (
@@ -41,7 +39,7 @@ export default function ViewProfile({route}) {
           ListHeaderComponent = {
             <View>
               <View style = {{height: 50, width: 50, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center', marginRight: 20, marginTop: 20}}>
-                <BackButton navigation={navigation}/>
+                <BackButton />
               </View>
 
               <View style = {{alignItems: 'center', paddingTop: 10}}>
@@ -79,7 +77,7 @@ export default function ViewProfile({route}) {
           data = {UsersPosts}
           renderItem = {({item}) => (
             <View>
-              <PostCard title = {item.title} username={route.params.currentUsername} currentProfilePicture={route.params.currentProfilePicture}/>
+              <PostCard title = {item.title}/>
             </View>
           )}
         />

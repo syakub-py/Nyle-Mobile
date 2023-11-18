@@ -28,7 +28,6 @@ export const updateCurrencyPrice = async (data) => {
   });
 };
 
-
 export const updatedCurrencyList = (currencyList) =>{
   if (_.size(currencyList)>1) {
     return currencyList;
@@ -50,5 +49,19 @@ export const categoryFilter = (text, masterData, setFilterData) => {
     setFilterData(newData);
   } else {
     setFilterData(masterData);
+  }
+};
+
+export const getProfilePicture = async (username) => {
+  try {
+    const userRef = firestore.collection('ProfilePictures').doc(username);
+    const doc = await userRef.get();
+    if (doc.exists) {
+      return doc.data().url;
+    } else {
+      return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+    }
+  } catch (error) {
+    return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
   }
 };

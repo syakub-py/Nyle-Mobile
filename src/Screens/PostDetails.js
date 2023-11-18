@@ -10,7 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import {generateRating, updatedCurrencyList} from './GlobalFunctions';
+import {updatedCurrencyList} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import BackButton from '../Components/BackButton';
 import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
@@ -22,23 +22,23 @@ import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
 import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
 import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
 import usePostContext from '../Services/UsePostContext';
+import {useNavigation} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 const height = width;
 
 
-export default function PostDetails({route, navigation}) {
+export default function PostDetails({route}) {
   const postContext = usePostContext(route.params.title);
   const images = postContext.pictures;
   const likes = postContext.likes;
-  const username =postContext.postedBy;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [more, setMore] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const [Liked, setLiked] = useState(false);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
+  const navigation =useNavigation();
 
 
   useEffect(()=>{
@@ -52,7 +52,7 @@ export default function PostDetails({route, navigation}) {
 
   useEffect(() => {
     postContext.handleViewCounter();
-    generateRating(postContext.postedBy, setRating, setNumOfReviews);
+    postContext.handleLikeCounter();
   }, []);
 
 
@@ -75,7 +75,7 @@ export default function PostDetails({route, navigation}) {
       <ScrollView style = {{backgroundColor: 'white'}} showsVerticalScrollIndicator = {false}>
         <View style = {{zIndex: 1}}>
           <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-            <BackButton navigation={navigation}/>
+            <BackButton />
           </View>
 
           <View style = {{position: 'absolute', top: 30, right: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
@@ -174,11 +174,11 @@ export default function PostDetails({route, navigation}) {
           </View>
 
 
-          <RenderIsCategoryHomes item={postContext}/>
-          <RenderIsCategoryAuto item={postContext}/>
+          <RenderIsCategoryHomes postContext={postContext}/>
+          <RenderIsCategoryAuto postContext={postContext}/>
 
         </View>
-        <PostedBySameAsUsername postedBy={postContext.postedBy} username = {username} rating={rating} numOfReviews={numOfReviews} navigation={navigation}/>
+        <PostedBySameAsUsername postedBy={postContext.postedBy} numOfReviews={numOfReviews}/>
 
         <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
 

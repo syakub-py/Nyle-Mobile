@@ -1,8 +1,9 @@
 import {Alert, Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, {useContext} from 'react';
 import {firestore} from '../Firebase';
-import {getProfilePicture} from '../../Screens/GlobalFunctions';
+import {UserContext} from '../../Contexts/Context';
+import {useNavigation} from '@react-navigation/native';
 
 
 export const generateChatID = (user1, user2) => {
@@ -68,17 +69,19 @@ const handleAddChat = (params, navigation) => {
 };
 
 
-export default function PostedBySameAsUsername({postedBy, username, rating, numOfReviews, navigation}) {
-  if (postedBy !== username) {
+export default function PostedBySameAsUsername({postedBy, numOfReviews}) {
+  const navigation = useNavigation();
+  const userContext = useContext(UserContext);
+  if (postedBy !== userContext.username) {
     return (
       <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style = {{justifyContent: 'center', flexDirection: 'row', marginLeft: 10}}>
-          {/* <Image source = {{uri: getProfilePicture(username)}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/> */}
+          <Image source = {{uri: userContext.profilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
           <View style = {{margin: 10, alignSelf: 'center'}}>
             <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
             <Pressable onPress = {() => {
-              navigation.navigate('Reviews', {username: postedBy, currentUser: username});
+              navigation.navigate('Reviews', {username: postedBy, currentUser: userContext.username});
             }}>
               <View style = {{
                 flexDirection: 'row',
@@ -87,7 +90,7 @@ export default function PostedBySameAsUsername({postedBy, username, rating, numO
                 marginTop: 2,
               }}>
                 <Ionicons name = "star" style = {{marginRight: 3}} color = "#ebd61e" size = {13} />
-                <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{rating.toFixed(1)}</Text>
+                <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{userContext.rating.toFixed(1)}</Text>
                 <Text style = {{fontSize: 10, color: 'grey', marginLeft: 3}}>({numOfReviews} reviews)</Text>
               </View>
             </Pressable>
@@ -112,7 +115,7 @@ export default function PostedBySameAsUsername({postedBy, username, rating, numO
           <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
           <View style = {{flexDirection: 'row', alignItems: 'center', marginTop: 3}}>
             <Ionicons name = {'star'} style = {{marginRight: 3}} color = {'#ebd61e'} size = {13}/>
-            <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{rating.toFixed(1)}</Text>
+            <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{userContext.rating.toFixed(1)}</Text>
           </View>
         </View>
       </View>

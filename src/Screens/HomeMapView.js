@@ -11,11 +11,12 @@ import {
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect, useContext} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {categoryFilter, getProfilePicture} from './GlobalFunctions';
+import {categoryFilter} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import MapPostCard from '../Components/MapPostCard';
 import BackButton from '../Components/BackButton';
-import {AppContext} from '../Contexts/Context';
+import {AppContext, UserContext} from '../Contexts/Context';
+import {useNavigation} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
@@ -25,14 +26,14 @@ const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFil
   categoryFilter(categories[index], masterData, setFilterData);
 };
 
-export default function HomeMapView({navigation, route}) {
+export default function HomeMapView() {
   const [masterData, setMasterData] = useState([]);
   const [filteredData, setFilterData] = useState([]);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [profilePic, setProfilePic] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const nyleContext = useContext(AppContext);
-  const username = route.params.username;
+  const userContext = useContext(UserContext);
+  const navigation = useNavigation();
   const handleScroll = (event) => {
     const contentOffset = event.nativeEvent.contentOffset;
     const currentIndex = Math.floor(contentOffset.x / 245);
@@ -45,10 +46,6 @@ export default function HomeMapView({navigation, route}) {
       setFilterData(result);
       setMasterData(result);
     });
-
-    getProfilePicture(username).then((result)=>{
-      setProfilePic(result);
-    });
   }, []);
 
 
@@ -56,7 +53,7 @@ export default function HomeMapView({navigation, route}) {
     <View style = {{flex: 1}}>
       <View style = {{zIndex: 1}}>
         <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, alignItems: 'center', justifyContent: 'center'}}>
-          <BackButton navigation={navigation}/>
+          <BackButton />
         </View>
 
 
@@ -66,7 +63,7 @@ export default function HomeMapView({navigation, route}) {
         </View>
 
         <View style = {{position: 'absolute', top: 30, right: 15, height: 50, width: 50, backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center'}}>
-          <Image source={{uri: profilePic}} style={{borderRadius: 13, height: '100%', width: '100%'}}/>
+          <Image source={{uri: userContext.profilePicture}} style={{borderRadius: 13, height: '100%', width: '100%'}}/>
         </View>
       </View>
 
@@ -176,7 +173,7 @@ export default function HomeMapView({navigation, route}) {
                   marginLeft: index === 0 ? width/2-230/2 : 15,
                   marginRight: index === filteredData.length - 1 ? width/2 - 230/2 : 15,
                 }}>
-                  <MapPostCard data = {item} username = {username} />
+                  <MapPostCard title = {item.title} />
                 </View>
               </Pressable>
             );

@@ -1,17 +1,19 @@
 import {Image, Pressable, ScrollView, View, Text, SafeAreaView} from 'react-native';
 import React from 'react';
 import BackButton from '../Components/BackButton';
+import {useNavigation} from '@react-navigation/native';
 
-export default function PhotoCollage({route, navigation}) {
+export default function PhotoCollage({route}) {
   const pictures = route.params.pictures;
   const price = route.params.priceInUSD;
+  const navigation =useNavigation();
   return (
     <SafeAreaView>
       <View style={{height: 80, backgroundColor: 'white'}}>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 30}}>
           <View style = {{height: 50, width: 40, alignItems: 'center', justifyContent: 'center'}}>
-            <BackButton navigation={navigation}/>
+            <BackButton />
           </View>
 
           <Image source={{uri: pictures[0]}} style={{height: 40, width: 40, marginRight: 6, borderRadius: 7}}/>

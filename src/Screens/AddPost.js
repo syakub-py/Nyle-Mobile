@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -16,22 +16,14 @@ import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropdownInput from '../Components/AddPostDropdown';
 import {CustomText, CustomTextWithInput} from '../Components/CustomText';
-import {getProfilePicture, getUsername} from './GlobalFunctions';
 import RenderPrice from '../Components/AddPostsComponents/renderPrice';
 import ImageUrls from '../Components/AddPostsComponents/renderIsImages';
 import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsText';
 import RenderHomeDataSection from '../Components/AddPostsComponents/renderHomeSection';
 import RenderAutoSection from '../Components/AddPostsComponents/renderAutoSection';
-import {loadingAnimation} from '../Components/LoadingAnimation';
-import {AppContext} from '../Contexts/Context';
+import {AppContext, UserContext} from '../Contexts/Context';
 
 
-/**
-
- *
- * @param {*} param0: {profilePicture: url of the profile, username: current username}
- * @returns
- */
 
 const currencies = [
   {label: 'Bitcoin', value: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'},
@@ -85,33 +77,11 @@ export default function AddPost() {
   const {width} = Dimensions.get('window');
   const {height} = Dimensions.get('window');
   const categories = [{Label: 'All', Value: 'All'}, {Label: 'Tech', Value: 'Tech'}, {Label: 'Auto', Value: 'Auto'}, {Label: 'Homes', Value: 'Homes'}, {Label: 'Bikes', Value: 'Bikes'}, {Label: 'Bike Parts', Value: 'Bike Parts'}, {Label: 'Jewelry', Value: 'Jewelry'}, {Label: 'Retail/Wholesale', Value: 'Retail/Wholesale'}];
-
   const [imageUrls, setImageUrls] = useState([]);
   const [currencyList, setCurrencyList] = useState([]);
-  const [profilePic, setProfilePic] = useState(null);
-  const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
   const nyleContext = useContext(AppContext);
-
-
-  useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUsernameAndProfilePicture();
-  }, []);
-
-  loadingAnimation(loading);
+  const userContext = useContext(UserContext);
 
   const dropMarker = (event) => {
     const coordinate = event.nativeEvent;
@@ -146,11 +116,11 @@ export default function AddPost() {
     return {
       id: Math.floor(Math.random() * 100),
       title: title || '',
-      postedBy: username || '',
+      postedBy: userContext.username || '',
       currencies: currencyList || '',
       description: description || '',
       pictures: localImageUrls || [],
-      profilePicture: profilePic || '',
+      profilePicture: userContext.profilePicture || '',
       coordinates: coordinates || {},
       views: 0,
       likes: [],

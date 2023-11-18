@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable, TextInput, Image} from 'react-native';
 import {auth} from '../Components/Firebase';
 import BackButton from '../Components/BackButton';
+import {useNavigation} from '@react-navigation/native';
 
 const handleResetPassword = (username) => {
   auth.sendPasswordResetEmail(username)
@@ -13,7 +14,7 @@ const handleResetPassword = (username) => {
       });
 };
 
-export default function ResetPassword({navigation}) {
+export default function ResetPassword() {
   const [username, setUsername] = useState('');
   return (
     <View style = {styles.container}>
@@ -26,7 +27,7 @@ export default function ResetPassword({navigation}) {
           }}/>
       </View>
       <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'whitesmoke', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-        <BackButton navigation={navigation}/>
+        <BackButton />
       </View>
       <TextInput placeholder ='Enter the Username' style = {styles.textInput} value = {username} onChangeText = {(text) => setUsername(text)} />
       <Pressable style = {styles.submitContainer} onPress = {handleResetPassword}>

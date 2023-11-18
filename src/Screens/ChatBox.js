@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
 import _ from 'lodash';
-import {getProfilePicture, getUsername} from './GlobalFunctions';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
 import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
 import RenderMessageImage from '../Components/ChatBoxComponents/renderMessageImage';
 import {GiftedChat} from 'react-native-gifted-chat';
+import {UserContext} from '../Contexts/Context';
+import {useNavigation} from '@react-navigation/native';
 
 const clearMessages = async (messagesRef) => {
   const today = new Date();
@@ -48,37 +49,17 @@ const markAsRead = async (conversationID, username) => {
     @route.params = {avatar: url of the current users avatar, conversationID: id of the current conversation in firestore, name:name of the conversation, otherAvatar: url of the other users avatar, userId:the current users id in the conversation, username:the current username}
  */
 
-export default function ChatBox({route, navigation}) {
+export default function ChatBox({route}) {
   const conversationID = route.params.conversationID;
   const messagesRef = firestore.collection(`Chats/${conversationID}/messages`);
-
   const [imageUrls, setImageUrls] = useState([]);
   const [animating, setAnimating] = useState(false);
   let downloadUrls =[];
   const [messages, setMessages] = useState([]);
-  const [username, setUsername] = useState(null);
-  const [profilePic, setProfilePic] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  const userContext = useContext(UserContext);
   const wss = new WebSocket('ws://192.168.133.56:8080');
-
+  const navigation =useNavigation();
   useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      setLoading(true);
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUsernameAndProfilePicture();
-
     wss.onopen = () => {
       console.log('Connected to the WebSocket');
     };
@@ -119,7 +100,7 @@ export default function ChatBox({route, navigation}) {
     }
 
     clearMessages(messagesRef);
-    markAsRead(route.params.userId, username);
+    markAsRead(route.params.userId, userContext.username);
 
     return () => {
       wss.onmessage = null;
@@ -127,8 +108,6 @@ export default function ChatBox({route, navigation}) {
     };
   }, []);
 
-
-  loadingAnimation(loading);
 
   const onSend = useCallback(async (message) => {
     const messagesRef = firestore.collection('Chats/'+ route.params.conversationID + '/messages');
@@ -145,8 +124,8 @@ export default function ChatBox({route, navigation}) {
       received: false,
       user: {
         _id: route.params.userId,
-        name: username,
-        avatar: profilePic,
+        name: userContext.username,
+        avatar: userContext.profilePicture,
       },
     };
     setImageUrls([]);

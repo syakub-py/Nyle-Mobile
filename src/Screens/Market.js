@@ -47,7 +47,7 @@ const getMarketData = async () => {
   }
 };
 
-export default function Market({navigation, route}) {
+export default function Market() {
   const [data, setData] = useState([]);
   const [articles, setArticles] = useState([]);
 

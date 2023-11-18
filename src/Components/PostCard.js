@@ -1,14 +1,16 @@
 import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
 import usePostContext from '../Services/UsePostContext';
+import {UserContext} from '../Contexts/Context';
 
-export default function PostCard({title, username, currentProfilePicture}) {
+export default function PostCard({title}) {
   const navigation = useNavigation();
   const data = usePostContext(title);
-  const [Liked, setLiked] = useState(isLiked(data.likes, username));
+  const userContext = useContext(UserContext);
+  const [Liked, setLiked] = useState(isLiked(data.likes, userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
@@ -37,10 +39,10 @@ export default function PostCard({title, username, currentProfilePicture}) {
   };
 
   const RenderIsUsernameSameAsPostedBy = () => {
-    if (username === data.postedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>;
+    if (userContext.username === data.postedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>;
     return (
-      <Pressable onPress = {() => navigation.navigate('view profile', {ProfileImage: data.profilePic, postedByUsername: data.postedBy, currentUsername: username, currentProfilePicture})}>
-        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>
+      <Pressable onPress = {() => navigation.navigate('view profile', {postedByUsername: data.postedBy})}>
+        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>
       </Pressable>
     );
   };
@@ -61,9 +63,9 @@ export default function PostCard({title, username, currentProfilePicture}) {
   return (
     <View style={{backgroundColor: 'transparent', borderRadius: 10, margin: 10}}>
       {
-          (username !== data.postedBy) ? (
+          (userContext.username !== data.postedBy) ? (
               <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
-                <Pressable onPress={() => handleLike(data.title, username, Liked, setLiked)}>
+                <Pressable onPress={() => handleLike(data.title, userContext.username, Liked, setLiked)}>
                   <RenderLiked/>
                 </Pressable>
               </View>

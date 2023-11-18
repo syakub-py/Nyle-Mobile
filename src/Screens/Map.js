@@ -10,7 +10,7 @@ export default function Map({route, navigation}) {
     <View style = {{flex: 1}}>
       <View style = {{zIndex: 1}}>
         <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-          <BackButton navigation={navigation}/>
+          <BackButton />
         </View>
       </View>
       <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: coordinates, pitch: 0, heading: 0, zoom: 12, altitude: 0}} >

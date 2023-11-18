@@ -1,5 +1,5 @@
 import {StatusBar} from 'expo-status-bar';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -14,10 +14,10 @@ import {firestore, getstorage} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import _ from 'lodash';
-import {getProfilePicture, getUsername} from './GlobalFunctions';
 import HiddenButton from '../Components/HiddenButton';
 import ChatItem from '../Components/ChatComponents/ChatItem';
 import {useNavigation} from '@react-navigation/native';
+import {UserContext} from '../Contexts/Context';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 
 const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, username) => {
@@ -111,39 +111,19 @@ export default function Chat() {
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const [profilePic, setProfilePic] = useState(null);
   const navigation = useNavigation();
-  const [username, setUsername] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-        return await getChats(profileName, setFilterData, setMasterData);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUsernameAndProfilePicture();
-  }, []);
-
-
-  loadingAnimation(loading);
-
+  const userContext = useContext(UserContext);
   const handleSearchFilter = (text) => {
     searchFilter(text, masterData, setFilterData, setSearch);
   };
 
   const randomNumber = Math.floor(Math.random() * 100);
-
+  useEffect(()=>{
+    loadingAnimation(true);
+    getChats(userContext.username, setFilterData, setMasterData).then(()=>{
+      loadingAnimation(false);
+    });
+  }, []);
 
   return (
     <SafeAreaView style = {styles.container}>
@@ -157,7 +137,7 @@ export default function Chat() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={async () => {
-              await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, username);
+              await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, userContext.username);
             }}
           />
         }
@@ -175,7 +155,7 @@ export default function Chat() {
 
               <Image
                 resizeMode="cover"
-                source={{uri: profilePic}}
+                source={{uri: userContext.profilePicture}}
                 style={{height: 50, width: 50, borderRadius: 15}}
               />
             </View>
@@ -211,7 +191,7 @@ export default function Chat() {
           </View>
         )}
         renderItem = {({item}) => (
-          <ChatItem item={item} username={username} navigation={navigation}/>
+          <ChatItem item={item} username={userContext.username} navigation={navigation}/>
         )}
       />
       <StatusBar style = "auto"/>

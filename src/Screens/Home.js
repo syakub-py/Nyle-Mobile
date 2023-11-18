@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {categoryFilter, getProfilePicture, getUsername} from './GlobalFunctions';
+import {categoryFilter} from './GlobalFunctions';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
-import {AppContext} from '../Contexts/Context';
+import {AppContext, UserContext} from '../Contexts/Context';
 
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
@@ -52,38 +52,23 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 
 export default function Home() {
   const nyleContext = useContext(AppContext);
+  const userContext = useContext(UserContext);
   const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState(nyleContext.currentUser);
   const navigation = useNavigation();
 
   useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUsernameAndProfilePicture();
-
+    setLoading(true);
     nyleContext.readDatabase('AllPosts').then((result)=>{
       setMasterData(result);
       setFilterData(result);
+      setLoading(false);
     });
   }, []);
-
   loadingAnimation(loading);
 
   const RenderFooter = () => {
@@ -104,7 +89,7 @@ export default function Home() {
 
   return (
     <View style = {{flex: 1, backgroundColor: 'white'}}>
-      <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: username})}
+      <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
           bottom: 90,
@@ -146,14 +131,14 @@ export default function Home() {
 
                 <View style={{marginLeft: 15}}>
                   <Text style={{fontSize: 17, fontWeight: 'bold'}}>Welcome Back</Text>
-                  <Text style={{fontWeight: '500', color: 'grey'}}>{username}</Text>
+                  <Text style={{fontWeight: '500', color: 'grey'}}>{userContext.username}</Text>
                 </View>
                 <Pressable onPress={()=>{
-                  navigation.navigate('My Profile', {username: username});
+                  navigation.navigate('My Profile');
                 }}>
                   <Image
                     resizeMode="cover"
-                    source={{uri: profilePic}}
+                    source={{uri: userContext.profilePicture}}
                     style={{height: 50, width: 50, borderRadius: 15}}
                   />
                 </Pressable>
@@ -185,7 +170,7 @@ export default function Home() {
             <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, nyleContext)} />
           }
           renderItem = {({item}) => (
-            <PostCard title = {item.title} username = {username} currentProfilePicture={profilePic}/>
+            <PostCard title = {item.title}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{

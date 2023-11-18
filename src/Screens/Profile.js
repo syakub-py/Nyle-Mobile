@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
-  Alert,
   Image,
   Pressable,
   RefreshControl,
@@ -15,30 +14,17 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import {firestore} from '../Components/Firebase';
 import firebase from 'firebase/compat/app';
 import * as ImagePicker from 'expo-image-picker';
-import {getSoldItems, generateRating, getProfilePicture, addProfilePicture, getUsername} from './GlobalFunctions';
 import _ from 'lodash';
 import HiddenButton from '../Components/HiddenButton';
 import RatingButton from '../Components/RatingButton';
-import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
+import {AppContext, UserContext} from '../Contexts/Context';
 
-const getPosts = async (username, setUserList) => {
-  const results = [];
-  const MyPostsQuery = firestore.collection('AllPosts').where('postedBy', '==', username);
-  try {
-    const postSnapshot = await MyPostsQuery.get();
-    postSnapshot.forEach((doc) => {
-      results.push(doc.data());
-    });
-    setUserList(results);
-  } catch (error) {
-    Alert.alert('Error Getting Posts:', error);
-  }
-};
 
-const onRefresh = async (setRefreshing, username, setUserList) => {
+
+const onRefresh = async (setRefreshing, userContext) => {
   setRefreshing(true);
-  await getPosts(username, setUserList);
+  await userContext.getPosts();
   Vibration.vibrate(100);
 
   setTimeout(() => setRefreshing(false), 1000);
@@ -103,36 +89,12 @@ const selectProfilePic = async (username) => {
 export default function Profile() {
   const [userPostsList, setUserPostsList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [numOfReviews, setNumOfReviews] = useState(0);
-  const [profilePic, setProfilePic] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-
-        getPosts(profileName, setUserPostsList);
-        clearDeletedAfter30Days(profileName, userPostsList, setUserPostsList);
-        generateRating(profileName, setRating, setNumOfReviews);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUsernameAndProfilePicture();
+  const userContext = useContext(UserContext);
+  const nyleContext =useContext(AppContext);
+  useEffect(()=>{
+    clearDeletedAfter30Days(nyleContext);
   }, []);
-
-
-  loadingAnimation(loading);
 
   const SectionTitle = ({title}) => {
     return (
@@ -159,10 +121,10 @@ export default function Profile() {
   return (
     <View style = {{backgroundColor: 'white'}}>
       <SwipeListView
-        data = {userPostsList}
+        data = {userContext.posts}
         rightOpenValue = {-170}
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserPostsList)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, userContext)} />
         }
         ListFooterComponent = {
           <View style = {{height: 80}}/>
@@ -172,9 +134,9 @@ export default function Profile() {
             <View>
               <View style = {{alignItems: 'center', marginTop: 25}}>
                 <Pressable onPress={()=>{
-                  selectProfilePic(username);
+                  selectProfilePic(userContext.username);
                 }}>
-                  <Image source = {{uri: profilePic}} style = {{
+                  <Image source = {{uri: userContext.profilePicture}} style = {{
                     width: 100,
                     height: 100,
                     borderRadius: 20,
@@ -190,9 +152,9 @@ export default function Profile() {
 
               <View style = {{flexDirection: 'row', alignSelf: 'center', paddingTop: 10}}>
                 <View style={{flexDirection: 'column'}}>
-                  <RatingButton navigation={navigation} rating={rating} username={username} currentUsername={username}/>
+                  <RatingButton rating={userContext.rating} username={userContext.username} currentUsername={userContext.username}/>
 
-                  <Text style={{fontSize: 13, color: 'gray'}}>({numOfReviews} reviews)</Text>
+                  <Text style={{fontSize: 13, color: 'gray'}}>({userContext.numberOfReviews} reviews)</Text>
                 </View>
                 <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
@@ -204,7 +166,7 @@ export default function Profile() {
                 <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
                 <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{getSoldItems(userPostsList)}</Text>
+                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{userContext.amountOfSoldItems}</Text>
                   <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Sold items</Text>
                 </View>
               </View>
@@ -235,7 +197,7 @@ export default function Profile() {
             <Setting
               title = "Recently Deleted Posts"
               type = "button"
-              onPress = {() =>navigation.navigate('Deleted Posts', {username: username, currentProfilePicture: profilePic})}
+              onPress = {() =>navigation.navigate('Deleted Posts')}
               nameOfIcon = 'trash-outline'
             />
 
@@ -253,7 +215,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <PostCard title = {item.title} username={username} currentProfilePicture={profilePic}/>
+          <PostCard title = {item.title} />
         )}
 
         renderHiddenItem = {({item}) => (

@@ -3,6 +3,7 @@ import {firestore} from '../Components/Firebase';
 import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
+import {useNavigation} from '@react-navigation/native';
 
 const postReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation) => {
   return firestore.collection('Reviews').add({
@@ -24,15 +25,16 @@ const postReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation)
     @route.params = {postedBy:user the review was posted by, username:current username}
 */
 
-export default function WriteReview({route, navigation}) {
+export default function WriteReview({route}) {
   const [reviewMessage, setReviewMessage] = useState('');
   const [title, setTitle] = useState('');
   const [stars, setStars] = useState(0);
+  const navigation =useNavigation();
 
   return (
     <View style = {{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style = {{position: 'absolute', top: 30, left: 10}}>
-        <BackButton navigation={navigation}/>
+        <BackButton />
       </View>
       <View style = {{paddingTop: 70, paddingHorizontal: 10, margin: 10}}>
         <TextInput style = {{height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10}} placeholder = "Title" onChangeText = {(text) => setTitle(text)} />

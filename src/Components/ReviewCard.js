@@ -6,12 +6,13 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {getProfilePicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
+import {UserContext} from '../Contexts/Context';
 
 const sendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
   const docRef = firestore.collection('Reviews').doc(data.id);
@@ -47,22 +48,23 @@ const deleteReply = async (data, existingReplies, setExistingReplies, index) => 
 
 /*
     @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
-    @param currentUser = string (current username)
  */
 
-export default function ReviewCard({data, currentUser}) {
+export default function ReviewCard({data}) {
   const [open, setOpen] = useState(false);
   const [reply, setReply] = useState('');
   const [existingReplies, setExistingReplies] = useState(data.Replies);
   const [profilePic, setProfilePic] = useState(null);
+  const userContext = useContext(UserContext);
 
   useEffect(()=>{
     getProfilePicture(data.Reviewer).then((result)=>{
       setProfilePic(result);
     });
   }, []);
+
   const handleSendReply = () => {
-    sendReply(data, currentUser, reply, existingReplies, setExistingReplies);
+    sendReply(data, userContext.username, reply, existingReplies, setExistingReplies);
     setOpen(!open);
   };
 
@@ -71,7 +73,7 @@ export default function ReviewCard({data, currentUser}) {
   };
 
   const renderIsRevieweCurrentUser = () => {
-    if (data.Reviewe !== currentUser) return <View/>;
+    if (data.Reviewe !== userContext.username) return <View/>;
     return (
       <Pressable onPress = {() =>setOpen(!open)}>
         <View style = {{position: 'absolute', bottom: 0, right: 10}}>
@@ -102,7 +104,7 @@ export default function ReviewCard({data, currentUser}) {
   };
 
   const renderIsRevieweCurrentUser2 = () => {
-    if (data.Reviewe !== currentUser) {
+    if (data.Reviewe !== userContext.username) {
       return (
         <ScrollView>
           {

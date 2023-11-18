@@ -1,26 +1,22 @@
 import {View, Text, FlatList, SafeAreaView, Pressable} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {firestore} from '../Components/Firebase';
+import React, {useContext} from 'react';
 import ReviewCard from '../Components/ReviewCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
+import {UserContext} from '../Contexts/Context';
+import {useNavigation} from '@react-navigation/native';
 
 /*
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-export default function Reviews({route, navigation}) {
-  const [ReviewList, setReviewList] = useState([]);
+export default function Reviews({route}) {
   const PostedByUsername = route.params.username;
-  const currentUsername = route.params.currentUser;
-  useEffect(() => {
-    getReviews(PostedByUsername).then((result) => {
-      setReviewList(result);
-    });
-  }, []);
-
+  const userContext = useContext(UserContext);
+  const ReviewList = userContext.reviews;
+  const navigation = useNavigation();
   const RenderIsCurrentUser = () => {
-    if (currentUsername === PostedByUsername) return <View/>;
+    if (userContext.username === PostedByUsername) return <View/>;
     return (
       <View style = {{
         position: 'absolute',
@@ -35,7 +31,7 @@ export default function Reviews({route, navigation}) {
           justifyContent: 'center',
           alignItems: 'center',
           elevation: 6,
-        }} onPress = {() => navigation.navigate('Write Review', {username: currentUsername, PostedBy: PostedByUsername})}>
+        }} onPress = {() => navigation.navigate('Write Review', {PostedBy: PostedByUsername})}>
           <Ionicons name = "pencil" size = {24} color = "white" />
         </Pressable>
 
@@ -51,7 +47,7 @@ export default function Reviews({route, navigation}) {
           <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
 
             <View style = {{zIndex: 1}}>
-              <BackButton navigation={navigation}/>
+              <BackButton />
             </View>
 
             <View style={{flexDirection: 'column'}}>
@@ -63,7 +59,7 @@ export default function Reviews({route, navigation}) {
           </View>
         }
         renderItem = {({item}) => (
-          <ReviewCard data = {item} currentUser = {currentUsername}/>
+          <ReviewCard data = {item}/>
         )}/>
       <RenderIsCurrentUser/>
 

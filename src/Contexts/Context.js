@@ -23,7 +23,7 @@ class Post {
     this.title = postData.title || '';
     this.views = postData.views || 0;
   }
-  handleLike = async (username, Liked, setLiked) => {
+  handleLikeCounter = async (username, Liked, setLiked) => {
     const PostRef = firestore.collection('AllPosts').doc(this.title);
     PostRef.get()
         .then((doc) => {
@@ -78,6 +78,7 @@ class User {
     this.posts = [];
     this.rating = 0;
     this.numberOfReviews = 0;
+    this.amountOfSoldItems = 0;
     this.initializeUserData();
   };
 
@@ -86,9 +87,10 @@ class User {
       this.username = await this.getUsername();
       await Promise.all([
         this.getReviews(),
-        this.addProfilePicture(),
         this.generateRating(),
         this.getPosts(),
+        this.getProfilePicture(),
+        this.getAmountOfSoldItems(),
       ]);
     } catch (error) {
       console.error('Error initializing user data:', error);
@@ -164,12 +166,12 @@ class User {
     return await AsyncStorage.getItem('@username');
   };
 
-  getAmountOfSoldItems = (UsersPosts) => {
+  getAmountOfSoldItems = () => {
     let counter = 0;
-    for (let i = 0; i < UsersPosts.length; i++) {
-      if (UsersPosts[i].sold === 'true') counter++;
+    for (let i = 0; i < this.posts.length; i++) {
+      if (this.posts[i].sold === 'true') counter++;
     }
-    return counter;
+    this.amountOfSoldItems = counter;
   };
 
   generateRating = async () => {
@@ -208,7 +210,6 @@ export class NyleContext {
   constructor() {
     this.PostContextArray;
     this.lastDocument;
-    this.currentUser = new User();
   }
 
   upload = async (PhoneImagesArray, title) => {
@@ -322,3 +323,4 @@ export class NyleContext {
 
 export const AppContext = createContext(new NyleContext());
 
+export const UserContext = createContext(new User());

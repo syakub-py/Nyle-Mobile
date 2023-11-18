@@ -5,7 +5,8 @@ import {firestore} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
-import {AppContext} from '../Contexts/Context';
+import {AppContext, UserContext} from '../Contexts/Context';
+import {useNavigation} from '@react-navigation/native';
 
 
 
@@ -42,14 +43,15 @@ const deleteAllPosts = (deletedPostList, nyleContext) => {
   });
 };
 
-export default function DeletedPosts({route, navigation}) {
+export default function DeletedPosts() {
   const [refreshing, setRefreshing] = useState(false);
   const [deletedPostList, setDeletedPostList] = useState([]);
-  const username= route.params.username;
+  const userContext = useContext(UserContext);
   const nyleContext =useContext(AppContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    getPosts(username, setDeletedPostList);
+    getPosts(userContext.username, setDeletedPostList);
   }, []);
 
   return (
@@ -80,10 +82,10 @@ export default function DeletedPosts({route, navigation}) {
           </View>
         }
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(username, setRefreshing, setDeletedPostList)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(userContext.username, setRefreshing, setDeletedPostList)} />
         }
         renderItem = {({item}) => (
-          <PostCard title = {item.title} username = {username} currentProfilePicture={route.params.currentProfilePicture}/>
+          <PostCard title = {item.title}/>
         )}
         renderHiddenItem = {({item}) => (
           <View style = {{position: 'absolute',

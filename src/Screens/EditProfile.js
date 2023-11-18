@@ -37,7 +37,7 @@ const updatePassword = async (newPassword) => {
   }
 };
 
-export default function EditProfile({navigation}) {
+export default function EditProfile() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -58,7 +58,7 @@ export default function EditProfile({navigation}) {
           justifyContent: 'center',
         }}
       >
-        <BackButton navigation={navigation}/>
+        <BackButton />
       </View>
       <TextInput
         style = {{
