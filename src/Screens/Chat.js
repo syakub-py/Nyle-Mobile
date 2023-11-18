@@ -10,125 +10,55 @@ import {
   TextInput,
   Vibration,
 } from 'react-native';
-import {firestore, getstorage} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import _ from 'lodash';
 import HiddenButton from '../Components/HiddenButton';
 import ChatItem from '../Components/ChatComponents/ChatItem';
 import {useNavigation} from '@react-navigation/native';
-import {UserContext} from '../Contexts/Context';
-import {loadingAnimation} from '../Components/LoadingAnimation';
+import {UserContext} from '../Contexts/UserContext';
 
-const onRefresh = async (setRefreshing, getChats, setFilterData, setMasterData, username) => {
+const onRefresh = (setRefreshing, userContext) => {
   setRefreshing(true);
-  await getChats(username, setFilterData, setMasterData);
-  Vibration.vibrate(100);
-  setTimeout(() => setRefreshing(false), 300);
+  userContext.getChats().then(()=>{
+    Vibration.vibrate(100);
+    setRefreshing(false);
+  });
 };
 
-const searchFilter = (text, masterData, setFilterData, setSearch) => {
+const searchFilter = (text, masterData, setSearch) => {
   if (text) {
-    const newData = masterData.filter((item) => {
+    setSearch(text);
+    return masterData.filter((item) => {
       const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData)>-1;
     });
-    setFilterData(newData);
-    setSearch(text);
   } else {
-    setFilterData(masterData);
     setSearch(text);
-  }
-};
-
-const deleteChat = async (chat, filteredData, setFilteredData) => {
-  const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection('messages').get();
-  for (const doc of docSnapshots.docs) {
-    if (!_.isEmpty(doc.data().image)) {
-      for (const picture of doc.data().image) {
-        const imageRef = getstorage.refFromURL(picture);
-        await imageRef.delete();
-      }
-    }
-  }
-  setFilteredData(filteredData.filter((item) =>(chat.id!==item.id)));
-  await firestore.collection('Chats').doc(chat.id).delete();
-};
-
-const getChats = async (username, setFilterData, setMasterData) => {
-  const results = [];
-  try {
-    const MyChatQuery = firestore.collection('Chats');
-    const ChatSnapshot = await MyChatQuery.get();
-    const chatDocs = ChatSnapshot.docs;
-    for (const doc of chatDocs) {
-      if (doc.data().owners.some((item) => item.username === username)) {
-        const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-            .orderBy('createdAt', 'desc')
-            .limit(1);
-
-        const latestMessageSnapshot = await latestMessageQuery.get();
-        const latestMessageDocs = latestMessageSnapshot.docs;
-
-        if (!_.isEmpty(latestMessageDocs)) {
-          const latestMessageData = latestMessageDocs[0].data();
-          const latestMessage = latestMessageData.text;
-          const received = latestMessageData.received;
-          const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
-
-          const chatData = {
-            data: doc.data(),
-            id: doc.id,
-            latestMessage,
-            image,
-            received,
-          };
-
-          if (latestMessageData.user.name === username) chatData.latestMessage = 'You: ' + latestMessage;
-
-          results.push(chatData);
-        } else {
-          results.push({
-            data: doc.data(),
-            id: doc.id,
-            latestMessage: '',
-            image: '',
-            received: true,
-          });
-        }
-      }
-    }
-    setFilterData(results);
-    setMasterData(results);
-  } catch (error) {
-    console.log(error);
   }
 };
 
 export default function Chat() {
-  const [filteredData, setFilterData] = useState([]);
-  const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
   const handleSearchFilter = (text) => {
-    searchFilter(text, masterData, setFilterData, setSearch);
+    searchFilter(text, userContext.chats, setSearch);
   };
 
   const randomNumber = Math.floor(Math.random() * 100);
   useEffect(()=>{
-    loadingAnimation(true);
-    getChats(userContext.username, setFilterData, setMasterData).then(()=>{
-      loadingAnimation(false);
+    setRefreshing(true);
+    userContext.getChats().then(()=>{
+      setRefreshing(false);
     });
   }, []);
 
   return (
     <SafeAreaView style = {styles.container}>
       <SwipeListView
-        data = {filteredData}
+        data = {userContext.chats}
         ListFooterComponent = {
           <View style = {{height: 80}}/>
         }
@@ -137,7 +67,7 @@ export default function Chat() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={async () => {
-              await onRefresh(setRefreshing, getChats, setFilterData, setMasterData, userContext.username);
+              await onRefresh(setRefreshing, userContext);
             }}
           />
         }
@@ -185,9 +115,7 @@ export default function Chat() {
             width: 75,
             justifyContent: 'center',
             alignItems: 'center'}}>
-            <HiddenButton iconName={'trash-outline'} color={'red'} onPress={()=>{
-              deleteChat(item, filteredData, setFilterData);
-            }}/>
+            <HiddenButton iconName={'trash-outline'} color={'red'} onPress={()=>userContext.deleteChat(item)}/>
           </View>
         )}
         renderItem = {({item}) => (

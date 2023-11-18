@@ -1,10 +1,11 @@
 import {View, Text, FlatList, SafeAreaView, Pressable} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ReviewCard from '../Components/ReviewCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
+import {loadingAnimation} from '../Components/LoadingAnimation';
 
 /*
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
@@ -13,8 +14,19 @@ import {useNavigation} from '@react-navigation/native';
 export default function Reviews({route}) {
   const PostedByUsername = route.params.username;
   const userContext = useContext(UserContext);
-  const ReviewList = userContext.reviews;
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  useEffect(()=>{
+    setLoading(true);
+    userContext.getReviews().then(()=>{
+      setLoading(false);
+    });
+  }, []);
+
+  loadingAnimation(loading);
+
+  const ReviewList = userContext.reviews;
+
   const RenderIsCurrentUser = () => {
     if (userContext.username === PostedByUsername) return <View/>;
     return (

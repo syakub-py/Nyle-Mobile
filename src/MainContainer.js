@@ -10,7 +10,7 @@ import chat from './Screens/Chat';
 import profile from './Screens/Profile';
 import addPost from './Screens/AddPost';
 import {loadingAnimation} from './Components/LoadingAnimation';
-import {UserContext} from './Contexts/Context';
+import {UserContext} from './Contexts/UserContext';
 
 const Home = 'Home';
 const Market = 'Market';

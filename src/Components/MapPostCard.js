@@ -8,7 +8,7 @@ import {
 import {isLiked} from '../Screens/GlobalFunctions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RenderIsLiked from './PostDetailsComponents/renderIsLiked';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 import usePostContext from '../Services/UsePostContext';
 
 export default function MapPostCard({title}) {

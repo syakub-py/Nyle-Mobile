@@ -12,7 +12,7 @@ import {firestore} from './Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {getProfilePicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 
 const sendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
   const docRef = firestore.collection('Reviews').doc(data.id);

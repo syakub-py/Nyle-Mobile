@@ -40,15 +40,14 @@ export const isLiked = (likes, username) =>{
   return likes.includes(username);
 };
 
-export const categoryFilter = (text, masterData, setFilterData) => {
+export const categoryFilter = (text, masterData) => {
   if (text && text !== 'All') {
-    const newData = masterData.filter((item) => {
+    return masterData.filter((item) => {
       const itemData = item.category ? item.category : '';
       return itemData.indexOf(text)>-1;
     });
-    setFilterData(newData);
   } else {
-    setFilterData(masterData);
+    return masterData;
   }
 };
 

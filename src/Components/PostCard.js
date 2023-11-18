@@ -4,12 +4,12 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import {updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
 import usePostContext from '../Services/UsePostContext';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 
 export default function PostCard({title}) {
   const navigation = useNavigation();
-  const data = usePostContext(title);
   const userContext = useContext(UserContext);
+  const data = usePostContext(title) || userContext.deletedPosts.find((item) => item.title === title);
   const [Liked, setLiked] = useState(isLiked(data.likes, userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);

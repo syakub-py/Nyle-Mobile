@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {AppContext} from '../Contexts/Context';
+import {AppContext} from '../Contexts/NyleContext';
 
 
 export default function usePostContext(postTitle) {

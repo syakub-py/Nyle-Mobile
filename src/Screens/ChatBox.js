@@ -15,7 +15,7 @@ import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
 import RenderMessageImage from '../Components/ChatBoxComponents/renderMessageImage';
 import {GiftedChat} from 'react-native-gifted-chat';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 const clearMessages = async (messagesRef) => {

@@ -2,7 +2,7 @@ import {Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useContext} from 'react';
 import _ from 'lodash';
-import {UserContext} from '../Contexts/Context';
+import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 

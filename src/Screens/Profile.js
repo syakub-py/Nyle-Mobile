@@ -18,8 +18,8 @@ import _ from 'lodash';
 import HiddenButton from '../Components/HiddenButton';
 import RatingButton from '../Components/RatingButton';
 import {useNavigation} from '@react-navigation/native';
-import {AppContext, UserContext} from '../Contexts/Context';
-
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 
 
 const onRefresh = async (setRefreshing, userContext) => {
@@ -92,8 +92,16 @@ export default function Profile() {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
   const nyleContext =useContext(AppContext);
+
   useEffect(()=>{
-    clearDeletedAfter30Days(nyleContext);
+    setRefreshing(true);
+    Promise.all([
+      clearDeletedAfter30Days(nyleContext),
+      userContext.getAmountOfSoldItems(),
+      userContext.generateRating(),
+    ]).then(()=>{
+      setRefreshing(false);
+    });
   }, []);
 
   const SectionTitle = ({title}) => {

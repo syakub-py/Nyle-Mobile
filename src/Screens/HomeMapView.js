@@ -15,20 +15,20 @@ import {categoryFilter} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import MapPostCard from '../Components/MapPostCard';
 import BackButton from '../Components/BackButton';
-import {AppContext, UserContext} from '../Contexts/Context';
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 
-const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setFilterData) => {
+const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setMasterData) => {
   setSelectedCategoryIndex(index);
-  categoryFilter(categories[index], masterData, setFilterData);
+  setMasterData(categoryFilter(categories[index], masterData));
 };
 
 export default function HomeMapView() {
   const [masterData, setMasterData] = useState([]);
-  const [filteredData, setFilterData] = useState([]);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const nyleContext = useContext(AppContext);
@@ -43,7 +43,6 @@ export default function HomeMapView() {
 
   useEffect(() => {
     nyleContext.readDatabase('AllPosts').then((result)=>{
-      setFilterData(result);
       setMasterData(result);
     });
   }, []);
@@ -110,7 +109,7 @@ export default function HomeMapView() {
         <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent'}}>
           {
             categories.map((category, index) => (
-              <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setFilterData)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
+              <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setMasterData)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
                 <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight: '400'}}>
                   {category}
                 </Text>
@@ -122,7 +121,7 @@ export default function HomeMapView() {
 
 
       <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: {latitude: 40.849113, longitude: -101.325992}, pitch: 0, heading: 0, zoom: 1, altitude: 0}}>
-        {filteredData.map((item, index) => (
+        {masterData.map((item, index) => (
           <View key = {index}>
             <Marker coordinate = {item.coordinates}>
               <CustomMapMarker firstImage = {item.pictures[0]} />
@@ -141,7 +140,7 @@ export default function HomeMapView() {
 
       <View style = {{position: 'absolute', bottom: 10, width: '100%'}}>
         <FlatList
-          data={filteredData}
+          data={masterData}
           horizontal
           pagingEnabled
           onScroll={handleScroll}
@@ -171,7 +170,7 @@ export default function HomeMapView() {
                     {scale: index === currentIndex ? 1.1 : 1},
                   ],
                   marginLeft: index === 0 ? width/2-230/2 : 15,
-                  marginRight: index === filteredData.length - 1 ? width/2 - 230/2 : 15,
+                  marginRight: index === masterData.length - 1 ? width/2 - 230/2 : 15,
                 }}>
                   <MapPostCard title = {item.title} />
                 </View>

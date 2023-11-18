@@ -18,33 +18,30 @@ import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
 import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
-import {AppContext, UserContext} from '../Contexts/Context';
-
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-const onRefresh = (setRefreshing, setMasterData, setFilteredData, nyleContext) => {
+const onRefresh = (setRefreshing, setMasterData, nyleContext) => {
   setRefreshing(true);
   Vibration.vibrate(100);
   nyleContext.readDatabase('AllPosts').then((result)=>{
     setMasterData(result);
-    setFilteredData(result);
   });
   setTimeout(() => setRefreshing(false), 300);
 };
 
-const searchFilter = (text, masterData, setFilterData, setSearch) => {
+const searchFilter = (text, masterData, setSearch) => {
   if (text) {
-    const newData = masterData.filter((item) => {
+    setSearch(text);
+    return masterData.filter((item) => {
       const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData)>-1;
     });
-    setFilterData(newData);
-    setSearch(text);
   } else {
-    setFilterData(masterData);
     setSearch(text);
   }
 };
@@ -53,7 +50,6 @@ const searchFilter = (text, masterData, setFilterData, setSearch) => {
 export default function Home() {
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
-  const [filteredData, setFilterData] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -65,7 +61,6 @@ export default function Home() {
     setLoading(true);
     nyleContext.readDatabase('AllPosts').then((result)=>{
       setMasterData(result);
-      setFilterData(result);
       setLoading(false);
     });
   }, []);
@@ -145,7 +140,7 @@ export default function Home() {
 
               </View>
 
-              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} setFilterData={setFilterData} />
+              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} />
 
               <View style = {{
                 flex: 1,
@@ -159,15 +154,15 @@ export default function Home() {
                 elevation: 2,
               }}>
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text, masterData, setFilterData, setSearch)} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => setMasterData(searchFilter(text, masterData, setSearch))} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
               </View>
 
             </View>
           }
 
-          data = {filteredData}
+          data = {masterData}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, nyleContext)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setMasterData, nyleContext)} />
           }
           renderItem = {({item}) => (
             <PostCard title = {item.title}/>

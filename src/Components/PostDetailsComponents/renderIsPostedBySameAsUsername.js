@@ -2,7 +2,7 @@ import {Alert, Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useContext} from 'react';
 import {firestore} from '../Firebase';
-import {UserContext} from '../../Contexts/Context';
+import {UserContext} from '../../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 

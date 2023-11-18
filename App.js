@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Stack from './src/Stack';
-import {AppContext, NyleContext} from './src/Contexts/Context';
+import {AppContext, NyleContext} from './src/Contexts/NyleContext';
 
 /**
  * Main App component.

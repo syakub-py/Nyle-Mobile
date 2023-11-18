@@ -21,8 +21,8 @@ import ImageUrls from '../Components/AddPostsComponents/renderIsImages';
 import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsText';
 import RenderHomeDataSection from '../Components/AddPostsComponents/renderHomeSection';
 import RenderAutoSection from '../Components/AddPostsComponents/renderAutoSection';
-import {AppContext, UserContext} from '../Contexts/Context';
-
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 
 
 const currencies = [

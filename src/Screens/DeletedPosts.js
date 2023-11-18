@@ -1,20 +1,20 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
+import {Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import {firestore} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
-import {AppContext, UserContext} from '../Contexts/Context';
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 
-
-
-const onRefresh = (username, setRefreshing, setDeletedPostList) => {
+const onRefresh = (username, setRefreshing, userContext) => {
   setRefreshing(true);
-  getPosts(username, setDeletedPostList);
-  setTimeout(() => setRefreshing(false), 1000);
+  userContext.getDeletedPosts().then(()=>{
+    setRefreshing(false);
+  });
 };
 
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
@@ -51,13 +51,16 @@ export default function DeletedPosts() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getPosts(userContext.username, setDeletedPostList);
+    setRefreshing(true);
+    userContext.getDeletedPosts().then(()=>{
+      setRefreshing(false);
+    });
   }, []);
 
   return (
     <View style = {{flex: 1}}>
       <SwipeListView
-        data = {deletedPostList}
+        data = {userContext.deletedPosts}
         rightOpenValue = {-140}
         ListHeaderComponent = {
           <View style = {{marginTop: 10}}>
@@ -71,9 +74,7 @@ export default function DeletedPosts() {
               <Text style = {{alignSelf: 'center', fontWeight: 'bold'}}>Posts will get deleted after 30 days</Text>
             </View>
 
-            <Pressable onPress = {() => {
-              deleteAllPosts(deletedPostList, nyleContext);
-            }}>
+            <Pressable onPress = {() => deleteAllPosts(deletedPostList, nyleContext)}>
               <View style = {{width: 100, backgroundColor: 'black', margin: 10, borderRadius: 5}}>
                 <Ionicons name = {'trash'} size = {30} style = {{color: 'white', alignSelf: 'center'}}/>
               </View>
@@ -82,7 +83,7 @@ export default function DeletedPosts() {
           </View>
         }
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(userContext.username, setRefreshing, setDeletedPostList)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(userContext.username, setRefreshing, userContext)} />
         }
         renderItem = {({item}) => (
           <PostCard title = {item.title}/>
