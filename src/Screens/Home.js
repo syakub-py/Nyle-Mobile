@@ -29,7 +29,7 @@ const onRefresh = (setRefreshing, setMasterData, nyleContext) => {
   Vibration.vibrate(100);
   nyleContext.readDatabase('AllPosts').then((result)=>{
     setMasterData(result);
-    setRefreshing(false)
+    setRefreshing(false);
   });
 };
 
@@ -87,7 +87,7 @@ export default function Home() {
       <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
-          bottom: 90,
+          bottom: 110,
           left: width / 2 - 40,
           width: 80,
           backgroundColor: 'white',

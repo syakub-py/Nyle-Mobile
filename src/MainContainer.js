@@ -115,8 +115,12 @@ export default function MainContainer() {
             }
           } else if (rn === Profile && !_.isEmpty(userContext.profilePicture)) return <Image source = {{uri: userContext.profilePicture}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>;
           else if (rn === AddPost) {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
-            return <Ionicons name = {iconName} size = {32} color = {color}/>;
+            iconName = focused ? 'add' : 'add-outline';
+            return (
+              <View style={{backgroundColor: 'black', height: 60, width: 60, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginBottom: 40, elevation: 2}}>
+                <Ionicons name = {iconName} size = {40} color = {'white'}/>
+              </View>
+            );
           }
         },
 

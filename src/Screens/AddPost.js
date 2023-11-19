@@ -83,7 +83,7 @@ export default function AddPost() {
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
   const {width} = Dimensions.get('window');
-  const {height} = Dimensions.get('window');
+  const height =width;
   const categories = [{Label: 'All', Value: 'All'}, {Label: 'Tech', Value: 'Tech'}, {Label: 'Auto', Value: 'Auto'}, {Label: 'Homes', Value: 'Homes'}, {Label: 'Bikes', Value: 'Bikes'}, {Label: 'Bike Parts', Value: 'Bike Parts'}, {Label: 'Jewelry', Value: 'Jewelry'}, {Label: 'Retail/Wholesale', Value: 'Retail/Wholesale'}];
 
   useEffect(()=>{
@@ -209,6 +209,7 @@ export default function AddPost() {
               );
             }}
           />
+
         </View>
         <ImageUrls imageUrls={imageUrls} setImageUrls={setImageUrls} selectImages={selectImages}/>
         <View>
@@ -236,7 +237,6 @@ export default function AddPost() {
             }}
             setIsFocus={()=>setIsFocus(false)}
           />
-
         </View>
 
         <View >

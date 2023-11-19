@@ -14,7 +14,7 @@ const postReview = (username, PostedBy, Title, ReviewMessage, Stars, navigation)
     stars: Stars+1,
     Replies: [],
     DatePosted: new Date().toLocaleString(),
-  }).then((ref) => {
+  }).then(() => {
     navigation.goBack();
   }).catch((error) => {
     console.log('Error adding document: ', error);
