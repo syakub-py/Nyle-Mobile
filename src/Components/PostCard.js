@@ -65,7 +65,7 @@ export default function PostCard({title}) {
       {
           (userContext.username !== data.postedBy) ? (
               <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
-                <Pressable onPress={() => handleLike(data.title, userContext.username, Liked, setLiked)}>
+                <Pressable onPress={() => data.handleLikeCounter(userContext.username, Liked, setLiked)}>
                   <RenderLiked/>
                 </Pressable>
               </View>

@@ -1,16 +1,16 @@
 import {View} from 'react-native';
-import {CustomTextWithInput} from '../CustomText';
+import {CustomTextInput} from '../CustomText';
 import React from 'react';
 
 
 export default function RenderDetailsText({category, setDetails}) {
   if ((category === 'Homes' || category === 'Auto')) {
-    return <View/>;
+    return null;
   }
   return (
     <View>
-      <CustomTextWithInput
-        text="Details"
+      <CustomTextInput
+        placeholder="Details"
         onChangeText={(text) => setDetails(text)}
         multiline
         height={200}

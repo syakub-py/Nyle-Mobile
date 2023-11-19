@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import {CustomTextWithInput} from '../CustomText';
+import {CustomTextInput} from '../CustomText';
 import React from 'react';
 
 
@@ -10,10 +10,10 @@ export default function RenderAutoSection({category, setMake, setModel, setMilea
 
   return (
     <View>
-      <CustomTextWithInput text="Make" onChangeText={(text) => setMake(text)} />
-      <CustomTextWithInput text="Model" onChangeText={(text) => setModel(text)} />
-      <CustomTextWithInput text="Mileage" onChangeText={(text) => setMileage(text)} />
-      <CustomTextWithInput text="VIN" onChangeText={(text) => setVIN(text)} />
+      <CustomTextInput placeholder="Make" onChangeText={(text) => setMake(text)} />
+      <CustomTextInput placeholder="Model" onChangeText={(text) => setModel(text)} />
+      <CustomTextInput placeholder="Mileage" onChangeText={(text) => setMileage(text)} />
+      <CustomTextInput placeholder="VIN" onChangeText={(text) => setVIN(text)} />
     </View>
   );
 }
