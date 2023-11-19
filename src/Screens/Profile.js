@@ -24,10 +24,10 @@ import {UserContext} from '../Contexts/UserContext';
 
 const onRefresh = async (setRefreshing, userContext) => {
   setRefreshing(true);
-  await userContext.getPosts();
-  Vibration.vibrate(100);
-
-  setTimeout(() => setRefreshing(false), 1000);
+  await userContext.getPosts().then(()=>{
+    Vibration.vibrate(100);
+    setRefreshing(false);
+  });
 };
 
 const handleSignOut = async (navigation) => {

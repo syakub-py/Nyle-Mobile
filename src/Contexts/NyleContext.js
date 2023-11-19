@@ -1,7 +1,7 @@
 import {firestore, getstorage} from '../Components/Firebase';
 import {Alert} from 'react-native';
 import {createContext} from 'react';
-import {Post} from './PostContext';
+import {Post} from '../Classes/Post';
 
 export class NyleContext {
   constructor() {
@@ -32,7 +32,7 @@ export class NyleContext {
     if (!collectionPath) throw new Error('Error: collection name cannot be empty');
 
 
-    Post.pictures= await this.upload(Post.pictures, Post.title);
+    Post.pictures = await this.upload(Post.pictures, Post.title);
 
     return firestore.collection(collectionPath).doc(Post.title).set(Post)
         .then((ref) => {

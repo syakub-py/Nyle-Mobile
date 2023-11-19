@@ -51,6 +51,7 @@ export class Post {
     setLiked(!Liked);
     Vibration.vibrate(100);
   };
+
   handleViewCounter = () => {
     const PostRef = firestore.collection('AllPosts').doc(this.title);
     return PostRef.get()

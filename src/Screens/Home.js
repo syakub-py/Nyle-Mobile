@@ -29,8 +29,8 @@ const onRefresh = (setRefreshing, setMasterData, nyleContext) => {
   Vibration.vibrate(100);
   nyleContext.readDatabase('AllPosts').then((result)=>{
     setMasterData(result);
+    setRefreshing(false)
   });
-  setTimeout(() => setRefreshing(false), 300);
 };
 
 const searchFilter = (text, masterData, setSearch) => {

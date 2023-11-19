@@ -8,9 +8,9 @@ import {
   View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useContext} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import {updatedCurrencyList} from './GlobalFunctions';
+import {isLiked, updatedCurrencyList} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import BackButton from '../Components/BackButton';
 import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
@@ -23,6 +23,7 @@ import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButto
 import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
 import usePostContext from '../Services/UsePostContext';
 import {useNavigation} from '@react-navigation/native';
+import {UserContext} from '../Contexts/UserContext';
 const {width} = Dimensions.get('window');
 const height = width;
 
@@ -34,12 +35,11 @@ export default function PostDetails({route}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [more, setMore] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [numOfReviews, setNumOfReviews] = useState(0);
   const [Liked, setLiked] = useState(false);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
   const navigation =useNavigation();
-
+  const userContext = useContext(UserContext);
 
   useEffect(()=>{
     smallFlatListRef.current?.scrollToIndex({
@@ -52,7 +52,7 @@ export default function PostDetails({route}) {
 
   useEffect(() => {
     postContext.handleViewCounter();
-    postContext.handleLikeCounter();
+    postContext.handleLikeCounter(userContext.username, isLiked, setLiked);
   }, []);
 
 
@@ -87,7 +87,7 @@ export default function PostDetails({route}) {
           <MenuButtonModal isOpen={isOpen} setIsOpen={setIsOpen}/>
 
           <View style = {{position: 'absolute', top: 30, right: 75, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-            <Pressable onPress = {() =>postContext.handleLike()}>
+            <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, isLiked, setLiked)}>
               <RenderIsLiked Liked={Liked} size={30}/>
             </Pressable>
           </View>
@@ -178,7 +178,7 @@ export default function PostDetails({route}) {
           <RenderIsCategoryAuto postContext={postContext}/>
 
         </View>
-        <PostedBySameAsUsername postedBy={postContext.postedBy} numOfReviews={numOfReviews}/>
+        <PostedBySameAsUsername postedBy={postContext.postedBy} numOfReviews={userContext.numberOfReviews}/>
 
         <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
 

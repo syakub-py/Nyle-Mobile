@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Pressable,
   Dimensions,
   SafeAreaView,
-  ActivityIndicator, Vibration,
+  ActivityIndicator, Vibration, FlatList,
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
@@ -74,14 +74,32 @@ export default function AddPost() {
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [, setIsFocus] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageUrls, setImageUrls] = useState([]);
+  const [currencyList, setCurrencyList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const smallFlatListRef = useRef(null);
+  const mainFlatListRef = useRef(null);
+  const nyleContext = useContext(AppContext);
+  const userContext = useContext(UserContext);
   const {width} = Dimensions.get('window');
   const {height} = Dimensions.get('window');
   const categories = [{Label: 'All', Value: 'All'}, {Label: 'Tech', Value: 'Tech'}, {Label: 'Auto', Value: 'Auto'}, {Label: 'Homes', Value: 'Homes'}, {Label: 'Bikes', Value: 'Bikes'}, {Label: 'Bike Parts', Value: 'Bike Parts'}, {Label: 'Jewelry', Value: 'Jewelry'}, {Label: 'Retail/Wholesale', Value: 'Retail/Wholesale'}];
-  const [imageUrls, setImageUrls] = useState([]);
-  const [currencyList, setCurrencyList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const nyleContext = useContext(AppContext);
-  const userContext = useContext(UserContext);
+
+  useEffect(()=>{
+    if (currentIndex<0) {
+      smallFlatListRef.current?.scrollToIndex({
+        index: currentIndex,
+        animated: true,
+        viewPosition: 0.5,
+      });
+    };
+  }, [currentIndex]);
+
+  const change = ({nativeEvent}) => {
+    const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+    setCurrentIndex(slide);
+  };
 
   const dropMarker = (event) => {
     const coordinate = event.nativeEvent;
@@ -136,43 +154,62 @@ export default function AddPost() {
     return <ActivityIndicator size = "large" color = "black" animating = {loading} />;
   };
 
+  const scrollToActiveIndex = (index) =>{
+    mainFlatListRef.current.scrollToIndex({
+      index: index,
+      animated: false,
+      viewPosition: 0.8,
+    });
+    setCurrentIndex(index);
+  };
+
   return (
     <SafeAreaView style = {{backgroundColor: 'white'}}>
       <ScrollView contentContainerStyle = {{paddingBottom: 60}} refreshControl = {<RefreshControl refreshing = {refresh} onRefresh = {()=>onRefresh(setRefreshing)}/>} >
         <View>
-          <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator = {false}>
-            {
-              imageUrls.map((item, index) =>(
-                <View key = {index}>
-                  <Image source = {{uri: item}} style = {{height: height, width: width}}/>
-                </View>
-              ) )
-            }
-          </ScrollView>
+          <FlatList
+            data={imageUrls}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={change}
+            ref = {mainFlatListRef}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <View key = {index}>
+                <Image source = {{uri: item}} style = {{height: height, width: width}}/>
+              </View>
+            )}
+          />
 
-          <ScrollView horizontal showsHorizontalScrollIndicator = {false} style = {{bottom: 15, paddingHorizontal: 5, position: 'absolute', width: width}}>
-            <View style = {{flexDirection: 'row', alignItems: 'center'}}>
-              {
-                imageUrls.map((i, k) =>(
-                  <Pressable key = {k}>
-                    <Pressable style = {{zIndex: 1}} onPress = {() => {
-                      deleteImages(i);
-                    }}>
-                      <View style = {styles.shadowBox}>
-                        <View style = {styles.circle}>
-                          <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation: 1}}/>
-                        </View>
+          <FlatList
+            data={imageUrls}
+            horizontal={true}
+            style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
+            contentContainerStyle={{alignItems: 'center'}}
+            showsHorizontalScrollIndicator={false}
+            ref = {smallFlatListRef}
+            initialScrollIndex={currentIndex}
+            renderItem={({item, index})=>{
+              return (
+                <>
+                  <Pressable style = {{zIndex: 1}} onPress = {() => {
+                    deleteImages(index);
+                  }}>
+                    <View style = {styles.shadowBox}>
+                      <View style = {styles.circle}>
+                        <Ionicons name ='remove-outline' color = {'white'} size = {15} style = {{elevation: 1}}/>
                       </View>
-                    </Pressable>
-                    <Image source = {{uri: i}} style = {{height: 50, width: 50, margin: 10, borderRadius: 10, alignContent: 'center'}}/>
+                    </View>
                   </Pressable>
-                ))
-              }
-            </View>
-          </ScrollView>
+                  <Pressable key = {item} onPress={()=>scrollToActiveIndex(index)}>
+                    <Image source = {{uri: item}} style = {{height: 50, width: 50, margin: 10, borderRadius: 10, alignContent: 'center'}}/>
+                  </Pressable>
+                </>
+              );
+            }}
+          />
         </View>
-
-
         <ImageUrls imageUrls={imageUrls} setImageUrls={setImageUrls} selectImages={selectImages}/>
         <View>
           <CustomTextWithInput

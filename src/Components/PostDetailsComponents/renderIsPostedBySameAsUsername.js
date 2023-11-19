@@ -1,9 +1,10 @@
 import {Alert, Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {firestore} from '../Firebase';
 import {UserContext} from '../../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
+import {getProfilePicture} from '../../Screens/GlobalFunctions';
 
 
 export const generateChatID = (user1, user2) => {
@@ -72,11 +73,20 @@ const handleAddChat = (params, navigation) => {
 export default function PostedBySameAsUsername({postedBy, numOfReviews}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
+  const [postedByProfilePicture, setPostedByProfilePicture] = useState('');
+  useEffect(()=>{
+    getProfilePicture(postedBy).then((result)=>{
+      setPostedByProfilePicture(result);
+    });
+    userContext.generateRating();
+  }, []);
+
+
   if (postedBy !== userContext.username) {
     return (
       <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style = {{justifyContent: 'center', flexDirection: 'row', marginLeft: 10}}>
-          <Image source = {{uri: userContext.profilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+          <Image source = {{uri: postedByProfilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
           <View style = {{margin: 10, alignSelf: 'center'}}>
             <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
@@ -109,7 +119,7 @@ export default function PostedBySameAsUsername({postedBy, numOfReviews}) {
   return (
     <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
       <View style = {{justifyContent: 'center', flexDirection: 'row', margin: 10}}>
-        {/* <Image source = {{uri: ''}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/> */}
+        <Image source = {{uri: userContext.profilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
         <View style = {{margin: 10, alignSelf: 'center'}}>
           <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy} (You)</Text>
           <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
