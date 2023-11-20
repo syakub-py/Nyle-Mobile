@@ -4,9 +4,7 @@ import React from 'react';
 
 
 export default function RenderDetailsText({category, setDetails}) {
-  if ((category === 'Homes' || category === 'Auto')) {
-    return null;
-  }
+  if ((category === 'Homes' || category === 'Auto')) return null;
   return (
     <View>
       <CustomTextInput

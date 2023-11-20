@@ -147,7 +147,7 @@ export default function HomeMapView() {
           snapToAlignment={'center'}
           showsHorizontalScrollIndicator={false}
           onEndReached={()=>{
-            nyleContext.handleEndReached();
+            nyleContext.handleEndOfScreenReached();
           }}
           renderItem={({item, index})=>{
             return (

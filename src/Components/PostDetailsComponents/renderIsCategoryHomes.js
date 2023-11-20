@@ -1,9 +1,10 @@
 import {Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
+import usePostContext from '../../Services/UsePostContext';
 
-
-export default function RenderIsCategoryHomes({postContext}) {
+export default function RenderIsCategoryHomes({postTitle}) {
+  const postContext = usePostContext(postTitle);
   if (postContext.category === 'Homes') {
     return (
       <View style = {{flexDirection: 'row', alignContent: 'center', marginTop: 5}}>

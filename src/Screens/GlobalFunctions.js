@@ -39,7 +39,6 @@ export const updatedCurrencyList = (currencyList) =>{
 export const isLiked = (likes, username) =>{
   return likes.includes(username);
 };
-
 export const categoryFilter = (text, masterData) => {
   if (text && text !== 'All') {
     return masterData.filter((item) => {

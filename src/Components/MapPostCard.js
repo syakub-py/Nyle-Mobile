@@ -10,7 +10,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import RenderIsLiked from './PostDetailsComponents/renderIsLiked';
 import {UserContext} from '../Contexts/UserContext';
 import usePostContext from '../Services/UsePostContext';
-
 export default function MapPostCard({title}) {
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
@@ -21,7 +20,6 @@ export default function MapPostCard({title}) {
   useEffect(() => {
     generateRating(postContext.postedBy, setRating, setNumOfReviews);
   }, []);
-
 
   const RenderLikeButton = () =>{
     if (userContext.username !== postContext.postedBy) {

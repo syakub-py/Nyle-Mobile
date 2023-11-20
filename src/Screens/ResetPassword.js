@@ -8,6 +8,7 @@ const handleResetPassword = (username) => {
   auth.sendPasswordResetEmail(username)
       .then(() => {
         alert('Password reset email sent successfully!');
+        useNavigation().goBack();
       })
       .catch((error) => {
         console.log(error);

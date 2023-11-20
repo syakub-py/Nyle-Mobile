@@ -56,7 +56,7 @@ export default function PostDetails({route}) {
   }, []);
 
 
-  const change = ({nativeEvent}) => {
+  const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     setCurrentIndex(slide);
   };
@@ -103,7 +103,7 @@ export default function PostDetails({route}) {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            onScroll={change}
+            onScroll={changeIndex}
             ref = {mainFlatListRef}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => (
@@ -174,8 +174,8 @@ export default function PostDetails({route}) {
           </View>
 
 
-          <RenderIsCategoryHomes postContext={postContext}/>
-          <RenderIsCategoryAuto postContext={postContext}/>
+          <RenderIsCategoryHomes postTitle={postContext.title}/>
+          <RenderIsCategoryAuto postTitle={postContext.title}/>
 
         </View>
         <PostedBySameAsUsername postedBy={postContext.postedBy} numOfReviews={userContext.numberOfReviews}/>
@@ -200,7 +200,7 @@ export default function PostDetails({route}) {
             </MapView>
           </View>
         </Pressable>
-        <RenderHomesAndAuto item={postContext}/>
+        <RenderHomesAndAuto postTitle={postContext.title}/>
       </ScrollView>
     </SafeAreaView>
   );

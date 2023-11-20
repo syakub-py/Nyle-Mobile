@@ -38,7 +38,7 @@ class User {
         results.push({id: doc.id, ...doc.data()});
       });
     });
-    if (results) {
+    if (!_.isEmpty(results)) {
       results = results.sort((a, b) => {
         return new Date(b.DatePosted) - new Date(a.DatePosted);
       });
@@ -64,7 +64,7 @@ class User {
 
       const querySnapshot = await PostsRef.where('profilePic', '==', this.username).get();
 
-      if (querySnapshot.empty) {
+      if (_.isEmpty(querySnapshot)) {
         const batch = firestore.batch();
         querySnapshot.forEach((doc) => {
           const docRef = PostsRef.doc(doc.id);
@@ -117,10 +117,9 @@ class User {
         counter++;
       });
     });
-    const rating = sum/counter;
-    const numOfReviews = counter;
-    this.rating = rating;
-    this.numberOfReviews = numOfReviews;
+
+    this.rating =  sum/counter;
+    this.numberOfReviews = counter;
   };
 
   getPosts = async () => {
@@ -216,6 +215,5 @@ class User {
     await firestore.collection('Chats').doc(chat.id).delete();
   };
 }
-
 
 export const UserContext = createContext(new User());

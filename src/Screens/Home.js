@@ -46,7 +46,6 @@ const searchFilter = (text, masterData, setSearch) => {
   }
 };
 
-
 export default function Home() {
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
@@ -170,7 +169,7 @@ export default function Home() {
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{
             if (_.size(masterData)>1) {
-              nyleContext.handleEndReached();
+              nyleContext.handleEndOfScreenReached();
             }
           }}
         />

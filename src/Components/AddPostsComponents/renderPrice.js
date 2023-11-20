@@ -62,7 +62,7 @@ export default function RenderPrice({currencyList, setCurrencyList, setIsFocus})
               width: Dimensions.get('window').width / 3,
             }}
           />
-          <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width / 2.5} />
+          <CustomTextInput onChangeText={(text) => setPrice(text)} />
         </View>
 
         <View style={{zIndex: 1, marginLeft: 15}}>
@@ -109,7 +109,7 @@ export default function RenderPrice({currencyList, setCurrencyList, setIsFocus})
             }}
             setIsFocus={()=>setIsFocus(false)}
           />
-          <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width/2.5}/>
+          <CustomTextInput onChangeText={(text) => setPrice(text)}/>
         </View>
       </View>
     );

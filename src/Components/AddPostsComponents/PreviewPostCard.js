@@ -14,7 +14,7 @@ export default function PreviewPostCard({postData}) {
   const FLATLIST_PICTURE_DIMENSIONS = 40;
   const userContext = useContext(UserContext);
 
-  const change = ({nativeEvent}) => {
+  const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     setCurrentIndex(slide);
   };
@@ -50,7 +50,7 @@ export default function PreviewPostCard({postData}) {
         data={postData.pictures}
         horizontal
         pagingEnabled
-        onScroll={change}
+        onScroll={changeIndex}
         ref = {mainFlatListRef}
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}
@@ -83,7 +83,16 @@ export default function PreviewPostCard({postData}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === postData.pictures.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
+              <Image source = {{uri: item}}
+                style = {{
+                  height: FLATLIST_PICTURE_DIMENSIONS,
+                  width: FLATLIST_PICTURE_DIMENSIONS,
+                  transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}],
+                  borderRadius: 6, borderWidth: index === currentIndex ?2:0,
+                  borderColor: index === currentIndex ?'white':'transparent',
+                  marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3,
+                  marginRight: index === postData.pictures.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}}
+                key = {item}/>
             </Pressable>
           );
         }}

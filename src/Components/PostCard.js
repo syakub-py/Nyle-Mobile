@@ -47,7 +47,7 @@ export default function PostCard({title}) {
     );
   };
 
-  const change = ({nativeEvent}) => {
+  const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     setCurrentIndex(slide);
   };
@@ -86,7 +86,7 @@ export default function PostCard({title}) {
         data={data.pictures}
         horizontal
         pagingEnabled
-        onScroll={change}
+        onScroll={changeIndex}
         ref = {mainFlatListRef}
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}

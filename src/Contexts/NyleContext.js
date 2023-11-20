@@ -96,7 +96,7 @@ export class NyleContext {
     }
   };
 
-  handleEndReached = async () => {
+  handleEndOfScreenReached = async () => {
     const postRef = firestore.collection('AllPosts');
     let querySnapshot = null;
     if (this.lastDocument) {

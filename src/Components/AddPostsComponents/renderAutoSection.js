@@ -4,9 +4,7 @@ import React from 'react';
 
 
 export default function RenderAutoSection({category, setMake, setModel, setMileage, setVIN}) {
-  if (category !== 'Auto') {
-    return null;
-  }
+  if (category !== 'Auto') return null;
 
   return (
     <View>

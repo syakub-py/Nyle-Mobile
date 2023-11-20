@@ -1,9 +1,10 @@
 import {Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
+import usePostContext from '../../Services/UsePostContext';
 
-
-export default function RenderIsCategoryAuto({postContext}) {
+export default function RenderIsCategoryAuto({postTitle}) {
+  const postContext = usePostContext(postTitle);
   if (postContext.category === 'Auto') {
     return (
       <View style = {{flexDirection: 'column'}}>

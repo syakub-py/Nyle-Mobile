@@ -25,8 +25,6 @@ export default function Reviews({route}) {
 
   loadingAnimation(loading);
 
-  const ReviewList = userContext.reviews;
-
   const RenderIsCurrentUser = () => {
     if (userContext.username === PostedByUsername) return null;
     return (
@@ -54,7 +52,7 @@ export default function Reviews({route}) {
   return (
     <SafeAreaView style = {{flex: 1, backgroundColor: 'whitesmoke'}}>
 
-      <FlatList data = {ReviewList}
+      <FlatList data = {userContext.reviews}
         ListHeaderComponent = {
           <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
 

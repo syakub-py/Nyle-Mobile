@@ -60,7 +60,7 @@ export default function SignUp() {
     return requirements.every((requirement) => requirement.fulfilled);
   };
 
-  const handleSignUp = (username, password, profilePic, navigation) => {
+  const handleSignUp = () => {
     if (areAllRequirementsFulfilled()) {
       auth
           .createUserWithEmailAndPassword(username, password)
@@ -118,7 +118,7 @@ export default function SignUp() {
 
       </View>
 
-      <Pressable style = {styles.submitContainer} onPress = {()=>handleSignUp(username, password, profilePic, navigation)}>
+      <Pressable style = {styles.submitContainer} onPress = {()=>handleSignUp()}>
         <Text style = {[styles.text, {color: 'white', fontWeight: '600', fontSize: 16}]}>Sign Up</Text>
       </Pressable>
     </View>

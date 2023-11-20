@@ -1,10 +1,7 @@
 import React from 'react';
-import {Text, TextInput, View} from 'react-native';
+import { TextInput} from 'react-native';
 
-
-
-
-export const CustomTextInput = ({placeholder, onChangeText, multiline = false, height = 50, value, width = null}) => {
+export const CustomTextInput = ({placeholder, onChangeText, multiline = false, value}) => {
   return (
     <TextInput
       multiline = {multiline}
