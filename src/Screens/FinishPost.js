@@ -1,5 +1,5 @@
 import PreviewPostCard from '../Components/AddPostsComponents/PreviewPostCard';
-import {Dimensions, View, Text, ScrollView} from 'react-native';
+import {Dimensions, View, ScrollView, Pressable, Text} from 'react-native';
 import {useContext, useState} from 'react';
 import {UserContext} from '../Contexts/UserContext';
 import {AppContext} from '../Contexts/NyleContext';
@@ -11,6 +11,8 @@ import RenderHomeDataSection from '../Components/AddPostsComponents/renderHomeSe
 import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsText';
 import MapView, {Marker} from 'react-native-maps';
 import DropdownInput from '../Components/AddPostDropdown';
+import RenderPrice from '../Components/AddPostsComponents/renderPrice';
+import {loadingAnimation} from '../Components/LoadingAnimation';
 export default function FinishPost({route}) {
   const images = route.params.selectedImages;
   const [title, setTitle] = useState('');
@@ -107,14 +109,31 @@ export default function FinishPost({route}) {
           <Marker coordinate = {coordinates}/>
         </MapView>
       </View>
+      <RenderPrice setIsFocus={setIsFocus} currencyList={currencyList} setCurrencyList={setCurrencyList} />
       <RenderDetailsText category={category} setDetails={setDetails}/>
       <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
       <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
 
-      <View style ={{position: 'absolute', bottom: 20}}>
+      <View style = {{flexDirection: 'row', position: 'absolute', bottom: 0, height: '10%', width: '100%', justifyContent: 'space-evenly', backgroundColor: 'transparent', alignItems: 'center'}}>
+        <View style = {{justifyContent: 'center', backgroundColor: 'whitesmoke', borderWidth: 2, borderColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>
+          <Pressable>
+            <Text style = {{color: 'black', fontSize: 15, fontWeight: 'bold'}}>Cancel</Text>
+          </Pressable>
+        </View>
 
+        {loadingAnimation(loading)}
+        <View style = {{justifyContent: 'center', backgroundColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>
+          <Pressable onPress = {() => {
+            setLoading(true);
+            nyleContext.addPost('AllPosts', createPost(images)).then(()=>{
+              setLoading(false);
+            });
+          }}>
+            <Text style = {{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Post</Text>
+          </Pressable>
+        </View>
       </View>
-
+      <View style={{height: 200}}/>
     </ScrollView>
   );
 }

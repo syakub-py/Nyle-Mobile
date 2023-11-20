@@ -13,10 +13,17 @@ const RenderCurrencyItem = (item) => {
   );
 };
 
-export default function RenderPrice({currencies, currencyList, setCurrencyList, setIsFocus}) {
+export default function RenderPrice({currencyList, setCurrencyList, setIsFocus}) {
   const [checked, setChecked] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState({});
   const [price, setPrice] = useState(0);
+  const currencies = [
+    {label: 'Bitcoin', value: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'},
+    {label: 'Ethereum', value: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880'},
+    {label: 'Doge Coin', value: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1547792256'},
+    {label: 'USD', value: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389'},
+    {label: 'Solana', value: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422'},
+  ];
 
   useEffect(() => {
     console.log('Selected currency updated, ', selectedCurrency);
