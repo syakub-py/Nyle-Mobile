@@ -12,7 +12,7 @@ export default function RatingButton({username}) {
   if (!_.isUndefined(userContext.rating)) {
     return (
       <Pressable onPress = {() => {
-        navigation.navigate('Reviews', {username: username, currentUser: userContext.username});
+        navigation.navigate('Reviews', {username: username});
       }}>
         <View style = {{flexDirection: 'column', alignItems: 'center'}}>
           <Ionicons size = {20} name = {'star'} color = {'#ebd61e'}/>

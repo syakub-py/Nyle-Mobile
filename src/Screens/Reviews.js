@@ -28,7 +28,7 @@ export default function Reviews({route}) {
   const ReviewList = userContext.reviews;
 
   const RenderIsCurrentUser = () => {
-    if (userContext.username === PostedByUsername) return <View/>;
+    if (userContext.username === PostedByUsername) return null;
     return (
       <View style = {{
         position: 'absolute',

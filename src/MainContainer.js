@@ -42,10 +42,7 @@ export default function MainContainer() {
     const latestMessagePromises = [];
 
     ChatSnapshot.docs.forEach((doc) => {
-      const owner = doc.data().owners.find(
-          (owner) => {
-            owner.username === userContext.username;
-          });
+      const owner = doc.data().owners.find((owner) => owner.username === userContext.username);
       if (owner) {
         const latestMessageQuery = firestore
             .collection(`Chats/${doc.id}/messages`)

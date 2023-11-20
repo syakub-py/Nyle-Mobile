@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import {Image, Pressable, ScrollView, Text, View} from 'react-native';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 
 export default function RenderMessageImage({props}) {
   const [state, setState] = useState({active: 0});
+  const navigation =useNavigation();
   const isStateActiveCSS = (state, k) => {
     if (k === state.active) return {color: 'white', margin: 4, fontSize: 10};
     return {color: '#a8a5a5', margin: 4, fontSize: 7};

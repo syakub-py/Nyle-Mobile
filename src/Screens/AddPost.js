@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -32,7 +32,7 @@ const fetchImages = async () => {
 
 export default function AddPost() {
   const [imageUrls, setImageUrls] = useState([]);
-  const selectedImages = [];
+  const [selectedImages, setSelectedImages] = useState([]);
   const {width} = Dimensions.get('window');
   const height = 300;
   const navigation = useNavigation();
@@ -44,7 +44,7 @@ export default function AddPost() {
   }, []);
 
   const handleToggleImage = (item) =>{
-    selectedImages.push(item);
+    setSelectedImages([...selectedImages, item]);
     Vibration.vibrate(10);
   };
 
@@ -52,12 +52,17 @@ export default function AddPost() {
     <FlatList
       data={imageUrls}
       keyExtractor={(item, index) => index.toString()}
-      contentContainerStyle={{alignItems: 'center', marginTop: 30}}
+      contentContainerStyle={{alignItems: 'center', backgroundColor: 'white', flexGrow: 1}}
       ListHeaderComponent={
         <View style={{marginBottom: 5, paddingBottom: 10}}>
           <Text style={{fontSize: 20, fontWeight: 'bold', alignSelf: 'center', margin: 10}}>Add Post</Text>
-          <Image source={{uri: imageUrls[0]}} style={{width: width-20, height: height, borderRadius: 10, marginLeft: 10, marginRight: 10}}/>
-
+          {
+            (selectedImages.length>0)?(
+              <Image source={{uri: selectedImages[0]}} style={{width: width-20, height: height, borderRadius: 10, marginLeft: 10, marginRight: 10}}/>
+            ):(
+              <Image source={{uri: imageUrls[0]}} style={{width: width-20, height: height, borderRadius: 10, marginLeft: 10, marginRight: 10}}/>
+            )
+          }
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
             <Pressable onPress={()=>navigation.navigate('Finish Post', {selectedImages: selectedImages})}>
               <View style={{backgroundColor: 'black', width: 100, height: 25, borderRadius: 20, justifyContent: 'center', marginTop: 15, marginRight: 10}}>

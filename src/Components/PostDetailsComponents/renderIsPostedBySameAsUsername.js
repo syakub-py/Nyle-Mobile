@@ -91,7 +91,7 @@ export default function PostedBySameAsUsername({postedBy, numOfReviews}) {
             <Text style = {{fontWeight: 'bold', color: 'black'}}>{postedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
             <Pressable onPress = {() => {
-              navigation.navigate('Reviews', {username: postedBy, currentUser: userContext.username});
+              navigation.navigate('Reviews', {username: postedBy});
             }}>
               <View style = {{
                 flexDirection: 'row',

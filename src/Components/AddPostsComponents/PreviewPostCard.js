@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import {UserContext} from '../../Contexts/UserContext';
+import {updatedCurrencyList} from '../../Screens/GlobalFunctions';
 
 
-export default function PreviewPostCard({selectedImages}) {
+export default function PreviewPostCard({postData}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
@@ -37,16 +38,16 @@ export default function PreviewPostCard({selectedImages}) {
       <View style={{flexDirection: 'row', position: 'absolute', top: 12, left: 10, zIndex: 1}}>
         <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>
         <View style={{marginLeft: 5}}>
-          <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>Test Title</Text>
-          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}> */}
-          {/*   <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(data.currencies)[0].value}}/> */}
-          {/*   <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(data.currencies)[0].price} </Text> */}
-          {/*   <Text style={{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500'}}>(${Number(data.USD).toLocaleString('en-US')})</Text> */}
-          {/* </View> */}
+          <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>{postData.title}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {/* <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(postData.currencies)[0].value}}/> */}
+            {/* <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(postData.currencies)[0].price} </Text> */}
+            <Text style={{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500'}}>(${Number(postData.USD).toLocaleString('en-US')})</Text>
+          </View>
         </View>
       </View>
       <FlatList
-        data={selectedImages}
+        data={postData.pictures}
         horizontal
         pagingEnabled
         onScroll={change}
@@ -59,7 +60,7 @@ export default function PreviewPostCard({selectedImages}) {
       />
 
       <FlatList
-        data={selectedImages}
+        data={postData.pictures}
         horizontal={true}
         style = {{
           bottom: 10,
@@ -82,7 +83,7 @@ export default function PreviewPostCard({selectedImages}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === selectedImages.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
+              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === postData.pictures.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
             </Pressable>
           );
         }}

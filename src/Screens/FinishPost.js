@@ -82,7 +82,7 @@ export default function FinishPost({route}) {
         <BackButton/>
       </View>
 
-      <PreviewPostCard selectedImages={images}/>
+      <PreviewPostCard postData={createPost(images)}/>
 
       <CustomTextInput placeholder={'Title'} value={title} onChangeText={(text)=>setTitle(text)} multiline={false}/>
       <View>
