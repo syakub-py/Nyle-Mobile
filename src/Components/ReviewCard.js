@@ -55,7 +55,7 @@ export default function ReviewCard({data}) {
   const [reply, setReply] = useState('');
   const [existingReplies, setExistingReplies] = useState(data.Replies);
   const [profilePic, setProfilePic] = useState(null);
-  const userContext = useContext(UserContext);
+  const {username} = useContext(UserContext);
 
   useEffect(()=>{
     getProfilePicture(data.Reviewer).then((result)=>{
@@ -64,7 +64,7 @@ export default function ReviewCard({data}) {
   }, []);
 
   const handleSendReply = () => {
-    sendReply(data, userContext.username, reply, existingReplies, setExistingReplies);
+    sendReply(data, username, reply, existingReplies, setExistingReplies);
     setOpen(!open);
   };
 
@@ -73,7 +73,7 @@ export default function ReviewCard({data}) {
   };
 
   const renderIsRevieweCurrentUser = () => {
-    if (data.Reviewe !== userContext.username) return <View/>;
+    if (data.Reviewe !== username) return <View/>;
     return (
       <Pressable onPress = {() =>setOpen(!open)}>
         <View style = {{position: 'absolute', bottom: 0, right: 10}}>
@@ -104,7 +104,7 @@ export default function ReviewCard({data}) {
   };
 
   const renderIsRevieweCurrentUser2 = () => {
-    if (data.Reviewe !== userContext.username) {
+    if (data.Reviewe !== username) {
       return (
         <ScrollView>
           {
