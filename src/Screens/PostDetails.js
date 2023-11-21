@@ -10,7 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect, useContext} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import {isLiked, updatedCurrencyList} from './GlobalFunctions';
+import {isLiked} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import BackButton from '../Components/BackButton';
 import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
@@ -159,7 +159,7 @@ export default function PostDetails({route}) {
 
           <View style={{maxWidth: 135, flexDirection: 'row'}}>
             <FlatList horizontal
-              data={updatedCurrencyList(postContext.currencies)}
+              data={postContext.updatedCurrencyList()}
               snapToAlignment={'center'}
               pagingEnabled
               showsHorizontalScrollIndicator={false}

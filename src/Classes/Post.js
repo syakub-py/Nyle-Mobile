@@ -1,5 +1,7 @@
 import {firestore} from '../Components/Firebase';
 import {Vibration} from 'react-native';
+import CryptoDataService from '../Services/CryptoDataService';
+import _ from 'lodash';
 
 export class Post {
   constructor(postData) {
@@ -66,5 +68,39 @@ export class Post {
               });
           return currentViews;
         });
+  };
+
+  updateCurrencyPrice = async () => {
+    let price = 0;
+    try {
+      const response = await CryptoDataService.getMarketData();
+      const filteredData = response.data.filter((item) => item.image === this.currencies[0].value);
+      if (!_.isEmpty(filteredData)) {
+        price = filteredData[0].current_price;
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+    const postRef = firestore.collection('AllPosts').doc(this.title);
+    postRef.get().then((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.hasOwnProperty('USD') && price !== 0) {
+          postRef.update({USD: (price * data.currencies[0].price).toFixed(2).toString()});
+        } else {
+          if (price !== 0) {
+            postRef.set({USD: (price * data.currencies[0].price).toFixed(2).toString()}, {merge: true});
+          }
+        }
+      }
+    });
+  };
+
+  updatedCurrencyList = () =>{
+    if (_.size(this.currencies)>1) {
+      return this.currencies;
+    } else {
+      return this.currencies;
+    }
   };
 }

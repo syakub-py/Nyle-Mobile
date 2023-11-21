@@ -2,7 +2,7 @@ import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-nat
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
+import {isLiked} from '../Screens/GlobalFunctions';
 import usePostContext from '../Services/UsePostContext';
 import {UserContext} from '../Contexts/UserContext';
 
@@ -20,7 +20,7 @@ export default function PostCard({title}) {
   const FLATLIST_PICTURE_DIMENSIONS = 40;
 
   useEffect(() => {
-    updateCurrencyPrice(data);
+    data.updateCurrencyPrice();
   }, [data.currencies[0].value]);
 
   useEffect(()=>{
@@ -76,8 +76,8 @@ export default function PostCard({title}) {
         <View style={{marginLeft: 5}}>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>{data.title}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(data.currencies)[0].value}}/>
-            <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(data.currencies)[0].price} </Text>
+            <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: data.updatedCurrencyList(data.currencies)[0].value}}/>
+            <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{data.updatedCurrencyList(data.currencies)[0].price} </Text>
             <Text style={{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500'}}>(${Number(data.USD).toLocaleString('en-US')})</Text>
           </View>
         </View>
