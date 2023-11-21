@@ -178,7 +178,7 @@ export default function PostDetails({route}) {
           <RenderIsCategoryAuto postTitle={postContext.title}/>
 
         </View>
-        <PostedBySameAsUsername postedBy={postContext.postedBy} numOfReviews={userContext.numberOfReviews}/>
+        <PostedBySameAsUsername numOfReviews={userContext.numberOfReviews} postTitle = {postContext.title}/>
 
         <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
 

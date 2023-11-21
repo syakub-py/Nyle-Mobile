@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {categoryFilter} from './GlobalFunctions';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
-import {loadingAnimation} from '../Components/LoadingAnimation';
+import {LoadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
@@ -24,14 +24,7 @@ import {UserContext} from '../Contexts/UserContext';
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-const onRefresh = (setRefreshing, setMasterData, nyleContext) => {
-  setRefreshing(true);
-  Vibration.vibrate(100);
-  nyleContext.readDatabase('AllPosts').then((result)=>{
-    setMasterData(result);
-    setRefreshing(false);
-  });
-};
+
 
 const searchFilter = (text, masterData, setSearch) => {
   if (text) {
@@ -58,12 +51,20 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
-    nyleContext.readDatabase('AllPosts').then((result)=>{
+    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
       setLoading(false);
     });
   }, []);
-  loadingAnimation(loading);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    Vibration.vibrate(100);
+    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
+      setMasterData(result);
+      setRefreshing(false);
+    });
+  };
 
   const RenderFooter = () => {
     if (!loading) {
@@ -83,6 +84,7 @@ export default function Home() {
 
   return (
     <View style = {{flex: 1, backgroundColor: 'white'}}>
+      <LoadingAnimation loading={loading}/>
       <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
@@ -161,7 +163,7 @@ export default function Home() {
 
           data = {masterData}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setMasterData, nyleContext)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
           }
           renderItem = {({item}) => (
             <PostCard title = {item.title}/>

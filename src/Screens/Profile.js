@@ -22,13 +22,7 @@ import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 
 
-const onRefresh = async (setRefreshing, userContext) => {
-  setRefreshing(true);
-  await userContext.getPosts().then(()=>{
-    Vibration.vibrate(100);
-    setRefreshing(false);
-  });
-};
+
 
 const handleSignOut = async (navigation) => {
   try {
@@ -104,6 +98,15 @@ export default function Profile() {
     });
   }, []);
 
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await userContext.getPosts().then(()=>{
+      Vibration.vibrate(100);
+      setRefreshing(false);
+    });
+  };
+
   const SectionTitle = ({title}) => {
     return (
       <View style = {{marginTop: 20, marginLeft: 10}}>
@@ -132,7 +135,7 @@ export default function Profile() {
         data = {userContext.posts}
         rightOpenValue = {-170}
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, userContext)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
         }
         ListFooterComponent = {
           <View style = {{height: 80}}/>

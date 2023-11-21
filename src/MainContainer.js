@@ -9,7 +9,7 @@ import market from './Screens/Market';
 import chat from './Screens/Chat';
 import profile from './Screens/Profile';
 import addPost from './Screens/AddPost';
-import {loadingAnimation} from './Components/LoadingAnimation';
+import {LoadingAnimation} from './Components/LoadingAnimation';
 import {UserContext} from './Contexts/UserContext';
 
 const Home = 'Home';
@@ -33,8 +33,6 @@ export default function MainContainer() {
     });
   }, []);
 
-
-  loadingAnimation(loading);
 
   const MyChatQuery = firestore.collection('Chats');
 
@@ -110,8 +108,19 @@ export default function MainContainer() {
                 </View>
               );
             }
-          } else if (rn === Profile && !_.isEmpty(userContext.profilePicture)) return <Image source = {{uri: userContext.profilePicture}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>;
-          else if (rn === AddPost) {
+          } else if (rn === Profile && !_.isEmpty(userContext.profilePicture)) {
+            return <Image source={{uri: userContext.profilePicture}}
+              style={focused ? {
+                height: 37,
+                width: 37,
+                borderRadius: 20,
+                borderWidth: 2,
+              } : {
+                height: 32,
+                width: 32,
+                borderRadius: 20,
+              }}/>;
+          } else if (rn === AddPost) {
             iconName = focused ? 'add' : 'add-outline';
             return (
               <View style={{backgroundColor: 'black', height: 60, width: 60, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginBottom: 40, elevation: 2}}>
@@ -122,7 +131,7 @@ export default function MainContainer() {
         },
 
       })}>
-
+      <LoadingAnimation loading={loading}/>
       <Tab.Screen name = {Home} component = {home}/>
       <Tab.Screen name = {Market} component = {market}/>
       <Tab.Screen

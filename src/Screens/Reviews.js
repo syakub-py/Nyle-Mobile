@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
 import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
-import {loadingAnimation} from '../Components/LoadingAnimation';
+import {LoadingAnimation} from '../Components/LoadingAnimation';
 
 /*
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
@@ -22,8 +22,6 @@ export default function Reviews({route}) {
       setLoading(false);
     });
   }, []);
-
-  loadingAnimation(loading);
 
   const RenderIsCurrentUser = () => {
     if (userContext.username === PostedByUsername) return null;
@@ -55,7 +53,7 @@ export default function Reviews({route}) {
       <FlatList data = {userContext.reviews}
         ListHeaderComponent = {
           <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
-
+            <LoadingAnimation loading={loading}/>
             <View style = {{zIndex: 1}}>
               <BackButton />
             </View>

@@ -10,13 +10,6 @@ import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
 
-const onRefresh = (username, setRefreshing, userContext) => {
-  setRefreshing(true);
-  userContext.getDeletedPosts().then(()=>{
-    setRefreshing(false);
-  });
-};
-
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
   try {
@@ -37,11 +30,6 @@ const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   }
 };
 
-const deleteAllPosts = (deletedPostList, nyleContext) => {
-  deletedPostList.forEach((post) => {
-    nyleContext.deletePost(post);
-  });
-};
 
 export default function DeletedPosts() {
   const [refreshing, setRefreshing] = useState(false);
@@ -56,6 +44,19 @@ export default function DeletedPosts() {
       setRefreshing(false);
     });
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    userContext.getDeletedPosts().then(()=>{
+      setRefreshing(false);
+    });
+  };
+
+  const deleteAllPosts = () => {
+    deletedPostList.forEach((post) => {
+      nyleContext.deletePost(post);
+    });
+  };
 
   return (
     <View style = {{flex: 1}}>
@@ -74,7 +75,7 @@ export default function DeletedPosts() {
               <Text style = {{alignSelf: 'center', fontWeight: 'bold'}}>Posts will get deleted after 30 days</Text>
             </View>
 
-            <Pressable onPress = {() => deleteAllPosts(deletedPostList, nyleContext)}>
+            <Pressable onPress = {() => deleteAllPosts()}>
               <View style = {{width: 100, backgroundColor: 'black', margin: 10, borderRadius: 5}}>
                 <Ionicons name = {'trash'} size = {30} style = {{color: 'white', alignSelf: 'center'}}/>
               </View>
@@ -83,7 +84,7 @@ export default function DeletedPosts() {
           </View>
         }
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(userContext.username, setRefreshing, userContext)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
         }
         renderItem = {({item}) => (
           <PostCard title = {item.title}/>

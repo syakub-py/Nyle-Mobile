@@ -12,7 +12,8 @@ import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsTex
 import MapView, {Marker} from 'react-native-maps';
 import DropdownInput from '../Components/AddPostDropdown';
 import RenderPrice from '../Components/AddPostsComponents/renderPrice';
-import {loadingAnimation} from '../Components/LoadingAnimation';
+import {LoadingAnimation} from '../Components/LoadingAnimation';
+
 export default function FinishPost({route}) {
   const images = route.params.selectedImages;
   const [title, setTitle] = useState('');
@@ -121,7 +122,7 @@ export default function FinishPost({route}) {
           </Pressable>
         </View>
 
-        {loadingAnimation(loading)}
+        <LoadingAnimation loading={loading}/>
         <View style = {{justifyContent: 'center', backgroundColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>
           <Pressable onPress = {() => {
             setLoading(true);

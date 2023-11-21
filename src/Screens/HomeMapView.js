@@ -34,6 +34,7 @@ export default function HomeMapView() {
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
+
   const handleScroll = (event) => {
     const contentOffset = event.nativeEvent.contentOffset;
     const currentIndex = Math.floor(contentOffset.x / 245);
@@ -42,7 +43,7 @@ export default function HomeMapView() {
   };
 
   useEffect(() => {
-    nyleContext.readDatabase('AllPosts').then((result)=>{
+    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
     });
   }, []);

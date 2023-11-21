@@ -17,13 +17,7 @@ import ChatItem from '../Components/ChatComponents/ChatItem';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
 
-const onRefresh = (setRefreshing, userContext) => {
-  setRefreshing(true);
-  userContext.getChats().then(()=>{
-    Vibration.vibrate(100);
-    setRefreshing(false);
-  });
-};
+
 
 const searchFilter = (text, masterData, setSearch) => {
   if (text) {
@@ -55,6 +49,14 @@ export default function Chat() {
     });
   }, []);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    userContext.getChats().then(()=>{
+      Vibration.vibrate(100);
+      setRefreshing(false);
+    });
+  };
+
   return (
     <SafeAreaView style = {styles.container}>
       <SwipeListView
@@ -66,9 +68,7 @@ export default function Chat() {
         refreshControl = {
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={async () => {
-              await onRefresh(setRefreshing, userContext);
-            }}
+            onRefresh={() => onRefresh()}
           />
         }
         key = {randomNumber}

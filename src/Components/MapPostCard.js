@@ -10,6 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import RenderIsLiked from './PostDetailsComponents/renderIsLiked';
 import {UserContext} from '../Contexts/UserContext';
 import usePostContext from '../Services/UsePostContext';
+import {generateOtherUsersRating} from '../Screens/GlobalFunctions';
 export default function MapPostCard({title}) {
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
@@ -18,14 +19,14 @@ export default function MapPostCard({title}) {
   const [Liked, setLiked] = useState(isLiked(postContext.likes, userContext.username));
 
   useEffect(() => {
-    generateRating(postContext.postedBy, setRating, setNumOfReviews);
+    generateOtherUsersRating(postContext.postedBy, setRating, setNumOfReviews);
   }, []);
 
   const RenderLikeButton = () =>{
     if (userContext.username !== postContext.postedBy) {
       return (
         <View style = {{position: 'absolute', right: 7, top: 7, height: 30, width: 30, borderRadius: 12, justifyContent: 'center', alignItems: 'center'}}>
-          <Pressable onPress = {() =>handleLike(postContext.title, userContext.username, Liked, setLiked)}>
+          <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, Liked, setLiked)}>
             <RenderIsLiked Liked={Liked} size={20}/>
           </Pressable>
         </View>

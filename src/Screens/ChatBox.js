@@ -9,7 +9,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
 import _ from 'lodash';
-import {loadingAnimation} from '../Components/LoadingAnimation';
 import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
 import RenderActions from '../Components/ChatBoxComponents/renderActions';
 import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';

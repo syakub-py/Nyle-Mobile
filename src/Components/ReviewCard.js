@@ -10,7 +10,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {getProfilePicture} from '../Screens/GlobalFunctions';
+import {getProfileOtherPicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
 import {UserContext} from '../Contexts/UserContext';
 
@@ -58,7 +58,7 @@ export default function ReviewCard({data}) {
   const {username} = useContext(UserContext);
 
   useEffect(()=>{
-    getProfilePicture(data.Reviewer).then((result)=>{
+    getProfileOtherPicture(data.Reviewer).then((result)=>{
       setProfilePic(result);
     });
   }, []);
@@ -83,27 +83,27 @@ export default function ReviewCard({data}) {
     );
   };
 
-  const renderIsOpen = () => {
-    if (open) {
-      return (
-        <View style = {{flexDirection: 'row', justifyContent: 'center'}}>
-          <View style = {{width: 300}}>
-            <TextInput multiline placeholder = {'Write a reply'} onChangeText = {(text) =>setReply(text)}/>
-          </View>
-
-          <Pressable onPress = {handleSendReply}>
-            <View style = {{backgroundColor: 'black', justifyContent: 'center', borderRadius: 30}}>
-              <Ionicons name = {'send'} size = {15} color = {'white'} style = {{margin: 7}}/>
-            </View>
-          </Pressable>
-
-        </View>
-      );
+  const RenderIsWriteReplyOpen = () => {
+    if (!open) {
+      return renderIsRevieweCurrentUser();
     }
-    return renderIsRevieweCurrentUser();
+    return (
+      <View style = {{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style = {{width: 300}}>
+          <TextInput multiline placeholder = {'Write a reply'} onChangeText = {(text) =>setReply(text)}/>
+        </View>
+
+        <Pressable onPress = {handleSendReply}>
+          <View style = {{backgroundColor: 'black', justifyContent: 'center', borderRadius: 30}}>
+            <Ionicons name = {'send'} size = {15} color = {'white'} style = {{margin: 7}}/>
+          </View>
+        </Pressable>
+
+      </View>
+    );
   };
 
-  const renderIsRevieweCurrentUser2 = () => {
+  const RenderIsRevieweCurrentUser2 = () => {
     if (data.Reviewe !== username) {
       return (
         <ScrollView>
@@ -168,11 +168,11 @@ export default function ReviewCard({data}) {
           <Text style = {{marginTop: 5}}>{data.ReviewMessage}</Text>
         </View>
 
-        {renderIsOpen()}
+        <RenderIsWriteReplyOpen/>
 
       </View>
 
-      {renderIsRevieweCurrentUser2()}
+      <RenderIsRevieweCurrentUser2/>
     </View>
   );
 }

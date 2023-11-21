@@ -50,7 +50,23 @@ export const categoryFilter = (text, masterData) => {
   }
 };
 
-export const getProfilePicture = async (username) => {
+
+export const generateOtherUsersRating = async (otherUsername, setRating, setNumberOfReviews) => {
+  let sum = 0;
+  let counter = 0;
+  const MyReviewsQuery = firestore.collection('Reviews').where('Reviewe', '==', otherUsername);
+  await MyReviewsQuery.get().then((postSnapshot) => {
+    postSnapshot.forEach((doc) => {
+      sum = sum + doc.data().stars;
+      counter++;
+    });
+  });
+
+  setRating(sum/counter);
+  setNumberOfReviews(counter);
+};
+
+export const getProfileOtherPicture = async (username) => {
   try {
     const userRef = firestore.collection('ProfilePictures').doc(username);
     const doc = await userRef.get();

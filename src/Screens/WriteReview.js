@@ -4,7 +4,7 @@ import React, {useContext, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
 import {useNavigation} from '@react-navigation/native';
-import {UserContext} from "../Contexts/UserContext";
+import {UserContext} from '../Contexts/UserContext';
 
 /*
     @route.params = {postedBy:user the review was posted by}
@@ -16,13 +16,14 @@ export default function WriteReview({route}) {
   const [stars, setStars] = useState(0);
   const navigation =useNavigation();
   const userContext = useContext(UserContext);
-  const postReview = (username, PostedBy, Title, ReviewMessage, Stars) => {
+
+  const postReview = () => {
     return firestore.collection('Reviews').add({
       Reviewer: userContext.username,
-      Reviewe: PostedBy,
-      Title: Title,
-      ReviewMessage: ReviewMessage,
-      stars: Stars+1,
+      Reviewe: route.params.postedBy,
+      Title: title,
+      ReviewMessage: reviewMessage,
+      stars: stars+1,
       Replies: [],
       DatePosted: new Date().toLocaleString(),
     }).then(() => {
@@ -50,7 +51,14 @@ export default function WriteReview({route}) {
           ))}
         </View>
         <TextInput style = {{height: 80, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, textAlignVertical: 'top'}} placeholder = "Review Message" onChangeText = {(text) => setReviewMessage(text)} multiline />
-        <Pressable style = {{width: 110, backgroundColor: 'black', borderRadius: 10, paddingVertical: 5, paddingHorizontal: 10, marginTop: 10}} onPress = {() => postReview(userContext.username, route.params.postedBy, title, reviewMessage, stars)}>
+        <Pressable style = {{
+          width: 110,
+          backgroundColor: 'black',
+          borderRadius: 10, paddingVertical: 5,
+          paddingHorizontal: 10,
+          marginTop: 10,
+        }}
+        onPress = {() => postReview()}>
           <Text style = {{color: 'white', fontSize: 16}}>Post Review</Text>
         </Pressable>
       </View>

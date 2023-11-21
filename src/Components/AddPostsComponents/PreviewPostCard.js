@@ -1,8 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import {UserContext} from '../../Contexts/UserContext';
-import {updatedCurrencyList} from '../../Screens/GlobalFunctions';
-
 
 export default function PreviewPostCard({postData}) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,7 +10,7 @@ export default function PreviewPostCard({postData}) {
   const ITEM_HEIGHT = 300;
   const FLATLIST_WIDTH = 140;
   const FLATLIST_PICTURE_DIMENSIONS = 40;
-  const userContext = useContext(UserContext);
+  const {profilePicture} = useContext(UserContext);
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
@@ -36,7 +34,7 @@ export default function PreviewPostCard({postData}) {
   return (
     <View style={{backgroundColor: 'transparent', borderRadius: 10, margin: 10}}>
       <View style={{flexDirection: 'row', position: 'absolute', top: 12, left: 10, zIndex: 1}}>
-        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>
+        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: profilePicture}}/>
         <View style={{marginLeft: 5}}>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>{postData.title}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

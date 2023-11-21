@@ -78,7 +78,7 @@ export class NyleContext {
     return this.PostContextArray.find((post) =>post.title === postTitle);
   }
 
-  readDatabase = async (
+  readNextTwoElements = async (
       collectionName,
   ) => {
     try {
