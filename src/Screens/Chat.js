@@ -17,8 +17,6 @@ import ChatItem from '../Components/ChatComponents/ChatItem';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
 
-
-
 const searchFilter = (text, masterData, setSearch) => {
   if (text) {
     setSearch(text);

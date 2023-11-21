@@ -25,20 +25,6 @@ const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewe
 const {width} = Dimensions.get('window');
 
 
-
-const searchFilter = (text, masterData, setSearch) => {
-  if (text) {
-    setSearch(text);
-    return masterData.filter((item) => {
-      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData)>-1;
-    });
-  } else {
-    setSearch(text);
-  }
-};
-
 export default function Home() {
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
@@ -56,6 +42,19 @@ export default function Home() {
       setLoading(false);
     });
   }, []);
+
+  const searchFilter = (text) => {
+    if (text) {
+      setSearch(text);
+      return masterData.filter((item) => {
+        const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData)>-1;
+      });
+    } else {
+      setSearch(text);
+    }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -155,7 +154,7 @@ export default function Home() {
                 elevation: 2,
               }}>
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => setMasterData(searchFilter(text, masterData, setSearch))} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => setMasterData(searchFilter(text))} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
               </View>
 
             </View>
