@@ -1,12 +1,10 @@
 import {Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useContext} from 'react';
+import React from 'react';
 import _ from 'lodash';
-import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
-export default function RatingButton({username}) {
-  const {rating} = useContext(UserContext);
+export default function RatingButton({username, rating}) {
   const navigation = useNavigation();
   if (_.isUndefined(rating)) {
     return null;

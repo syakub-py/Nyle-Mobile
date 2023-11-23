@@ -5,28 +5,29 @@ import {
   Text,
   View,
 } from 'react-native';
-import {isLiked} from '../Screens/GlobalFunctions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RenderIsLiked from './PostDetailsComponents/renderIsLiked';
 import {UserContext} from '../Contexts/UserContext';
 import usePostContext from '../Services/UsePostContext';
-import {generateOtherUsersRating} from '../Screens/GlobalFunctions';
+import {AppContext} from '../Contexts/NyleContext';
+
 export default function MapPostCard({title}) {
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const postContext = usePostContext(title);
   const userContext =useContext(UserContext);
-  const [Liked, setLiked] = useState(isLiked(postContext.likes, userContext.username));
+  const nyleContext = useContext(AppContext);
+  const [Liked, setLiked] = useState(postContext.isLiked(userContext.username));
 
   useEffect(() => {
-    generateOtherUsersRating(postContext.postedBy, setRating, setNumOfReviews);
+    nyleContext.generateOtherUsersRating(postContext.postedBy, setRating, setNumOfReviews);
   }, []);
 
   const RenderLikeButton = () =>{
     if (userContext.username !== postContext.postedBy) {
       return (
         <View style = {{position: 'absolute', right: 7, top: 7, height: 30, width: 30, borderRadius: 12, justifyContent: 'center', alignItems: 'center'}}>
-          <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, Liked, setLiked)}>
+          <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, setLiked)}>
             <RenderIsLiked Liked={Liked} size={20}/>
           </Pressable>
         </View>

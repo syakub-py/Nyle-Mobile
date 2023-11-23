@@ -1,10 +1,11 @@
 import {View, Text, SafeAreaView, FlatList, Image} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import PostCard from '../Components/PostCard';
-import {useNavigation} from '@react-navigation/native';
 import {firestore} from '../Components/Firebase';
 import BackButton from '../Components/BackButton';
 import RatingButton from '../Components/RatingButton';
+import {UserContext} from '../Contexts/UserContext';
+import {AppContext} from '../Contexts/NyleContext';
 
 /*
     @route.params = {ProfileImage: profile picture of current user, currentUsername: the current username, postedByUsername:the user that the posts were posted by}
@@ -22,14 +23,15 @@ const getPosts = async (username, setUserPosts) => {
 };
 
 export default function ViewProfile({route}) {
-  const navigation = useNavigation();
   const [UsersPosts, setUserPosts] = useState([]);
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
   const postedByUsername = route.params.postedByUsername;
-
+  const userContext = useContext(UserContext);
+  const nyleContext = useContext(AppContext)
   useEffect(() => {
     getPosts(postedByUsername, setUserPosts);
+    nyleContext.getProfileOtherPicture(postedByUsername, setRating, setNumOfReviews);
   }, []);
 
   return (
@@ -43,7 +45,7 @@ export default function ViewProfile({route}) {
               </View>
 
               <View style = {{alignItems: 'center', paddingTop: 10}}>
-                <Image resizeMode ='cover' source = {{uri: route.params.ProfileImage}} style = {{height: 150, width: 150, borderRadius: 100}}/>
+                <Image resizeMode ='cover' source = {{uri: userContext.profilePicture}} style = {{height: 150, width: 150, borderRadius: 100}}/>
                 <View>
                   <Text style = {{fontSize: 22, fontWeight: '700', paddingTop: 10}}>{postedByUsername}</Text>
                 </View>
@@ -51,7 +53,7 @@ export default function ViewProfile({route}) {
 
               <View style = {{flexDirection: 'row', alignSelf: 'center', paddingTop: 10}}>
                 <View style={{flexDirection: 'column', alignContent: 'center'}}>
-                  <RatingButton username={postedByUsername} currentUsername={route.params.currentUsername} rating={rating} navigation={navigation}/>
+                  <RatingButton username={postedByUsername} rating ={rating}/>
                   <Text style={{fontSize: 13, color: 'gray'}}>({numOfReviews} reviews)</Text>
                 </View>
 
@@ -60,13 +62,6 @@ export default function ViewProfile({route}) {
                 <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                   <Text style = {{fontSize: 20, fontWeight: '500'}}>{UsersPosts.length}</Text>
                   <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Total Items</Text>
-                </View>
-
-                <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
-
-                <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{getSoldItems(UsersPosts)}</Text>
-                  <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Sold items</Text>
                 </View>
               </View>
 

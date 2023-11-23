@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Image, Pressable, TextInput} from 'react-native'
 import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
-import {addProfilePicture} from './GlobalFunctions';
 import BackButton from '../Components/BackButton';
 import RenderDoesPasswordFulfillRequirements from '../Components/SignUpCompoenents/renderDoesPasswordFufillRequirements';
 import ShowPassword from '../Components/ShowPassword';

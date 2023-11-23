@@ -131,7 +131,6 @@ export default function MainContainer() {
         },
 
       })}>
-      <LoadingAnimation loading={loading}/>
       <Tab.Screen name = {Home} component = {home}/>
       <Tab.Screen name = {Market} component = {market}/>
       <Tab.Screen

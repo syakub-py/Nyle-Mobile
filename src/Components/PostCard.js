@@ -2,7 +2,6 @@ import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-nat
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {isLiked} from '../Screens/GlobalFunctions';
 import usePostContext from '../Services/UsePostContext';
 import {UserContext} from '../Contexts/UserContext';
 
@@ -10,7 +9,7 @@ export default function PostCard({title}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
   const data = usePostContext(title) || userContext.deletedPosts.find((item) => item.title === title);
-  const [Liked, setLiked] = useState(isLiked(data.likes, userContext.username));
+  const [Liked, setLiked] = useState(data.isLiked(userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
@@ -65,7 +64,7 @@ export default function PostCard({title}) {
       {
           (userContext.username !== data.postedBy) ? (
               <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
-                <Pressable onPress={() => data.handleLikeCounter(userContext.username, Liked, setLiked)}>
+                <Pressable onPress={() => data.handleLikeCounter(userContext.username, setLiked)}>
                   <RenderLiked/>
                 </Pressable>
               </View>

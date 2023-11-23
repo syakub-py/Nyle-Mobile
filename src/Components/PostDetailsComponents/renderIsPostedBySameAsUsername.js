@@ -4,8 +4,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {firestore} from '../Firebase';
 import {UserContext} from '../../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
-import {getProfileOtherPicture} from '../../Screens/GlobalFunctions';
 import usePostContext from '../../Services/UsePostContext';
+import {AppContext} from '../../Contexts/NyleContext';
 
 
 export const generateChatID = (user1, user2) => {
@@ -18,10 +18,11 @@ export const generateChatID = (user1, user2) => {
 export default function PostedBySameAsUsername({numOfReviews, postTitle}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const [postedByProfilePicture, setPostedByProfilePicture] = useState('');
   const post = usePostContext(postTitle);
+  const nyleContext = useContext(AppContext);
+  const [postedByProfilePicture, setPostedByProfilePicture] = useState('');
   useEffect(()=>{
-    getProfileOtherPicture(post.postedBy).then((result)=>{
+    nyleContext.getProfileOtherPicture(post.postedBy).then((result)=>{
       setPostedByProfilePicture(result);
     });
     userContext.generateRating();

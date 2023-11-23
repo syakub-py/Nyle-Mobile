@@ -69,14 +69,14 @@ const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
   }
 };
 
-const selectProfilePic = async (username) => {
+const selectProfilePic = async (userContext) => {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     aspect: [4, 3],
     quality: 1,
   });
   if (!result.canceled) {
-    await addProfilePicture(username, result.assets[0].uri);
+    await userContext.addProfilePicture(userContext.username, result.assets[0].uri);
   }
 };
 
@@ -130,7 +130,7 @@ export default function Profile() {
   };
 
   return (
-    <View style = {{backgroundColor: 'white'}}>
+    <View style = {{backgroundColor: 'white', flex: 1}}>
       <SwipeListView
         data = {userContext.posts}
         rightOpenValue = {-170}
@@ -145,7 +145,7 @@ export default function Profile() {
             <View>
               <View style = {{alignItems: 'center', marginTop: 25}}>
                 <Pressable onPress={()=>{
-                  selectProfilePic(userContext.username);
+                  selectProfilePic(userContext);
                 }}>
                   <Image source = {{uri: userContext.profilePicture}} style = {{
                     width: 100,

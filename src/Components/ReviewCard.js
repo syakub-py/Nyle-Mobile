@@ -10,9 +10,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {getProfileOtherPicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
 import {UserContext} from '../Contexts/UserContext';
+import {AppContext} from '../Contexts/NyleContext';
 
 const sendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
   const docRef = firestore.collection('Reviews').doc(data.id);
@@ -56,9 +56,10 @@ export default function ReviewCard({data}) {
   const [existingReplies, setExistingReplies] = useState(data.Replies);
   const [profilePic, setProfilePic] = useState(null);
   const {username} = useContext(UserContext);
+  const nyleContext = useContext(AppContext);
 
   useEffect(()=>{
-    getProfileOtherPicture(data.Reviewer).then((result)=>{
+    nyleContext.getProfileOtherPicture(data.Reviewer).then((result)=>{
       setProfilePic(result);
     });
   }, []);

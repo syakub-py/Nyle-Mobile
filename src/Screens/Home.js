@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {categoryFilter} from './GlobalFunctions';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
 import {LoadingAnimation} from '../Components/LoadingAnimation';
@@ -140,7 +139,7 @@ export default function Home() {
 
               </View>
 
-              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} />
+              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={nyleContext.categoryFilter} />
 
               <View style = {{
                 flex: 1,

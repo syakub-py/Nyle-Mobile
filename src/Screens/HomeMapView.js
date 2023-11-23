@@ -11,7 +11,6 @@ import {
 import MapView, {Circle, Marker} from 'react-native-maps';
 import React, {useState, useEffect, useContext} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {categoryFilter} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import MapPostCard from '../Components/MapPostCard';
 import BackButton from '../Components/BackButton';
@@ -22,10 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 const {width} = Dimensions.get('window');
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 
-const handleCategoryPress = (index, setSelectedCategoryIndex, masterData, setMasterData) => {
-  setSelectedCategoryIndex(index);
-  setMasterData(categoryFilter(categories[index], masterData));
-};
+
 
 export default function HomeMapView() {
   const [masterData, setMasterData] = useState([]);
@@ -40,6 +36,11 @@ export default function HomeMapView() {
     const currentIndex = Math.floor(contentOffset.x / 245);
 
     setCurrentIndex(currentIndex);
+  };
+
+  const handleCategoryPress = (index) => {
+    setSelectedCategoryIndex(index);
+    setMasterData(nyleContext.categoryFilter(categories[index], masterData));
   };
 
   useEffect(() => {

@@ -118,7 +118,7 @@ class User {
       });
     });
 
-    this.rating =  sum/counter;
+    this.rating = sum/counter;
     this.numberOfReviews = counter;
   };
 

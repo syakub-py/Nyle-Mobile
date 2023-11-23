@@ -10,7 +10,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useState, useRef, useEffect, useContext} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
-import {isLiked} from './GlobalFunctions';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import BackButton from '../Components/BackButton';
 import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
@@ -52,7 +51,7 @@ export default function PostDetails({route}) {
 
   useEffect(() => {
     postContext.handleViewCounter();
-    postContext.handleLikeCounter(userContext.username, isLiked, setLiked);
+    postContext.handleLikeCounter(userContext.username, setLiked);
   }, []);
 
 
@@ -87,7 +86,7 @@ export default function PostDetails({route}) {
           <MenuButtonModal isOpen={isOpen} setIsOpen={setIsOpen}/>
 
           <View style = {{position: 'absolute', top: 30, right: 75, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-            <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, isLiked, setLiked)}>
+            <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, setLiked)}>
               <RenderIsLiked Liked={Liked} size={30}/>
             </Pressable>
           </View>

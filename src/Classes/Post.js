@@ -23,7 +23,7 @@ export class Post {
     this.title = postData.title || '';
     this.views = postData.views || 0;
   }
-  handleLikeCounter = async (username, Liked, setLiked) => {
+  handleLikeCounter = async (username, setLiked) => {
     const PostRef = firestore.collection('AllPosts').doc(this.title);
     PostRef.get()
         .then((doc) => {
@@ -50,7 +50,7 @@ export class Post {
         .catch((error) => {
           console.error('Error getting document:', error);
         });
-    setLiked(!Liked);
+    setLiked(!this.isLiked(username));
     Vibration.vibrate(100);
   };
 
@@ -102,5 +102,8 @@ export class Post {
     } else {
       return this.currencies;
     }
+  };
+  isLiked = (username) =>{
+    return this.likes.includes(username);
   };
 }
