@@ -28,7 +28,7 @@ export default function ViewProfile({route}) {
   const [numOfReviews, setNumOfReviews] = useState(0);
   const postedByUsername = route.params.postedByUsername;
   const userContext = useContext(UserContext);
-  const nyleContext = useContext(AppContext)
+  const nyleContext = useContext(AppContext);
   useEffect(() => {
     getPosts(postedByUsername, setUserPosts);
     nyleContext.getProfileOtherPicture(postedByUsername, setRating, setNumOfReviews);

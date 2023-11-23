@@ -22,8 +22,6 @@ import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 
 
-
-
 const handleSignOut = async (navigation) => {
   try {
     await firebase.auth().signOut();

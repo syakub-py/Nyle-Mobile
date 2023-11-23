@@ -22,7 +22,6 @@ const {width} = Dimensions.get('window');
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 
 
-
 export default function HomeMapView() {
   const [masterData, setMasterData] = useState([]);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
