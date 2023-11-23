@@ -3,10 +3,10 @@ import {View, Text, StyleSheet, Image, Pressable, TextInput} from 'react-native'
 import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
-import {addProfilePicture} from './GlobalFunctions';
 import BackButton from '../Components/BackButton';
 import RenderDoesPasswordFulfillRequirements from '../Components/SignUpCompoenents/renderDoesPasswordFufillRequirements';
 import ShowPassword from '../Components/ShowPassword';
+import {useNavigation} from '@react-navigation/native';
 
 
 const selectImages = async (setProfilePic) => {
@@ -23,15 +23,15 @@ const selectImages = async (setProfilePic) => {
 };
 
 
-const removeProfilePhoto = ( setProfilePic) => {
+const removeProfilePhoto = (setProfilePic) => {
   setProfilePic(null);
 };
-export default function SignUp({navigation}) {
+export default function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [profilePic, setProfilePic] = useState(null);
   const [visible, setVisible] = useState(false);
-
+  const navigation= useNavigation();
   const requirements = [
     {
       label: 'At least 8 characters',
@@ -59,7 +59,7 @@ export default function SignUp({navigation}) {
     return requirements.every((requirement) => requirement.fulfilled);
   };
 
-  const handleSignUp = (username, password, profilePic, navigation) => {
+  const handleSignUp = () => {
     if (areAllRequirementsFulfilled()) {
       auth
           .createUserWithEmailAndPassword(username, password)
@@ -100,7 +100,7 @@ export default function SignUp({navigation}) {
     <View style = {styles.container}>
 
       <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'whitesmoke', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-        <BackButton navigation={navigation}/>
+        <BackButton />
       </View>
 
       <View style = {{alignItems: 'center', justifyContent: 'center'}}>
@@ -117,7 +117,7 @@ export default function SignUp({navigation}) {
 
       </View>
 
-      <Pressable style = {styles.submitContainer} onPress = {()=>handleSignUp(username, password, profilePic, navigation)}>
+      <Pressable style = {styles.submitContainer} onPress = {()=>handleSignUp()}>
         <Text style = {[styles.text, {color: 'white', fontWeight: '600', fontSize: 16}]}>Sign Up</Text>
       </Pressable>
     </View>

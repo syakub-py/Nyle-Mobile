@@ -1,16 +1,16 @@
 import _ from 'lodash';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase';
 import {Image, View} from 'react-native';
-import {getProfilePicture, getUsername} from './Screens/GlobalFunctions';
 import home from './Screens/Home';
 import market from './Screens/Market';
 import chat from './Screens/Chat';
 import profile from './Screens/Profile';
 import addPost from './Screens/AddPost';
-import {loadingAnimation} from './Components/LoadingAnimation';
+import {LoadingAnimation} from './Components/LoadingAnimation';
+import {UserContext} from './Contexts/UserContext';
 
 const Home = 'Home';
 const Market = 'Market';
@@ -23,30 +23,16 @@ const Tab = createBottomTabNavigator();
 
 export default function MainContainer() {
   const [received, setReceived] = useState(true);
-  const [profilePic, setProfilePic] = useState(null);
-  const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+  const userContext = useContext(UserContext);
 
   useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUsernameAndProfilePicture();
+    setLoading(true);
+    userContext.initializeUserData().then(()=>{
+      setLoading(false);
+    });
   }, []);
 
-
-  loadingAnimation(loading);
 
   const MyChatQuery = firestore.collection('Chats');
 
@@ -54,10 +40,7 @@ export default function MainContainer() {
     const latestMessagePromises = [];
 
     ChatSnapshot.docs.forEach((doc) => {
-      const owner = doc.data().owners.find(
-          (owner) => {
-            owner.username === username;
-          });
+      const owner = doc.data().owners.find((owner) => owner.username === userContext.username);
       if (owner) {
         const latestMessageQuery = firestore
             .collection(`Chats/${doc.id}/messages`)
@@ -70,7 +53,7 @@ export default function MainContainer() {
     Promise.all(latestMessagePromises).then((results) => {
       results.forEach((latestMessageSnapshot) => {
         if (!latestMessageSnapshot.empty &&
-            latestMessageSnapshot.docs[0].data().user.name !== username) {
+            latestMessageSnapshot.docs[0].data().user.name !== userContext.username) {
           const latestMessage = latestMessageSnapshot.docs[0].data();
           setReceived(latestMessage.received);
         }
@@ -125,15 +108,29 @@ export default function MainContainer() {
                 </View>
               );
             }
-          } else if (rn === Profile && !_.isEmpty(profilePic)) return <Image source = {{uri: profilePic}} style = {focused?{height: 37, width: 37, borderRadius: 20, borderWidth: 2}:{height: 32, width: 32, borderRadius: 20}}/>;
-          else if (rn === AddPost) {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
-            return <Ionicons name = {iconName} size = {32} color = {color}/>;
+          } else if (rn === Profile && !_.isEmpty(userContext.profilePicture)) {
+            return <Image source={{uri: userContext.profilePicture}}
+              style={focused ? {
+                height: 37,
+                width: 37,
+                borderRadius: 20,
+                borderWidth: 2,
+              } : {
+                height: 32,
+                width: 32,
+                borderRadius: 20,
+              }}/>;
+          } else if (rn === AddPost) {
+            iconName = focused ? 'add' : 'add-outline';
+            return (
+              <View style={{backgroundColor: 'black', height: 60, width: 60, borderRadius: 50, justifyContent: 'center', alignItems: 'center', marginBottom: 40, elevation: 2}}>
+                <Ionicons name = {iconName} size = {40} color = {'white'}/>
+              </View>
+            );
           }
         },
 
       })}>
-
       <Tab.Screen name = {Home} component = {home}/>
       <Tab.Screen name = {Market} component = {market}/>
       <Tab.Screen
@@ -143,8 +140,7 @@ export default function MainContainer() {
         name = {Chat}
         component = {chat} />
       <Tab.Screen name = {Profile}
-        component = {profile}
-        initialParams = {{username: username}}/>
+        component = {profile}/>
 
     </Tab.Navigator>
   );

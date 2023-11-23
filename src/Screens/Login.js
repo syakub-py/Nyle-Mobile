@@ -4,17 +4,18 @@ import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ShowPassword from '../Components/ShowPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 const handleEmailAndPasswordLogin = (username, password) => {
   auth.signInWithEmailAndPassword(username, password)
       .catch((error) => alert(error.message));
 };
 
-export default function Login({navigation}) {
+export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [visible, setVisible] = useState(false);
-
+  const navigation = useNavigation();
   useEffect( () => {
     return auth.onAuthStateChanged(async (user) => {
       if (user) {

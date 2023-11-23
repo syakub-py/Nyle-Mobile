@@ -1,63 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {Alert, Pressable, RefreshControl, Text, View} from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from '../Components/PostCard.js';
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
+import {useNavigation} from '@react-navigation/native';
 
-
-const getPosts = async (username, setDeletedPostList) => {
-  const results = [];
-  const MyPostsQuery = firestore.collection('DeletedPosts').where('PostedBy', '==', username);
-  try {
-    await MyPostsQuery.get().then((postSnapshot) => {
-      postSnapshot.forEach((doc) => {
-        results.push(doc.data());
-      });
-    });
-    setDeletedPostList(results);
-  } catch (error) {
-    Alert.alert('Error Getting Posts: ', error);
-  }
-};
-
-const onRefresh = (username, setRefreshing, setDeletedPostList) => {
-  setRefreshing(true);
-  getPosts(username, setDeletedPostList);
-  setTimeout(() => setRefreshing(false), 1000);
-};
-
-const deletePost = (item, deletedPostList, setDeletedPostList) => {
-  setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
-  firestore
-      .collection('DeletedPosts')
-      .doc(item.title)
-      .delete()
-      .then(() => {
-        item.pic.forEach((picture, index) => {
-          const picRef = getstorage.refFromURL(picture);
-          picRef
-              .getMetadata()
-              .then(() => {
-                picRef
-                    .delete()
-                    .then(() => {
-                    })
-                    .catch((error) => {
-                      console.log('Error deleting picture:', error);
-                    });
-              })
-              .catch((error) => {
-                console.log('Picture does not exist:', error);
-              });
-        });
-        Alert.alert('Posted deleted!');
-      })
-      .catch((error) => {
-        console.log('Error deleting document: ' + JSON.stringify(error));
-      });
-};
 
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
@@ -79,25 +30,38 @@ const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   }
 };
 
-const deleteAllPosts = ( deletedPostList, setDeletedPostList) => {
-  deletedPostList.forEach((post) => {
-    deletePost(post, deletedPostList, setDeletedPostList);
-  });
-};
 
-export default function DeletedPosts({route, navigation}) {
+export default function DeletedPosts() {
   const [refreshing, setRefreshing] = useState(false);
   const [deletedPostList, setDeletedPostList] = useState([]);
-  const username= route.params.username;
+  const userContext = useContext(UserContext);
+  const nyleContext =useContext(AppContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    getPosts(username, setDeletedPostList);
+    setRefreshing(true);
+    userContext.getDeletedPosts().then(()=>{
+      setRefreshing(false);
+    });
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    userContext.getDeletedPosts().then(()=>{
+      setRefreshing(false);
+    });
+  };
+
+  const deleteAllPosts = () => {
+    deletedPostList.forEach((post) => {
+      nyleContext.deletePost(post);
+    });
+  };
 
   return (
     <View style = {{flex: 1}}>
       <SwipeListView
-        data = {deletedPostList}
+        data = {userContext.deletedPosts}
         rightOpenValue = {-140}
         ListHeaderComponent = {
           <View style = {{marginTop: 10}}>
@@ -111,9 +75,7 @@ export default function DeletedPosts({route, navigation}) {
               <Text style = {{alignSelf: 'center', fontWeight: 'bold'}}>Posts will get deleted after 30 days</Text>
             </View>
 
-            <Pressable onPress = {() => {
-              deleteAllPosts(deletedPostList, setDeletedPostList);
-            }}>
+            <Pressable onPress = {() => deleteAllPosts()}>
               <View style = {{width: 100, backgroundColor: 'black', margin: 10, borderRadius: 5}}>
                 <Ionicons name = {'trash'} size = {30} style = {{color: 'white', alignSelf: 'center'}}/>
               </View>
@@ -122,10 +84,10 @@ export default function DeletedPosts({route, navigation}) {
           </View>
         }
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(username, setRefreshing, setDeletedPostList)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
         }
         renderItem = {({item}) => (
-          <PostCard data = {item} username = {username} currentProfilePicture={route.params.currentProfilePicture}/>
+          <PostCard title = {item.title}/>
         )}
         renderHiddenItem = {({item}) => (
           <View style = {{position: 'absolute',
@@ -136,7 +98,7 @@ export default function DeletedPosts({route, navigation}) {
             width: 60,
             alignItems: 'center'}}>
             <View style = {{marginRight: 20}}>
-              <HiddenButton iconName={'trash-outline'} color={'red'} onPress = {() => deletePost(item, deletedPostList, setDeletedPostList)}/>
+              <HiddenButton iconName={'trash-outline'} color={'red'} onPress = {() => nyleContext.deletePost(item)}/>
             </View>
 
             <View>

@@ -1,12 +1,15 @@
 import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect, useRef} from 'react';
-import {handleLike, updateCurrencyPrice, isLiked, updatedCurrencyList} from '../Screens/GlobalFunctions';
+import React, {useState, useEffect, useRef, useContext} from 'react';
+import usePostContext from '../Services/UsePostContext';
+import {UserContext} from '../Contexts/UserContext';
 
-export default function PostCard({data, username, currentProfilePicture}) {
+export default function PostCard({title}) {
   const navigation = useNavigation();
-  const [Liked, setLiked] = useState(isLiked(data.likes, username));
+  const userContext = useContext(UserContext);
+  const data = usePostContext(title) || userContext.deletedPosts.find((item) => item.title === title);
+  const [Liked, setLiked] = useState(data.isLiked(userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
@@ -16,8 +19,8 @@ export default function PostCard({data, username, currentProfilePicture}) {
   const FLATLIST_PICTURE_DIMENSIONS = 40;
 
   useEffect(() => {
-    updateCurrencyPrice(data);
-  }, [data.currency[0].value]);
+    data.updateCurrencyPrice();
+  }, [data.currencies[0].value]);
 
   useEffect(()=>{
     smallFlatListRef.current?.scrollToIndex({
@@ -35,15 +38,15 @@ export default function PostCard({data, username, currentProfilePicture}) {
   };
 
   const RenderIsUsernameSameAsPostedBy = () => {
-    if (username === data.PostedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>;
+    if (userContext.username === data.postedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>;
     return (
-      <Pressable onPress = {() => navigation.navigate('view profile', {ProfileImage: data.profilePic, postedByUsername: data.PostedBy, currentUsername: username, currentProfilePicture})}>
-        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePic}}/>
+      <Pressable onPress = {() => navigation.navigate('view profile', {postedByUsername: data.postedBy})}>
+        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>
       </Pressable>
     );
   };
 
-  const change = ({nativeEvent}) => {
+  const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     setCurrentIndex(slide);
   };
@@ -59,9 +62,9 @@ export default function PostCard({data, username, currentProfilePicture}) {
   return (
     <View style={{backgroundColor: 'transparent', borderRadius: 10, margin: 10}}>
       {
-          (username !== data.PostedBy) ? (
+          (userContext.username !== data.postedBy) ? (
               <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
-                <Pressable onPress={() => handleLike(data.title, username, Liked, setLiked)}>
+                <Pressable onPress={() => data.handleLikeCounter(userContext.username, setLiked)}>
                   <RenderLiked/>
                 </Pressable>
               </View>
@@ -72,29 +75,29 @@ export default function PostCard({data, username, currentProfilePicture}) {
         <View style={{marginLeft: 5}}>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>{data.title}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(data.currency)[0].value}}/>
-            <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(data.currency)[0].price} </Text>
+            <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: data.updatedCurrencyList(data.currencies)[0].value}}/>
+            <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{data.updatedCurrencyList(data.currencies)[0].price} </Text>
             <Text style={{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500'}}>(${Number(data.USD).toLocaleString('en-US')})</Text>
           </View>
         </View>
       </View>
       <FlatList
-        data={data.pic}
+        data={data.pictures}
         horizontal
         pagingEnabled
-        onScroll={change}
+        onScroll={changeIndex}
         ref = {mainFlatListRef}
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}
         renderItem={({item}) => (
-          <Pressable onPress={() => navigation.navigate('post details', {CurrentUserProfilePic: currentProfilePicture, username: username, data})}>
+          <Pressable onPress={() => navigation.navigate('post details', {title: data.title})}>
             <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: ITEM_WIDTH, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
           </Pressable>
         )}
       />
 
       <FlatList
-        data={data.pic}
+        data={data.pictures}
         horizontal={true}
         style = {{
           bottom: 10,
@@ -117,7 +120,7 @@ export default function PostCard({data, username, currentProfilePicture}) {
             <Pressable key = {item} onPress = {() => {
               scrollToActiveIndex(index);
             }}>
-              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === data.pic.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
+              <Image source = {{uri: item}} style = {{height: FLATLIST_PICTURE_DIMENSIONS, width: FLATLIST_PICTURE_DIMENSIONS, transform: [{scale: index === currentIndex ? 1.2 : scaleFactor}], borderRadius: 6, borderWidth: index === currentIndex ?2:0, borderColor: index === currentIndex ?'white':'transparent', marginLeft: index === 0 ? FLATLIST_WIDTH/2-(FLATLIST_PICTURE_DIMENSIONS/2) : 3, marginRight: index === data.pictures.length - 1 ? FLATLIST_WIDTH/2 - (FLATLIST_PICTURE_DIMENSIONS/2) : 3}} key = {item}/>
             </Pressable>
           );
         }}

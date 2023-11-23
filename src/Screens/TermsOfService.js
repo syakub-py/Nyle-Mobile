@@ -32,7 +32,7 @@ export default function TermsOfService({route, navigation}) {
           </View>
         </Pressable>
         <Pressable onPress = {() => {
-          navigation.navigate('Main Container', {username: route.params.username});
+          navigation.navigate('Main Container');
         }}>
           <View style = {{width: '40%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'green', borderRadius: 5, margin: 10}}>
             <Text style = {{color: 'white', fontWeight: 'bold', margin: 5}}>Accept</Text>

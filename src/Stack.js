@@ -18,6 +18,8 @@ import TermsOfService from './Screens/TermsOfService';
 import HomeMapView from './Screens/HomeMapView';
 import PhotoCollage from './Screens/PhotoCollage';
 import Profile from './Screens/Profile';
+import FinishPost from './Screens/FinishPost';
+
 
 const Stack = () => {
   const Stack = createNativeStackNavigator();
@@ -41,6 +43,7 @@ const Stack = () => {
       <Stack.Screen name = "Home Map View" component = {HomeMapView} />
       <Stack.Screen name = "Photo Collage" component = {PhotoCollage} />
       <Stack.Screen name = "My Profile" component = {Profile} />
+      <Stack.Screen name = "Finish Post" component = {FinishPost} />
     </Stack.Navigator>
   );
 };

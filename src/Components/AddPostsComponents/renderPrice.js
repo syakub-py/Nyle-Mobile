@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Dimensions, Image, Text, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import DropdownInput from '../../Components/AddPostDropdown';
-import _ from 'lodash';
-import {convertPrice} from '../../Screens/GlobalFunctions';
 import {CustomTextInput} from '../CustomText';
 
 const RenderCurrencyItem = (item) => {
@@ -15,11 +13,17 @@ const RenderCurrencyItem = (item) => {
   );
 };
 
-export default function RenderPrice({currencies, currencyList, setCurrencyList}) {
+export default function RenderPrice({currencyList, setCurrencyList, setIsFocus}) {
   const [checked, setChecked] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState({});
   const [price, setPrice] = useState(0);
-
+  const currencies = [
+    {label: 'Bitcoin', value: 'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'},
+    {label: 'Ethereum', value: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880'},
+    {label: 'Doge Coin', value: 'https://assets.coingecko.com/coins/images/5/large/dogecoin.png?1547792256'},
+    {label: 'USD', value: 'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389'},
+    {label: 'Solana', value: 'https://assets.coingecko.com/coins/images/4128/large/solana.png?1640133422'},
+  ];
 
   useEffect(() => {
     console.log('Selected currency updated, ', selectedCurrency);
@@ -44,16 +48,6 @@ export default function RenderPrice({currencies, currencyList, setCurrencyList})
             placeholder="Select a currency"
             onChange={(item) => {
               if (selectedCurrency !== null && selectedCurrency !== undefined && Object.keys(selectedCurrency).length !== 0) {
-                if (_.size(currencyList) > 0) {
-                  convertPrice(currencyList[0].label, price, selectedCurrency.label).then((result)=>{
-                    const updatedCurrencyList = [...currencyList, {...item, price: result.price}];
-                    setCurrencyList(updatedCurrencyList);
-                  });
-                } else {
-                  const updatedCurrencyList = [...currencyList, {...item, price: price}];
-                  setCurrencyList(updatedCurrencyList);
-                }
-              } else {
                 if (Object.keys(item).length !== 0) {
                   setSelectedCurrency({...item, price: price});
                 } else {
@@ -68,7 +62,7 @@ export default function RenderPrice({currencies, currencyList, setCurrencyList})
               width: Dimensions.get('window').width / 3,
             }}
           />
-          <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width / 2.5} />
+          <CustomTextInput onChangeText={(text) => setPrice(text)} />
         </View>
 
         <View style={{zIndex: 1, marginLeft: 15}}>
@@ -115,7 +109,7 @@ export default function RenderPrice({currencies, currencyList, setCurrencyList})
             }}
             setIsFocus={()=>setIsFocus(false)}
           />
-          <CustomTextInput onChangeText={(text) => setPrice(text)} width={Dimensions.get('window').width/2.5}/>
+          <CustomTextInput onChangeText={(text) => setPrice(text)}/>
         </View>
       </View>
     );

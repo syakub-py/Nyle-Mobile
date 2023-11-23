@@ -1,42 +1,30 @@
 import {View, Text, FlatList, SafeAreaView, Pressable} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {firestore} from '../Components/Firebase';
+import React, {useContext, useEffect, useState} from 'react';
 import ReviewCard from '../Components/ReviewCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
+import {UserContext} from '../Contexts/UserContext';
+import {useNavigation} from '@react-navigation/native';
+import {LoadingAnimation} from '../Components/LoadingAnimation';
 
 /*
     @route.params = {DatePosted:TimeStamp, Title: Title of the review, stars: (number of stars), Reviewe: user getting the review, Reviewer:user giving the review, Replies: [{datePosted, message, username (posted by username)}], ReviewMessage:string, id: string (Id of document)}
 */
 
-const getReviews = async (username) => {
-  let results = [];
-  const MyReviewsQuery = firestore.collection('Reviews').where('Reviewe', '==', username);
-  await MyReviewsQuery.get().then((postSnapshot) => {
-    postSnapshot.forEach((doc) => {
-      results.push({id: doc.id, ...doc.data()});
-    });
-  });
-  if (results) {
-    results = results.sort((a, b) => {
-      return new Date(b.DatePosted) - new Date(a.DatePosted);
-    });
-  }
-  return results;
-};
-
-export default function Reviews({route, navigation}) {
-  const [ReviewList, setReviewList] = useState([]);
+export default function Reviews({route}) {
   const PostedByUsername = route.params.username;
-  const currentUsername = route.params.currentUser;
-  useEffect(() => {
-    getReviews(PostedByUsername).then((result) => {
-      setReviewList(result);
+  const userContext = useContext(UserContext);
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  useEffect(()=>{
+    setLoading(true);
+    userContext.getReviews().then(()=>{
+      setLoading(false);
     });
   }, []);
 
   const RenderIsCurrentUser = () => {
-    if (currentUsername === PostedByUsername) return <View/>;
+    if (userContext.username === PostedByUsername) return null;
     return (
       <View style = {{
         position: 'absolute',
@@ -51,7 +39,7 @@ export default function Reviews({route, navigation}) {
           justifyContent: 'center',
           alignItems: 'center',
           elevation: 6,
-        }} onPress = {() => navigation.navigate('Write Review', {username: currentUsername, PostedBy: PostedByUsername})}>
+        }} onPress = {() => navigation.navigate('Write Review', {PostedBy: PostedByUsername})}>
           <Ionicons name = "pencil" size = {24} color = "white" />
         </Pressable>
 
@@ -62,12 +50,12 @@ export default function Reviews({route, navigation}) {
   return (
     <SafeAreaView style = {{flex: 1, backgroundColor: 'whitesmoke'}}>
 
-      <FlatList data = {ReviewList}
+      <FlatList data = {userContext.reviews}
         ListHeaderComponent = {
           <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
-
+            <LoadingAnimation loading={loading}/>
             <View style = {{zIndex: 1}}>
-              <BackButton navigation={navigation}/>
+              <BackButton />
             </View>
 
             <View style={{flexDirection: 'column'}}>
@@ -79,7 +67,7 @@ export default function Reviews({route, navigation}) {
           </View>
         }
         renderItem = {({item}) => (
-          <ReviewCard data = {item} currentUser = {currentUsername}/>
+          <ReviewCard data = {item}/>
         )}/>
       <RenderIsCurrentUser/>
 

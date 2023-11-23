@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
-  Alert,
   Image,
   Pressable,
   RefreshControl,
@@ -12,37 +11,18 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from '../Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore} from '../Components/Firebase';
 import firebase from 'firebase/compat/app';
 import * as ImagePicker from 'expo-image-picker';
-import {getSoldItems, generateRating, getProfilePicture, addProfilePicture, getUsername} from './GlobalFunctions';
 import _ from 'lodash';
 import HiddenButton from '../Components/HiddenButton';
 import RatingButton from '../Components/RatingButton';
-import {loadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 
-const getPosts = async (username, setUserList) => {
-  const results = [];
-  const MyPostsQuery = firestore.collection('AllPosts').where('PostedBy', '==', username);
-  try {
-    const postSnapshot = await MyPostsQuery.get();
-    postSnapshot.forEach((doc) => {
-      results.push(doc.data());
-    });
-    setUserList(results);
-  } catch (error) {
-    Alert.alert('Error Getting Posts:', error);
-  }
-};
 
-const onRefresh = async (setRefreshing, username, setUserList) => {
-  setRefreshing(true);
-  await getPosts(username, setUserList);
-  Vibration.vibrate(100);
 
-  setTimeout(() => setRefreshing(false), 1000);
-};
 
 const handleSignOut = async (navigation) => {
   try {
@@ -53,31 +33,7 @@ const handleSignOut = async (navigation) => {
   return navigation.navigate('Login');
 };
 
-const deletePost = (post, collectionName, userPostList, setUserPostList) => {
-  setUserPostList(userPostList.filter((item) =>(item.title!==post.title)));
-  firestore
-      .collection(collectionName)
-      .doc(post.title)
-      .delete()
-      .then(() => {
-        post.pic.forEach((picture) => {
-          const picRef = getstorage.refFromURL(picture);
-          picRef
-              .delete()
-              .then(() => {
-              })
-              .catch((error) => {
-                console.log('Error deleting picture:', error);
-              });
-        });
-        Alert.alert('Posted deleted!');
-      })
-      .catch((error) => {
-        console.log('Error deleting document: ' + JSON.stringify(error));
-      });
-};
-
-const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
+const clearDeletedAfter30Days = async (nyleContext) => {
   const sourceDocRef = firestore.collection('DeletedPosts');
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -86,7 +42,7 @@ const clearDeletedAfter30Days = async (username, userPostList, setUserList) => {
     const snapshot = await query.get();
     const batch = firestore.batch();
     snapshot.forEach((doc) => {
-      deletePost(doc.data(), 'DeletedPosts', userPostList, setUserList);
+      nyleContext.deletePost(doc.data());
     });
     await batch.commit();
   } catch (error) {
@@ -113,50 +69,43 @@ const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
   }
 };
 
-const selectProfilePic = async (username) => {
+const selectProfilePic = async (userContext) => {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     aspect: [4, 3],
     quality: 1,
   });
   if (!result.canceled) {
-    await addProfilePicture(username, result.assets[0].uri);
+    await userContext.addProfilePicture(userContext.username, result.assets[0].uri);
   }
 };
 
 export default function Profile() {
   const [userPostsList, setUserPostsList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [numOfReviews, setNumOfReviews] = useState(0);
-  const [profilePic, setProfilePic] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const userContext = useContext(UserContext);
+  const nyleContext =useContext(AppContext);
 
-  useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-
-        getPosts(profileName, setUserPostsList);
-        clearDeletedAfter30Days(profileName, userPostsList, setUserPostsList);
-        generateRating(profileName, setRating, setNumOfReviews);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUsernameAndProfilePicture();
+  useEffect(()=>{
+    setRefreshing(true);
+    Promise.all([
+      clearDeletedAfter30Days(nyleContext),
+      userContext.getAmountOfSoldItems(),
+      userContext.generateRating(),
+    ]).then(()=>{
+      setRefreshing(false);
+    });
   }, []);
 
 
-  loadingAnimation(loading);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await userContext.getPosts().then(()=>{
+      Vibration.vibrate(100);
+      setRefreshing(false);
+    });
+  };
 
   const SectionTitle = ({title}) => {
     return (
@@ -181,12 +130,12 @@ export default function Profile() {
   };
 
   return (
-    <View style = {{backgroundColor: 'white'}}>
+    <View style = {{backgroundColor: 'white', flex: 1}}>
       <SwipeListView
-        data = {userPostsList}
+        data = {userContext.posts}
         rightOpenValue = {-170}
         refreshControl = {
-          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, username, setUserPostsList)} />
+          <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
         }
         ListFooterComponent = {
           <View style = {{height: 80}}/>
@@ -196,9 +145,9 @@ export default function Profile() {
             <View>
               <View style = {{alignItems: 'center', marginTop: 25}}>
                 <Pressable onPress={()=>{
-                  selectProfilePic(username);
+                  selectProfilePic(userContext);
                 }}>
-                  <Image source = {{uri: profilePic}} style = {{
+                  <Image source = {{uri: userContext.profilePicture}} style = {{
                     width: 100,
                     height: 100,
                     borderRadius: 20,
@@ -214,9 +163,9 @@ export default function Profile() {
 
               <View style = {{flexDirection: 'row', alignSelf: 'center', paddingTop: 10}}>
                 <View style={{flexDirection: 'column'}}>
-                  <RatingButton navigation={navigation} rating={rating} username={username} currentUsername={username}/>
+                  <RatingButton rating={userContext.rating} username={userContext.username} currentUsername={userContext.username}/>
 
-                  <Text style={{fontSize: 13, color: 'gray'}}>({numOfReviews} reviews)</Text>
+                  <Text style={{fontSize: 13, color: 'gray'}}>({userContext.numberOfReviews} reviews)</Text>
                 </View>
                 <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
@@ -228,7 +177,7 @@ export default function Profile() {
                 <View style = {{borderRightWidth: 1, borderColor: 'lightgray', height: '100%', marginLeft: 10, marginRight: 10}} />
 
                 <View style = {{flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{getSoldItems(userPostsList)}</Text>
+                  <Text style = {{fontSize: 20, fontWeight: '500'}}>{userContext.amountOfSoldItems}</Text>
                   <Text style = {{fontSize: 15, fontWeight: '400', color: 'lightgray'}}>Sold items</Text>
                 </View>
               </View>
@@ -259,7 +208,7 @@ export default function Profile() {
             <Setting
               title = "Recently Deleted Posts"
               type = "button"
-              onPress = {() =>navigation.navigate('Deleted Posts', {username: username, currentProfilePicture: profilePic})}
+              onPress = {() =>navigation.navigate('Deleted Posts')}
               nameOfIcon = 'trash-outline'
             />
 
@@ -277,7 +226,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <PostCard data = {item} username={username} currentProfilePicture={profilePic}/>
+          <PostCard title = {item.title} />
         )}
 
         renderHiddenItem = {({item}) => (

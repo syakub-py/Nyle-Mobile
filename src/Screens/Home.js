@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,71 +13,56 @@ import {
 } from 'react-native';
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {readDatabase, categoryFilter, getProfilePicture, getUsername} from './GlobalFunctions';
-import {handleEndReached} from './GlobalFunctions';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
-import {loadingAnimation} from '../Components/LoadingAnimation';
+import {LoadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
-
+import {AppContext} from '../Contexts/NyleContext';
+import {UserContext} from '../Contexts/UserContext';
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
-const onRefresh = (setRefreshing, setFilterData, setMasterData, setLastDocument) => {
-  setRefreshing(true);
-  readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
-  Vibration.vibrate(100);
-
-  setTimeout(() => setRefreshing(false), 300);
-};
-
-const searchFilter = (text, masterData, setFilterData, setSearch) => {
-  if (text) {
-    const newData = masterData.filter((item) => {
-      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData)>-1;
-    });
-    setFilterData(newData);
-    setSearch(text);
-  } else {
-    setFilterData(masterData);
-    setSearch(text);
-  }
-};
 
 export default function Home() {
-  const [filteredData, setFilterData] = useState([]);
+  const nyleContext = useContext(AppContext);
+  const userContext = useContext(UserContext);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [profilePic, setProfilePic] = useState(null);
-  const [lastDocument, setLastDocument] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState(null);
   const navigation = useNavigation();
 
   useEffect(() => {
-    async function fetchUsernameAndProfilePicture() {
-      try {
-        const profileName = await getUsername();
-        setUsername(profileName);
-
-        const pic = await getProfilePicture(profileName);
-        setProfilePic(pic);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchUsernameAndProfilePicture();
-    readDatabase('AllPosts', setFilterData, setMasterData, setLastDocument);
+    setLoading(true);
+    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
+      setMasterData(result);
+      setLoading(false);
+    });
   }, []);
 
-  loadingAnimation(loading);
+  const searchFilter = (text) => {
+    if (text) {
+      setSearch(text);
+      return masterData.filter((item) => {
+        const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData)>-1;
+      });
+    } else {
+      setSearch(text);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    Vibration.vibrate(100);
+    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
+      setMasterData(result);
+      setRefreshing(false);
+    });
+  };
 
   const RenderFooter = () => {
     if (!loading) {
@@ -97,10 +82,11 @@ export default function Home() {
 
   return (
     <View style = {{flex: 1, backgroundColor: 'white'}}>
-      <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: username})}
+      <LoadingAnimation loading={loading}/>
+      <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
-          bottom: 90,
+          bottom: 110,
           left: width / 2 - 40,
           width: 80,
           backgroundColor: 'white',
@@ -139,21 +125,21 @@ export default function Home() {
 
                 <View style={{marginLeft: 15}}>
                   <Text style={{fontSize: 17, fontWeight: 'bold'}}>Welcome Back</Text>
-                  <Text style={{fontWeight: '500', color: 'grey'}}>{username}</Text>
+                  <Text style={{fontWeight: '500', color: 'grey'}}>{userContext.username}</Text>
                 </View>
                 <Pressable onPress={()=>{
-                  navigation.navigate('My Profile', {username: username});
+                  navigation.navigate('My Profile');
                 }}>
                   <Image
                     resizeMode="cover"
-                    source={{uri: profilePic}}
+                    source={{uri: userContext.profilePicture}}
                     style={{height: 50, width: 50, borderRadius: 15}}
                   />
                 </Pressable>
 
               </View>
 
-              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={categoryFilter} setFilterData={setFilterData} />
+              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={nyleContext.categoryFilter} />
 
               <View style = {{
                 flex: 1,
@@ -167,23 +153,23 @@ export default function Home() {
                 elevation: 2,
               }}>
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
-                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => searchFilter(text, masterData, setFilterData, setSearch)} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
+                <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => setMasterData(searchFilter(text))} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
               </View>
 
             </View>
           }
 
-          data = {filteredData}
+          data = {masterData}
           refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh(setRefreshing, setFilterData, setMasterData, setLastDocument)} />
+            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
           }
           renderItem = {({item}) => (
-            <PostCard data = {item} username = {username} currentProfilePicture={profilePic}/>
+            <PostCard title = {item.title}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{
             if (_.size(masterData)>1) {
-              handleEndReached(filteredData, lastDocument, setFilterData, setMasterData, setLastDocument, setLoading);
+              nyleContext.handleEndOfScreenReached();
             }
           }}
         />

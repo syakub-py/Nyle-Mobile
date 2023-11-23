@@ -6,12 +6,13 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {getProfilePicture} from '../Screens/GlobalFunctions';
 import HiddenButton from './HiddenButton';
+import {UserContext} from '../Contexts/UserContext';
+import {AppContext} from '../Contexts/NyleContext';
 
 const sendReply = async (data, currentUser, reply, existingReplies, setExistingReplies) => {
   const docRef = firestore.collection('Reviews').doc(data.id);
@@ -47,22 +48,24 @@ const deleteReply = async (data, existingReplies, setExistingReplies, index) => 
 
 /*
     @param data = {DatePosted:TimeStamp ,Replies: [{datePosted, message, username (posted by username)}, id:string (id of the doc in firestore), stars: int (number of stars)]
-    @param currentUser = string (current username)
  */
 
-export default function ReviewCard({data, currentUser}) {
+export default function ReviewCard({data}) {
   const [open, setOpen] = useState(false);
   const [reply, setReply] = useState('');
   const [existingReplies, setExistingReplies] = useState(data.Replies);
   const [profilePic, setProfilePic] = useState(null);
+  const {username} = useContext(UserContext);
+  const nyleContext = useContext(AppContext);
 
   useEffect(()=>{
-    getProfilePicture(data.Reviewer).then((result)=>{
+    nyleContext.getProfileOtherPicture(data.Reviewer).then((result)=>{
       setProfilePic(result);
     });
   }, []);
+
   const handleSendReply = () => {
-    sendReply(data, currentUser, reply, existingReplies, setExistingReplies);
+    sendReply(data, username, reply, existingReplies, setExistingReplies);
     setOpen(!open);
   };
 
@@ -71,7 +74,7 @@ export default function ReviewCard({data, currentUser}) {
   };
 
   const renderIsRevieweCurrentUser = () => {
-    if (data.Reviewe !== currentUser) return <View/>;
+    if (data.Reviewe !== username) return <View/>;
     return (
       <Pressable onPress = {() =>setOpen(!open)}>
         <View style = {{position: 'absolute', bottom: 0, right: 10}}>
@@ -81,28 +84,28 @@ export default function ReviewCard({data, currentUser}) {
     );
   };
 
-  const renderIsOpen = () => {
-    if (open) {
-      return (
-        <View style = {{flexDirection: 'row', justifyContent: 'center'}}>
-          <View style = {{width: 300}}>
-            <TextInput multiline placeholder = {'Write a reply'} onChangeText = {(text) =>setReply(text)}/>
-          </View>
-
-          <Pressable onPress = {handleSendReply}>
-            <View style = {{backgroundColor: 'black', justifyContent: 'center', borderRadius: 30}}>
-              <Ionicons name = {'send'} size = {15} color = {'white'} style = {{margin: 7}}/>
-            </View>
-          </Pressable>
-
-        </View>
-      );
+  const RenderIsWriteReplyOpen = () => {
+    if (!open) {
+      return renderIsRevieweCurrentUser();
     }
-    return renderIsRevieweCurrentUser();
+    return (
+      <View style = {{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style = {{width: 300}}>
+          <TextInput multiline placeholder = {'Write a reply'} onChangeText = {(text) =>setReply(text)}/>
+        </View>
+
+        <Pressable onPress = {handleSendReply}>
+          <View style = {{backgroundColor: 'black', justifyContent: 'center', borderRadius: 30}}>
+            <Ionicons name = {'send'} size = {15} color = {'white'} style = {{margin: 7}}/>
+          </View>
+        </Pressable>
+
+      </View>
+    );
   };
 
-  const renderIsRevieweCurrentUser2 = () => {
-    if (data.Reviewe !== currentUser) {
+  const RenderIsRevieweCurrentUser2 = () => {
+    if (data.Reviewe !== username) {
       return (
         <ScrollView>
           {
@@ -166,11 +169,11 @@ export default function ReviewCard({data, currentUser}) {
           <Text style = {{marginTop: 5}}>{data.ReviewMessage}</Text>
         </View>
 
-        {renderIsOpen()}
+        <RenderIsWriteReplyOpen/>
 
       </View>
 
-      {renderIsRevieweCurrentUser2()}
+      <RenderIsRevieweCurrentUser2/>
     </View>
   );
 }

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Stack from './src/Stack';
+import {AppContext, NyleContext} from './src/Contexts/NyleContext';
 
 /**
  * Main App component.
@@ -8,9 +9,12 @@ import Stack from './src/Stack';
  * @return {React.JSX.Element} The rendered component.
  */
 export default function App() {
+  const nyleContext = useMemo(()=>new NyleContext(), []);
   return (
-    <NavigationContainer>
-      <Stack />
-    </NavigationContainer>
+    <AppContext.Provider value={nyleContext}>
+      <NavigationContainer>
+        <Stack />
+      </NavigationContainer>
+    </AppContext.Provider>
   );
 }

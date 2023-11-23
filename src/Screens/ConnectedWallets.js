@@ -9,12 +9,12 @@ const wallets = [
   {name: 'FTX Wallet', address: '0xghi78957395**********', balance: '234,324', walletProvider: 'https://i.pinimg.com/originals/23/ae/af/23aeaf41d1cefffadf15692d792e9289.png'},
 ];
 
-export default function ConnectedWallets({navigation}) {
+export default function ConnectedWallets() {
   return (
     <View>
       <View style = {{zIndex: 1}}>
         <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
-          <BackButton navigation={navigation}/>
+          <BackButton />
         </View>
       </View>
 
