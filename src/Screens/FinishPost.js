@@ -114,7 +114,13 @@ export default function FinishPost({route}) {
       <RenderDetailsText category={category} setDetails={setDetails}/>
       <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
       <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
-
+      <CustomTextInput
+        text="Description"
+        onChangeText={(text) => setDescription(text)}
+        multiline={true}
+        height={200}
+        value={description}
+      />
       <View style = {{flexDirection: 'row', position: 'absolute', bottom: 0, height: '10%', width: '100%', justifyContent: 'space-evenly', backgroundColor: 'transparent', alignItems: 'center'}}>
         <View style = {{justifyContent: 'center', backgroundColor: 'whitesmoke', borderWidth: 2, borderColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>
           <Pressable>

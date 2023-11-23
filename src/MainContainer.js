@@ -9,7 +9,6 @@ import market from './Screens/Market';
 import chat from './Screens/Chat';
 import profile from './Screens/Profile';
 import addPost from './Screens/AddPost';
-import {LoadingAnimation} from './Components/LoadingAnimation';
 import {UserContext} from './Contexts/UserContext';
 
 const Home = 'Home';
@@ -20,19 +19,13 @@ const Profile = 'Profile';
 
 const Tab = createBottomTabNavigator();
 
-
 export default function MainContainer() {
   const [received, setReceived] = useState(true);
-  const [loading, setLoading] = useState(true);
   const userContext = useContext(UserContext);
 
-  useEffect(() => {
-    setLoading(true);
-    userContext.initializeUserData().then(()=>{
-      setLoading(false);
-    });
+  useEffect(async () => {
+    await userContext.initializeUserData();
   }, []);
-
 
   const MyChatQuery = firestore.collection('Chats');
 
