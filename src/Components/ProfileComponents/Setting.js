@@ -2,7 +2,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 
-export default function Setting({title, nameOfIcon, type, onPress}){
+export default function Setting({title, nameOfIcon, type, onPress}) {
   if (type !== 'button') return <View/>;
   else {
     return (
