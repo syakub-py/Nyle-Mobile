@@ -71,9 +71,7 @@ export default function ViewProfile({route}) {
           }
           data = {UsersPosts}
           renderItem = {({item}) => (
-            <View>
-              <PostCard title = {item.title}/>
-            </View>
+            <PostCard postId = {item.id}/>
           )}
         />
       </View>

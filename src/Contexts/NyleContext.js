@@ -2,6 +2,7 @@ import {firestore, getstorage} from '../Components/Firebase';
 import {Alert} from 'react-native';
 import {createContext} from 'react';
 import {Post} from '../Classes/Post';
+import _ from 'lodash';
 
 export class NyleContext {
   constructor() {
@@ -74,8 +75,8 @@ export class NyleContext {
         });
   };
 
-  contextFor(postTitle) {
-    return this.PostContextArray.find((post) =>post.title === postTitle);
+  contextFor(postId) {
+    return this.PostContextArray.find((post) =>post.id === postId);
   }
 
   readNextTwoElements = async (collectionName) => {
@@ -129,6 +130,21 @@ export class NyleContext {
     setNumberOfReviews(counter);
   };
 
+  getOtherReviews = async (postedBy) => {
+    let results = [];
+    const MyReviewsQuery = firestore.collection('Reviews').where('Reviewe', '==', postedBy);
+    await MyReviewsQuery.get().then((postSnapshot) => {
+      postSnapshot.forEach((doc) => {
+        results.push({id: doc.id, ...doc.data()});
+      });
+    });
+    if (!_.isEmpty(results)) {
+      results = results.sort((a, b) => {
+        return new Date(b.DatePosted) - new Date(a.DatePosted);
+      });
+    }
+    return results;
+  };
   getProfileOtherPicture = async (username) => {
     try {
       const userRef = firestore.collection('ProfilePictures').doc(username);

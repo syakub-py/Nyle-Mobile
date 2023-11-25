@@ -160,7 +160,7 @@ export default function Home() {
             <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
           }
           renderItem = {({item}) => (
-            <PostCard title = {item.title}/>
+            <PostCard postId = {item.id}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{

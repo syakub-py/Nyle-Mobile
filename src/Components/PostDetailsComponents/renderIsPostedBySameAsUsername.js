@@ -4,8 +4,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {firestore} from '../Firebase';
 import {UserContext} from '../../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
-import usePostContext from '../../Services/UsePostContext';
+import findPost from '../../Services/FindPost';
 import {AppContext} from '../../Contexts/NyleContext';
+import {LoadingAnimation} from '../LoadingAnimation';
 
 
 export const generateChatID = (user1, user2) => {
@@ -15,17 +16,23 @@ export const generateChatID = (user1, user2) => {
 };
 
 
-export default function PostedBySameAsUsername({numOfReviews, postTitle}) {
+export default function PostedBySameAsUsername({postId}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const post = usePostContext(postTitle);
+  const post = findPost(postId);
   const nyleContext = useContext(AppContext);
-  const [postedByProfilePicture, setPostedByProfilePicture] = useState('');
+  const [postedByProfilePicture, setPostedByProfilePicture] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
+
   useEffect(()=>{
+    setLoading(true);
     nyleContext.getProfileOtherPicture(post.postedBy).then((result)=>{
       setPostedByProfilePicture(result);
+      setLoading(false);
     });
-    userContext.generateRating();
+    nyleContext.generateOtherUsersRating(post.postedBy, setRating, setNumberOfReviews);
   }, []);
 
   const handleAddChat = () => {
@@ -81,11 +88,18 @@ export default function PostedBySameAsUsername({numOfReviews, postTitle}) {
           Alert.alert('Error checking for existing chat: ', error);
         });
   };
+
   if (post.postedBy !== userContext.username) {
     return (
       <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style = {{justifyContent: 'center', flexDirection: 'row', marginLeft: 10}}>
-          <Image source = {{uri: postedByProfilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+          {
+            (loading)?(
+              <LoadingAnimation loading={loading}/>
+            ):(
+              <Image source = {{uri: postedByProfilePicture}} style = {{height: 60, width: 60, borderRadius: 10, alignSelf: 'center'}}/>
+            )
+          }
           <View style = {{margin: 10, alignSelf: 'center'}}>
             <Text style = {{fontWeight: 'bold', color: 'black'}}>{post.postedBy}</Text>
             <Text style = {{fontWeight: 'bold', color: 'lightgrey'}}>Owner</Text>
@@ -99,8 +113,8 @@ export default function PostedBySameAsUsername({numOfReviews, postTitle}) {
                 marginTop: 2,
               }}>
                 <Ionicons name = "star" style = {{marginRight: 3}} color = "#ebd61e" size = {13} />
-                <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{userContext.rating.toFixed(1)}</Text>
-                <Text style = {{fontSize: 10, color: 'grey', marginLeft: 3}}>({numOfReviews} reviews)</Text>
+                <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{rating.toFixed(1)}</Text>
+                <Text style = {{fontSize: 10, color: 'grey', marginLeft: 3}}>({numberOfReviews} reviews)</Text>
               </View>
             </Pressable>
           </View>
@@ -125,6 +139,7 @@ export default function PostedBySameAsUsername({numOfReviews, postTitle}) {
           <View style = {{flexDirection: 'row', alignItems: 'center', marginTop: 3}}>
             <Ionicons name = {'star'} style = {{marginRight: 3}} color = {'#ebd61e'} size = {13}/>
             <Text style = {{fontSize: 12, fontWeight: 'bold'}}>{userContext.rating.toFixed(1)}</Text>
+            <Text style = {{fontSize: 10, color: 'grey', marginLeft: 3}}>({userContext.numberOfReviews} reviews)</Text>
           </View>
         </View>
       </View>

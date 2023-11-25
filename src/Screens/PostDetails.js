@@ -20,7 +20,7 @@ import RenderDescription from '../Components/PostDetailsComponents/renderDescrip
 import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
 import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
 import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
-import usePostContext from '../Services/UsePostContext';
+import findPost from '../Services/FindPost';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
 const {width} = Dimensions.get('window');
@@ -28,7 +28,7 @@ const height = width;
 
 
 export default function PostDetails({route}) {
-  const postContext = usePostContext(route.params.title);
+  const postContext = findPost(route.params.id);
   const images = postContext.pictures;
   const likes = postContext.likes;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -171,11 +171,11 @@ export default function PostDetails({route}) {
           </View>
 
 
-          <RenderIsCategoryHomes postTitle={postContext.title}/>
-          <RenderIsCategoryAuto postTitle={postContext.title}/>
+          <RenderIsCategoryHomes postId={postContext.id}/>
+          <RenderIsCategoryAuto postId={postContext.id}/>
 
         </View>
-        <PostedBySameAsUsername numOfReviews={userContext.numberOfReviews} postTitle = {postContext.title}/>
+        <PostedBySameAsUsername postId = {postContext.id}/>
 
         <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
 
@@ -197,7 +197,7 @@ export default function PostDetails({route}) {
             </MapView>
           </View>
         </Pressable>
-        <RenderHomesAndAuto postTitle={postContext.title}/>
+        <RenderHomesAndAuto postId={postContext.id}/>
       </ScrollView>
     </SafeAreaView>
   );

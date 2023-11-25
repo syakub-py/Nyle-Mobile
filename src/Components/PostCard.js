@@ -2,13 +2,14 @@ import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-nat
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import usePostContext from '../Services/UsePostContext';
+import findPost from '../Services/FindPost';
 import {UserContext} from '../Contexts/UserContext';
+import {Post} from '../Classes/Post';
 
-export default function PostCard({title}) {
+export default function PostCard({postId}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const data = usePostContext(title) || usePostContext(userContext.deletedPosts.find((item) => item.title === title));
+  const data = findPost(postId) || new Post(userContext.deletedPosts.find((item) => item.id === postId));
   const [Liked, setLiked] = useState(data.isLiked(userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
@@ -41,7 +42,7 @@ export default function PostCard({title}) {
     if (userContext.username === data.postedBy) return <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>;
     return (
       <Pressable onPress = {() => navigation.navigate('view profile', {postedByUsername: data.postedBy})}>
-        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: userContext.profilePicture}}/>
+        <Image style = {{height: 50, width: 50, borderRadius: 15, marginLeft: 12, marginRight: 12}} source = {{uri: data.profilePicture}}/>
       </Pressable>
     );
   };
@@ -90,7 +91,7 @@ export default function PostCard({title}) {
         showsHorizontalScrollIndicator={false}
         snapToAlignment={'center'}
         renderItem={({item}) => (
-          <Pressable onPress={() => navigation.navigate('post details', {title: data.title})}>
+          <Pressable onPress={() => navigation.navigate('post details', {id: data.id})}>
             <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: ITEM_WIDTH, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
           </Pressable>
         )}

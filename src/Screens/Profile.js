@@ -49,7 +49,7 @@ const clearDeletedAfter30Days = async (nyleContext) => {
 };
 
 const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
-  setUserList(userPostsList.filter((post) =>(post.title!==item.title)));
+  setUserList(userPostsList.filter((post) =>(post.id!==item.id)));
   try {
     const sourceDocRef = firestore.collection('AllPosts').doc(item.title);
     const sourceDoc = await sourceDocRef.get();
@@ -201,7 +201,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <PostCard title = {item.title} />
+          <PostCard postId = {item.id} />
         )}
 
         renderHiddenItem = {({item}) => (

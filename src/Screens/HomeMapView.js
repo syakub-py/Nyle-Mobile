@@ -152,7 +152,7 @@ export default function HomeMapView() {
           }}
           renderItem={({item, index})=>{
             return (
-              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {title: item.title})}>
+              <Pressable key = {index} onPress = {() =>navigation.navigate('post details', {id: item.id})}>
                 <View style={{
                   flex: 1,
                   height: 170,
@@ -173,7 +173,7 @@ export default function HomeMapView() {
                   marginLeft: index === 0 ? width/2-230/2 : 15,
                   marginRight: index === masterData.length - 1 ? width/2 - 230/2 : 15,
                 }}>
-                  <MapPostCard title = {item.title} />
+                  <MapPostCard postId = {item.id} />
                 </View>
               </Pressable>
             );

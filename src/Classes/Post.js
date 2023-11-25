@@ -17,7 +17,7 @@ export class Post {
     this.id = postData.id || '';
     this.likes = postData.likes || [];
     this.pictures = postData.pictures || [];
-    this.profilePic = postData.profilePic || '';
+    this.profilePicture = postData.profilePicture || '';
     this.sold = postData.sold || false;
     this.title = postData.title || '';
     this.views = postData.views || 0;

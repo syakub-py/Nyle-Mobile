@@ -1,10 +1,10 @@
 import {Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import usePostContext from '../../Services/UsePostContext';
+import findPost from '../../Services/FindPost';
 
-export default function RenderIsCategoryHomes({postTitle}) {
-  const postContext = usePostContext(postTitle);
+export default function RenderIsCategoryHomes({postId}) {
+  const postContext = findPost(postId);
   if (postContext.category !== 'Homes') return null;
   return (
     <View style = {{flexDirection: 'row', alignContent: 'center', marginTop: 5}}>

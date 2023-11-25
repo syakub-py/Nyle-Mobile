@@ -1,10 +1,10 @@
 import {Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
-import usePostContext from '../../Services/UsePostContext';
+import findPost from '../../Services/FindPost';
 
-export default function RenderIsCategoryAuto({postTitle}) {
-  const postContext = usePostContext(postTitle);
+export default function RenderIsCategoryAuto({postId}) {
+  const postContext = findPost(postId);
   if (postContext.category !== 'Auto') return null;
   return (
     <View style = {{flexDirection: 'column'}}>
