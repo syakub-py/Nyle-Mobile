@@ -1,5 +1,4 @@
 import {firestore} from '../Components/Firebase';
-import {Vibration} from 'react-native';
 import CryptoDataService from '../Services/CryptoDataService';
 import _ from 'lodash';
 
@@ -28,19 +27,21 @@ export class Post {
     PostRef.get()
         .then((doc) => {
           if (doc.exists && !doc.data().likes.includes(username)) {
-            const likesArray = doc.data().likes || [];
-            likesArray.push(username);
-            PostRef.update({likes: likesArray})
+            this.likes = doc.data().likes || [];
+            this.likes.push(username);
+            setLiked(true);
+            PostRef.update({likes: this.likes})
                 .then(() => {
                 })
                 .catch((error) => {
                   console.error('Error adding Like:', error);
                 });
           } else {
-            const likesArray = doc.data().likes || [];
-            const updatedLikesArray = likesArray.filter((username) => username !== username);
-            PostRef.update({likes: updatedLikesArray})
+            this.likes = doc.data().likes || [];
+            this.likes= this.likes.filter((username) => username !== username);
+            PostRef.update({likes: this.likes})
                 .then(() => {
+                  setLiked(false);
                 })
                 .catch((error) => {
                   console.error('Error removing like:', error);
@@ -50,8 +51,6 @@ export class Post {
         .catch((error) => {
           console.error('Error getting document:', error);
         });
-    setLiked(!this.isLiked(username));
-    Vibration.vibrate(100);
   };
 
   handleViewCounter = () => {

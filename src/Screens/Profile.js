@@ -100,7 +100,7 @@ export default function Profile() {
   const onRefresh = async () => {
     setRefreshing(true);
     await userContext.getPosts().then(()=>{
-      Vibration.vibrate(100);
+      Vibration.vibrate(10);
       setRefreshing(false);
     });
   };

@@ -10,7 +10,7 @@ export default function PreviewPostCard({postData}) {
   const ITEM_HEIGHT = 300;
   const FLATLIST_WIDTH = 140;
   const FLATLIST_PICTURE_DIMENSIONS = 40;
-  const {profilePicture, updatedCurrencyList} = useContext(UserContext);
+  const {profilePicture} = useContext(UserContext);
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
@@ -38,8 +38,8 @@ export default function PreviewPostCard({postData}) {
         <View style={{marginLeft: 5}}>
           <Text style={{fontSize: 15, fontWeight: 'bold', color: 'white', elevation: 1}}>{postData.title}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(postData.currencies)[0].value}}/>
-            <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(postData.currencies)[0].price} </Text>
+            {/* <Image style={{height: 20, width: 20, marginTop: 4, borderRadius: 20}} source={{uri: updatedCurrencyList(postData.currencies)[0].value}}/> */}
+            {/* <Text style={{color: 'white', fontSize: 15, elevation: 1, marginLeft: 5, fontWeight: '500'}}>{updatedCurrencyList(postData.currencies)[0].price} </Text> */}
             <Text style={{color: 'white', fontSize: 11, elevation: 1, fontWeight: '500'}}>(${Number(postData.USD).toLocaleString('en-US')})</Text>
           </View>
         </View>

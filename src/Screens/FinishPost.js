@@ -115,7 +115,7 @@ export default function FinishPost({route}) {
       <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
       <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
       <CustomTextInput
-        text="Description"
+        placeholder="Description"
         onChangeText={(text) => setDescription(text)}
         multiline={true}
         height={200}

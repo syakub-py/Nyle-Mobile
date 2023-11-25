@@ -15,7 +15,6 @@ import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 import Slider from '../Components/HomeComponents/Slider';
-import {LoadingAnimation} from '../Components/LoadingAnimation';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
@@ -31,14 +30,13 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
-    setLoading(true);
+    setRefreshing(true);
     nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
-      setLoading(false);
+      setRefreshing(false);
     });
   }, []);
 
@@ -51,13 +49,14 @@ export default function Home() {
         return itemData.indexOf(textData)>-1;
       });
     } else {
-      setSearch(text);
+      setSearch('');
+      return masterData;
     }
   };
 
   const onRefresh = () => {
     setRefreshing(true);
-    Vibration.vibrate(100);
+    Vibration.vibrate(10);
     nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
       setRefreshing(false);
@@ -65,10 +64,9 @@ export default function Home() {
   };
 
   const RenderFooter = () => {
-    if (!loading) {
+    if (!refreshing) {
       return (
-        <View style = {{height: 80}}>
-        </View>
+        <View style = {{height: 80}}/>
       );
     }
 
@@ -82,7 +80,6 @@ export default function Home() {
 
   return (
     <View style = {{flex: 1, backgroundColor: 'white'}}>
-      <LoadingAnimation loading={loading}/>
       <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
@@ -155,7 +152,6 @@ export default function Home() {
                 <Ionicons name = "search-outline" style = {{paddingLeft: 20}} size = {25} color = {'gray'}/>
                 <TextInput placeholder ='Search Nyle...' value = {search} onChangeText = {(text) => setMasterData(searchFilter(text))} placeholderTextColor = {'gray'} style = {{flex: 1, fontWeight: '400', backgroundColor: 'white', margin: 10, paddingHorizontal: 5}}/>
               </View>
-
             </View>
           }
 

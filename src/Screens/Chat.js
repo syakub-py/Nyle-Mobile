@@ -50,7 +50,7 @@ export default function Chat() {
   const onRefresh = () => {
     setRefreshing(true);
     userContext.getChats().then(()=>{
-      Vibration.vibrate(100);
+      Vibration.vibrate(10);
       setRefreshing(false);
     });
   };

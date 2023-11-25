@@ -23,8 +23,8 @@ export default function MainContainer() {
   const [received, setReceived] = useState(true);
   const userContext = useContext(UserContext);
 
-  useEffect(async () => {
-    await userContext.initializeUserData();
+  useEffect(() => {
+    userContext.initializeUserData().then(()=>{});
   }, []);
 
   const MyChatQuery = firestore.collection('Chats');
@@ -122,7 +122,6 @@ export default function MainContainer() {
             );
           }
         },
-
       })}>
       <Tab.Screen name = {Home} component = {home}/>
       <Tab.Screen name = {Market} component = {market}/>

@@ -8,7 +8,7 @@ import {UserContext} from '../Contexts/UserContext';
 export default function PostCard({title}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const data = usePostContext(title) || userContext.deletedPosts.find((item) => item.title === title);
+  const data = usePostContext(title) || usePostContext(userContext.deletedPosts.find((item) => item.title === title));
   const [Liked, setLiked] = useState(data.isLiked(userContext.username));
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);

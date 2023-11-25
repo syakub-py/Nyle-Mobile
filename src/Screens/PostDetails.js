@@ -48,12 +48,10 @@ export default function PostDetails({route}) {
     });
   }, [currentIndex]);
 
-
   useEffect(() => {
+    setLiked(postContext.isLiked(userContext.username));
     postContext.handleViewCounter();
-    postContext.handleLikeCounter(userContext.username, setLiked);
   }, []);
-
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);

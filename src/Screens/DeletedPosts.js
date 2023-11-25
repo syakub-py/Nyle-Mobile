@@ -9,7 +9,6 @@ import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
-
 const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
   setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
   try {
