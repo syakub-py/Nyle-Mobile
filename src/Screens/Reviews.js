@@ -1,10 +1,8 @@
-import {View, Text, FlatList, SafeAreaView, Pressable} from 'react-native';
+import {View, Text, FlatList, SafeAreaView} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import ReviewCard from '../Components/ReviewCard';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';
 import {UserContext} from '../Contexts/UserContext';
-import {useNavigation} from '@react-navigation/native';
 import {LoadingAnimation} from '../Components/LoadingAnimation';
 import {AppContext} from '../Contexts/NyleContext';
 import RenderWriteReviewButton from '../Components/ReviewComponents/RenderWriteReviewButton';
