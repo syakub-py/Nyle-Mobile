@@ -3,7 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-export default function RenderWriteReviewButton({username, PostedByUsername}){
+export default function RenderWriteReviewButton({username, PostedByUsername}) {
   const navigation = useNavigation();
   if (username === PostedByUsername) return null;
   return (
