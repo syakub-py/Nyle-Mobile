@@ -52,19 +52,22 @@ export default function Reviews({route}) {
 
       <FlatList data = {userContext.reviews}
         ListHeaderComponent = {
-          <View style = {{flex: 1, flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
+          <View style={{flex: 1}}>
             <LoadingAnimation loading={loading}/>
-            <View style = {{zIndex: 1}}>
-              <BackButton />
-            </View>
-
-            <View style={{flexDirection: 'column'}}>
-              <View style = {{width: 90, backgroundColor: 'transparent'}}>
-                <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Reviews</Text>
+            <View style = {{flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
+              <View style = {{zIndex: 1}}>
+                <BackButton />
               </View>
-              <Text style={{color: 'lightgray', fontSize: 13}}>{PostedByUsername}</Text>
+
+              <View style={{flexDirection: 'column'}}>
+                <View style = {{width: 90, backgroundColor: 'transparent'}}>
+                  <Text style = {{fontSize: 18, fontWeight: 'bold'}}>Reviews</Text>
+                </View>
+                <Text style={{color: 'lightgray', fontSize: 13}}>{PostedByUsername}</Text>
+              </View>
             </View>
           </View>
+
         }
         renderItem = {({item}) => (
           <ReviewCard data = {item}/>

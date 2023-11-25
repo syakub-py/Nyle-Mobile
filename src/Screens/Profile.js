@@ -4,7 +4,6 @@ import {
   Pressable,
   RefreshControl,
   Text,
-  TouchableOpacity,
   Vibration,
   View,
 } from 'react-native';
@@ -20,7 +19,8 @@ import RatingButton from '../Components/RatingButton';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
-
+import Setting from '../Components/ProfileComponents/Setting';
+import SectionTitle from '../Components/ProfileComponents/SectionTitle';
 
 const handleSignOut = async (navigation) => {
   try {
@@ -50,17 +50,12 @@ const clearDeletedAfter30Days = async (nyleContext) => {
 
 const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
   setUserList(userPostsList.filter((post) =>(post.title!==item.title)));
-
   try {
     const sourceDocRef = firestore.collection('AllPosts').doc(item.title);
     const sourceDoc = await sourceDocRef.get();
-
     const sourceData = sourceDoc.data();
-
     const destinationCollectionRef = firestore.collection('DeletedPosts').doc(item.title);
-
     await destinationCollectionRef.set(sourceData);
-
     await sourceDocRef.delete();
   } catch (error) {
     console.error('Error moving document to delete collection:', error);
@@ -88,10 +83,12 @@ export default function Profile() {
   useEffect(()=>{
     setRefreshing(true);
     Promise.all([
+      userContext.getPosts(),
       clearDeletedAfter30Days(nyleContext),
       userContext.getAmountOfSoldItems(),
       userContext.generateRating(),
     ]).then(()=>{
+      setUserPostsList(userContext.posts);
       setRefreshing(false);
     });
   }, []);
@@ -101,36 +98,16 @@ export default function Profile() {
     setRefreshing(true);
     await userContext.getPosts().then(()=>{
       Vibration.vibrate(10);
+      setUserPostsList(userContext.posts);
       setRefreshing(false);
     });
   };
 
-  const SectionTitle = ({title}) => {
-    return (
-      <View style = {{marginTop: 20, marginLeft: 10}}>
-        <Text style = {{color: 'black', fontSize: 20, fontWeight: 'bold'}}>{title}</Text>
-      </View>
-    );
-  };
-
-  const Setting = ({title, nameOfIcon, type, onPress}) => {
-    if (type !== 'button') return <View/>;
-    else {
-      return (
-        <TouchableOpacity style = {{flexDirection: 'row', height: 50, alignItems: 'center', width: '100%', marginLeft: 20}} onPress = {onPress}>
-          <View style = {{flexDirection: 'row'}}>
-            <Ionicons name = {nameOfIcon} style = {{color: 'black', marginRight: 20}} size = {25}/>
-            <Text style = {{flex: 1, color: 'black', fontSize: 16, fontWeight: 'bold'}}>{title}</Text>
-          </View>
-        </TouchableOpacity>
-      );
-    }
-  };
 
   return (
     <View style = {{backgroundColor: 'white', flex: 1}}>
       <SwipeListView
-        data = {userContext.posts}
+        data = {userPostsList}
         rightOpenValue = {-170}
         refreshControl = {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
