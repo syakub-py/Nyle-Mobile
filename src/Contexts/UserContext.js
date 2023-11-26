@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import _ from 'lodash';
 import {createContext} from 'react';
+import {Chat} from '../Classes/Chat';
+import {useNavigation} from '@react-navigation/native';
 
 class User {
   constructor() {
@@ -160,38 +162,39 @@ class User {
       const chatDocs = ChatSnapshot.docs;
       for (const doc of chatDocs) {
         if (doc.data().owners.some((item) => item.username === this.username)) {
-          const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-              .orderBy('createdAt', 'desc')
-              .limit(1);
+          const messagesQuery = firestore.collection(`Chats/${doc.id}/messages`)
+              .orderBy('createdAt', 'desc');
 
-          const latestMessageSnapshot = await latestMessageQuery.get();
-          const latestMessageDocs = latestMessageSnapshot.docs;
+          const AllMessagesSnapshot = await messagesQuery.get();
+          const AllMessageDocs = AllMessagesSnapshot.docs;
 
-          if (!_.isEmpty(latestMessageDocs)) {
-            const latestMessageData = latestMessageDocs[0].data();
+          if (!_.isEmpty(AllMessageDocs)) {
+            const latestMessageData = AllMessageDocs[0].data();
             const latestMessage = latestMessageData.text;
             const received = latestMessageData.received;
             const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
 
             const chatData = {
-              data: doc.data(),
+              owners: doc.data().owners,
               id: doc.id,
-              latestMessage,
-              image,
+              latestMessage: latestMessage,
+              latestImageUri: image,
+              messages: AllMessageDocs.map((message) => message.data()),
               received,
             };
 
             if (latestMessageData.user.name === this.username) chatData.latestMessage = 'You: ' + latestMessage;
 
-            results.push(chatData);
+            results.push(new Chat(chatData));
           } else {
-            results.push({
-              data: doc.data(),
+            results.push(new Chat({
+              owners: doc.data().owners,
               id: doc.id,
               latestMessage: '',
-              image: '',
+              latestImageUri: '',
+              messages: [],
               received: true,
-            });
+            }));
           }
         }
       }
@@ -201,8 +204,40 @@ class User {
     }
   };
 
+  addChat = async (withWho, withWhoProfilePicture)=> {
+    const currentUser = this.username;
+    const chatID = [currentUser, withWho].sort().join('_');
+    firestore
+        .collection('Chats')
+        .doc(chatID)
+        .get()
+        .then((docSnapshot) => {
+          if (!docSnapshot.exists) {
+            firestore
+                .collection('Chats')
+                .doc(chatID)
+                .set({
+                  owners: [
+                    {
+                      profilePic: this.profilePicture,
+                      username: currentUser,
+                    },
+                    {
+                      profilePic: withWhoProfilePicture,
+                      username: withWho,
+                    },
+                  ],
+                }).then(()=>{
+                  this.getChats();
+                }).catch((error) => Alert.alert('Error adding document: ', error));
+          }
+        })
+        .catch((error) => {
+          Alert.alert('Error checking for existing chat: ', error);
+        });
+  };
   deleteChat = async (chat) => {
-    const docSnapshots = await firestore.collection('Chats').doc(chat.id).collection('messages').get();
+    const docSnapshots = await firestore.collection('Chats').doc(chat.conversationID).collection('messages').get();
     for (const doc of docSnapshots.docs) {
       if (!_.isEmpty(doc.data().image)) {
         for (const picture of doc.data().image) {
@@ -211,8 +246,8 @@ class User {
         }
       }
     }
-    this.chats.filter((item) =>(chat.id!==item.id));
-    await firestore.collection('Chats').doc(chat.id).delete();
+    this.chats.filter((item) =>(chat.conversationID!==item.conversationID));
+    await firestore.collection('Chats').doc(chat.conversationID).delete();
   };
 }
 

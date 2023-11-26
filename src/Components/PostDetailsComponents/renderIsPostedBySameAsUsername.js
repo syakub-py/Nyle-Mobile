@@ -1,19 +1,11 @@
-import {Alert, Image, Pressable, Text, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useContext, useEffect, useState} from 'react';
-import {firestore} from '../Firebase';
 import {UserContext} from '../../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 import findPost from '../../Services/FindPost';
 import {AppContext} from '../../Contexts/NyleContext';
 import {LoadingAnimation} from '../LoadingAnimation';
-
-
-export const generateChatID = (user1, user2) => {
-  const sortedUsers = [user1, user2].sort();
-
-  return `${sortedUsers[0]}_${sortedUsers[1]}`;
-};
 
 
 export default function PostedBySameAsUsername({postId}) {
@@ -35,58 +27,16 @@ export default function PostedBySameAsUsername({postId}) {
     nyleContext.generateOtherUsersRating(post.postedBy, setRating, setNumberOfReviews);
   }, []);
 
-  const handleAddChat = () => {
-    const currentUser = userContext.username;
-    const otherUser = post.postedBy;
-    const chatID = [currentUser, otherUser].sort().join('_');
-    firestore
-        .collection('Chats')
-        .doc(chatID)
-        .get()
-        .then((docSnapshot) => {
-          if (docSnapshot.exists) {
-            navigation.navigate('chat box', {
-              username: currentUser,
-              conversationID: chatID,
-              name: otherUser,
-              avatar: userContext.profilePicture,
-              otherAvatar: postedByProfilePicture,
-              userId: generateChatID(currentUser, otherUser),
-            });
-          } else {
-            firestore
-                .collection('Chats')
-                .doc(chatID)
-                .set({
-                  owners: [
-                    {
-                      profilePic: userContext.profilePicture,
-                      username: currentUser,
-                    },
-                    {
-                      profilePic: postedByProfilePicture,
-                      username: otherUser,
-                    },
-                  ],
-                })
-                .then(() => {
-                  navigation.navigate('chat box', {
-                    username: currentUser,
-                    conversationID: chatID,
-                    name: otherUser,
-                    avatar: userContext.profilePicture,
-                    otherAvatar: postedByProfilePicture,
-                    userId: generateChatID(currentUser, otherUser),
-                  });
-                })
-                .catch((error) => {
-                  Alert.alert('Error adding document: ', error);
-                });
-          }
-        })
-        .catch((error) => {
-          Alert.alert('Error checking for existing chat: ', error);
-        });
+  const handleAddChat = ()=>{
+    userContext.addChat(post.postedBy, postedByProfilePicture).then(()=>{
+      console.log('chat Added');
+      // navigation.navigate('chat box', {
+      //   conversationID: ,
+      //   name: post.postedBy,
+      //   otherAvatar: postedByProfilePicture,
+      //   userId: userId,
+      // });
+    });
   };
 
   if (post.postedBy !== userContext.username) {

@@ -24,7 +24,7 @@ export default function MainContainer() {
   const userContext = useContext(UserContext);
 
   useEffect(() => {
-    userContext.initializeUserData().then(()=>{});
+    userContext.initializeUserData();
   }, []);
 
   const MyChatQuery = firestore.collection('Chats');

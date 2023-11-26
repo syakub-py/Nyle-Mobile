@@ -117,7 +117,7 @@ export default function Chat() {
           </View>
         )}
         renderItem = {({item}) => (
-          <ChatItem item={item} username={userContext.username} navigation={navigation}/>
+          <ChatItem Chat={item}/>
         )}
       />
       <StatusBar style = "auto"/>
