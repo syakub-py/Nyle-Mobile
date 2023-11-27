@@ -10,9 +10,9 @@ const UserNameLengthGreaterThanTen = ({username}) => {
 };
 
 const ItemLatestMessageLengthGreaterThanTen = ({item}) => {
-  if (item.latestMessage.length > 10) return <Text style = {(item.received) ?{color: 'gray', fontSize: 14, paddingTop: 3}:{color: 'black', fontSize: 14, paddingTop: 3, fontWeight: 'bold'}}>{item.latestMessage}</Text>;
+  if (item.latestMessage.length > 10) return <Text style = {(item.latestMessageReceived) ?{color: 'gray', fontSize: 14, paddingTop: 3}:{color: 'black', fontSize: 14, paddingTop: 3, fontWeight: 'bold'}}>{item.latestMessage}</Text>;
 
-  return <Text style = {(item.received) ?{color: 'gray', fontSize: 14, paddingTop: 3}:{color: 'black', fontSize: 14, paddingTop: 3, fontWeight: 'bold'}}>{item.latestMessage}</Text>;
+  return <Text style = {(item.latestMessageReceived)?{color: 'gray', fontSize: 14, paddingTop: 3}:{color: 'black', fontSize: 14, paddingTop: 3, fontWeight: 'bold'}}>{item.latestMessage}</Text>;
 };
 
 const ItemImage = ({item}) => {
@@ -51,7 +51,6 @@ export default function ChatItem({Chat}) {
             style={{width: 60, height: 60, borderRadius: 15, marginRight: 15}}
           />
         </View>
-
         <View style={{flexDirection: 'column'}}>
           <UserNameLengthGreaterThanTen username={OtherUsername} />
           <ItemLatestMessageLengthGreaterThanTen item={Chat} />

@@ -27,33 +27,6 @@ export default function MainContainer() {
     userContext.initializeUserData();
   }, []);
 
-  const MyChatQuery = firestore.collection('Chats');
-
-  MyChatQuery.get().then((ChatSnapshot) => {
-    const latestMessagePromises = [];
-
-    ChatSnapshot.docs.forEach((doc) => {
-      const owner = doc.data().owners.find((owner) => owner.username === userContext.username);
-      if (owner) {
-        const latestMessageQuery = firestore
-            .collection(`Chats/${doc.id}/messages`)
-            .orderBy('createdAt', 'desc')
-            .limit(1);
-        latestMessagePromises.push(latestMessageQuery.get());
-      }
-    });
-
-    Promise.all(latestMessagePromises).then((results) => {
-      results.forEach((latestMessageSnapshot) => {
-        if (!latestMessageSnapshot.empty &&
-            latestMessageSnapshot.docs[0].data().user.name !== userContext.username) {
-          const latestMessage = latestMessageSnapshot.docs[0].data();
-          setReceived(latestMessage.received);
-        }
-      });
-    });
-  });
-
   return (
     <Tab.Navigator initialRouteName = {home}
       screenOptions = {({route}) => ({
