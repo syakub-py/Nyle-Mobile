@@ -5,6 +5,7 @@ import _ from 'lodash';
 import {createContext} from 'react';
 import {Chat} from '../Classes/Chat';
 import {useNavigation} from '@react-navigation/native';
+import { getChatDocuments, getUserChats } from '../Firebase/Chat';
 
 class User {
   constructor() {
@@ -154,51 +155,10 @@ class User {
     }
   };
 
-  getChats = async () => {
-    const results = [];
+  async getChats () {
     try {
-      const MyChatQuery = firestore.collection('Chats');
-      const ChatSnapshot = await MyChatQuery.get();
-      const chatDocs = ChatSnapshot.docs;
-      for (const doc of chatDocs) {
-        if (doc.data().owners.some((item) => item.username === this.username)) {
-          const messagesQuery = firestore.collection(`Chats/${doc.id}/messages`)
-              .orderBy('createdAt', 'desc');
-
-          const AllMessagesSnapshot = await messagesQuery.get();
-          const AllMessageDocs = AllMessagesSnapshot.docs;
-
-          if (!_.isEmpty(AllMessageDocs)) {
-            const latestMessageData = AllMessageDocs[0].data();
-            const latestMessage = latestMessageData.text;
-            const received = latestMessageData.received;
-            const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
-
-            const chatData = {
-              owners: doc.data().owners,
-              id: doc.id,
-              latestMessage: latestMessage,
-              latestImageUri: image,
-              messages: AllMessageDocs.map((message) => message.data()),
-              received,
-            };
-
-            if (latestMessageData.user.name === this.username) chatData.latestMessage = 'You: ' + latestMessage;
-
-            results.push(new Chat(chatData));
-          } else {
-            results.push(new Chat({
-              owners: doc.data().owners,
-              id: doc.id,
-              latestMessage: '',
-              latestImageUri: '',
-              messages: [],
-              received: true,
-            }));
-          }
-        }
-      }
-      this.chats = results;
+	  const userChats = await getUserChats(this.username);
+      this.chats = userChats;
     } catch (error) {
       console.log(error);
     }
