@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {createContext} from 'react';
 import {Chat} from '../Classes/Chat';
 import {useNavigation} from '@react-navigation/native';
-import { getChatDocuments, getUserChats } from '../Firebase/Chat';
+import { getUserChats } from '../Firebase/Chat';
 
 class User {
   constructor() {

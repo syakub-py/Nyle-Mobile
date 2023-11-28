@@ -1,14 +1,14 @@
+import { Chat } from "../Classes/Chat";
 import { firestore } from "./Firebase";
 
-export async function getChatDocuments() {
-    const myChatQuery = firestore.collection('Chats');
-    return await myChatQuery.get();
+async function getUserChatDocuments(username) {
+    const myChatQuery = firestore.collection('Chats').where('owners', 'array-contains', { username: username });
+	return await myChatQuery.get();
 }
 
 export async function processChatDocuments(chatSnapshot, username) {
     for (const doc of chatSnapshot.docs) {
-      const owner = doc.data().owners.find((owner) => owner.username === username);
-      if (owner) await fetchLatestMessage(doc.id, username);
+        await fetchLatestMessage(doc.id, username);
     }
 }
 
@@ -29,11 +29,6 @@ async function processLatestMessageResults(results, username) {
         latestMessageReceived = latestMessageSnapshot.docs[0].data().received;
       }
     });
-}
-
-async function getUserChatDocuments(username) {
-    const myChatQuery = firestore.collection('Chats').where('owners', 'array-contains', { username: username });
-	return await myChatQuery.get();
 }
 
 export async function getUserChats(username) {
