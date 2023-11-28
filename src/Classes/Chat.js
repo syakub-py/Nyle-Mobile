@@ -1,7 +1,9 @@
 import { getChatDocuments, processChatDocuments } from '../Firebase/Chat';
+import { makeAutoObservable } from "mobx"
 
 export class Chat {
   constructor(chatData) {
+	makeAutoObservable(this)
     this.owners = chatData.owners;
     this.messages = chatData.messages;
     this.conversationID = chatData.id;

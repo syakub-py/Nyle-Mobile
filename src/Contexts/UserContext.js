@@ -3,12 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import _ from 'lodash';
 import {createContext} from 'react';
-import {Chat} from '../Classes/Chat';
-import {useNavigation} from '@react-navigation/native';
 import { getUserChats } from '../Firebase/Chat';
+import { makeAutoObservable } from "mobx"
 
 class User {
   constructor() {
+	makeAutoObservable(this)
     this.username = '';
     this.profilePicture = '';
     this.reviews = [];

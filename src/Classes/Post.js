@@ -6,9 +6,11 @@ import {
 	updatePostWithCurrencyPrice,
 	updateViewCount
 } from '../Firebase/AllPosts';
+import { makeAutoObservable } from "mobx"
 
 export class Post {
   constructor(postData) {
+	makeAutoObservable(this)
     this.postedBy = postData.postedBy || '';
     this.SQFT = postData.SQFT || 0;
     this.USD = postData.USD || 0;

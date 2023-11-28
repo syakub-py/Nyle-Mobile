@@ -2,6 +2,7 @@ import {Image, Pressable, Text, View} from 'react-native';
 import React, {useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../../Contexts/UserContext';
+import { observer } from 'mobx-react'
 
 const UserNameLengthGreaterThanTen = ({username}) => {
   if (username.length > 10) return <Text style = {{fontSize: 18, fontWeight: '500'}}>{username.slice(0, 13) + '...'}</Text>;
@@ -26,7 +27,7 @@ const ItemImage = ({item}) => {
   );
 };
 
-export default function ChatItem({Chat}) {
+function ChatItem({Chat}) {
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
   const username = userContext.username;
@@ -60,3 +61,6 @@ export default function ChatItem({Chat}) {
     </Pressable>
   );
 }
+
+// make sure to install observer from mobx-react
+export default observer(ChatItem)

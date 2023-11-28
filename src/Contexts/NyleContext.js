@@ -3,9 +3,11 @@ import {Alert} from 'react-native';
 import {createContext} from 'react';
 import {Post} from '../Classes/Post';
 import _ from 'lodash';
+import { makeAutoObservable } from "mobx"
 
 export class NyleContext {
   constructor() {
+	makeAutoObservable(this)
     this.PostContextArray;
     this.lastDocument;
   }
