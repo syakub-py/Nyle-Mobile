@@ -8,9 +8,7 @@ export async function getChatDocuments() {
 export async function processChatDocuments(chatSnapshot, username) {
     for (const doc of chatSnapshot.docs) {
       const owner = doc.data().owners.find((owner) => owner.username === username);
-      if (owner) {
-        await fetchLatestMessage(doc.id, username);
-      }
+      if (owner) await fetchLatestMessage(doc.id, username);
     }
 }
 
