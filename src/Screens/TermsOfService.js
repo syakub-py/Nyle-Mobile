@@ -1,4 +1,4 @@
-import {firestore} from '../Components/Firebase';
+import {firestore} from '../Firebase/Firebase';
 import {
   View,
   Text,

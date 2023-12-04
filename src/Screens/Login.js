@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import {auth} from '../Components/Firebase';
+import {auth} from '../Firebase/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ShowPassword from '../Components/ShowPassword';
 import AsyncStorage from '@react-native-async-storage/async-storage';

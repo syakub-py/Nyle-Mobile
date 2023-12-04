@@ -1,4 +1,4 @@
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore, getstorage} from '../Firebase/Firebase';
 import {Alert} from 'react-native';
 import {createContext} from 'react';
 import {Post} from '../Classes/Post';

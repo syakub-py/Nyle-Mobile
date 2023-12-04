@@ -1,10 +1,10 @@
-import {firestore, getstorage} from '../Components/Firebase';
+import {firestore, getstorage} from '../Firebase/Firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import _ from 'lodash';
 import {createContext} from 'react';
-import { getUserChats } from '../Firebase/Chat';
-import { makeAutoObservable } from "mobx"
+import {makeAutoObservable} from "mobx"
+import {Chat} from "../Classes/Chat";
 
 class User {
   constructor() {
@@ -155,15 +155,6 @@ class User {
     }
   };
 
-  async getChats () {
-    try {
-	  const userChats = await getUserChats(this.username);
-      this.chats = userChats;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   addChat = async (withWho, withWhoProfilePicture)=> {
     const currentUser = this.username;
     const chatID = [currentUser, withWho].sort().join('_');
@@ -196,6 +187,7 @@ class User {
           Alert.alert('Error checking for existing chat: ', error);
         });
   };
+
   deleteChat = async (chat) => {
     const docSnapshots = await firestore.collection('Chats').doc(chat.conversationID).collection('messages').get();
     for (const doc of docSnapshots.docs) {
@@ -209,6 +201,79 @@ class User {
     this.chats.filter((item) =>(chat.conversationID!==item.conversationID));
     await firestore.collection('Chats').doc(chat.conversationID).delete();
   };
+  async getUserChatDocuments(username) {
+    const myChatQuery = firestore.collection('Chats').where('owners', 'array-contains', username);
+    return await myChatQuery.get();
+  }
+
+  async fetchLatestMessage(docId, username) {
+    const latestMessageQuery = firestore
+        .collection(`Chats/${docId}/messages`)
+        .orderBy('createdAt', 'desc')
+        .limit(1);
+
+    const results = await latestMessageQuery.get();
+    return this.processLatestMessageResults(results, username);
+  }
+
+  processLatestMessageResults(results, username) {
+    for (const latestMessageSnapshot of results.docs) {
+      if (!latestMessageSnapshot.empty &&
+          latestMessageSnapshot.data().user.name !== username) {
+        return latestMessageSnapshot.data().received;
+      }
+    }
+    return null;
+  }
+
+  async getUserChats() {
+    try {
+      const chatSnapshot = await this.getUserChatDocuments(this.username);
+      const chatDocs = chatSnapshot.docs;
+      const userChats = [];
+
+      for (const doc of chatDocs) {
+        const messagesQuery = firestore.collection(`Chats/${doc.id}/messages`).orderBy('createdAt', 'desc');
+        const allMessagesSnapshot = await messagesQuery.get();
+        const allMessageDocs = allMessagesSnapshot.docs;
+
+        let chatData = {
+          owners: doc.data().owners,
+          id: doc.id,
+          latestMessage: '',
+          latestImageUri: '',
+          messages: [],
+          received: false,
+        };
+
+        if (allMessageDocs.length > 0) {
+          const latestMessageData = allMessageDocs[0].data();
+          chatData.latestMessage = latestMessageData.user.name === this.username ? 'You: ' + latestMessageData.text : latestMessageData.text;
+          chatData.received = latestMessageData.received;
+          chatData.latestImageUri = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
+          chatData.messages = allMessageDocs.map((message) => message.data());
+        }
+
+        userChats.push(new Chat(chatData));
+      }
+
+      this.chats = userChats;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async updateLatestMessage(username) {
+    const chatSnapshot = await this.getUserChatDocuments(username);
+    await this.processChatDocuments(chatSnapshot, username);
+  }
+
+  async processChatDocuments(chatSnapshot, username) {
+    for (const doc of chatSnapshot.docs) {
+      await this.fetchLatestMessage(doc.id, username);
+    }
+  }
 }
 
 export const UserContext = createContext(new User());

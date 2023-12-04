@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, {useState, useEffect, useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from './Components/Firebase';
 import {Image, View} from 'react-native';
 import home from './Screens/Home';
 import market from './Screens/Market';
@@ -34,26 +33,26 @@ export default function MainContainer() {
         headerShown: false,
         tabBarActiveTintColor: 'black',
         tabBarShowLabel: false,
-
-        tabBarStyle: {
-          height: 60,
-          borderRadius: 20,
-          backgroundColor: '#fff',
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          right: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 4,
+          tabBarStyle: {
+              height: 60,
+              borderRadius: 20,
+              backgroundColor: '#fff',
+              position: 'absolute',
+              bottom: '3%',
+              left: 20,
+              right: 20,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000',
+              shadowOffset: {
+                  width: 0,
+                  height: 4,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 5,
           },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-          elevation: 5,
-        },
         tabBarIcon: ({focused, color}) => {
           let iconName;
           const rn = route.name;

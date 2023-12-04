@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {firestore} from './Firebase';
+import {firestore} from '../Firebase/Firebase';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from './HiddenButton';
 import {UserContext} from '../Contexts/UserContext';

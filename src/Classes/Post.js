@@ -48,7 +48,7 @@ export class Post {
 			const doc = await fetchPost(this.title);
 			const currentViews = doc.data().views;
 			this.views = currentViews + 1;
-			await updateViewCount(this.title, views);
+			await updateViewCount(this.title, this.views);
 			return currentViews;
 		  } catch (error) {
 			console.error('Error handling view counter:', error);

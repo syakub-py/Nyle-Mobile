@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Pressable, RefreshControl, Text, View} from 'react-native';
 import PostCard from '../Components/PostCard.js';
-import {firestore} from '../Components/Firebase';
+import {firestore} from '../Firebase/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import HiddenButton from '../Components/HiddenButton';

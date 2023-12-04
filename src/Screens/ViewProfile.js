@@ -1,7 +1,7 @@
 import {View, Text, SafeAreaView, FlatList, Image} from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
 import PostCard from '../Components/PostCard';
-import {firestore} from '../Components/Firebase';
+import {firestore} from '../Firebase/Firebase';
 import BackButton from '../Components/BackButton';
 import RatingButton from '../Components/RatingButton';
 import {UserContext} from '../Contexts/UserContext';

@@ -42,7 +42,7 @@ export default function Chat() {
   const randomNumber = Math.floor(Math.random() * 100);
   useEffect(()=>{
     setRefreshing(true);
-    userContext.getChats().then(()=>{
+    userContext.getUserChats().then(()=>{
       setRefreshing(false);
     });
   }, []);

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, Pressable, TextInput} from 'react-native';
-import {auth} from '../Components/Firebase';
+import {auth} from '../Firebase/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import BackButton from '../Components/BackButton';

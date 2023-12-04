@@ -1,5 +1,5 @@
 import {View, Text, Pressable, TextInput} from 'react-native';
-import {firestore} from '../Components/Firebase';
+import {firestore} from '../Firebase/Firebase';
 import React, {useContext, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BackButton from '../Components/BackButton';

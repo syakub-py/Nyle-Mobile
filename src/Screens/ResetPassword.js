@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable, TextInput, Image} from 'react-native';
-import {auth} from '../Components/Firebase';
+import {auth} from '../Firebase/Firebase';
 import BackButton from '../Components/BackButton';
 import {useNavigation} from '@react-navigation/native';
 

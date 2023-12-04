@@ -10,7 +10,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostCard from '../Components/PostCard.js';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {firestore} from '../Components/Firebase';
+import {firestore} from '../Firebase/Firebase';
 import firebase from 'firebase/compat/app';
 import * as ImagePicker from 'expo-image-picker';
 import _ from 'lodash';
