@@ -31,7 +31,7 @@ export default function Reviews({route}) {
 
   const ReviewList = ({reviews}) =>{
     return (
-      <SafeAreaView style = {{flex: 1, backgroundColor: 'whitesmoke'}}>
+      <View style = {{flex: 1, backgroundColor: 'whitesmoke'}}>
         <FlatList data = {reviews}
           ListHeaderComponent = {
             <View style={{flex: 1}}>
@@ -55,7 +55,7 @@ export default function Reviews({route}) {
             <ReviewCard data = {item}/>
           )}/>
         <RenderWriteReviewButton username={userContext.username} PostedByUsername={PostedByUsername}/>
-      </SafeAreaView>
+      </View>
     );
   };
 

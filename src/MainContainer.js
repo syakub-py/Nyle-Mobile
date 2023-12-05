@@ -61,17 +61,14 @@ export default function MainContainer() {
         headerShown: false,
         tabBarActiveTintColor: 'black',
         tabBarShowLabel: false,
-
         tabBarStyle: {
           height: 60,
           borderRadius: 20,
-          backgroundColor: '#fff',
+          backgroundColor: 'white',
           position: 'absolute',
-          bottom: 20,
-          left: 20,
-          right: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
+          bottom: '3%',
+          left: '5%',
+          right: '5%',
           shadowColor: '#000',
           shadowOffset: {
             width: 0,

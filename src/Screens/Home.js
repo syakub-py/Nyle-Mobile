@@ -83,7 +83,7 @@ export default function Home() {
       <Pressable onPress = {() =>navigation.navigate('Home Map View', {username: userContext.username})}
         style = {{
           position: 'absolute',
-          bottom: 110,
+          bottom: '14%',
           left: width / 2 - 40,
           width: 80,
           backgroundColor: 'white',

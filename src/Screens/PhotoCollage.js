@@ -8,7 +8,7 @@ export default function PhotoCollage({route}) {
   const price = route.params.priceInUSD;
   const navigation =useNavigation();
   return (
-    <SafeAreaView>
+    <View>
       <View style={{height: 80, backgroundColor: 'white'}}>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 30}}>
@@ -50,7 +50,7 @@ export default function PhotoCollage({route}) {
           })
         }
       </ScrollView>
-    </SafeAreaView>
+    </View>
 
   );
 };

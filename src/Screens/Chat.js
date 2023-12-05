@@ -56,7 +56,7 @@ export default function Chat() {
   };
 
   return (
-    <SafeAreaView style = {styles.container}>
+    <View style = {styles.container}>
       <SwipeListView
         data = {userContext.chats}
         ListFooterComponent = {
@@ -121,7 +121,7 @@ export default function Chat() {
         )}
       />
       <StatusBar style = "auto"/>
-    </SafeAreaView>
+    </View>
   );
 }
 

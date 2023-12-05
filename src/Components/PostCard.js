@@ -1,4 +1,4 @@
-import {FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
+import {Dimensions, FlatList, Image, ImageBackground, Pressable, Text, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef, useContext} from 'react';
@@ -14,7 +14,6 @@ export default function PostCard({postId}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const smallFlatListRef = useRef(null);
   const mainFlatListRef = useRef(null);
-  const ITEM_WIDTH = 365;
   const ITEM_HEIGHT = 300;
   const FLATLIST_WIDTH = 140;
   const FLATLIST_PICTURE_DIMENSIONS = 40;
@@ -49,7 +48,9 @@ export default function PostCard({postId}) {
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-    setCurrentIndex(slide);
+    if (slide>=0){
+      setCurrentIndex(slide);
+    }
   };
 
   const scrollToActiveIndex = (index) =>{
@@ -92,7 +93,7 @@ export default function PostCard({postId}) {
         snapToAlignment={'center'}
         renderItem={({item}) => (
           <Pressable onPress={() => navigation.navigate('post details', {id: data.id})}>
-            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: ITEM_WIDTH, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
+            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: Dimensions.get("window").width-20, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
           </Pressable>
         )}
       />

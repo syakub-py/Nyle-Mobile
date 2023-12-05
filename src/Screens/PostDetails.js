@@ -55,7 +55,9 @@ export default function PostDetails({route}) {
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-    setCurrentIndex(slide);
+    if(slide>=0){
+      setCurrentIndex(slide);
+    }
   };
 
   const scrollToActiveIndex = (index) =>{
@@ -68,14 +70,14 @@ export default function PostDetails({route}) {
   };
 
   return (
-    <SafeAreaView style = {{flex: 1}}>
+    <View style = {{flex: 1}}>
       <ScrollView style = {{backgroundColor: 'white'}} showsVerticalScrollIndicator = {false}>
         <View style = {{zIndex: 1}}>
-          <View style = {{position: 'absolute', top: 30, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
+          <View style = {{position: 'absolute', top: 45, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
             <BackButton />
           </View>
 
-          <View style = {{position: 'absolute', top: 30, right: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
+          <View style = {{position: 'absolute', top: 45, right: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
             <Pressable onPress = {() => setIsOpen(!isOpen)}>
               <Ionicons name ='reorder-three-outline' size = {30}/>
             </Pressable>
@@ -83,7 +85,7 @@ export default function PostDetails({route}) {
 
           <MenuButtonModal isOpen={isOpen} setIsOpen={setIsOpen}/>
 
-          <View style = {{position: 'absolute', top: 30, right: 75, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
+          <View style = {{position: 'absolute', top: 45, right: 75, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
             <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, setLiked)}>
               <RenderIsLiked Liked={Liked} size={30}/>
             </Pressable>
@@ -199,6 +201,6 @@ export default function PostDetails({route}) {
         </Pressable>
         <RenderHomesAndAuto postId={postContext.id}/>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
