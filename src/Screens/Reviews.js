@@ -1,4 +1,4 @@
-import {View, Text, FlatList, SafeAreaView} from 'react-native';
+import {View, Text, FlatList} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import ReviewCard from '../Components/ReviewCard';
 import BackButton from '../Components/BackButton';

@@ -2,7 +2,6 @@ import {
   Dimensions, FlatList,
   Image,
   Pressable,
-  SafeAreaView,
   ScrollView,
   Text,
   View,

@@ -62,10 +62,13 @@ export default function MainContainer() {
         tabBarActiveTintColor: 'black',
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: 60,
+          height: "7%",
           borderRadius: 20,
-          backgroundColor: 'white',
+            display: 'flex',
+            backgroundColor: 'white',
           position: 'absolute',
+            alignItems: 'center', // Center vertically
+            justifyContent: 'center', // Center horizontally
           bottom: '3%',
           left: '5%',
           right: '5%',

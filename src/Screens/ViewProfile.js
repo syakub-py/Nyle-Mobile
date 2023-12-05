@@ -1,4 +1,4 @@
-import {View, Text, SafeAreaView, FlatList, Image} from 'react-native';
+import {View, Text, FlatList, Image} from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
 import PostCard from '../Components/PostCard';
 import {firestore} from '../Components/Firebase';
@@ -35,7 +35,7 @@ export default function ViewProfile({route}) {
   }, []);
 
   return (
-    <SafeAreaView>
+    <View>
       <View>
         <FlatList
           ListHeaderComponent = {
@@ -75,6 +75,6 @@ export default function ViewProfile({route}) {
           )}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
