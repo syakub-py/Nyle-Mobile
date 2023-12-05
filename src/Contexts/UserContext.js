@@ -179,7 +179,7 @@ class User {
                     },
                   ],
                 }).then(()=>{
-                  this.getChats();
+                  this.getUserChats();
                 }).catch((error) => Alert.alert('Error adding document: ', error));
           }
         })

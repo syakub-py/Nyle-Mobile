@@ -48,7 +48,10 @@ export default function PostCard({postId}) {
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-    setCurrentIndex(slide);
+    if (slide>=0){
+      setCurrentIndex(slide);
+
+    }
   };
 
   const scrollToActiveIndex = (index) =>{
@@ -91,7 +94,7 @@ export default function PostCard({postId}) {
         snapToAlignment={'center'}
         renderItem={({item}) => (
           <Pressable onPress={() => navigation.navigate('post details', {id: data.id})}>
-            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: Dimensions.get("window").width*0.958, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
+            <ImageBackground source={{uri: item}} imageStyle={{borderRadius: 10, resizeMode: 'cover'}} style={{width: Dimensions.get("window").width-20, height: ITEM_HEIGHT, borderRadius: 10, zIndex: 0}}/>
           </Pressable>
         )}
       />

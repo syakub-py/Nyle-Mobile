@@ -6,7 +6,7 @@ import {
 	updatePostWithCurrencyPrice,
 	updateViewCount
 } from '../Firebase/AllPosts';
-import { makeAutoObservable } from "mobx"
+import {makeAutoObservable} from "mobx"
 
 export class Post {
   constructor(postData) {
@@ -35,8 +35,7 @@ export class Post {
 			const doc = await fetchPost(this.title);
 			if (doc.exists) {
 				this.likes = doc.data().likes || [];
-				const updatedLikes = await processPostForLike(doc, username, setLiked, title);
-				this.likes = updatedLikes;
+				this.likes = await processPostForLike(doc, username, setLiked, this.title);
 			}
 		} catch (error) {
 			console.error('Error handling like counter:', error);
