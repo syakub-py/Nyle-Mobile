@@ -1,4 +1,5 @@
 import {
+  Animated,
   Dimensions, FlatList,
   Image,
   Pressable,
@@ -38,6 +39,7 @@ export default function PostDetails({route}) {
   const mainFlatListRef = useRef(null);
   const navigation =useNavigation();
   const userContext = useContext(UserContext);
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   useEffect(()=>{
     smallFlatListRef.current?.scrollToIndex({
@@ -96,31 +98,46 @@ export default function PostDetails({route}) {
           <View style = {{maxWidth: 60, zIndex: 1, bottom: 10, right: 10, paddingHorizontal: 5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center'}}>
             <Text style = {{color: 'white', fontWeight: 'bold'}}>{currentIndex + 1}/{images.length}</Text>
           </View>
-          <FlatList
+          <Animated.FlatList
             data={images}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            onScroll={changeIndex}
+            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+              useNativeDriver: true,
+              listener: event => {
+                changeIndex(event);
+              },
+            })}
             ref = {mainFlatListRef}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <Pressable
-                onPress={() => {
-                  navigation.navigate('Photo Collage', {
-                    pictures: images,
-                    index,
-                    title: postContext.title,
-                    priceInUSD: postContext.USD,
-                  });
-                }}
-                key={index}
-              >
-                <View style={{width, height, position: 'relative'}}>
-                  <Image style={{width, height}} resizeMode={'cover'} source={{uri: item}} />
-                </View>
-              </Pressable>
-            )}
+            renderItem={({item, index}) =>{
+              const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
+              const translateX = scrollX.interpolate({
+                inputRange,
+                outputRange: [-width*0.4, 0, width*0.4],
+              });
+
+              return(
+                  <Pressable
+                      onPress={() => {
+                        navigation.navigate('Photo Collage', {
+                          pictures: images,
+                          index,
+                          title: postContext.title,
+                          priceInUSD: postContext.USD,
+                        });
+                      }}
+                      key={index}
+                  >
+                    <View style={{width, alignItems:'center'}}>
+                      <View style={{height, width, overflow:'hidden'}}>
+                        <Animated.Image style={{height, width:width*1.4, resizeMode:'cover', transform:[{translateX}]}} source={{uri: item}}/>
+                      </View>
+                    </View>
+                  </Pressable>
+              )
+            }}
           />
 
           <FlatList
