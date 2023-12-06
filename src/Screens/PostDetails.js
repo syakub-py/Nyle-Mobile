@@ -132,7 +132,7 @@ export default function PostDetails({route}) {
                   >
                     <View style={{width, alignItems:'center'}}>
                       <View style={{height, width, overflow:'hidden'}}>
-                        <Animated.Image style={{height, width:width*1.4, resizeMode:"cover", transform:[{translateX}]}} source={{uri: item}}/>
+                        <Animated.Image style={{height, width:width*1.4, resizeMode:'cover', transform:[{translateX}]}} source={{uri: item}}/>
                       </View>
                     </View>
                   </Pressable>
