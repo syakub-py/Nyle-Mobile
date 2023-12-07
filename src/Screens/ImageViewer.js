@@ -1,17 +1,17 @@
 import React, {useRef} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {Animated, Dimensions, FlatList, Image, StyleSheet, View} from "react-native";
 import BackButton from "../Components/BackButton";
 
 
 export default function ViewImages({route}) {
   const {pictures, index} = route.params;
-  const navigation = useNavigation();
   const width = Dimensions.get('window').width
-    const scrollX = useRef(new Animated.Value(0)).current;
-
+  const scrollX = useRef(new Animated.Value(0)).current;
     return (
         <View style={{flex:1}}>
+            <View style={{backgroundColor:'transparent', zIndex:1, position:'absolute', top:40, left:20}}>
+                <BackButton/>
+            </View>
             <View style={[StyleSheet.absoluteFillObject]}>
                 {
                     pictures.map((image, index)=>{
@@ -36,6 +36,7 @@ export default function ViewImages({route}) {
                       horizontal={true}
                       showsHorizontalScrollIndicator={false}
                       onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {useNativeDriver: false,})}
+                      bounces={false}
                       renderItem={({item})=>{
                           return(
                               <View style={{
