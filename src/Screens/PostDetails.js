@@ -109,6 +109,7 @@ export default function PostDetails({route}) {
                 changeIndex(event);
               },
             })}
+            bounces={false}
             ref = {mainFlatListRef}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) =>{

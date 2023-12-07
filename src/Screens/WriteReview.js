@@ -36,7 +36,7 @@ export default function WriteReview({route}) {
   return (
     <View style = {{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style = {{position: 'absolute', top: 30, left: 10}}>
-        <BackButton />
+        <BackButton/>
       </View>
       <View style = {{paddingTop: 70, paddingHorizontal: 10, margin: 10}}>
         <TextInput style = {{height: 40, backgroundColor: '#F2F2F2', borderRadius: 8, paddingHorizontal: 10, marginBottom: 10}} placeholder = "Title" onChangeText = {(text) => setTitle(text)} />
