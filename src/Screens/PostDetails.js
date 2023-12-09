@@ -23,6 +23,7 @@ import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndVie
 import findPost from '../Services/FindPost';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
+import * as Animatable from 'react-native-animatable'
 const {width} = Dimensions.get('window');
 const height = width;
 
@@ -40,6 +41,7 @@ export default function PostDetails({route}) {
   const navigation =useNavigation();
   const userContext = useContext(UserContext);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const DURATION = 400
 
   useEffect(()=>{
     smallFlatListRef.current?.scrollToIndex({
@@ -61,6 +63,17 @@ export default function PostDetails({route}) {
     }
   };
 
+  const fadeInBottom ={
+    0:{
+      opacity:0,
+      translateY:100
+    },
+    1:{
+      opacity: 1,
+      translateY: 0
+    }
+  }
+
   const scrollToActiveIndex = (index) =>{
     mainFlatListRef.current.scrollToIndex({
       index: index,
@@ -72,8 +85,8 @@ export default function PostDetails({route}) {
 
   return (
     <View style = {{flex: 1}}>
-      <ScrollView style = {{backgroundColor: 'white'}} showsVerticalScrollIndicator = {false}>
-        <View style = {{zIndex: 1}}>
+      <ScrollView style = {{backgroundColor: 'white'}} bounces={false} showsVerticalScrollIndicator = {false}>
+        <Animatable.View style = {{zIndex: 1}} animation={fadeInBottom} duration={DURATION} delay={400}>
           <View style = {{position: 'absolute', top: 45, left: 15, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
             <BackButton />
           </View>
@@ -91,13 +104,11 @@ export default function PostDetails({route}) {
               <RenderIsLiked Liked={Liked} size={30}/>
             </Pressable>
           </View>
-        </View>
+        </Animatable.View>
 
         <View>
 
-          <View style = {{maxWidth: 60, zIndex: 1, bottom: 10, right: 10, paddingHorizontal: 5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center'}}>
-            <Text style = {{color: 'white', fontWeight: 'bold'}}>{currentIndex + 1}/{images.length}</Text>
-          </View>
+
           <Animated.FlatList
             data={images}
             horizontal
@@ -141,39 +152,43 @@ export default function PostDetails({route}) {
             }}
           />
 
-          <FlatList
-            data={images}
-            horizontal={true}
-            style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
-            contentContainerStyle={{alignItems: 'center'}}
-            showsHorizontalScrollIndicator={false}
-            ref = {smallFlatListRef}
-            initialScrollIndex={currentIndex}
-            renderItem={({item, index})=>{
-              return (
-                <Pressable key = {item} onPress = {() => {
-                  scrollToActiveIndex(index);
-                }}>
-                  <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10, borderWidth: 2, borderColor: 'white'}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
-                </Pressable>
-              );
-            }}
-          />
-
-          <View style = {{flexDirection: 'row', position: 'absolute', bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center', marginBottom: 5, marginLeft: 5, paddingHorizontal: 3}}>
-            <LikesAndViews color={'#e6121d'} iconName={'heart'} data={likes.length}/>
-            <LikesAndViews color={'white'} iconName={'eye'} data={postContext.views}/>
-          </View>
+          <Animatable.View animation={fadeInBottom} duration={DURATION} delay={500}>
+            <View style = {{maxWidth: 60, zIndex: 1, bottom: 10, right: 10, paddingHorizontal: 5, position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center'}}>
+              <Text style = {{color: 'white', fontWeight: 'bold'}}>{currentIndex + 1}/{images.length}</Text>
+            </View>
+            <FlatList
+                data={images}
+                horizontal={true}
+                style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
+                contentContainerStyle={{alignItems: 'center'}}
+                showsHorizontalScrollIndicator={false}
+                ref = {smallFlatListRef}
+                bounces={false}
+                initialScrollIndex={currentIndex}
+                renderItem={({item, index})=>{
+                  return (
+                      <Pressable key = {item} onPress = {() => {
+                        scrollToActiveIndex(index);
+                      }}>
+                        <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10, borderWidth: 2, borderColor: 'white'}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
+                      </Pressable>
+                  );
+                }}
+            />
+            <View style = {{flexDirection: 'row', position: 'absolute', bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center', marginBottom: 5, marginLeft: 5, paddingHorizontal: 3}}>
+              <LikesAndViews color={'#e6121d'} iconName={'heart'} data={likes.length}/>
+              <LikesAndViews color={'white'} iconName={'eye'} data={postContext.views}/>
+            </View>
+          </Animatable.View>
 
         </View>
 
         <View style = {{marginLeft: 10, marginTop: 10}}>
-
-          <View style = {{backgroundColor: 'transparent', flexDirection: 'row'}}>
+          <Animatable.View animation={fadeInBottom} duration={DURATION} delay={500} style = {{backgroundColor: 'transparent', flexDirection: 'row'}}>
             <Text style = {{color: 'black', fontSize: 23, fontWeight: 'bold'}}>{postContext.title}</Text>
-          </View>
+          </Animatable.View>
 
-          <View style={{maxWidth: 135, flexDirection: 'row'}}>
+          <Animatable.View animation={fadeInBottom} duration={DURATION} delay={600} style={{maxWidth: 135, flexDirection: 'row'}}>
             <FlatList horizontal
               data={postContext.updatedCurrencyList()}
               snapToAlignment={'center'}
@@ -186,37 +201,48 @@ export default function PostDetails({route}) {
                 </View>
               )}
             />
-            <Text style={{fontSize: 12, fontWeight: 'bold', color: 'black', alignSelf: 'center'}}>${Number(postContext.USD).toLocaleString('en-US')}</Text>
-          </View>
+            <Text  style={{fontSize: 12, fontWeight: 'bold', color: 'black', alignSelf: 'center'}}>${Number(postContext.USD).toLocaleString('en-US')}</Text>
+          </Animatable.View>
 
 
-          <RenderIsCategoryHomes postId={postContext.id}/>
-          <RenderIsCategoryAuto postId={postContext.id}/>
-
+          <Animatable.View animation={fadeInBottom} duration={DURATION} delay={700}>
+            <RenderIsCategoryHomes postId={postContext.id}/>
+            <RenderIsCategoryAuto postId={postContext.id}/>
+          </Animatable.View>
         </View>
-        <PostedBySameAsUsername postId = {postContext.id}/>
 
-        <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
+        <Animatable.View animation={fadeInBottom} duration={DURATION} delay={800}>
+          <PostedBySameAsUsername postId = {postContext.id}/>
+        </Animatable.View>
 
-        <Pressable onLongPress = {() => {
-          navigation.navigate('Map', {coordinates: postContext.coordinates, firstImage: images[0]});
-        }}>
-          <View style = {{width: width-50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3}}>
-            <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: postContext.coordinates, pitch: 0, heading: 0, zoom: 12, altitude: 0}} >
-              <Marker coordinate = {postContext.coordinates}>
-                <CustomMapMarker firstImage = {images[0]}/>
-              </Marker>
-              <Circle
-                center = {postContext.coordinates}
-                radius = {1200}
-                fillColor = "rgba(66, 135, 245, 0.2)"
-                strokeColor = "rgba(66, 135, 245, 0.7)"
-                strokeWidth = {1}
-              />
-            </MapView>
-          </View>
-        </Pressable>
-        <RenderHomesAndAuto postId={postContext.id}/>
+        <Animatable.View animation={fadeInBottom} duration={DURATION} delay={900}>
+          <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
+        </Animatable.View>
+
+        <Animatable.View animation={fadeInBottom} duration={DURATION} delay={1000}>
+          <Pressable onLongPress = {() => {
+            navigation.navigate('Map', {coordinates: postContext.coordinates, firstImage: images[0]});
+          }}>
+            <View style = {{width: width-50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden', elevation: 3}}>
+              <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: postContext.coordinates, pitch: 0, heading: 0, zoom: 12, altitude: 0}} >
+                <Marker coordinate = {postContext.coordinates}>
+                  <CustomMapMarker firstImage = {images[0]}/>
+                </Marker>
+                <Circle
+                    center = {postContext.coordinates}
+                    radius = {1200}
+                    fillColor = "rgba(66, 135, 245, 0.2)"
+                    strokeColor = "rgba(66, 135, 245, 0.7)"
+                    strokeWidth = {1}
+                />
+              </MapView>
+            </View>
+          </Pressable>
+        </Animatable.View>
+
+        <Animatable.View animation={fadeInBottom} duration={DURATION} delay={1200}>
+          <RenderHomesAndAuto postId={postContext.id}/>
+        </Animatable.View>
       </ScrollView>
     </View>
   );

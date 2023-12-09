@@ -88,6 +88,7 @@ export default function PostCard({postId}) {
                 horizontal
                 pagingEnabled
                 onScroll={changeIndex}
+                bounces={false}
                 ref = {mainFlatListRef}
                 showsHorizontalScrollIndicator={false}
                 snapToAlignment={'center'}
