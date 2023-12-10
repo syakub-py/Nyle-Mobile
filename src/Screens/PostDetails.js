@@ -23,7 +23,7 @@ import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndVie
 import findPost from '../Services/FindPost';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
-import * as Animatable from 'react-native-animatable'
+import * as Animatable from 'react-native-animatable';
 const {width} = Dimensions.get('window');
 const height = width;
 
@@ -41,7 +41,7 @@ export default function PostDetails({route}) {
   const navigation =useNavigation();
   const userContext = useContext(UserContext);
   const scrollX = useRef(new Animated.Value(0)).current;
-  const DURATION = 400
+  const DURATION = 400;
 
   useEffect(()=>{
     smallFlatListRef.current?.scrollToIndex({
@@ -58,26 +58,26 @@ export default function PostDetails({route}) {
 
   const changeIndex = ({nativeEvent}) => {
     const slide = Math.floor(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
-    if(slide>=0){
+    if (slide>=0) {
       setCurrentIndex(slide);
     }
   };
 
   const fadeInBottom ={
-    0:{
-      opacity:0,
-      translateY:100
+    0: {
+      opacity: 0,
+      translateY: 100,
     },
-    1:{
+    1: {
       opacity: 1,
-      translateY: 0
-    }
-  }
+      translateY: 0,
+    },
+  };
 
   const scrollToActiveIndex = (index) =>{
     mainFlatListRef.current.scrollToIndex({
       index: index,
-      animated: false,
+      animated: true,
       viewPosition: 0.8,
     });
     setCurrentIndex(index);
@@ -114,9 +114,9 @@ export default function PostDetails({route}) {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+            onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}], {
               useNativeDriver: true,
-              listener: event => {
+              listener: (event) => {
                 changeIndex(event);
               },
             })}
@@ -130,25 +130,25 @@ export default function PostDetails({route}) {
                 outputRange: [-width*0.4, 0, width*0.4],
               });
 
-              return(
-                  <Pressable
-                      onPress={() => {
-                        navigation.navigate('Photo Collage', {
-                          pictures: images,
-                          index,
-                          title: postContext.title,
-                          priceInUSD: postContext.USD,
-                        });
-                      }}
-                      key={index}
-                  >
-                    <View style={{width, alignItems:'center'}}>
-                      <View style={{height, width, overflow:'hidden'}}>
-                        <Animated.Image style={{height, width:width*1.4, resizeMode:'cover', transform:[{translateX}]}} source={{uri: item}}/>
-                      </View>
+              return (
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate('Photo Collage', {
+                      pictures: images,
+                      index,
+                      title: postContext.title,
+                      priceInUSD: postContext.USD,
+                    });
+                  }}
+                  key={index}
+                >
+                  <View style={{width, alignItems: 'center'}}>
+                    <View style={{height, width, overflow: 'hidden'}}>
+                      <Animated.Image style={{height, width: width*1.4, resizeMode: 'cover', transform: [{translateX}]}} source={{uri: item}}/>
                     </View>
-                  </Pressable>
-              )
+                  </View>
+                </Pressable>
+              );
             }}
           />
 
@@ -157,23 +157,23 @@ export default function PostDetails({route}) {
               <Text style = {{color: 'white', fontWeight: 'bold'}}>{currentIndex + 1}/{images.length}</Text>
             </View>
             <FlatList
-                data={images}
-                horizontal={true}
-                style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
-                contentContainerStyle={{alignItems: 'center'}}
-                showsHorizontalScrollIndicator={false}
-                ref = {smallFlatListRef}
-                bounces={false}
-                initialScrollIndex={currentIndex}
-                renderItem={({item, index})=>{
-                  return (
-                      <Pressable key = {item} onPress = {() => {
-                        scrollToActiveIndex(index);
-                      }}>
-                        <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10, borderWidth: 2, borderColor: 'white'}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
-                      </Pressable>
-                  );
-                }}
+              data={images}
+              horizontal={true}
+              style = {{bottom: 25, paddingHorizontal: 5, position: 'absolute', width: width}}
+              contentContainerStyle={{alignItems: 'center'}}
+              showsHorizontalScrollIndicator={false}
+              ref = {smallFlatListRef}
+              bounces={false}
+              initialScrollIndex={currentIndex}
+              renderItem={({item, index})=>{
+                return (
+                  <Pressable key = {item} onPress = {() => {
+                    scrollToActiveIndex(index);
+                  }}>
+                    <Image source = {{uri: item}} style = {currentIndex === index?{height: 60, width: 60, margin: 7, borderRadius: 10, borderWidth: 2, borderColor: 'white'}:{height: 50, width: 50, margin: 7, borderRadius: 10, alignContent: 'center'}} key = {item}/>
+                  </Pressable>
+                );
+              }}
             />
             <View style = {{flexDirection: 'row', position: 'absolute', bottom: 3, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 4, alignItems: 'center', marginBottom: 5, marginLeft: 5, paddingHorizontal: 3}}>
               <LikesAndViews color={'#e6121d'} iconName={'heart'} data={likes.length}/>
@@ -201,7 +201,7 @@ export default function PostDetails({route}) {
                 </View>
               )}
             />
-            <Text  style={{fontSize: 12, fontWeight: 'bold', color: 'black', alignSelf: 'center'}}>${Number(postContext.USD).toLocaleString('en-US')}</Text>
+            <Text style={{fontSize: 12, fontWeight: 'bold', color: 'black', alignSelf: 'center'}}>${Number(postContext.USD).toLocaleString('en-US')}</Text>
           </Animatable.View>
 
 
@@ -229,11 +229,11 @@ export default function PostDetails({route}) {
                   <CustomMapMarker firstImage = {images[0]}/>
                 </Marker>
                 <Circle
-                    center = {postContext.coordinates}
-                    radius = {1200}
-                    fillColor = "rgba(66, 135, 245, 0.2)"
-                    strokeColor = "rgba(66, 135, 245, 0.7)"
-                    strokeWidth = {1}
+                  center = {postContext.coordinates}
+                  radius = {1200}
+                  fillColor = "rgba(66, 135, 245, 0.2)"
+                  strokeColor = "rgba(66, 135, 245, 0.7)"
+                  strokeWidth = {1}
                 />
               </MapView>
             </View>

@@ -1,4 +1,4 @@
-import {Image, Pressable, ScrollView, View, Text, SafeAreaView} from 'react-native';
+import {Image, Pressable, ScrollView, View, Text} from 'react-native';
 import React from 'react';
 import BackButton from '../Components/BackButton';
 import {useNavigation} from '@react-navigation/native';
@@ -27,7 +27,7 @@ export default function PhotoCollage({route}) {
 
       </View>
 
-      <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'white'}}>
+      <ScrollView bounces={false} contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'white'}}>
         {
           pictures.map((photo, key) => {
             const height = 300;

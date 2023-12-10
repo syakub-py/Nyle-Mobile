@@ -26,7 +26,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nylecryptostore.nylecryptostore"
     },
     "android": {
       "adaptiveIcon": {

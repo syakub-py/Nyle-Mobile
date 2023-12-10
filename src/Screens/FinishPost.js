@@ -80,8 +80,8 @@ export default function FinishPost({route}) {
   };
 
   return (
-    <ScrollView style={{backgroundColor: 'white', flex: 1}}>
-      <View>
+    <ScrollView style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
+      <View >
         <BackButton/>
       </View>
 

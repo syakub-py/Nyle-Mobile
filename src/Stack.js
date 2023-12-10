@@ -6,7 +6,7 @@ import MainContainer from './MainContainer';
 import PostDetails from './Screens/PostDetails';
 import Chatbox from './Screens/ChatBox';
 import ViewProfile from './Screens/ViewProfile';
-import ViewImages from './Screens/ImageViewer';
+import ImageViewer from './Screens/ImageViewer';
 import ResetPassword from './Screens/ResetPassword';
 import EditProfile from './Screens/EditProfile';
 import ConnectedWallets from './Screens/ConnectedWallets';
@@ -31,7 +31,7 @@ const Stack = () => {
       <Stack.Screen name = "post details" component = {PostDetails}/>
       <Stack.Screen name = "chat box" component = {Chatbox} />
       <Stack.Screen name = "view profile" component = {ViewProfile} />
-      <Stack.Screen name = "Image Viewer" component = {ViewImages} />
+      <Stack.Screen name = "Image Viewer" component = {ImageViewer} />
       <Stack.Screen name = "Reset Password" component = {ResetPassword} />
       <Stack.Screen name = "Edit Profile" component = {EditProfile} />
       <Stack.Screen name = "Connected Wallets" component = {ConnectedWallets} />
