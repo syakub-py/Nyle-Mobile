@@ -34,6 +34,7 @@ export default function Home() {
 
   useEffect(() => {
     setRefreshing(true);
+    nyleContext.getProfileOtherPicture(userContext.username);
     nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
       setRefreshing(false);

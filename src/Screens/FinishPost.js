@@ -80,37 +80,12 @@ export default function FinishPost({route}) {
   };
 
   return (
-    <ScrollView style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
+    <ScrollView style={{backgroundColor: 'white', flex: 1}} bounces={false}>
       <View >
         <BackButton/>
       </View>
-
       <PreviewPostCard postData={createPost(images)}/>
-
       <CustomTextInput placeholder={'Title'} value={title} onChangeText={(text)=>setTitle(text)} multiline={false}/>
-      <View>
-        <DropdownInput
-          data={categories}
-          labelField = "Label"
-          valueField = "Value"
-          placeholder = "Select item"
-          onChange = {(item) => {
-            setCategory(item.Value);
-          }}
-          value = {category}
-          customStyle = {{
-            marginLeft: 35,
-            marginRight: 35,
-          }}
-          setIsFocus={()=>setIsFocus(true)}
-        />
-      </View>
-      <View style = {{width: width-50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden'}}>
-        <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: coordinates, pitch: 0, heading: 0, zoom: 10, altitude: 0}} onLongPress = {dropMarker}>
-          <Marker coordinate = {coordinates}/>
-        </MapView>
-      </View>
-      <RenderPrice setIsFocus={setIsFocus} currencyList={currencyList} setCurrencyList={setCurrencyList} />
       <RenderDetailsText category={category} setDetails={setDetails}/>
       <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
       <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
@@ -121,6 +96,28 @@ export default function FinishPost({route}) {
         height={200}
         value={description}
       />
+
+      <View>
+        <DropdownInput
+          data={categories}
+          labelField = "Label"
+          valueField = "Value"
+          placeholder = "Select item"
+          onChange = {(item) => {
+            setCategory(item.Value);
+          }}
+          value = {category}
+          setIsFocus={()=>setIsFocus(true)}
+        />
+      </View>
+      <View style = {{width: width-50, height: 300, alignSelf: 'center', marginBottom: 20, borderRadius: 20, overflow: 'hidden'}}>
+        <MapView style = {{height: '100%', width: '100%'}} initialCamera = {{center: coordinates, pitch: 0, heading: 0, zoom: 10, altitude: 0}} onLongPress = {dropMarker}>
+          <Marker coordinate = {coordinates}/>
+        </MapView>
+      </View>
+
+      <RenderPrice setIsFocus={setIsFocus} currencyList={currencyList} setCurrencyList={setCurrencyList} />
+
       <View style = {{flexDirection: 'row', position: 'absolute', bottom: 0, height: '10%', width: '100%', justifyContent: 'space-evenly', backgroundColor: 'transparent', alignItems: 'center'}}>
         <View style = {{justifyContent: 'center', backgroundColor: 'whitesmoke', borderWidth: 2, borderColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>
           <Pressable>

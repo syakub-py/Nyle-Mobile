@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import {useNavigation} from '@react-navigation/native';
+import _ from 'lodash';
 
 const fetchImages = async () => {
   const {status} = await MediaLibrary.requestPermissionsAsync();
@@ -48,6 +49,12 @@ export default function AddPost() {
     Vibration.vibrate(10);
   };
 
+  const handleNavigateToFinishPost = () =>{
+    if (!_.isEmpty(selectedImages)) {
+      navigation.navigate('Finish Post', {selectedImages: selectedImages});
+    }
+  };
+
   return (
     <FlatList
       data={imageUrls}
@@ -64,7 +71,7 @@ export default function AddPost() {
             )
           }
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Pressable onPress={()=>navigation.navigate('Finish Post', {selectedImages: selectedImages})}>
+            <Pressable onPress={()=>handleNavigateToFinishPost()}>
               <View style={{backgroundColor: 'black', width: 100, height: 25, borderRadius: 20, justifyContent: 'center', marginTop: 15, marginRight: 10}}>
                 <Text style={{color: 'white', alignSelf: 'center'}}>Next</Text>
               </View>

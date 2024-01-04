@@ -10,7 +10,6 @@ export default function PhotoCollage({route}) {
   return (
     <View>
       <View style={{height: 80, backgroundColor: 'white'}}>
-
         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 30}}>
           <View style = {{height: 50, width: 40, alignItems: 'center', justifyContent: 'center'}}>
             <BackButton />
@@ -51,6 +50,5 @@ export default function PhotoCollage({route}) {
         }
       </ScrollView>
     </View>
-
   );
 };

@@ -32,7 +32,6 @@ export default function RenderPrice({currencyList, setCurrencyList, setIsFocus})
   if (checked) {
     return (
       <View>
-        <Text style={{fontSize: 25, fontWeight: 'bold', color: 'black', margin: 10}}>Price</Text>
         <View style={{margin: 10}}>
           <CheckBox
             title="Accept multiple currencies"

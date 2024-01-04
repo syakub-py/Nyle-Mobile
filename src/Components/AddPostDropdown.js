@@ -8,7 +8,6 @@ export default function DropdownInput({data, labelField, valueField, placeholder
         height: 50,
         borderRadius: 10,
         paddingHorizontal: 16,
-        backgroundColor: 'whitesmoke',
         ...customStyle,
       }}
       placeholderStyle = {{}}

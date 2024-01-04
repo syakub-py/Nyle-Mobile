@@ -80,8 +80,10 @@ export default function Profile() {
   const userContext = useContext(UserContext);
   const nyleContext =useContext(AppContext);
 
+
   useEffect(()=>{
     setRefreshing(true);
+    nyleContext.getProfileOtherPicture(userContext.username);
     Promise.all([
       userContext.getPosts(),
       clearDeletedAfter30Days(nyleContext),
