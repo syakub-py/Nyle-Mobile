@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import RenderIsLiked from './PostDetailsComponents/renderIsLiked';
+import IsLiked from './PostDetailsComponents/IsLiked';
 import {UserContext} from '../Contexts/UserContext';
 import findPost from '../Services/FindPost';
 import {AppContext} from '../Contexts/NyleContext';
@@ -28,7 +28,7 @@ export default function MapPostCard({postId}) {
       return (
         <View style = {{position: 'absolute', right: 7, top: 7, height: 30, width: 30, borderRadius: 12, justifyContent: 'center', alignItems: 'center'}}>
           <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, setLiked)}>
-            <RenderIsLiked Liked={Liked} size={20}/>
+            <IsLiked Liked={Liked} size={20}/>
           </Pressable>
         </View>
       );

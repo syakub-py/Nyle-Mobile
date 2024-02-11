@@ -20,7 +20,7 @@ const selectImages = async (imageUrls, setImageUrls) => {
     setImageUrls(currentImageUrls);
   }
 };
-export default function RenderActions({imageUrls, setImageUrls}) {
+export default function Actions({imageUrls, setImageUrls}) {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center', margin: 7}}>
       <Pressable onPress={() => selectImages(imageUrls, setImageUrls)}>

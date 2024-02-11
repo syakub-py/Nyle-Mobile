@@ -3,7 +3,7 @@ import React from 'react';
 import findPost from '../../Services/FindPost';
 
 
-export default function RenderHomesAndAuto({postId}) {
+export default function HomesAndAuto({postId}) {
   const item = findPost(postId);
   if (!(item.category !== 'Homes' && item.category !== 'Auto')) return <View></View>;
   return (

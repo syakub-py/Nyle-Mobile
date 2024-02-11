@@ -9,10 +9,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore, getstorage} from '../Components/Firebase';
 import {v4 as uuidv4} from 'uuid';
 import _ from 'lodash';
-import RenderBubble from '../Components/ChatBoxComponents/renderBubble';
-import RenderActions from '../Components/ChatBoxComponents/renderActions';
-import RenderInputToolbar from '../Components/ChatBoxComponents/renderInputToolbar';
-import RenderMessageImage from '../Components/ChatBoxComponents/renderMessageImage';
+import MessageBubble from '../Components/ChatBoxComponents/MessageBubble';
+import Actions from '../Components/ChatBoxComponents/Actions';
+import MessageInputToolbar from '../Components/ChatBoxComponents/MessageInputToolbar';
+import MessageImage from '../Components/ChatBoxComponents/MessageImage';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
@@ -177,10 +177,10 @@ export default function ChatBox({route}) {
         alwaysShowSend
         scrollToBottom
         user = {{_id: route.params.userId}}
-        renderBubble={(props) => <RenderBubble {...props} imageUrls={imageUrls} />}
-        renderActions = {()=><RenderActions imageUrls={imageUrls} setImageUrls={setImageUrls}/>}
-        renderInputToolbar = {(props)=><RenderInputToolbar {...props} imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
-        renderMessageImage = {(props) => <RenderMessageImage props={props}/>}
+        renderBubble={(props) => <MessageBubble {...props} imageUrls={imageUrls} />}
+        renderActions = {()=><Actions imageUrls={imageUrls} setImageUrls={setImageUrls}/>}
+        renderInputToolbar = {(props)=><MessageInputToolbar {...props} imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating} />}
+        renderMessageImage = {(props) => <MessageImage props={props}/>}
       />
     </View>
   );

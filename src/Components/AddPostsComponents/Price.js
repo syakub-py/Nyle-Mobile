@@ -13,7 +13,7 @@ const RenderCurrencyItem = (item) => {
   );
 };
 
-export default function RenderPrice({currencyList, setCurrencyList, setIsFocus}) {
+export default function Price({currencyList, setCurrencyList, setIsFocus}) {
   const [checked, setChecked] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState({});
   const [price, setPrice] = useState(0);

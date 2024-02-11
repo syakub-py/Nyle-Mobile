@@ -1,7 +1,7 @@
 import {Bubble} from 'react-native-gifted-chat';
 import React from 'react';
 
-export default function RenderBubble({imageUrls, ...props}) {
+export default function MessageBubble({imageUrls, ...props}) {
   const wrapperStyle = {
     right: {
       backgroundColor: 'black',

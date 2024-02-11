@@ -1,10 +1,10 @@
 import {ScrollView, View} from 'react-native';
 import {InputToolbar} from 'react-native-gifted-chat';
 import React from 'react';
-import RenderImageUrls from './renderImageUrls';
+import ImageUrls from './ImageUrls';
 
 
-export default function RenderInputToolbar({imageUrls, setImageUrls, animating, ...props}) {
+export default function MessageInputToolbar({imageUrls, setImageUrls, animating, ...props}) {
   return (
     <View style = {{flex: 1}}>
       <ScrollView
@@ -17,7 +17,7 @@ export default function RenderInputToolbar({imageUrls, setImageUrls, animating, 
           right: 0,
           height: 75,
         }}>
-        <RenderImageUrls imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating}/>
+        <ImageUrls imageUrls={imageUrls} setImageUrls={setImageUrls} animating={animating}/>
       </ScrollView>
       <View style = {{flex: 1}}>
         <InputToolbar

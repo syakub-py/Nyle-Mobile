@@ -3,7 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import findPost from '../../Services/FindPost';
 
-export default function RenderIsCategoryAuto({postId}) {
+export default function IsCategoryAuto({postId}) {
   const postContext = findPost(postId);
   if (postContext.category !== 'Auto') return null;
   return (

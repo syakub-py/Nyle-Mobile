@@ -12,14 +12,14 @@ import React, {useState, useRef, useEffect, useContext} from 'react';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import CustomMapMarker from '../Components/CustomMapMarker';
 import BackButton from '../Components/BackButton';
-import PostedBySameAsUsername from '../Components/PostDetailsComponents/renderIsPostedBySameAsUsername';
-import RenderIsCategoryAuto from '../Components/PostDetailsComponents/renderIsCategoryAuto';
-import RenderIsCategoryHomes from '../Components/PostDetailsComponents/renderIsCategoryHomes';
-import RenderHomesAndAuto from '../Components/PostDetailsComponents/renderHomesAndAuto';
-import RenderDescription from '../Components/PostDetailsComponents/renderDescription';
-import RenderIsLiked from '../Components/PostDetailsComponents/renderIsLiked';
-import MenuButtonModal from '../Components/PostDetailsComponents/renderMenuButtonsModal';
-import LikesAndViews from '../Components/PostDetailsComponents/renderLikesAndViews';
+import PostedBySameAsUsername from '../Components/PostDetailsComponents/IsPostedBySameAsUsername';
+import IsCategoryAuto from '../Components/PostDetailsComponents/IsCategoryAuto';
+import IsCategoryHomes from '../Components/PostDetailsComponents/IsCategoryHomes';
+import HomesAndAuto from '../Components/PostDetailsComponents/HomesAndAuto';
+import Description from '../Components/PostDetailsComponents/Description';
+import IsLiked from '../Components/PostDetailsComponents/IsLiked';
+import MenuButtonModal from '../Components/PostDetailsComponents/MenuButtonsModal';
+import LikesAndViews from '../Components/PostDetailsComponents/LikesAndViews';
 import findPost from '../Services/FindPost';
 import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../Contexts/UserContext';
@@ -101,7 +101,7 @@ export default function PostDetails({route}) {
 
           <View style = {{position: 'absolute', top: 45, right: 75, height: 50, width: 50, elevation: 2, backgroundColor: 'white', borderRadius: 13, opacity: 0.7, alignItems: 'center', justifyContent: 'center'}}>
             <Pressable onPress = {() =>postContext.handleLikeCounter(userContext.username, setLiked)}>
-              <RenderIsLiked Liked={Liked} size={30}/>
+              <IsLiked Liked={Liked} size={30}/>
             </Pressable>
           </View>
         </Animatable.View>
@@ -206,8 +206,8 @@ export default function PostDetails({route}) {
 
 
           <Animatable.View animation={fadeInBottom} duration={DURATION} delay={700}>
-            <RenderIsCategoryHomes postId={postContext.id}/>
-            <RenderIsCategoryAuto postId={postContext.id}/>
+            <IsCategoryHomes postId={postContext.id}/>
+            <IsCategoryAuto postId={postContext.id}/>
           </Animatable.View>
         </View>
 
@@ -216,7 +216,7 @@ export default function PostDetails({route}) {
         </Animatable.View>
 
         <Animatable.View animation={fadeInBottom} duration={DURATION} delay={900}>
-          <RenderDescription description={postContext.description} more={more} setMore={setMore}/>
+          <Description description={postContext.description} more={more} setMore={setMore}/>
         </Animatable.View>
 
         <Animatable.View animation={fadeInBottom} duration={DURATION} delay={1000}>
@@ -241,7 +241,7 @@ export default function PostDetails({route}) {
         </Animatable.View>
 
         <Animatable.View animation={fadeInBottom} duration={DURATION} delay={1200}>
-          <RenderHomesAndAuto postId={postContext.id}/>
+          <HomesAndAuto postId={postContext.id}/>
         </Animatable.View>
       </ScrollView>
     </View>

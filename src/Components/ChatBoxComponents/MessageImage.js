@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 
-export default function RenderMessageImage({props}) {
+export default function MessageImage({props}) {
   const [state, setState] = useState({active: 0});
   const navigation =useNavigation();
   const isStateActiveCSS = (state, k) => {

@@ -4,7 +4,7 @@ import {auth} from '../Components/Firebase';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import BackButton from '../Components/BackButton';
-import RenderDoesPasswordFulfillRequirements from '../Components/SignUpCompoenents/renderDoesPasswordFufillRequirements';
+import DoesPasswordFulfillRequirements from '../Components/SignUpCompoenents/DoesPasswordFufillRequirements';
 import ShowPassword from '../Components/ShowPassword';
 import {useNavigation} from '@react-navigation/native';
 
@@ -110,7 +110,7 @@ export default function SignUp() {
       </View>
 
       <TextInput placeholder ='Username' style = {styles.textInput} onChangeText = {(text) => setUsername(text)} />
-      <RenderDoesPasswordFulfillRequirements requirements={requirements}/>
+      <DoesPasswordFulfillRequirements requirements={requirements}/>
       <TextInput placeholder ='Password' style = {styles.textInput} onChangeText = {(text) => setPassword(text)} secureTextEntry={!visible}/>
       <View style={{marginLeft: 20}}>
         <ShowPassword visible={visible} setVisible={setVisible}/>

@@ -3,7 +3,7 @@ import {CustomTextInput} from '../CustomText';
 import React from 'react';
 
 
-export default function RenderAutoSection({category, setMake, setModel, setMileage, setVIN}) {
+export default function AutoSection({category, setMake, setModel, setMileage, setVIN}) {
   if (category !== 'Auto') return null;
 
   return (

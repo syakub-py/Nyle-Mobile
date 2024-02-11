@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function RenderDoesPasswordFulfillRequirements({requirements}) {
+export default function DoesPasswordFulfillRequirements({requirements}) {
   return (
     <View>
       <Text style={{marginLeft: 20, fontWeight: 'bold', fontSize: 18}}>Password Requirements:</Text>

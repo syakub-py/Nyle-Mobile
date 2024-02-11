@@ -3,7 +3,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import findPost from '../../Services/FindPost';
 
-export default function RenderIsCategoryHomes({postId}) {
+export default function IsCategoryHomes({postId}) {
   const postContext = findPost(postId);
   if (postContext.category !== 'Homes') return null;
   return (

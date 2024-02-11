@@ -6,12 +6,12 @@ import {AppContext} from '../Contexts/NyleContext';
 import BackButton from '../Components/BackButton';
 import React from 'react';
 import {CustomTextInput} from '../Components/CustomText';
-import RenderAutoSection from '../Components/AddPostsComponents/renderAutoSection';
-import RenderHomeDataSection from '../Components/AddPostsComponents/renderHomeSection';
-import RenderDetailsText from '../Components/AddPostsComponents/renderDetailsText';
+import AutoSection from '../Components/AddPostsComponents/AutoSection';
+import HomeSection from '../Components/AddPostsComponents/HomeSection';
+import DetailsText from '../Components/AddPostsComponents/DetailsText';
 import MapView, {Marker} from 'react-native-maps';
 import DropdownInput from '../Components/AddPostDropdown';
-import RenderPrice from '../Components/AddPostsComponents/renderPrice';
+import Price from '../Components/AddPostsComponents/Price';
 import {LoadingAnimation} from '../Components/LoadingAnimation';
 
 export default function FinishPost({route}) {
@@ -86,9 +86,9 @@ export default function FinishPost({route}) {
       </View>
       <PreviewPostCard postData={createPost(images)}/>
       <CustomTextInput placeholder={'Title'} value={title} onChangeText={(text)=>setTitle(text)} multiline={false}/>
-      <RenderDetailsText category={category} setDetails={setDetails}/>
-      <RenderHomeDataSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
-      <RenderAutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
+      <DetailsText category={category} setDetails={setDetails}/>
+      <HomeSection category={category} setSQFT={setSQFT} setBathrooms={setBathrooms} setBedrooms={setBedrooms}/>
+      <AutoSection category={category} setMake={setMake} setModel={setModel} setVIN={setVIN} setMileage={setMileage}/>
       <CustomTextInput
         placeholder="Description"
         onChangeText={(text) => setDescription(text)}
@@ -116,7 +116,7 @@ export default function FinishPost({route}) {
         </MapView>
       </View>
 
-      <RenderPrice setIsFocus={setIsFocus} currencyList={currencyList} setCurrencyList={setCurrencyList} />
+      <Price setIsFocus={setIsFocus} currencyList={currencyList} setCurrencyList={setCurrencyList} />
 
       <View style = {{flexDirection: 'row', position: 'absolute', bottom: 0, height: '10%', width: '100%', justifyContent: 'space-evenly', backgroundColor: 'transparent', alignItems: 'center'}}>
         <View style = {{justifyContent: 'center', backgroundColor: 'whitesmoke', borderWidth: 2, borderColor: 'black', borderRadius: 200, width: 150, height: 50, alignItems: 'center'}}>

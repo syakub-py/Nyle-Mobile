@@ -8,7 +8,7 @@ const deleteImages = (index, imageUrls, setImageUrls) => {
   setImageUrls(newArray);
 };
 
-export default function RenderIsAnimating({value, index, animating, imageUrls, setImageUrls}) {
+export default function IsAnimating({value, index, animating, imageUrls, setImageUrls}) {
   if (animating) {
     return (
       <View>
