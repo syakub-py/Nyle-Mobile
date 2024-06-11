@@ -4,6 +4,8 @@ import {Alert} from 'react-native';
 import _ from 'lodash';
 import {createContext} from 'react';
 
+// create a ClearUserData function that gets called on logout to clear all the users old information
+
 class User {
   constructor() {
     this.username = '';

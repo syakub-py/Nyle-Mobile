@@ -8,13 +8,11 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IsLiked from './PostDetailsComponents/IsLiked';
 import {UserContext} from '../Contexts/UserContext';
-import findPost from '../Services/FindPost';
 import {AppContext} from '../Contexts/NyleContext';
 
-export default function MapPostCard({postId}) {
+export default function MapPostCard({postContext}) {
   const [rating, setRating] = useState(0);
   const [numOfReviews, setNumOfReviews] = useState(0);
-  const postContext = findPost(postId);
   const userContext =useContext(UserContext);
   const nyleContext = useContext(AppContext);
   const [Liked, setLiked] = useState(postContext.isLiked(userContext.username));

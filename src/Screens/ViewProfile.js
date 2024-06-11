@@ -31,7 +31,7 @@ export default function ViewProfile({route}) {
   const nyleContext = useContext(AppContext);
   useEffect(() => {
     getPosts(postedByUsername, setUserPosts);
-    nyleContext.getProfileOtherPicture(postedByUsername, setRating, setNumOfReviews);
+    nyleContext.getProfileOtherPicture(postedByUsername);
   }, []);
 
   return (
@@ -71,7 +71,7 @@ export default function ViewProfile({route}) {
           }
           data = {UsersPosts}
           renderItem = {({item}) => (
-            <PostCard postId = {item.id}/>
+            <PostCard post = {new Post(item)}/>
           )}
         />
       </View>

@@ -18,6 +18,7 @@ import Slider from '../Components/HomeComponents/Slider';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
+import {Post} from '../Classes/Post.js';
 
 const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
@@ -34,7 +35,6 @@ export default function Home() {
 
   useEffect(() => {
     setRefreshing(true);
-    nyleContext.getProfileOtherPicture(userContext.username);
     nyleContext.readNextTwoElements('AllPosts').then((result)=>{
       setMasterData(result);
       setRefreshing(false);
@@ -55,14 +55,15 @@ export default function Home() {
     }
   };
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    Vibration.vibrate(10);
-    nyleContext.readNextTwoElements('AllPosts').then((result)=>{
-      setMasterData(result);
-      setRefreshing(false);
-    });
-  };
+  // this has to get retrieve new data not add data to the masterpost list
+  // const onRefresh = () => {
+  //   setRefreshing(true);
+  //   Vibration.vibrate(10);
+  //   nyleContext.readNextTwoElements('AllPosts').then((result)=>{
+  //     setMasterData(result);
+  //     setRefreshing(false);
+  //   });
+  // };
 
   const RenderFooter = () => {
     if (!refreshing) {
@@ -157,11 +158,11 @@ export default function Home() {
           }
 
           data = {masterData}
-          refreshControl = {
-            <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
-          }
+          // refreshControl = {
+          //   <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
+          // }
           renderItem = {({item}) => (
-            <PostCard postId = {item.id}/>
+            <PostCard post = {new Post(item)}/>
           )}
           keyExtractor = {(item) => item.id}
           onEndReached={()=>{

@@ -22,9 +22,10 @@ import {UserContext} from '../Contexts/UserContext';
 import Setting from '../Components/ProfileComponents/Setting';
 import SectionTitle from '../Components/ProfileComponents/SectionTitle';
 
-const handleSignOut = async (navigation) => {
+const handleSignOut = async (navigation, userContext) => {
   try {
     await firebase.auth().signOut();
+    // userContext.ClearUserData();
   } catch (error) {
     console.error(error);
   }
@@ -78,12 +79,11 @@ export default function Profile() {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const nyleContext =useContext(AppContext);
+  const nyleContext = useContext(AppContext);
 
 
   useEffect(()=>{
     setRefreshing(true);
-    nyleContext.getProfileOtherPicture(userContext.username);
     Promise.all([
       userContext.getPosts(),
       clearDeletedAfter30Days(nyleContext),
@@ -178,7 +178,7 @@ export default function Profile() {
             <Setting
               title = "Log Out"
               type = "button"
-              onPress = {()=>handleSignOut(navigation)}
+              onPress = {()=>handleSignOut(navigation, userContext)}
               nameOfIcon = 'log-out-outline'
             />
 
@@ -203,7 +203,7 @@ export default function Profile() {
         }
 
         renderItem = {({item}) => (
-          <PostCard postId = {item.id} />
+          <PostCard post = {new Post(item)} />
         )}
 
         renderHiddenItem = {({item}) => (

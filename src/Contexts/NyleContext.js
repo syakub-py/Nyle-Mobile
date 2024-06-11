@@ -145,6 +145,7 @@ export class NyleContext {
     }
     return results;
   };
+
   getProfileOtherPicture = async (username) => {
     try {
       const userRef = firestore.collection('ProfilePictures').doc(username);

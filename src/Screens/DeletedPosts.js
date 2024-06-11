@@ -86,7 +86,7 @@ export default function DeletedPosts() {
           <RefreshControl refreshing = {refreshing} onRefresh = {()=>onRefresh()} />
         }
         renderItem = {({item}) => (
-          <PostCard postId = {item.id}/>
+          <PostCard post = {new Post(item)}/>
         )}
         renderHiddenItem = {({item}) => (
           <View style = {{position: 'absolute',

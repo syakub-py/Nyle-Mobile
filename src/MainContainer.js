@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase';
@@ -22,10 +22,6 @@ const Tab = createBottomTabNavigator();
 export default function MainContainer() {
   const [received, setReceived] = useState(true);
   const userContext = useContext(UserContext);
-
-  useEffect(() => {
-    userContext.initializeUserData();
-  }, []);
 
   const MyChatQuery = firestore.collection('Chats');
 

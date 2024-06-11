@@ -173,7 +173,7 @@ export default function HomeMapView() {
                   marginLeft: index === 0 ? width/2-230/2 : 15,
                   marginRight: index === masterData.length - 1 ? width/2 - 230/2 : 15,
                 }}>
-                  <MapPostCard postId = {item.id} />
+                  <MapPostCard postContext = {new Post(item)} />
                 </View>
               </Pressable>
             );
