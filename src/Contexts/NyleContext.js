@@ -8,6 +8,7 @@ export class NyleContext {
   constructor() {
     this.PostContextArray;
     this.lastDocument;
+    this.categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
   }
 
   upload = async (PhoneImagesArray, title) => {
@@ -31,7 +32,6 @@ export class NyleContext {
 
   addPost = async (collectionPath, Post) => {
     if (!collectionPath) throw new Error('Error: collection name cannot be empty');
-
 
     Post.pictures = await this.upload(Post.pictures, Post.title);
 
@@ -157,17 +157,6 @@ export class NyleContext {
       }
     } catch (error) {
       return 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
-    }
-  };
-
-  categoryFilter = (text, masterData) => {
-    if (text && text !== 'All') {
-      return masterData.filter((item) => {
-        const itemData = item.category ? item.category : '';
-        return itemData.indexOf(text)>-1;
-      });
-    } else {
-      return masterData;
     }
   };
 }

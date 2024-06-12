@@ -61,13 +61,13 @@ export default function PostCard({post}) {
   return (
     <View style={{backgroundColor: 'transparent', borderRadius: 10, margin: 10}}>
       {
-                (userContext.username !== post.postedBy) ? (
-                    <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
-                      <Pressable onPress={() => post.handleLikeCounter(userContext.username, setLiked)}>
-                        <RenderLiked/>
-                      </Pressable>
-                    </View>
-                ) : null
+        (userContext.username !== post.postedBy) ? (
+            <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: 'white', height: 40, width: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', opacity: 0.7, zIndex: 2}}>
+              <Pressable onPress={() => post.handleLikeCounter(userContext.username, setLiked)}>
+                <RenderLiked/>
+              </Pressable>
+            </View>
+        ) : null
       }
       <View style={{flexDirection: 'row', position: 'absolute', top: 12, left: 10, zIndex: 1}}>
         <RenderIsUsernameSameAsPostedBy/>

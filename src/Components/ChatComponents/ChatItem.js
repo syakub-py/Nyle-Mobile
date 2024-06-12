@@ -1,6 +1,7 @@
 import {Image, Pressable, Text, View} from 'react-native';
 import React from 'react';
 import {generateChatID} from '../PostDetailsComponents/IsPostedBySameAsUsername';
+import {useNavigation} from '@react-navigation/native';
 
 const UserNameLengthGreaterThanTen = ({username}) => {
   if (username.length > 10) return <Text style = {{fontSize: 18, fontWeight: '500'}}>{username.slice(0, 13) + '...'}</Text>;
@@ -26,9 +27,9 @@ const ItemImage = ({item}) => {
 };
 
 
-export default function ChatItem({item, username, navigation}) {
+export default function ChatItem({item, username}) {
+  const navigation = useNavigation();
   const userId = generateChatID(item.data.owners[0], item.data.owners[1]);
-
   const OtherUsername = item.data.owners.find((UserItem)=> UserItem.username !== username).username;
   const OtherProfilePic = item.data.owners.find((UserItem)=> UserItem.username !== username).profilePic;
 

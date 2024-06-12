@@ -26,6 +26,9 @@ class User {
       await Promise.all([
         this.getPosts(),
         this.getProfilePicture(),
+        this.getAmountOfSoldItems(),
+        this.generateRating(),
+        this.getChats(),
       ]);
     } catch (error) {
       console.error('Error initializing user data:', error);
@@ -85,6 +88,9 @@ class User {
 
   getProfilePicture = async () => {
     try {
+      if (!_.isEmpty(this.profilePicture)) {
+        return;
+      }
       const userRef = firestore.collection('ProfilePictures').doc(this.username);
       const doc = await userRef.get();
       if (doc.exists) {
@@ -154,50 +160,47 @@ class User {
     }
   };
 
+  getChatData = async (chatDoc) => {
+    const latestMessageQuery = firestore.collection(`Chats/${chatDoc.id}/messages`)
+        .orderBy('createdAt', 'desc')
+        .limit(1);
+
+    const latestMessageSnapshot = await latestMessageQuery.get();
+    const latestMessageDocs = latestMessageSnapshot.docs;
+
+    if (!_.isEmpty(latestMessageDocs)) {
+      const latestMessageData = latestMessageDocs[0].data();
+      const latestMessage = latestMessageData.text;
+      const received = latestMessageData.received;
+      const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
+
+      if (latestMessageData.user.name === this.username) latestMessage = 'You: ' + latestMessage;
+
+      return {
+        data: doc.data(),
+        id: doc.id,
+        latestMessage,
+        image,
+        received,
+      };
+    } else {
+      return {
+        data: doc.data(),
+        id: doc.id,
+        latestMessage: '',
+        image: '',
+        received: true,
+      };
+    }
+  };
+
   getChats = async () => {
-    const results = [];
     try {
       const MyChatQuery = firestore.collection('Chats');
       const ChatSnapshot = await MyChatQuery.get();
       const chatDocs = ChatSnapshot.docs;
-      for (const doc of chatDocs) {
-        if (doc.data().owners.some((item) => item.username === this.username)) {
-          const latestMessageQuery = firestore.collection(`Chats/${doc.id}/messages`)
-              .orderBy('createdAt', 'desc')
-              .limit(1);
-
-          const latestMessageSnapshot = await latestMessageQuery.get();
-          const latestMessageDocs = latestMessageSnapshot.docs;
-
-          if (!_.isEmpty(latestMessageDocs)) {
-            const latestMessageData = latestMessageDocs[0].data();
-            const latestMessage = latestMessageData.text;
-            const received = latestMessageData.received;
-            const image = !_.isEmpty(latestMessageData.image) ? latestMessageData.image[0] : '';
-
-            const chatData = {
-              data: doc.data(),
-              id: doc.id,
-              latestMessage,
-              image,
-              received,
-            };
-
-            if (latestMessageData.user.name === this.username) chatData.latestMessage = 'You: ' + latestMessage;
-
-            results.push(chatData);
-          } else {
-            results.push({
-              data: doc.data(),
-              id: doc.id,
-              latestMessage: '',
-              image: '',
-              received: true,
-            });
-          }
-        }
-      }
-      this.chats = results;
+      const chatData = await Promise.all(chatDocs.map(getChatData));
+      this.chats = chatData;
     } catch (error) {
       console.log(error);
     }

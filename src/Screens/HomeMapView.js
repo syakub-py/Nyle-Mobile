@@ -3,7 +3,6 @@ import {
   FlatList,
   Image,
   Pressable,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -17,14 +16,13 @@ import BackButton from '../Components/BackButton';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
+import CategoriesCarousell from '../Components/HomeComponents/CategoriesCarousell';
 
 const {width} = Dimensions.get('window');
-const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 
 
 export default function HomeMapView() {
   const [masterData, setMasterData] = useState([]);
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const nyleContext = useContext(AppContext);
   const userContext = useContext(UserContext);
@@ -37,10 +35,6 @@ export default function HomeMapView() {
     setCurrentIndex(currentIndex);
   };
 
-  const handleCategoryPress = (index) => {
-    setSelectedCategoryIndex(index);
-    setMasterData(nyleContext.categoryFilter(categories[index], masterData));
-  };
 
   useEffect(() => {
     nyleContext.readNextTwoElements('AllPosts').then((result)=>{
@@ -107,17 +101,7 @@ export default function HomeMapView() {
 
       </View>
       <View style = {{zIndex: 1, position: 'absolute', top: 140}}>
-        <ScrollView horizontal showsHorizontalScrollIndicator = {false} contentContainerStyle = {{paddingHorizontal: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent'}}>
-          {
-            categories.map((category, index) => (
-              <Pressable key = {index} onPress = {() => handleCategoryPress(index, setSelectedCategoryIndex, masterData, setMasterData)} style = {{backgroundColor: selectedCategoryIndex === index ? 'black' : 'white', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, marginRight: 10}}>
-                <Text style = {{color: selectedCategoryIndex === index ? '#ffffff' : 'gray', fontSize: 15, fontWeight: '400'}}>
-                  {category}
-                </Text>
-              </Pressable>
-            ))
-          }
-        </ScrollView>
+        <CategoriesCarousell masterData={masterData}/>
       </View>
 
 

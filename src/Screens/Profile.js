@@ -49,8 +49,7 @@ const clearDeletedAfter30Days = async (nyleContext) => {
   }
 };
 
-const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
-  setUserList(userPostsList.filter((post) =>(post.id!==item.id)));
+const moveToDeleteCollection = async (item, userPostsList) => {
   try {
     const sourceDocRef = firestore.collection('AllPosts').doc(item.title);
     const sourceDoc = await sourceDocRef.get();
@@ -58,8 +57,10 @@ const moveToDeleteCollection = async (item, userPostsList, setUserList) => {
     const destinationCollectionRef = firestore.collection('DeletedPosts').doc(item.title);
     await destinationCollectionRef.set(sourceData);
     await sourceDocRef.delete();
+    return userPostsList.filter((post) =>(post.id!==item.id));
   } catch (error) {
     console.error('Error moving document to delete collection:', error);
+    return userPostsList;
   }
 };
 
@@ -85,10 +86,7 @@ export default function Profile() {
   useEffect(()=>{
     setRefreshing(true);
     Promise.all([
-      userContext.getPosts(),
       clearDeletedAfter30Days(nyleContext),
-      userContext.getAmountOfSoldItems(),
-      userContext.generateRating(),
     ]).then(()=>{
       setUserPostsList(userContext.posts);
       setRefreshing(false);
@@ -214,7 +212,7 @@ export default function Profile() {
             bottom: 0,
             width: 100,
             alignItems: 'center'}}>
-            <HiddenButton color={'red'} onPress = {() =>moveToDeleteCollection(item, userPostsList, setUserPostsList)} iconName={'trash-outline'}/>
+            <HiddenButton color={'red'} onPress = {() =>setUserPostsList(moveToDeleteCollection(item, userPostsList))} iconName={'trash-outline'}/>
             <HiddenButton color={'black'} onPress = {() =>{}} iconName={'create-outline'}/>
           </View>
         )

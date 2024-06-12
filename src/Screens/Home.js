@@ -14,13 +14,12 @@ import {
 import PostCard from '../Components/PostCard.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
-import Slider from '../Components/HomeComponents/Slider';
+import CategoriesCarousell from '../Components/HomeComponents/CategoriesCarousell';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 import {Post} from '../Classes/Post.js';
 
-const categories = ['All', 'Tech', 'Auto', 'Homes', 'Bikes', 'Bike Parts', 'Jewelry', 'Retail/Wholesale'];
 const {width} = Dimensions.get('window');
 
 
@@ -30,7 +29,6 @@ export default function Home() {
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -42,12 +40,10 @@ export default function Home() {
   }, []);
 
   const searchFilter = (text) => {
+    setSearch(text);
     if (text) {
-      setSearch(text);
       return masterData.filter((item) => {
-        const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData)>-1;
+        return item.title && item.title.toUpperCase().includes(text.toUpperCase());
       });
     } else {
       setSearch('');
@@ -138,7 +134,7 @@ export default function Home() {
 
               </View>
 
-              <Slider inputArray={categories} masterData={masterData} selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex} filter={nyleContext.categoryFilter} />
+              <CategoriesCarousell masterData={masterData}/>
 
               <View style = {{
                 flex: 1,

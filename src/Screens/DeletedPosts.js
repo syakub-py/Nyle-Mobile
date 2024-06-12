@@ -9,8 +9,7 @@ import {AppContext} from '../Contexts/NyleContext';
 import {UserContext} from '../Contexts/UserContext';
 import {useNavigation} from '@react-navigation/native';
 
-const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
-  setDeletedPostList(deletedPostList.filter((post) =>(post.title!==item.title)));
+const restoreItem = async (item, deletedPostList) => {
   try {
     const sourceDocRef = firestore.collection('DeletedPosts').doc(item.title);
     const sourceDocSnapshot = await sourceDocRef.get();
@@ -24,8 +23,10 @@ const restoreItem = async (item, deletedPostList, setDeletedPostList) => {
 
       await sourceDocRef.delete();
     }
+    return deletedPostList.filter((post) =>(post.title!==item.title));
   } catch (error) {
     console.error('Error restoring document:', error);
+    return deletedPostList;
   }
 };
 
@@ -101,7 +102,7 @@ export default function DeletedPosts() {
             </View>
 
             <View>
-              <HiddenButton iconName={'arrow-redo-outline'} color={'lightblue'} onPress = {()=> restoreItem(item, deletedPostList, setDeletedPostList)}/>
+              <HiddenButton iconName={'arrow-redo-outline'} color={'lightblue'} onPress = {()=> setDeletedPostList(restoreItem(item, deletedPostList))}/>
             </View>
           </View>
         )}

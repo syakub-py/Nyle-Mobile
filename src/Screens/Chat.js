@@ -1,9 +1,7 @@
-import {StatusBar} from 'expo-status-bar';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   RefreshControl,
   TextInput,
@@ -37,15 +35,7 @@ export default function Chat() {
   const handleSearchFilter = (text) => {
     searchFilter(text, userContext.chats, setSearch);
   };
-
   const randomNumber = Math.floor(Math.random() * 100);
-  useEffect(()=>{
-    setRefreshing(true);
-    userContext.getChats().then(()=>{
-      setRefreshing(false);
-    });
-  }, []);
-
   const onRefresh = () => {
     setRefreshing(true);
     userContext.getChats().then(()=>{
@@ -55,7 +45,7 @@ export default function Chat() {
   };
 
   return (
-    <View style = {styles.container}>
+    <View style = {{flex: 1, backgroundColor: 'white'}}>
       <SwipeListView
         data = {userContext.chats}
         ListFooterComponent = {
@@ -105,7 +95,8 @@ export default function Chat() {
           </View>
         }
         renderHiddenItem = {({item}) => (
-          <View style={{position: 'absolute',
+          <View style={{
+            position: 'absolute',
             top: 0,
             right: 0,
             bottom: 0,
@@ -119,20 +110,6 @@ export default function Chat() {
           <ChatItem item={item} username={userContext.username} navigation={navigation}/>
         )}
       />
-      <StatusBar style = "auto"/>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-
-  separator: {
-    height: 1,
-    width: '100%',
-    color: 'black',
-  },
-});
