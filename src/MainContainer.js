@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {firestore} from './Components/Firebase';
@@ -49,6 +49,13 @@ export default function MainContainer() {
       });
     });
   });
+
+  useEffect(()=>{
+    userContext.initializeUserData().then(()=>{
+      console.log(userContext.username);
+      console.log(userContext.profilePicture);
+    });
+  }, []);
 
   return (
     <Tab.Navigator initialRouteName = {home}

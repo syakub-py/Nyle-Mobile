@@ -25,14 +25,15 @@ import SectionTitle from '../Components/ProfileComponents/SectionTitle';
 const handleSignOut = async (navigation, userContext) => {
   try {
     await firebase.auth().signOut();
-    // userContext.ClearUserData();
+    await userContext.clearUserData();
   } catch (error) {
     console.error(error);
   }
   return navigation.navigate('Login');
 };
 
-const clearDeletedAfter30Days = async (nyleContext) => {
+const clearDeletedAfter30Days = async () => {
+  const nyleContext = useContext(AppContext);
   const sourceDocRef = firestore.collection('DeletedPosts');
   const today = new Date();
   const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -80,13 +81,12 @@ export default function Profile() {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
   const userContext = useContext(UserContext);
-  const nyleContext = useContext(AppContext);
 
 
   useEffect(()=>{
     setRefreshing(true);
     Promise.all([
-      clearDeletedAfter30Days(nyleContext),
+      clearDeletedAfter30Days(),
     ]).then(()=>{
       setUserPostsList(userContext.posts);
       setRefreshing(false);

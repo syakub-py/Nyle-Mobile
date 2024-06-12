@@ -4,7 +4,6 @@ import {Alert} from 'react-native';
 import _ from 'lodash';
 import {createContext} from 'react';
 
-// create a ClearUserData function that gets called on logout to clear all the users old information
 
 class User {
   constructor() {
@@ -17,12 +16,11 @@ class User {
     this.amountOfSoldItems = 0;
     this.deletedPosts = [];
     this.chats = [];
-    this.initializeUserData();
   };
 
   initializeUserData = async () =>{
     try {
-      this.username = await this.getUsername();
+      this.username = await AsyncStorage.getItem('@username');
       await Promise.all([
         this.getPosts(),
         this.getProfilePicture(),
@@ -88,9 +86,6 @@ class User {
 
   getProfilePicture = async () => {
     try {
-      if (!_.isEmpty(this.profilePicture)) {
-        return;
-      }
       const userRef = firestore.collection('ProfilePictures').doc(this.username);
       const doc = await userRef.get();
       if (doc.exists) {
@@ -103,9 +98,6 @@ class User {
     }
   };
 
-  getUsername = async () =>{
-    return await AsyncStorage.getItem('@username');
-  };
 
   getAmountOfSoldItems = () => {
     let counter = 0;
@@ -199,7 +191,7 @@ class User {
       const MyChatQuery = firestore.collection('Chats');
       const ChatSnapshot = await MyChatQuery.get();
       const chatDocs = ChatSnapshot.docs;
-      const chatData = await Promise.all(chatDocs.map(getChatData));
+      const chatData = await Promise.all(chatDocs.map(this.getChatData));
       this.chats = chatData;
     } catch (error) {
       console.log(error);
@@ -218,6 +210,19 @@ class User {
     }
     this.chats.filter((item) =>(chat.id!==item.id));
     await firestore.collection('Chats').doc(chat.id).delete();
+  };
+
+  clearUserData = async () => {
+    this.username = '';
+    this.profilePicture = '';
+    this.reviews = [];
+    this.posts = [];
+    this.rating = 0;
+    this.numberOfReviews = 0;
+    this.amountOfSoldItems = 0;
+    this.deletedPosts = [];
+    this.chats = [];
+    await AsyncStorage.setItem('@username', '');
   };
 }
 

@@ -75,9 +75,9 @@ export class NyleContext {
         });
   };
 
-  contextFor(postId) {
+  contextFor = (postId) => {
     return this.PostContextArray.find((post) =>post.id === postId);
-  }
+  };
 
   readNextTwoElements = async (collectionName) => {
     try {
